@@ -1,0 +1,1169 @@
+{
+  "data": [
+    {
+      "text": "Zo door met 2xdd spoelen",
+      "tokens": [
+        "Zo",
+        "door",
+        "met",
+        "2",
+        "x",
+        "dd",
+        "spoelen"
+      ]
+    },
+    {
+      "text": "*10E9/L",
+      "tokens": [
+        "*",
+        "10",
+        "E",
+        "9",
+        "/",
+        "L"
+      ]
+    },
+    {
+      "text": "212 x10^9/L",
+      "tokens": [
+        "212",
+        "x",
+        "10",
+        "^",
+        "9",
+        "/",
+        "L"
+      ]
+    },
+    {
+      "text": "legpress 60 kg 2x10 hh",
+      "tokens": [
+        "legpress",
+        "60",
+        "kg",
+        "2",
+        "x",
+        "10",
+        "hh"
+      ]
+    },
+    {
+      "text": "297 x10^9",
+      "tokens": [
+        "297",
+        "x",
+        "10",
+        "^",
+        "9"
+      ]
+    },
+    {
+      "text": "expectatief",
+      "tokens": [
+        "expectatief"
+      ]
+    },
+    {
+      "text": "radiotherapie 5x4 Gy",
+      "tokens": [
+        "radiotherapie",
+        "5",
+        "x",
+        "4",
+        "Gy"
+      ]
+    },
+    {
+      "text": "recidiverende mastoiditis links (3x)",
+      "tokens": [
+        "recidiverende",
+        "mastoiditis",
+        "links",
+        "(",
+        "3",
+        "x",
+        ")"
+      ]
+    },
+    {
+      "text": "[PERSOON-1]",
+      "tokens": [
+        "[PERSOON-1]"
+      ]
+    },
+    {
+      "text": "[PERSOON-5]",
+      "tokens": [
+        "[PERSOON-5]"
+      ]
+    },
+    {
+      "text": "[PERSOON-99]",
+      "tokens": [
+        "[PERSOON-99]"
+      ]
+    },
+    {
+      "text": "[URL-1]",
+      "tokens": [
+        "[URL-1]"
+      ]
+    },
+    {
+      "text": "[PATIENTNUMMER-2]7",
+      "tokens": [
+        "[PATIENTNUMMER-2]",
+        "7"
+      ]
+    },
+    {
+      "text": "[PATIENTNUMMER-2]abc",
+      "tokens": [
+        "[PATIENTNUMMER-2]",
+        "abc"
+      ]
+    },
+    {
+      "text": "afmeting [cm]: 4",
+      "tokens": [
+        "afmeting",
+        "[",
+        "cm",
+        "]",
+        ":",
+        "4"
+      ]
+    },
+    {
+      "text": "afmeting[cm]: 4",
+      "tokens": [
+        "afmeting",
+        "[",
+        "cm",
+        "]",
+        ":",
+        "4"
+      ]
+    },
+    {
+      "text": "NF herhalen over 2wk.",
+      "tokens": [
+        "NF",
+        "herhalen",
+        "over",
+        "2",
+        "wk",
+        "."
+      ]
+    },
+    {
+      "text": "400cc",
+      "tokens": [
+        "400",
+        "cc"
+      ]
+    },
+    {
+      "text": "1.5mg",
+      "tokens": [
+        "1.5",
+        "mg"
+      ]
+    },
+    {
+      "text": "1250mg",
+      "tokens": [
+        "1250",
+        "mg"
+      ]
+    },
+    {
+      "text": "op de SEH 1u later opnieuw 8 EH",
+      "tokens": [
+        "op",
+        "de",
+        "SEH",
+        "1",
+        "u",
+        "later",
+        "opnieuw",
+        "8",
+        "EH"
+      ]
+    },
+    {
+      "text": "zaterdagmiddag 13-16u verlof",
+      "tokens": [
+        "zaterdagmiddag",
+        "13",
+        "-",
+        "16",
+        "u",
+        "verlof"
+      ]
+    },
+    {
+      "text": "prednisolon gebruik 20mg/dag",
+      "tokens": [
+        "prednisolon",
+        "gebruik",
+        "20",
+        "mg",
+        "/",
+        "dag"
+      ]
+    },
+    {
+      "text": "1e consult",
+      "tokens": [
+        "1",
+        "e",
+        "consult"
+      ]
+    },
+    {
+      "text": "1ste consult",
+      "tokens": [
+        "1",
+        "ste",
+        "consult"
+      ]
+    },
+    {
+      "text": "2e consult",
+      "tokens": [
+        "2",
+        "e",
+        "consult"
+      ]
+    },
+    {
+      "text": "2de consult",
+      "tokens": [
+        "2",
+        "de",
+        "consult"
+      ]
+    },
+    {
+      "text": "nog ~200mL totaal",
+      "tokens": [
+        "nog",
+        "~",
+        "200",
+        "mL",
+        "totaal"
+      ]
+    },
+    {
+      "text": "~8w pantoprazol 1dd",
+      "tokens": [
+        "~",
+        "8",
+        "w",
+        "pantoprazol",
+        "1",
+        "dd"
+      ]
+    },
+    {
+      "text": "junctioneel ritme tot 35pm~",
+      "tokens": [
+        "junctioneel",
+        "ritme",
+        "tot",
+        "35",
+        "pm",
+        "~"
+      ]
+    },
+    {
+      "text": "Mn `s nachts wel last",
+      "tokens": [
+        "Mn",
+        "`s",
+        "nachts",
+        "wel",
+        "last"
+      ]
+    },
+    {
+      "text": "hele avond/nacht hypo`s gehad",
+      "tokens": [
+        "hele",
+        "avond",
+        "/",
+        "nacht",
+        "hypo`s",
+        "gehad"
+      ]
+    },
+    {
+      "text": "Heeft februari `22 een resectie gehad",
+      "tokens": [
+        "Heeft",
+        "februari",
+        "`",
+        "22",
+        "een",
+        "resectie",
+        "gehad"
+      ]
+    },
+    {
+      "text": "operatie in `08",
+      "tokens": [
+        "operatie",
+        "in",
+        "`",
+        "08"
+      ]
+    },
+    {
+      "text": "informatiebrief Biobank_Later naar huisadres gestuurd",
+      "tokens": [
+        "informatiebrief",
+        "Biobank_Later",
+        "naar",
+        "huisadres",
+        "gestuurd"
+      ]
+    },
+    {
+      "text": "241 x10^9/L",
+      "tokens": [
+        "241",
+        "x",
+        "10",
+        "^",
+        "9",
+        "/",
+        "L"
+      ]
+    },
+    {
+      "text": "matige alt exotropie (20^BN)",
+      "tokens": [
+        "matige",
+        "alt",
+        "exotropie",
+        "(",
+        "20",
+        "^",
+        "BN",
+        ")"
+      ]
+    },
+    {
+      "text": "NIBP[mmHg]: 124/85(98)",
+      "tokens": [
+        "NIBP",
+        "[",
+        "mmHg",
+        "]",
+        ":",
+        "124",
+        "/",
+        "85",
+        "(",
+        "98",
+        ")"
+      ]
+    },
+    {
+      "text": "[PERSOON-1] kwam voor bloedafname.",
+      "tokens": [
+        "[PERSOON-1]",
+        "kwam",
+        "voor",
+        "bloedafname",
+        "."
+      ]
+    },
+    {
+      "text": "Zie status [PERSOON-1] [DATUM-3]",
+      "tokens": [
+        "Zie",
+        "status",
+        "[PERSOON-1]",
+        "[DATUM-3]"
+      ]
+    },
+    {
+      "text": "gisteravond wel nog (score [DATUM-1])",
+      "tokens": [
+        "gisteravond",
+        "wel",
+        "nog",
+        "(",
+        "score",
+        "[DATUM-1]",
+        ")"
+      ]
+    },
+    {
+      "text": "12 mmHg @ 10.30 uur",
+      "tokens": [
+        "12",
+        "mmHg",
+        "@",
+        "10.30",
+        "uur"
+      ]
+    },
+    {
+      "text": "effect van valproinezuur??? of toeval?",
+      "tokens": [
+        "effect",
+        "van",
+        "valproinezuur",
+        "?",
+        "?",
+        "?",
+        "of",
+        "toeval",
+        "?"
+      ]
+    },
+    {
+      "text": "Status na delier (?)",
+      "tokens": [
+        "Status",
+        "na",
+        "delier",
+        "(?)"
+      ]
+    },
+    {
+      "text": "Pegfilgrastim inj sp 6mg=0,6ml",
+      "tokens": [
+        "Pegfilgrastim",
+        "inj",
+        "sp",
+        "6",
+        "mg",
+        "=",
+        "0,6",
+        "ml"
+      ]
+    },
+    {
+      "text": "1224 kcal/dag (=94,78%)",
+      "tokens": [
+        "1224",
+        "kcal",
+        "/",
+        "dag",
+        "(",
+        "=",
+        "94,78",
+        "%",
+        ")"
+      ]
+    },
+    {
+      "text": "Bloedbeeld = ok, audiologie = ok",
+      "tokens": [
+        "Bloedbeeld",
+        "=",
+        "ok",
+        ",",
+        "audiologie",
+        "=",
+        "ok"
+      ]
+    },
+    {
+      "text": "Calprotectine <5 µg/g",
+      "tokens": [
+        "Calprotectine",
+        "<",
+        "5",
+        "µg",
+        "/",
+        "g"
+      ]
+    },
+    {
+      "text": "uitdrijvingsperiode beperken <45min",
+      "tokens": [
+        "uitdrijvingsperiode",
+        "beperken",
+        "<",
+        "45",
+        "min"
+      ]
+    },
+    {
+      "text": "CMV load<100",
+      "tokens": [
+        "CMV",
+        "load",
+        "<",
+        "100"
+      ]
+    },
+    {
+      "text": "anterograde amnesie >4u",
+      "tokens": [
+        "anterograde",
+        "amnesie",
+        ">",
+        "4",
+        "u"
+      ]
+    },
+    {
+      "text": "disharmonisch profiel VIQ>PIQ",
+      "tokens": [
+        "disharmonisch",
+        "profiel",
+        "VIQ",
+        ">",
+        "PIQ"
+      ]
+    },
+    {
+      "text": "spasme beide benen, R>L",
+      "tokens": [
+        "spasme",
+        "beide",
+        "benen",
+        ",",
+        "R",
+        ">",
+        "L"
+      ]
+    },
+    {
+      "text": "-> MRI geen afwijkingen.",
+      "tokens": [
+        "->",
+        "MRI",
+        "geen",
+        "afwijkingen",
+        "."
+      ]
+    },
+    {
+      "text": "--> MRI geen afwijkingen.",
+      "tokens": [
+        "-->",
+        "MRI",
+        "geen",
+        "afwijkingen",
+        "."
+      ]
+    },
+    {
+      "text": "cardiale schemie => onvoldoende info",
+      "tokens": [
+        "cardiale",
+        "schemie",
+        "=>",
+        "onvoldoende",
+        "info"
+      ]
+    },
+    {
+      "text": "cardiale schemie ==> onvoldoende info",
+      "tokens": [
+        "cardiale",
+        "schemie",
+        "==>",
+        "onvoldoende",
+        "info"
+      ]
+    },
+    {
+      "text": "Duplex carotiden: >= 70% stenose",
+      "tokens": [
+        "Duplex",
+        "carotiden",
+        ":",
+        ">=",
+        "70",
+        "%",
+        "stenose"
+      ]
+    },
+    {
+      "text": "normale bloeddruk, CR<2s",
+      "tokens": [
+        "normale",
+        "bloeddruk",
+        ",",
+        "CR",
+        "<",
+        "2",
+        "s"
+      ]
+    },
+    {
+      "text": "Contracties;-",
+      "tokens": [
+        "Contracties",
+        ";",
+        "-"
+      ]
+    },
+    {
+      "text": "bijzonderheden:  matuur cataract",
+      "tokens": [
+        "bijzonderheden",
+        ":",
+        " ",
+        "matuur",
+        "cataract"
+      ]
+    },
+    {
+      "text": "- Misselijkheid/braken: -/-",
+      "tokens": [
+        "-",
+        "Misselijkheid",
+        "/",
+        "braken",
+        ":",
+        "-",
+        "/",
+        "-"
+      ]
+    },
+    {
+      "text": "Meldde zich rond 5:00",
+      "tokens": [
+        "Meldde",
+        "zich",
+        "rond",
+        "5",
+        ":",
+        "00"
+      ]
+    },
+    {
+      "text": "werkt erg goed/rustgevend",
+      "tokens": [
+        "werkt",
+        "erg",
+        "goed",
+        "/",
+        "rustgevend"
+      ]
+    },
+    {
+      "text": "dialyse behoeftig 3x/wk",
+      "tokens": [
+        "dialyse",
+        "behoeftig",
+        "3",
+        "x",
+        "/",
+        "wk"
+      ]
+    },
+    {
+      "text": "VG/ o.a. alcoholische levercirrose",
+      "tokens": [
+        "VG",
+        "/",
+        "o.a.",
+        "alcoholische",
+        "levercirrose"
+      ]
+    },
+    {
+      "text": "onvoldoende aanwijzingen voor sepsis/meningitis",
+      "tokens": [
+        "onvoldoende",
+        "aanwijzingen",
+        "voor",
+        "sepsis",
+        "/",
+        "meningitis"
+      ]
+    },
+    {
+      "text": "lymfeklieren/ axilla",
+      "tokens": [
+        "lymfeklieren",
+        "/",
+        "axilla"
+      ]
+    },
+    {
+      "text": "achterste deel van de tong.",
+      "tokens": [
+        "achterste",
+        "deel",
+        "van",
+        "de",
+        "tong",
+        "."
+      ]
+    },
+    {
+      "text": "om 21.00 uur.",
+      "tokens": [
+        "om",
+        "21.00",
+        "uur",
+        "."
+      ]
+    },
+    {
+      "text": "dhr. mag nog 305ml vocht hebben",
+      "tokens": [
+        "dhr.",
+        "mag",
+        "nog",
+        "305",
+        "ml",
+        "vocht",
+        "hebben"
+      ]
+    },
+    {
+      "text": "Dalteparine injvlst 10.000ie/ml",
+      "tokens": [
+        "Dalteparine",
+        "injvlst",
+        "10.000",
+        "ie",
+        "/",
+        "ml"
+      ]
+    },
+    {
+      "text": "(0.13 SD)",
+      "tokens": [
+        "(",
+        "0.13",
+        "SD",
+        ")"
+      ]
+    },
+    {
+      "text": "57-jarige man",
+      "tokens": [
+        "57",
+        "-",
+        "jarige",
+        "man"
+      ]
+    },
+    {
+      "text": "gastro-intestinaal verlies",
+      "tokens": [
+        "gastro",
+        "-",
+        "intestinaal",
+        "verlies"
+      ]
+    },
+    {
+      "text": "time-out bij een dissociatie stoornis",
+      "tokens": [
+        "time",
+        "-",
+        "out",
+        "bij",
+        "een",
+        "dissociatie",
+        "stoornis"
+      ]
+    },
+    {
+      "text": "- Ontslag naar huis",
+      "tokens": [
+        "-",
+        "Ontslag",
+        "naar",
+        "huis"
+      ]
+    },
+    {
+      "text": "Reikend van Th10-L2.",
+      "tokens": [
+        "Reikend",
+        "van",
+        "Th10",
+        "-",
+        "L2",
+        "."
+      ]
+    },
+    {
+      "text": "geen visuklachten, n-v-",
+      "tokens": [
+        "geen",
+        "visuklachten",
+        ",",
+        "n",
+        "-",
+        "v",
+        "-"
+      ]
+    },
+    {
+      "text": "Familie-anamnese",
+      "tokens": [
+        "Familie",
+        "-",
+        "anamnese"
+      ]
+    },
+    {
+      "text": "levetiracetam, clobazam zn, midazolam neusspray",
+      "tokens": [
+        "levetiracetam",
+        ",",
+        "clobazam",
+        "zn",
+        ",",
+        "midazolam",
+        "neusspray"
+      ]
+    },
+    {
+      "text": "ropivacaïne 0,1 % + 0,5 µg/ml sufentanil",
+      "tokens": [
+        "ropivacaïne",
+        "0,1",
+        "%",
+        "+",
+        "0,5",
+        "µg",
+        "/",
+        "ml",
+        "sufentanil"
+      ]
+    },
+    {
+      "text": "Hemoglobine 8,8",
+      "tokens": [
+        "Hemoglobine",
+        "8,8"
+      ]
+    },
+    {
+      "text": "+ 3 na scoliose correctie",
+      "tokens": [
+        "+",
+        "3",
+        "na",
+        "scoliose",
+        "correctie"
+      ]
+    },
+    {
+      "text": "GDM 26+3 wv dieet.",
+      "tokens": [
+        "GDM",
+        "26",
+        "+",
+        "3",
+        "wv",
+        "dieet",
+        "."
+      ]
+    },
+    {
+      "text": "acenocoumarol + LMWH",
+      "tokens": [
+        "acenocoumarol",
+        "+",
+        "LMWH"
+      ]
+    },
+    {
+      "text": "21*60mg Hemlibra",
+      "tokens": [
+        "21",
+        "*",
+        "60",
+        "mg",
+        "Hemlibra"
+      ]
+    },
+    {
+      "text": "4,1 l/(min*m²)",
+      "tokens": [
+        "4,1",
+        "l",
+        "/",
+        "(",
+        "min",
+        "*",
+        "m²",
+        ")"
+      ]
+    },
+    {
+      "text": "* Fysio 14:00u",
+      "tokens": [
+        "*",
+        "Fysio",
+        "14",
+        ":",
+        "00",
+        "u"
+      ]
+    },
+    {
+      "text": "Fundoscopie OS(m)",
+      "tokens": [
+        "Fundoscopie",
+        "OS",
+        "(",
+        "m",
+        ")"
+      ]
+    },
+    {
+      "text": "[PERSOON-1] (M)",
+      "tokens": [
+        "[PERSOON-1]",
+        "(",
+        "M",
+        ")"
+      ]
+    },
+    {
+      "text": "reeds 2x eerder SCT (syngeen en SIB)",
+      "tokens": [
+        "reeds",
+        "2",
+        "x",
+        "eerder",
+        "SCT",
+        "(",
+        "syngeen",
+        "en",
+        "SIB",
+        ")"
+      ]
+    },
+    {
+      "text": "floxapen st 6.25 (4gr/50cc)",
+      "tokens": [
+        "floxapen",
+        "st",
+        "6.25",
+        "(",
+        "4",
+        "gr",
+        "/",
+        "50",
+        "cc",
+        ")"
+      ]
+    },
+    {
+      "text": "zelfstandige mobilisatie (lopen, traplopen)",
+      "tokens": [
+        "zelfstandige",
+        "mobilisatie",
+        "(",
+        "lopen",
+        ",",
+        "traplopen",
+        ")"
+      ]
+    },
+    {
+      "text": "De belangrijkste risico's zijn reeds eerder onderzocht",
+      "tokens": [
+        "De",
+        "belangrijkste",
+        "risico's",
+        "zijn",
+        "reeds",
+        "eerder",
+        "onderzocht"
+      ]
+    },
+    {
+      "text": "'spontane' afname op recente scan",
+      "tokens": [
+        "'",
+        "spontane",
+        "'",
+        "afname",
+        "op",
+        "recente",
+        "scan"
+      ]
+    },
+    {
+      "text": "dyspneu d'effort",
+      "tokens": [
+        "dyspneu",
+        "d'effort"
+      ]
+    },
+    {
+      "text": "'s Nachts wakker geworden",
+      "tokens": [
+        "'s",
+        "Nachts",
+        "wakker",
+        "geworden"
+      ]
+    },
+    {
+      "text": "operatie in '08",
+      "tokens": [
+        "operatie",
+        "in",
+        "'",
+        "08"
+      ]
+    },
+    {
+      "text": "Heeft februari '22 een resectie gehad",
+      "tokens": [
+        "Heeft",
+        "februari",
+        "'",
+        "22",
+        "een",
+        "resectie",
+        "gehad"
+      ]
+    },
+    {
+      "text": "K&J-psychiatrie",
+      "tokens": [
+        "K",
+        "&",
+        "J",
+        "-",
+        "psychiatrie"
+      ]
+    },
+    {
+      "text": "[PERSOON-6], gynaecoloog V&G",
+      "tokens": [
+        "[PERSOON-6]",
+        ",",
+        "gynaecoloog",
+        "V",
+        "&",
+        "G"
+      ]
+    },
+    {
+      "text": "ieder 50% kans",
+      "tokens": [
+        "ieder",
+        "50",
+        "%",
+        "kans"
+      ]
+    },
+    {
+      "text": "Sat 94-95%.",
+      "tokens": [
+        "Sat",
+        "94",
+        "-",
+        "95",
+        "%",
+        "."
+      ]
+    },
+    {
+      "text": "risico 0,4%",
+      "tokens": [
+        "risico",
+        "0,4",
+        "%"
+      ]
+    },
+    {
+      "text": "SD Poli #12345",
+      "tokens": [
+        "SD",
+        "Poli",
+        "#",
+        "12345"
+      ]
+    },
+    {
+      "text": "Spontaan \"goedemorgen\".",
+      "tokens": [
+        "Spontaan",
+        "\"",
+        "goedemorgen",
+        "\"",
+        "."
+      ]
+    },
+    {
+      "text": "Vanaf geboorte \"veel op pad\";",
+      "tokens": [
+        "Vanaf",
+        "geboorte",
+        "\"",
+        "veel",
+        "op",
+        "pad",
+        "\"",
+        ";"
+      ]
+    },
+    {
+      "text": "begint weer wat \"normaler\"te worden",
+      "tokens": [
+        "begint",
+        "weer",
+        "wat",
+        "\"",
+        "normaler",
+        "\"",
+        "te",
+        "worden"
+      ]
+    },
+    {
+      "text": "antistoffen worden gemaakt!",
+      "tokens": [
+        "antistoffen",
+        "worden",
+        "gemaakt",
+        "!"
+      ]
+    },
+    {
+      "text": "Let op!",
+      "tokens": [
+        "Let",
+        "op",
+        "!"
+      ]
+    },
+    {
+      "text": "VOBA 2,1 liter pos!!!",
+      "tokens": [
+        "VOBA",
+        "2,1",
+        "liter",
+        "pos",
+        "!",
+        "!",
+        "!"
+      ]
+    },
+    {
+      "text": "CRP 31 -> 358!",
+      "tokens": [
+        "CRP",
+        "31",
+        "->",
+        "358",
+        "!"
+      ]
+    }
+  ]
+}
