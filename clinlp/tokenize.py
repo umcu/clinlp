@@ -97,19 +97,19 @@ def create_tokenizer(nlp):
     suffixes.append(r"%")
     suffixes.append(r"\+")
     suffixes.append(r"~")
-    suffixes.append(r"(?<!([A-Z]-\d|-\d\d))\]")  # tricky one
 
     # Deduce tags
     prefixes.remove(r"\[")
     prefixes.append(r"\[(?![A-Z]{3,}-)")
     prefixes.append(r"\S+(?=\[[A-Z]{3,})")
     infixes.append(r"-(?![0-9]{1,2}\])")
-    infixes.append(r"(?<=[0-9])x(?=[0-9])")
     suffixes.remove(r"\]")
     suffixes.append(r"(?<=[0-9]\])\S+")
+    suffixes.append(r"(?<!([A-Z]-\d|-\d\d))\]")  # tricky one
 
     # x
     prefixes.append(r"x(?=[0-9]+)")
+    infixes.append(r"(?<=[0-9])x(?=[0-9])")
     suffixes.append(r"(?<=[0-9])x")
 
     # E, ^
