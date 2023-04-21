@@ -5,6 +5,60 @@ import re
 from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
+CUSTOM_PREFIXES = [
+    'dhr.',
+    'dr.',
+    'dh.',
+    'drs.',
+    'ds.',
+    'gg.',
+    'ggn.',
+    'grg.',
+    'ing.',
+    'ir.',
+    'medepat.',
+    'mej.',
+    'mevr.',
+    'mr.',
+    'mw.',
+    'prof.',
+    'pt.',
+]
+
+CUSTOM_ABBREVIATIONS = [
+    '1.',
+    '2.',
+    '3.',
+    '4.',
+    '5.',
+    '6.',
+    '7.',
+    '8.',
+    '9.',
+    '10.',
+    '11.',
+    '12.',
+    'I.',
+    'II.',
+    'III.',
+    'IV.',
+    'V.',
+    'VI.',
+    'VII.',
+    'VIII.',
+    'IX.',
+    'X.',
+    't.b.v.',
+    'a.n.',
+    'internat.eenh.',
+    'o.a.',
+    'oa.',
+    'tel.',
+    'i.o.m.',
+    'z.n.',
+    'o.l.v.',
+]
+
 UNITS = [
     "cc",
     "CC",
@@ -155,6 +209,14 @@ def create_tokenizer(nlp):
     tokenizer_exceptions["\t"] = [{65: "\t"}]
 
     tokenizer_exceptions["xdd"] = [{65: "x"}, {65: "dd"}]
+
+    for abbr in CUSTOM_ABBREVIATIONS:
+        tokenizer_exceptions[abbr] = [{65: abbr}]
+
+    for abbr in CUSTOM_PREFIXES:
+        tokenizer_exceptions[abbr] = [{65: abbr}]
+        tokenizer_exceptions[abbr.title()] = [{65: abbr.title()}]
+
 
     infix_re = compile_infix_regex(infixes)
     prefix_re = compile_prefix_regex(prefixes)
