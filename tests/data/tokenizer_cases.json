@@ -1164,6 +1164,43 @@
         "358",
         "!"
       ]
+    },
+    {
+      "text": "Blootstelling is adequaat. \r\nadvies in overleg met infectieziekten",
+      "tokens": [
+        "Blootstelling",
+        "is",
+        "adequaat",
+        ".",
+        "\r",
+        "\n",
+        "advies",
+        "in",
+        "overleg",
+        "met",
+        "infectieziekten"
+      ]
+    },
+    {
+      "text": "herhaalconsult\r\n\r\nStatus Preasens: \r\nHet verschilt nog elke dag.",
+      "tokens": [
+        "herhaalconsult",
+        "\r",
+        "\n",
+        "\r",
+        "\n",
+        "Status",
+        "Preasens",
+        ":",
+        "\r",
+        "\n",
+        "Het",
+        "verschilt",
+        "nog",
+        "elke",
+        "dag",
+        "."
+      ]
     }
   ]
 }
