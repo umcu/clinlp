@@ -123,10 +123,10 @@ def create_tokenizer(nlp):
     prefixes.append(r"([0-9]{,5}(\.|,))?[0-9]{,4}" + f"(?=({'|'.join(UNITS)}))")
     suffixes.append(r"(?<=[0-9])" + f"({'|'.join(UNITS)})")
 
-    # newlines
-    suffixes.append(r"\n")
-    suffixes.append(r"\r")
-    suffixes.append(r"\t")
+    # newlines, missed whitespaces
+    prefixes.append(r"\s")
+    infixes.append(r"\s")
+    suffixes.append(r"\s")
 
     # doseringen
     infixes.append(r"(?<=[0-9])(x?d?d)(?=[0-9])")
@@ -153,7 +153,6 @@ def create_tokenizer(nlp):
     tokenizer_exceptions["\n"] = [{65: "\n"}]
     tokenizer_exceptions["\r"] = [{65: "\r"}]
     tokenizer_exceptions["\t"] = [{65: "\t"}]
-    tokenizer_exceptions["\r\n"] = [{65: "\r\n"}]
 
     tokenizer_exceptions["xdd"] = [{65: "x"}, {65: "dd"}]
 
