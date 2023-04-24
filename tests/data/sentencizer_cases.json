@@ -1,20 +1,64 @@
 {
   "data": [
-    {"tokens": ["dit", "is", "een", "test"], "sentence_starts": [true, false, false, false]},
-    {"tokens": ["dit", "is", "een", "test", "\n", " ", "met", "twee", "zinnen"], "sentence_starts": [true, false, false, false, false, false, true, false, false]},
-    {"tokens": ["Uitslag", "meegedeeld", ".", "\r", "\n", " ", "Controle", "over", "4", "maanden", "."], "sentence_starts": [true, false, false, false, false, false, true, false, false, false, false]},
-    {"tokens": ["Huidige", "pijnmedicatie", "\n", " ", "Paracetamol", "4", "dd", "1000", "\n", " ", "Naproxen", "2", "dd", "500", "mg"], "sentence_starts": [true, false, false, false, true, false, false, false, false, false, true, false, false, false, false]},    {"tokens": ["Lab", ":", "\r", "\n", "*", "Nierfunctie", "goed", "\r", "\n", "*", "CRP", "9"], "sentence_starts": [true, false, false, false, true, false, false, false, false, true, false, false]},
-    {"tokens": ["Lab", ":", "CRP", "70", ".", "BSE", "48", "."], "sentence_starts": [true, false, false, false, false, true, false, false]},
-    {"tokens": ["Ochtendstijfheid", "was", "paar", "uur", ",", "nu", "nog", "1", "uur"], "sentence_starts": [true, false, false, false, false, false, false, false, false]},
-    {"tokens": [" ", "begint", "met", "een", "spatie"], "sentence_starts": [false, true, false, false, false]},
-    {"tokens": ["\n", " ", "begint", "met", "een", "newline"], "sentence_starts": [false, false, true, false, false, false]},
-    {"tokens": ["*", "begint", "met", "een", "asterisk"], "sentence_starts": [true, false, false, false, false]},
-    {"tokens": ["klachten", "t.g.v.", "val"], "sentence_starts": [true, false, false]},
-    {"tokens": ["Op", "MRI", "tumor", "suprasellair", ".", "\n", " ", "14.30", "u", "laatste", "keer", "gegeten"], "sentence_starts": [true, false, false, false, false, false, false, true, false, false, false, false]},
-    {"tokens": ["Dhr", "heeft", "zich", "klaargemaakt", "volgens", "protocol", ".", "\r", "\n", "Ging", "rond", "10", ":", "50", "voor", "OK", "."], "sentence_starts": [true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false]},
-    {"tokens": ["Dietist", ":", "graag", "evaluatie", "en", "advisering", "!", "!", "Fysio", ":", "graag", "meedenken", "over", "lighouding", "."], "sentence_starts": [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false]},
-    {"tokens": ["Reden", "van", "opname", "\r", "\n", "[DATUM-1]", "val", "van", "hoogte"], "sentence_starts": [true, false, false, false, false, true, false, false, false]}
-
-
+    {
+      "tokens": ["dit", "is", "een", "test"],
+      "sentence_starts": [true, false, false, false]
+    },
+    {
+      "tokens": ["dit", "is", "een", "test", "\n", " ", "met", "twee", "zinnen"],
+      "sentence_starts": [true, false, false, false, false, false, true, false, false]
+    },
+    {
+      "tokens": ["Uitslag", "meegedeeld", ".", "\r", "\n", " ", "Controle", "over", "4", "maanden", "."],
+      "sentence_starts": [true, false, false, false, false, false, true, false, false, false, false]
+    },
+    {
+      "tokens": ["Huidige", "pijnmedicatie", "\n", " ", "Paracetamol", "4", "dd", "1000", "\n", " ", "Naproxen", "2", "dd", "500", "mg"],
+      "sentence_starts": [true, false, false, false, true, false, false, false, false, false, true, false, false, false, false]
+    },
+    {
+      "tokens": ["Lab", ":", "\r", "\n", "*", "Nierfunctie", "goed", "\r", "\n", "*", "CRP", "9"],
+      "sentence_starts": [true, false, false, false, true, false, false, false, false, true, false, false]
+    },
+    {
+      "tokens": ["Lab", ":", "CRP", "70", ".", "BSE", "48", "."],
+      "sentence_starts": [true, false, false, false, false, true, false, false]
+    },
+    {
+      "tokens": ["Ochtendstijfheid", "was", "paar", "uur", ",", "nu", "nog", "1", "uur"],
+      "sentence_starts": [true, false, false, false, false, false, false, false, false]
+    },
+    {
+      "tokens": [" ", "begint", "met", "een", "spatie"],
+      "sentence_starts": [false, true, false, false, false]
+    },
+    {
+      "tokens": ["\n", " ", "begint", "met", "een", "newline"],
+      "sentence_starts": [false, false, true, false, false, false]
+    },
+    {
+      "tokens": ["*", "begint", "met", "een", "asterisk"],
+      "sentence_starts": [true, false, false, false, false]
+    },
+    {
+      "tokens": ["klachten", "t.g.v.", "val"],
+      "sentence_starts": [true, false, false]
+    },
+    {
+      "tokens": ["Op", "MRI", "tumor", "suprasellair", ".", "\n", " ", "14.30", "u", "laatste", "keer", "gegeten"],
+      "sentence_starts": [true, false, false, false, false, false, false, true, false, false, false, false]
+    },
+    {
+      "tokens": ["Dhr", "heeft", "zich", "klaargemaakt", "volgens", "protocol", ".", "\r", "\n", "Ging", "rond", "10", ":", "50", "voor", "OK", "."],
+      "sentence_starts": [true, false, false, false, false, false, false, false, false, true, false, false, false, false, false, false, false]
+    },
+    {
+      "tokens": ["Dietist", ":", "graag", "evaluatie", "en", "advisering", "!", "!", "Fysio", ":", "graag", "meedenken", "over", "lighouding", "."],
+      "sentence_starts": [true, false, false, false, false, false, false, false, true, false, false, false, false, false, false]
+    },
+    {
+      "tokens": ["Reden", "van", "opname", "\r", "\n", "[DATUM-1]", "val", "van", "hoogte"],
+      "sentence_starts": [true, false, false, false, false, true, false, false, false]
+    }
   ]
 }
