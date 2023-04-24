@@ -2,15 +2,15 @@ import json
 
 import spacy
 
-from clinlp.tokenize import create_tokenizer
+from clinlp.tokenizer import make_tokenizer
 
 
 class TestTokenizer:
     def test_create_tokenizer(self):
-        _ = create_tokenizer(spacy.blank("nl"))
+        _ = make_tokenizer(spacy.blank("nl"))
 
     def test_tokenize_cases(self):
-        tokenizer = create_tokenizer(spacy.blank("nl"))
+        tokenizer = make_tokenizer(spacy.blank("nl"))
 
         with open("tests/data/tokenizer_cases.json", "rb") as file:
             data = json.load(file)["data"]
