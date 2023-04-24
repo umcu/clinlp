@@ -1,4 +1,4 @@
-""" TODO remove all hardcoded stuff and make configurable """
+""" TODO remove hardcoded stuff and make configurable """
 
 import re
 
@@ -6,57 +6,80 @@ from spacy.tokenizer import Tokenizer
 from spacy.util import compile_infix_regex, compile_prefix_regex, compile_suffix_regex
 
 CUSTOM_PREFIXES = [
-    'dhr.',
-    'dr.',
-    'dh.',
-    'drs.',
-    'ds.',
-    'gg.',
-    'ggn.',
-    'grg.',
-    'ing.',
-    'ir.',
-    'medepat.',
-    'mej.',
-    'mevr.',
-    'mr.',
-    'mw.',
-    'prof.',
-    'pt.',
+    "dhr.",
+    "dr.",
+    "dh.",
+    "drs.",
+    "ds.",
+    "gg.",
+    "ggn.",
+    "grg.",
+    "ing.",
+    "ir.",
+    "medepat.",
+    "mej.",
+    "mevr.",
+    "mr.",
+    "mw.",
+    "prof.",
+    "pt.",
 ]
 
 CUSTOM_ABBREVIATIONS = [
-    '1.',
-    '2.',
-    '3.',
-    '4.',
-    '5.',
-    '6.',
-    '7.',
-    '8.',
-    '9.',
-    '10.',
-    '11.',
-    '12.',
-    'I.',
-    'II.',
-    'III.',
-    'IV.',
-    'V.',
-    'VI.',
-    'VII.',
-    'VIII.',
-    'IX.',
-    'X.',
-    't.b.v.',
-    'a.n.',
-    'internat.eenh.',
-    'o.a.',
-    'oa.',
-    'tel.',
-    'i.o.m.',
-    'z.n.',
-    'o.l.v.',
+    "1.",
+    "2.",
+    "3.",
+    "4.",
+    "5.",
+    "6.",
+    "7.",
+    "8.",
+    "9.",
+    "10.",
+    "11.",
+    "12.",
+    "I.",
+    "II.",
+    "III.",
+    "IV.",
+    "V.",
+    "VI.",
+    "VII.",
+    "VIII.",
+    "IX.",
+    "X.",
+    "t.b.v.",
+    "a.n.",
+    "internat.eenh.",
+    "o.a.",
+    "oa.",
+    "tel.",
+    "i.o.m.",
+    "z.n.",
+    "o.l.v.",
+    "z.n.",
+    "e.c.i.",
+    "s.c.",
+    "etc.",
+    "g.b.",
+    "t.p.v.",
+    "vlgs.",
+    "o.b.v.",
+    "t.h.v.",
+    "i.o.m.",
+    "i.v.",
+    "internat.eenh.",
+    "m.i.",
+    "v.v.",
+    "i.p.",
+    "i.v.m.",
+    "i.c.m.",
+    "m.b.v.",
+    "wv.",
+    "pol.",
+    "tr.",
+    "vv.",
+    "mi.",
 ]
 
 UNITS = [
@@ -118,8 +141,7 @@ UNITS = [
 ]
 
 
-def create_tokenizer(nlp):
-
+def make_tokenizer(nlp):
     infixes = nlp.Defaults.infixes.copy()
     prefixes = nlp.Defaults.prefixes.copy()
     suffixes = nlp.Defaults.suffixes.copy()
@@ -216,7 +238,6 @@ def create_tokenizer(nlp):
     for abbr in CUSTOM_PREFIXES:
         tokenizer_exceptions[abbr] = [{65: abbr}]
         tokenizer_exceptions[abbr.title()] = [{65: abbr.title()}]
-
 
     infix_re = compile_infix_regex(infixes)
     prefix_re = compile_prefix_regex(prefixes)
