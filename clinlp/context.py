@@ -1,9 +1,11 @@
 import itertools
+import json
+import re
 import warnings
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
-from typing import Iterator, Union
+from typing import Iterator, Optional, Union
 
 import intervaltree as ivt
 from spacy.language import Language
@@ -56,23 +58,71 @@ class MatchedQualifierPattern:
         }.__repr__()
 
 
+def _parse_level(level: str, qualifiers: dict[str, Qualifier]) -> Qualifier:
+    if not re.match(r"\w+\.\w+", level):
+        raise ValueError(f"Cannot parse level {level}, please adhere to format QualifierClass.level")
+
+    level_class, level = level.split(".")
+
+    return qualifiers[level_class][level]
+
+
+def _parse_direction(direction: str) -> QualifierRuleDirection:
+    return QualifierRuleDirection[direction.upper()]
+
+
+def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -> list[QualifierRule]:
+    if input_json and data:
+        raise ValueError(
+            "Please choose either input_json to load data from json, " "or provide data as dict, but not both."
+        )
+
+    if input_json:
+        with open(input_json, "rb") as file:
+            data = json.load(file)
+
+    qualifiers = {
+        qualifier["qualifier"]: Qualifier(qualifier["qualifier"], qualifier["levels"])
+        for qualifier in data["qualifiers"]
+    }
+
+    return [
+        QualifierRule(
+            pattern=rule["pattern"],
+            level=_parse_level(rule["level"], qualifiers),
+            direction=_parse_direction(rule["direction"]),
+        )
+        for rule in data["rules"]
+    ]
+
+
 @Language.factory(
     name="clinlp_qualifier",
-    default_config={"phrase_matcher_attr": "TEXT", "qualifiers_attr": QUALIFIERS_ATTR},
+    default_config={"phrase_matcher_attr": "TEXT", "qualifiers_attr": QUALIFIERS_ATTR, "rules": None},
     requires=["doc.sents", "doc.ents"],
 )
 class QualifierMatcher:
-    def __init__(self, nlp: Language, name: str, phrase_matcher_attr: str, qualifiers_attr: str):
+    def __init__(
+        self,
+        nlp: Language,
+        name: str,
+        phrase_matcher_attr: str,
+        qualifiers_attr: str,
+        rules: Optional[list[QualifierRule]] = None,
+    ):
         self.qualifiers_attr = qualifiers_attr
         Span.set_extension(name=qualifiers_attr, default=None)
 
         self._nlp = nlp
-
         self.name = name
-        self.rules = {}
 
         self._matcher = Matcher(self._nlp.vocab, validate=True)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
+
+        self.rules = {}
+
+        if rules:
+            self.add_rules(rules)
 
     def add_rule(self, rule: QualifierRule):
         rule_key = f"rule_{len(self.rules)}"
@@ -86,6 +136,13 @@ class QualifierMatcher:
 
         else:
             raise ValueError(f"Don't know how to process QualifierRule with pattern of type {type(rule.pattern)}")
+
+    def add_rules(self, rules: list[QualifierRule]):
+        for rule in rules:
+            self.add_rule(rule)
+
+    def __len__(self):
+        return len(self.rules)
 
     @staticmethod
     def _get_sentences_having_entity(doc: Doc) -> Iterator[Span]:
@@ -165,6 +222,8 @@ class QualifierMatcher:
 
             for match_id, start, end in matches:
                 rule = self._get_rule_from_match_id(match_id)
+
+                # spacy Matcher handles offset differently than PhraseMatcher, when applying the matcher to a sentence
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
                 pattern = MatchedQualifierPattern(
