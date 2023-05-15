@@ -28,7 +28,7 @@ class QualifierRuleDirection(Enum):
 
 @dataclass
 class QualifierRule:
-    pattern: Union[str, list[str]]
+    pattern: Union[str, list[dict[str, str]]]
     level: Qualifier
     direction: QualifierRuleDirection
 
@@ -74,7 +74,7 @@ def _parse_direction(direction: str) -> QualifierRuleDirection:
 def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -> list[QualifierRule]:
     if input_json and data:
         raise ValueError(
-            "Please choose either input_json to load data from json, " "or provide data as dict, but not both."
+            "Please choose either input_json to load data from json, or provide data as dict, but not both."
         )
 
     if input_json:
@@ -106,12 +106,21 @@ class QualifierMatcher:
         self,
         nlp: Language,
         name: str,
-        phrase_matcher_attr: str,
-        qualifiers_attr: str,
+        phrase_matcher_attr: str = "TEXT",
+        qualifiers_attr: str = QUALIFIERS_ATTR,
         rules: Optional[list[QualifierRule]] = None,
     ):
         self.qualifiers_attr = qualifiers_attr
-        Span.set_extension(name=qualifiers_attr, default=None)
+
+        if Span.has_extension(qualifiers_attr):
+            warnings.warn(
+                RuntimeWarning(
+                    f"The Span extension {qualifiers_attr} seems already present, please use something"
+                    f"else by specifying the qualifiers_attr keyword if this is not intended"
+                )
+            )
+
+        Span.set_extension(name=qualifiers_attr, default=None, force=True)
 
         self._nlp = nlp
         self.name = name
@@ -210,6 +219,9 @@ class QualifierMatcher:
     def __call__(self, doc: Doc):
         if len(doc.ents) == 0:
             return doc
+
+        if len(self.rules) == 0:
+            raise RuntimeError("Cannot match qualifiers without any QualifierRule.")
 
         for sentence in self._get_sentences_having_entity(doc):
             with warnings.catch_warnings():
