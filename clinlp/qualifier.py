@@ -112,6 +112,7 @@ class QualifierMatcher:
     ):
         self.qualifiers_attr = qualifiers_attr
 
+        # TODO: Check if this is the right way to do this?
         if Span.has_extension(qualifiers_attr):
             warnings.warn(
                 RuntimeWarning(
