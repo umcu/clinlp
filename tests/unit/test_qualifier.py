@@ -16,7 +16,7 @@ mock_qualifier = Qualifier("MOCK", ["MOCK_1", "MOCK_2"])
 mock_doc = Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
-class TestQualifier:
+class TestUnitQualifier:
     def test_qualifier(self):
         q = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"])
 
@@ -24,7 +24,7 @@ class TestQualifier:
         assert q["NEGATED"]
 
 
-class TestQualifierRuleDirection:
+class UnitTestQualifierRuleDirection:
     def test_qualifier_rule_direction_create(self):
         assert QualifierRuleDirection.PRECEDING
         assert QualifierRuleDirection.FOLLOWING
@@ -32,7 +32,7 @@ class TestQualifierRuleDirection:
         assert QualifierRuleDirection.TERMINATION
 
 
-class TestQualifierRule:
+class UnitTestQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
         level = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
@@ -56,7 +56,7 @@ class TestQualifierRule:
         assert qr.direction == direction
 
 
-class TestMatchedQualifierPattern:
+class UnitTestMatchedQualifierPattern:
     def test_create_matched_qualifier_pattern(self):
         rule = QualifierRule(pattern="_", level=mock_qualifier.MOCK_1, direction=QualifierRuleDirection.PRECEDING)
         start = 0
@@ -107,7 +107,7 @@ class TestMatchedQualifierPattern:
         assert mqp.scope == (0, 2)
 
 
-class TestLoadRules:
+class UnitTestLoadRules:
     def test_parse_level(self):
         level = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}

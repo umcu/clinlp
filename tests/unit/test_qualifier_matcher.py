@@ -8,7 +8,7 @@ ruler = nlp.add_pipe("entity_ruler")
 ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
 
 
-class TestQualifierMatcher:
+class TestUnitQualifierMatcher:
     def test_create_qualifier_matcher(self):
         data = {
             "qualifiers": [

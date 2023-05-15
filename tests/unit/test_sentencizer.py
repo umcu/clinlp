@@ -1,4 +1,3 @@
-import json
 from unittest.mock import patch
 
 import spacy
@@ -16,19 +15,9 @@ def get_mock_tokens(texts: list[str]):
     return [MockToken(text) for text in texts]
 
 
-class TestClinlpSentencizer:
+class TestUnitClinlpSentencizer:
     def test_make_sentencizer(self):
         _ = make_sentencizer(spacy.blank("nl"), name="_")
-
-    def test_default_clinlp_sentencizer_examples(self):
-        sentencizer = ClinlpSentencizer()
-
-        with open("tests/data/sentencizer_cases.json", "rb") as file:
-            data = json.load(file)["data"]
-
-        for example in data:
-            tokens = get_mock_tokens(example["tokens"])
-            assert sentencizer.predict(tokens) == example["sentence_starts"]
 
     def test_clinlp_sentencizer_predict_1(self):
         sentencizer = ClinlpSentencizer(sent_end_chars=[], sent_start_punct=[])

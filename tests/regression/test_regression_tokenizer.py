@@ -5,10 +5,7 @@ import spacy
 from clinlp.tokenizer import make_tokenizer
 
 
-class TestTokenizer:
-    def test_create_tokenizer(self):
-        _ = make_tokenizer(spacy.blank("nl"))
-
+class TestTokenizerRegression:
     def test_tokenize_cases(self):
         tokenizer = make_tokenizer(spacy.blank("nl"))
 

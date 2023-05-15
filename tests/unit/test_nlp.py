@@ -1,7 +1,7 @@
 from clinlp.clinlp import create_model
 
 
-class TestCreateModel:
+class TestUnitCreateModel:
     def test_create_model(self):
         _ = create_model()
 
