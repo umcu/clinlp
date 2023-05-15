@@ -1,0 +1,594 @@
+{
+  "examples": [
+    {
+      "text": "2004 poli interne vanwege ENTITY.",
+      "ents": [
+        {
+          "start": 4,
+          "end": 5,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Geen ENTITY klachten; niet ENTITY.",
+      "ents": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Gaat pas slapen als hij ENTITY is.",
+      "ents": [
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Bij kliniek sinds [DATUM-1] jaar continue en toenemende ENTITY in de benen",
+      "ents": [
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "2022 sept gastroscopie: 11 cm van de ENTITY ENTITY",
+      "ents": [
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "resp: geen ENTITY, kan krachtig ENTITY",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        },
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Gezien geen aanwijzingen voor cardiologische oorzaak thoracale ENTITY, geen poliklinische follow-up",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Patiënt werd op [DATUM-10] opgenomen via de SEH in verband met ENTITY",
+      "ents": [
+        {
+          "start": 11,
+          "end": 12,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (ENTITY, ENTITY of andere gezondheidsproblemen)?",
+      "ents": [
+        {
+          "start": 11,
+          "end": 12,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 13,
+          "end": 14,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "S: Dhr heeft geen ENTITY geuit. ",
+      "ents": [
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Heden wel mild macrocytaire ENTITY, zonder zichtbaar ENTITY. ",
+      "ents": [
+        {
+          "start": 4,
+          "end": 5,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Interventieradioloog gebeld, nagaan post renale ENTITY?",
+      "ents": [
+        {
+          "start": 6,
+          "end": 7,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "S1S2, geen ENTITY, HA rond 70/min ",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "vanochtend jammerig/ oncomfortabel, onduidelijk of dit ENTITY/ onbekendheid vpk is ",
+      "ents": [
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "2022: milde ENTITY infcet (ENTITY zonder ENTITY of ENTITY).",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        },
+        {
+          "start": 6,
+          "end": 7,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL",
+            "Negation.NEGATED"
+          ]
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL",
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Dochter van patiente heeft ook vergelijkbare klachten van ENTITY en ENTITY. ",
+      "ents": [
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Experiencer.OTHER"
+          ]
+        },
+        {
+          "start": 10,
+          "end": 11,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Experiencer.OTHER"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Nuchter, niet gespuugd of ENTITY geweest. ",
+      "ents": [
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL",
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Extremiteiten: slanke, soepele ENTITY, geen ENTITY",
+      "ents": [
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 8,
+          "end": 9,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "U kan nog een paar dagen last hebben van ENTITY.",
+      "ents": [
+        {
+          "start": 9,
+          "end": 10,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Positieve ENTITY maar geen ENTITY.",
+      "ents": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Overname [INSTELLING-1] verdenking ENTITY",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Er zou een erfelijke vorm van ENTITY in de familie zitten, hier wordt patiënte nog op getest.",
+      "ents": [
+        {
+          "start": 6,
+          "end": 7,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "kan goed op de geopereerde kant liggen, dan geen ENTITY.",
+      "ents": [
+        {
+          "start": 10,
+          "end": 11,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL",
+            "Negation.NEGATED"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Familie anamnese: broer t-cel ENTITY dunnedarm ENTITY gerelateerd",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Experiencer.OTHER"
+          ]
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Experiencer.OTHER"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Ook een keer ENTITY en ENTITY gelaat gehad in 2014, weet niet welke kant. ",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Temporality.HISTORICAL"
+          ]
+        }
+      ]
+    },
+    {
+      "text": "Mw voelt zich nog beroerd, veel ENTITY li flank merkt weinig verbetering.",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "In rust hijgt hij van de ENTITY.",
+      "ents": [
+        {
+          "start": 6,
+          "end": 7,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "CRT-D drager in verband met ENTITY bij ENTITY totaal AV",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "LO/ Alg ind: niet acuut ENTITY, helder en ENTITY",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        },
+        {
+          "start": 11,
+          "end": 12,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "Uiteindelijk is het fraai gelukt om de ENTITY macroscopisch compleet te verwijderen.",
+      "ents": [
+        {
+          "start": 7,
+          "end": 8,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "Hij is motorisch ENTITY en snel afgeleid.",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "Indicatie: analyse ENTITY, elder geduid als bij ENTITY.",
+      "ents": [
+        {
+          "start": 3,
+          "end": 4,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 9,
+          "end": 10,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "Mw is ENTITY aanwezig, moe na het familiebezoek ",
+      "ents": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "Exp: ENTITY en ENTITY antalgisch beperkt",
+      "ents": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 4,
+          "end": 5,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "DD recente ENTITY in peripelviene ENTITY",
+      "ents": [
+        {
+          "start": 2,
+          "end": 3,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "geen ENTITY, wel meer ENTITY overdag, komt door haar spierziekte ENTITY",
+      "ents": [
+        {
+          "start": 1,
+          "end": 2,
+          "text": "ENTITY",
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
+        },
+        {
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": []
+        },
+        {
+          "start": 12,
+          "end": 13,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    }
+  ]
+}
