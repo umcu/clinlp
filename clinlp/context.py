@@ -10,7 +10,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-QUALIFIERS_ATTR = 'qualifiers'
+QUALIFIERS_ATTR = "qualifiers"
 
 
 class Qualifier(Enum):
@@ -58,12 +58,11 @@ class MatchedQualifierPattern:
 
 @Language.factory(
     name="clinlp_qualifier",
-    default_config={'phrase_matcher_attr': 'TEXT', 'qualifiers_attr': QUALIFIERS_ATTR},
-    requires=["doc.sents", "doc.ents"]
+    default_config={"phrase_matcher_attr": "TEXT", "qualifiers_attr": QUALIFIERS_ATTR},
+    requires=["doc.sents", "doc.ents"],
 )
 class QualifierMatcher:
     def __init__(self, nlp: Language, name: str, phrase_matcher_attr: str, qualifiers_attr: str):
-
         self.qualifiers_attr = qualifiers_attr
         Span.set_extension(name=qualifiers_attr, default=None)
 
@@ -178,7 +177,6 @@ class QualifierMatcher:
             match_scopes = self._compute_match_scopes(matched_patterns)
 
             for ent in sentence.ents:
-
                 qualifiers = set()
 
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
