@@ -3,14 +3,14 @@ import warnings
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
-from typing import Generator, Union
+from typing import Iterator, Union
 
 import intervaltree as ivt
 from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-Span.set_extension(name="qualifiers", default=None)
+QUALIFIERS_ATTR = 'qualifiers'
 
 
 class Qualifier(Enum):
@@ -28,7 +28,7 @@ class QualifierRuleDirection(Enum):
 class QualifierRule:
     pattern: Union[str, list[str]]
     level: Qualifier
-    direction: Qualifier
+    direction: QualifierRuleDirection
 
 
 class MatchedQualifierPattern:
@@ -45,9 +45,6 @@ class MatchedQualifierPattern:
         elif self.rule.direction == QualifierRuleDirection.FOLLOWING:
             self.scope = (sentence.start, self.end)
 
-        else:
-            raise ValueError(f"Don't know how to set initial scope of match with rule direction {self.rule.direction}")
-
     def __repr__(self):
         return {
             "start": self.start,
@@ -59,9 +56,17 @@ class MatchedQualifierPattern:
         }.__repr__()
 
 
-@Language.factory(name="clinlp_qualifier", requires=["doc.sents"])
+@Language.factory(
+    name="clinlp_qualifier",
+    default_config={'phrase_matcher_attr': 'TEXT', 'qualifiers_attr': QUALIFIERS_ATTR},
+    requires=["doc.sents", "doc.ents"]
+)
 class QualifierMatcher:
-    def __init__(self, nlp: Language, name: str, phrase_matcher_attr: str = "TEXT"):
+    def __init__(self, nlp: Language, name: str, phrase_matcher_attr: str, qualifiers_attr: str):
+
+        self.qualifiers_attr = qualifiers_attr
+        Span.set_extension(name=qualifiers_attr, default=None)
+
         self._nlp = nlp
 
         self.name = name
@@ -84,7 +89,7 @@ class QualifierMatcher:
             raise ValueError(f"Don't know how to process QualifierRule with pattern of type {type(rule.pattern)}")
 
     @staticmethod
-    def _get_sentences_having_entity(doc: Doc) -> Generator[Span]:
+    def _get_sentences_having_entity(doc: Doc) -> Iterator[Span]:
         return (sent for sent in doc.sents if len(sent.ents) > 0)
 
     def _get_rule_from_match_id(self, match_id: int) -> QualifierRule:
@@ -118,9 +123,7 @@ class QualifierMatcher:
 
         return scopes
 
-    def _compute_match_scopes(
-        self, matched_patterns: list[MatchedQualifierPattern], sentence: Span
-    ) -> ivt.IntervalTree:
+    def _compute_match_scopes(self, matched_patterns: list[MatchedQualifierPattern]) -> ivt.IntervalTree:
         match_scopes = ivt.IntervalTree()
 
         for _, level_matches in self._group_matched_patterns(matched_patterns).items():
@@ -133,7 +136,6 @@ class QualifierMatcher:
 
             # Following, preceding
             for match in itertools.chain(preceding_, following_):
-                match.set_initial_scope(sentence)
                 level_matches[match.start : match.end] = match
 
             # Pseudo
@@ -166,18 +168,22 @@ class QualifierMatcher:
                 rule = self._get_rule_from_match_id(match_id)
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
-                matched_patterns.append(
-                    MatchedQualifierPattern(
-                        rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
-                    )
+                pattern = MatchedQualifierPattern(
+                    rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
                 )
 
-            match_scopes = self._compute_match_scopes(matched_patterns, sentence)
+                pattern.set_initial_scope(sentence)
+                matched_patterns.append(pattern)
+
+            match_scopes = self._compute_match_scopes(matched_patterns)
 
             for ent in sentence.ents:
-                ent._.qualifiers = set()
+
+                qualifiers = set()
 
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
-                    ent._.qualifiers.add(str(match_interval.data.rule.level))
+                    qualifiers.add(str(match_interval.data.rule.level))
+
+                ent._.set(self.qualifiers_attr, qualifiers)
 
         return doc
