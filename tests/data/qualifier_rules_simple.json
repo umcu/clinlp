@@ -1,0 +1,30 @@
+{
+  "qualifiers": [
+    {
+      "qualifier": "Negation",
+      "levels": [
+        "AFFIRMED",
+        "NEGATED"
+      ]
+    },
+    {
+      "qualifier": "Temporality",
+      "levels": [
+        "CURRENT",
+        "HISTORICAL"
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "pattern": "geen",
+      "level": "Negation.NEGATED",
+      "direction": "preceding"
+    },
+    {
+      "pattern": "weken geleden",
+      "level": "Temporality.HISTORICAL",
+      "direction": "following"
+    }
+  ]
+}
