@@ -1,11 +1,12 @@
 import spacy.lang.nl.tokenizer_exceptions
 import spacy.lang.tokenizer_exceptions
-from spacy.lang.nl import Dutch
+import spacy.lang.punctuation
+import spacy.lang.char_classes
 from spacy.language import BaseDefaults, Language
 from spacy.symbols import ORTH
 from spacy.util import update_exc
 
-CLINLP_PREFIXES = [
+CLINLP_ABBREVIATIONS = [
     "dhr.",
     "dr.",
     "dh.",
@@ -23,9 +24,6 @@ CLINLP_PREFIXES = [
     "mw.",
     "prof.",
     "pt.",
-]
-
-CLINLP_ABBREVIATIONS = [
     "1.",
     "2.",
     "3.",
@@ -138,9 +136,70 @@ CLINLP_UNITS = [
     "µm",
     "mmgh",
     "mmHg",
+    "km",
+    "km²",
+    "km³",
+    "m",
+    "m²",
+    "m³",
+    "dm",
+    "dm²",
+    "dm³",
+    "cm",
+    "cm²",
+    "cm³",
+    "mm",
+    "mm²",
+    "mm³",
+    "ha",
+    "µm",
+    "nm",
+    "yd",
+    "in",
+    "ft",
+    "kg",
+    "g",
+    "mg",
+    "µg",
+    "t",
+    "lb",
+    "oz",
+    "m/s",
+    "km/h",
+    "kmh",
+    "mph",
+    "hPa",
+    "Pa",
+    "mbar",
+    "mb",
+    "MB",
+    "kb",
+    "KB",
+    "gb",
+    "GB",
+    "tb",
+    "TB",
+    "T",
+    "G",
+    "M",
+    "K",
+    "%",
+    "км",
+    "км²",
+    "км³",
+    "м",
+    "м²",
+    "м³",
+    "см",
+    "см²",
+    "см³",
+    "мм",
+    "мм²",
+    "мм³",
+    "нм",
 ]
 
-CLINLP_BASE_EXCEPTIONS = {
+CLINLP_TOKENIZER_EXCEPTIONS = {
     "\n": [{ORTH: "\n"}],
     "\r": [{ORTH: "\r"}],
     "\t": [{ORTH: "\t"}],
@@ -158,16 +217,17 @@ CLINLP_BASE_EXCEPTIONS = {
     "xdd": [{ORTH: "x"}, {ORTH: "dd"}],
 }
 
+ALPHA_LOWER = 'a-z'
+ALPHA_UPPER = 'A_Z'
+ALPHA = 'a-zA-Z'
 
 def _get_tokenizer_exceptions():
-    tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
+    tokeizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
 
     for emoticon in spacy.lang.tokenizer_exceptions.emoticons:
-        del tokenizer_exceptions[emoticon]
+        del tokeizer_exceptions[emoticon]
 
-    tokenizer_exceptions = update_exc(tokenizer_exceptions, CLINLP_BASE_EXCEPTIONS)
-
-    abbreviations = spacy.lang.nl.tokenizer_exceptions.abbrevs + CLINLP_ABBREVIATIONS + CLINLP_PREFIXES
+    abbreviations = spacy.lang.nl.tokenizer_exceptions.abbrevs + CLINLP_ABBREVIATIONS
 
     abbr_transforms = [
         lambda x: x,
@@ -177,103 +237,90 @@ def _get_tokenizer_exceptions():
 
     for abbr_transform in abbr_transforms:
         abbr_update = {abbr_transform(a): [{ORTH: abbr_transform(a)}] for a in abbreviations}
-        tokenizer_exceptions = update_exc(tokenizer_exceptions, abbr_update)
+        tokeizer_exceptions = update_exc(tokeizer_exceptions, abbr_update)
 
-    return tokenizer_exceptions
+    tokeizer_exceptions = update_exc(tokeizer_exceptions, CLINLP_TOKENIZER_EXCEPTIONS)
+
+    return tokeizer_exceptions
 
 
 def _get_tokenizer_prefixes():
-    prefixes = Dutch.Defaults.prefixes.copy()
 
-    # Punctuation
-    prefixes.remove(r"`")
-    prefixes.append(r"/")
-    prefixes.append(r"-")
-    prefixes.append(r"\+")
-    prefixes.append(r"~")
-    prefixes.append(r",")
+    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + [',,', "§", "%", "=", "—", "–", r"\+(?![0-9])", "/", "-" ,r"\+", "~", ","]
+    _punct.remove(r"\[")
 
-    # Deduce tags
-    prefixes.remove(r"\[")
+    _ellipses = spacy.lang.punctuation.LIST_ELLIPSES.copy()
+
+    _quotes = spacy.lang.punctuation.LIST_QUOTES.copy()
+    _quotes.remove("`")
+
+    _currencies = spacy.lang.punctuation.LIST_CURRENCY.copy()
+
+    prefixes = _punct + _ellipses + _quotes + _currencies
+
     prefixes.append(r"\[(?![A-Z]{3,}-)")
     prefixes.append(r"\S+(?=\[[A-Z]{3,}-)")
-
-    # x
     prefixes.append(r"x(?=[0-9]+)")
-
-    # `22
     prefixes.append(r"`(?=[0-9])")
-
-    # units
     prefixes.append(r"([0-9]{,5}(\.|,))?[0-9]{,4}" + f"(?=({'|'.join(CLINLP_UNITS)}))")
-
-    # newlines, missed whitespaces
     prefixes.append(r"\s")
 
     return prefixes
 
 
 def _get_tokenizer_infixes():
-    infixes = Dutch.Defaults.infixes.copy()
 
-    infixes = [item.replace(r"`", "") for item in infixes]
-    infixes.append(r"/")
-    infixes.append(r"\+")
-    infixes.append(r"=")
-    infixes.append(r":")
-    infixes.append(r"&")
-    infixes.append(r";")
-    infixes.append(r"\*")
-    infixes.append(r"<")
-    infixes.append(r"\(")
-    infixes.append(r"\)")
+    _punct = ['/', r'\+', '=', ':', '&', ';', r'\*', '<', r'\(', r'\)']
+
+    _quotes = spacy.lang.punctuation.CONCAT_QUOTES
+    _quotes = _quotes.replace("`", "")
+    _quotes = _quotes.replace(r"\'", "")
+
+    _ellipses = spacy.lang.punctuation.LIST_ELLIPSES.copy()
+
+    infixes = _punct + _ellipses
+
+    infixes.append(r"(?<=[{}])\.(?=[{}])".format(ALPHA_LOWER, ALPHA_UPPER))
+    infixes.append(r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA))
+    infixes.append(r'(?<=[{a}"])[:<>=](?=[{a}])'.format(a=ALPHA))
+    infixes.append(r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA))
+    infixes.append(r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q=_quotes))
+    infixes.append(r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA))
 
     infixes.append(r"-(?![0-9]{1,2}\])")
-
-    # x
     infixes.append(r"(?<=[0-9])x(?=[0-9])")
-
-    # E, ^
     infixes.append(r"(?<=10)E(?=\d)")
     infixes.append(r"\^")
-
-    # newlines, missed whitespaces
     infixes.append(r"\s")
-
-    # doseringen
     infixes.append(r"(?<=[0-9])(x?d?d)(?=[0-9])")
 
     return infixes
 
 
 def _get_tokenizer_suffixes():
-    suffixes = Dutch.Defaults.suffixes.copy()
 
-    suffixes.append(r"/")
-    suffixes.append(r"-")
-    suffixes.append(r"=")
-    suffixes.append(r"%")
-    suffixes.append(r"\+")
-    suffixes.append(r"~")
+    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + ['/', '-', '=', '%', r'\+', '~', "''", "—", "–"]
+    _punct.remove(r"\]")
+    _quotes = spacy.lang.punctuation.LIST_QUOTES.copy()
+    _concat_quotes = spacy.lang.punctuation.CONCAT_QUOTES
+    _concat_punct = spacy.lang.punctuation.PUNCT
+    _ellipses = spacy.lang.punctuation.LIST_ELLIPSES.copy()
+    _currency = spacy.lang.char_classes.CURRENCY
 
-    # Deduce tags
-    suffixes.remove(r"\]")
+    suffixes = _punct + _quotes + _ellipses
+
+    suffixes.append(r"(?<=[0-9])\+")
+    suffixes.append(r"(?<=°[FfCcKk])\.")
+    suffixes.append(r"(?<=[0-9])(?:{c})".format(c=_currency))
+    suffixes.append(r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(al=ALPHA_LOWER, e=r"%²\-\+", q=_concat_quotes, p=_concat_punct))
+    suffixes.append(r"(?<=[{au}][{au}])\.".format(au=ALPHA_UPPER))
+
     suffixes.append(r"(?<=[0-9]\])\S+")
     suffixes.append(r"(?<!([A-Z]-\d|-\d\d))\]")  # tricky one
-
-    # x
     suffixes.append(r"(?<=[0-9])x")
-
-    # units
     suffixes.append(r"(?<=[0-9])" + f"({'|'.join(CLINLP_UNITS)})")
-
-    # newlines, missed whitespaces
     suffixes.append(r"\s")
-
-    # doseringen
     suffixes.append(r"(?<=[0-9])d?d")
-
-    # rangtelwoord
     suffixes.append(r"(?<=[0-9])(e|de|ste)")
 
     return suffixes
