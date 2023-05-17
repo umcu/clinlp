@@ -1,11 +1,11 @@
 from unittest.mock import patch
 
+import pytest
 import spacy
 
 import clinlp
 from clinlp.sentencizer import ClinlpSentencizer
 
-import pytest
 
 class MockToken:
     def __init__(self, text: str):
@@ -16,9 +16,10 @@ class MockToken:
 def get_mock_tokens(texts: list[str]):
     return [MockToken(text) for text in texts]
 
+
 @pytest.fixture
 def nlp():
-    return spacy.blank('clinlp')
+    return spacy.blank("clinlp")
 
 
 class TestUnitClinlpSentencizer:

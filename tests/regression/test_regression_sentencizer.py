@@ -1,7 +1,9 @@
 import json
 
-from clinlp.sentencizer import ClinlpSentencizer
 import spacy
+
+from clinlp.sentencizer import ClinlpSentencizer
+
 
 class MockToken:
     def __init__(self, text: str):
