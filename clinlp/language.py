@@ -218,7 +218,7 @@ CLINLP_TOKENIZER_EXCEPTIONS = {
 }
 
 ALPHA_LOWER = 'a-z'
-ALPHA_UPPER = 'A_Z'
+ALPHA_UPPER = 'A-Z'
 ALPHA = 'a-zA-Z'
 
 def _get_tokenizer_exceptions():
