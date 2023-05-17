@@ -1,7 +1,7 @@
-import spacy.lang.nl.tokenizer_exceptions
-import spacy.lang.tokenizer_exceptions
-import spacy.lang.punctuation
 import spacy.lang.char_classes
+import spacy.lang.nl.tokenizer_exceptions
+import spacy.lang.punctuation
+import spacy.lang.tokenizer_exceptions
 from spacy.language import BaseDefaults, Language
 from spacy.symbols import ORTH
 from spacy.util import update_exc
@@ -217,15 +217,16 @@ CLINLP_TOKENIZER_EXCEPTIONS = {
     "xdd": [{ORTH: "x"}, {ORTH: "dd"}],
 }
 
-ALPHA_LOWER = 'a-z'
-ALPHA_UPPER = 'A-Z'
-ALPHA = 'a-zA-Z'
+ALPHA_LOWER = "a-z"
+ALPHA_UPPER = "A-Z"
+ALPHA = "a-zA-Z"
+
 
 def _get_tokenizer_exceptions():
-    tokeizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
+    tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
 
     for emoticon in spacy.lang.tokenizer_exceptions.emoticons:
-        del tokeizer_exceptions[emoticon]
+        del tokenizer_exceptions[emoticon]
 
     abbreviations = spacy.lang.nl.tokenizer_exceptions.abbrevs + CLINLP_ABBREVIATIONS
 
@@ -237,16 +238,28 @@ def _get_tokenizer_exceptions():
 
     for abbr_transform in abbr_transforms:
         abbr_update = {abbr_transform(a): [{ORTH: abbr_transform(a)}] for a in abbreviations}
-        tokeizer_exceptions = update_exc(tokeizer_exceptions, abbr_update)
+        tokenizer_exceptions = update_exc(tokenizer_exceptions, abbr_update)
 
-    tokeizer_exceptions = update_exc(tokeizer_exceptions, CLINLP_TOKENIZER_EXCEPTIONS)
+    tokenizer_exceptions = update_exc(tokenizer_exceptions, CLINLP_TOKENIZER_EXCEPTIONS)
 
-    return tokeizer_exceptions
+    return tokenizer_exceptions
 
 
 def _get_tokenizer_prefixes():
-
-    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + [',,', "§", "%", "=", "—", "–", r"\+(?![0-9])", "/", "-" ,r"\+", "~", ","]
+    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + [
+        ",,",
+        "§",
+        "%",
+        "=",
+        "—",
+        "–",
+        r"\+(?![0-9])",
+        "/",
+        "-",
+        r"\+",
+        "~",
+        ",",
+    ]
     _punct.remove(r"\[")
 
     _ellipses = spacy.lang.punctuation.LIST_ELLIPSES.copy()
@@ -269,8 +282,7 @@ def _get_tokenizer_prefixes():
 
 
 def _get_tokenizer_infixes():
-
-    _punct = ['/', r'\+', '=', ':', '&', ';', r'\*', '<', r'\(', r'\)']
+    _punct = ["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)"]
 
     _quotes = spacy.lang.punctuation.CONCAT_QUOTES
     _quotes = _quotes.replace("`", "")
@@ -298,8 +310,7 @@ def _get_tokenizer_infixes():
 
 
 def _get_tokenizer_suffixes():
-
-    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + ['/', '-', '=', '%', r'\+', '~', "''", "—", "–"]
+    _punct = spacy.lang.punctuation.LIST_PUNCT.copy() + ["/", "-", "=", "%", r"\+", "~", "''", "—", "–"]
     _punct.remove(r"\]")
     _quotes = spacy.lang.punctuation.LIST_QUOTES.copy()
     _concat_quotes = spacy.lang.punctuation.CONCAT_QUOTES
@@ -312,7 +323,9 @@ def _get_tokenizer_suffixes():
     suffixes.append(r"(?<=[0-9])\+")
     suffixes.append(r"(?<=°[FfCcKk])\.")
     suffixes.append(r"(?<=[0-9])(?:{c})".format(c=_currency))
-    suffixes.append(r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(al=ALPHA_LOWER, e=r"%²\-\+", q=_concat_quotes, p=_concat_punct))
+    suffixes.append(
+        r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(al=ALPHA_LOWER, e=r"%²\-\+", q=_concat_quotes, p=_concat_punct)
+    )
     suffixes.append(r"(?<=[{au}][{au}])\.".format(au=ALPHA_UPPER))
 
     suffixes.append(r"(?<=[0-9]\])\S+")
