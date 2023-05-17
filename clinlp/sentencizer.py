@@ -3,6 +3,7 @@
 from typing import Optional
 
 import spacy.tokens
+from spacy.language import Language
 
 
 @spacy.language.Language.factory(
@@ -10,21 +11,13 @@ import spacy.tokens
     assigns=["token.is_sent_start", "doc.sents"],
     default_config={"sent_end_chars": None, "sent_start_punct": None},
 )
-def make_sentencizer(
-    nlp: spacy.language.Language,
-    name: str,
-    sent_end_chars: Optional[list[str]] = None,
-    sent_start_punct: Optional[list[str]] = None,
-):
-    return ClinlpSentencizer(name, sent_end_chars=None, sent_start_punct=None)
-
-
 class ClinlpSentencizer(spacy.pipeline.Pipe):
     default_sent_end_chars = [".", "!", "?", "\n", "\r"]
     default_sent_start_punct = ["-", "*", "[", "("]
 
     def __init__(
         self,
+        nlp: Language,
         name="clinlp_sentencizer",
         *,
         sent_end_chars: Optional[list[str]] = None,

@@ -1,14 +1,17 @@
 import json
 
 import pytest
+import spacy
 
-from clinlp import create_model
+import clinlp
+from clinlp import sentencizer
 from clinlp.qualifier import load_rules
 
 
 @pytest.fixture()
 def nlp():
-    nlp = create_model()
+    nlp = spacy.blank("clinlp")
+    nlp.add_pipe("clinlp_sentencizer")
 
     # ruler
     ruler = nlp.add_pipe("entity_ruler")
