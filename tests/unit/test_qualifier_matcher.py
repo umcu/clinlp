@@ -1,9 +1,12 @@
 import pytest
+import spacy
 
-from clinlp import create_model
+import clinlp
+import clinlp.sentencizer
 from clinlp.qualifier import QualifierMatcher, load_rules
 
-nlp = create_model()
+nlp = spacy.blank("clinlp")
+nlp.add_pipe("clinlp_sentencizer")
 ruler = nlp.add_pipe("entity_ruler")
 ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
 

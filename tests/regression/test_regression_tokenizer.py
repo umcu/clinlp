@@ -2,12 +2,12 @@ import json
 
 import spacy
 
-from clinlp.tokenizer import make_tokenizer
+import clinlp
 
 
 class TestTokenizerRegression:
     def test_tokenize_cases(self):
-        tokenizer = make_tokenizer(spacy.blank("nl"))
+        tokenizer = spacy.blank("clinlp").tokenizer
 
         with open("tests/data/tokenizer_cases.json", "rb") as file:
             data = json.load(file)["data"]
