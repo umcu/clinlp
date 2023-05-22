@@ -24,4 +24,4 @@ class TestClinlpSentencizerRegression:
 
         for example in data:
             tokens = get_mock_tokens(example["tokens"])
-            assert sentencizer.predict(tokens) == example["sentence_starts"]
+            assert sentencizer._get_sentence_starts(tokens) == example["sentence_starts"]
