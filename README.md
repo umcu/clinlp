@@ -76,7 +76,7 @@ for ent in doc.ents:
 
 ### Introduction
 
-`clinlp` is built on top of spacy, a widely used library for Natural Language Processing. Before getting started with `clinlp`, it may be useful to read [spaCy 101: Everything you need to know (~10 mins)](https://spacy.io/usage/spacy-101). Main things to know are that spacy consists of a tokenizer (breaks a text up into small pieces, i.e. words), and various components that further process the text. 
+`clinlp` is built on top of spaCy, a widely used library for Natural Language Processing. Before getting started with `clinlp`, it may be useful to read [spaCy 101: Everything you need to know (~10 mins)](https://spacy.io/usage/spacy-101). Main things to know are that spaCy consists of a tokenizer (breaks a text up into small pieces, i.e. words), and various components that further process the text. 
 
 Currently, `clinlp` offers the following components, tailored to Dutch Clinical text, further discussed below: 
 
@@ -112,7 +112,7 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the Spacy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second only also accepts [Spacy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). 
+Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second only also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
 
 For instance, a matcher that helps recognize COVID19 symptoms:
 
@@ -131,17 +131,38 @@ for term_description, terms in terms.items():
     ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
 ```
 
-For more info, it's useful to checkout these Spacy documentation pages:
+For more info, it's useful to check out these spaCy documentation pages:
 * [Rule based matching](https://spacy.io/usage/rule-based-matching)
-* [[Spacy API] Matcher](https://spacy.io/api/matcher)
-* [[Spacy API] PhraseMatcher](https://spacy.io/api/phrasematcher)
+* [[spaCy API] Matcher](https://spacy.io/api/matcher)
+* [[spaCy API] PhraseMatcher](https://spacy.io/api/phrasematcher)
 
 Note that the `DependencyMatcher` cannot be used, and neither are part of speech tags available, as no good models for determining this information for clinical text exist (yet).  
 
 ### Context detection
 
+After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) for this purpose. This algorithm is fairly accurate, and quite transparent and fast. Better solutions will hopefully be added to `clinlp` in the future. 
 
+A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
+```python
+nlp.add_pipe('clinlp_context_matcher')
+```
+
+A custom set of rules, including different types of qualifiers, can easily be defined. See `[clinlp/resources/psynlp_context_rules.json](clinlp/resources/psynlp_context_rules.json)` for an example, and load it as follows: 
+
+```python
+from clinlp.component.qualifier import parse_rules
+
+cm = nlp.add_pipe('clinlp_context_matcher', config={'default_rules': None})
+cm.add_rules(parse_rules('my_custom_rules.json'))
+```
+
+### Where to go from here
+
+We hope to extend `clinlp` with new functionality and more complete documentation in the near future. In the meantime, if any questions or problems arise, we recommend:
+
+* Checking the source code 
+* Getting in touch ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new)
 
 ## Principles and goals
 
