@@ -29,9 +29,15 @@ class Sentencizer:
         self.sent_start_punct = set(self.sent_start_punct)
 
     def _token_can_start_sent(self, token: spacy.tokens.Token) -> bool:
+        """
+        Determines whether a token can start a sentence
+        """
         return token.text[0].isalnum() or (token.text[0] in {"["}) or (token.text in self.sent_start_punct)
 
     def _token_can_end_sent(self, token: spacy.tokens.Token):
+        """
+        Determines whether a token can end a sentence
+        """
         return token.text in self.sent_end_chars
 
     def _get_sentence_starts(self, doc: spacy.tokens.Doc) -> list[bool]:
