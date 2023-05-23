@@ -2,7 +2,7 @@
 
 ![clinlp](media/clinlp.png)
 
-* :star: Performant and production-ready NLP pipelines for clinical text written in Dutch.
+* :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
 
@@ -10,7 +10,7 @@ Read our [principles and goals](#principles-and-goals), futher down :arrow_down:
 
 ## Contact and contributing
 
-`clinlp` is very much still being shaped, so if you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to contact us ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new)). We would be very happy to get in touch about your ideas and needs, whether its from a (end) user, engineering or clincal perspective, and formulate a roadmap with next steps together. 
+`clinlp` is very much still being shaped, so if you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to contact us ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new)). We would be very happy to get in touch about your ideas and needs, whether its from the perspective of an (end) user, engineer or clinician, and formulate a roadmap with next steps together. 
 
 ## Getting started
 
@@ -57,7 +57,7 @@ from spacy import displacy
 displacy.render(doc, style='ent')
 ```
 
-[![example_doc_render.png](media/example_doc_render.png)]
+![example_doc_render.png](media/example_doc_render.png)
 
 With relevant qualifiers:
 
@@ -67,10 +67,10 @@ for ent in doc.ents:
 
 ```
 
-11 14 `verlies van reuk` {'Temporality.HISTORICAL'}
-25 26 `kortademigheid` {'Negation.NEGATED'}
-33 34 `hoesten` {}
-37 38 `vermoeidheid` {}
+* `11` `14` `verlies van reuk` `{'Temporality.HISTORICAL'}`
+* `25` `26` `kortademigheid` `{'Negation.NEGATED'}`
+* `33` `34` `hoesten` `{}`
+* `37` `38` `vermoeidheid` `{}`
 
 ## Documentation
 
@@ -108,7 +108,7 @@ The sentence splitter can be added as follows:
 nlp.add_pipe('clinlp_sentencizer')
 ```
 
-It is designed to detect sentence boundaries, whenever a character that demarks a sentence ending begins (e.g. newline, period, question mark). It also correctly detects enumerations (e.g. starting with `-` or `*`). 
+It is designed to detect sentence boundaries in clinical text, whenever a character that demarks a sentence ending is matched (e.g. newline, period, question mark). It also correctly detects items in an enumerations (e.g. starting with `-` or `*`). 
 
 ### Entity matcher
 
@@ -139,6 +139,7 @@ For more info, it's useful to checkout these Spacy documentation pages:
 Note that the `DependencyMatcher` cannot be used, and neither are part of speech tags available, as no good models for determining this information for clinical text exist (yet).  
 
 ### Context detection
+
 
 
 
