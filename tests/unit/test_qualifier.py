@@ -6,8 +6,8 @@ from clinlp.component import Qualifier, QualifierRule, QualifierRuleDirection
 from clinlp.component.qualifier import (
     MatchedQualifierPattern,
     _parse_direction,
-    _parse_level,
-    load_rules,
+    _parse_qualifier,
+    parse_rules,
 )
 
 
@@ -46,7 +46,7 @@ class UnitTestQualifierRule:
         qr = QualifierRule(pattern, level, direction)
 
         assert qr.pattern == pattern
-        assert qr.level == level
+        assert qr.qualifier == level
         assert qr.direction == direction
 
     def test_create_qualifier_rule_2(self):
@@ -57,7 +57,7 @@ class UnitTestQualifierRule:
         qr = QualifierRule(pattern, level, direction)
 
         assert qr.pattern == pattern
-        assert qr.level == level
+        assert qr.qualifier == level
         assert qr.direction == direction
 
 
@@ -117,14 +117,14 @@ class UnitTestLoadRules:
         level = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
-        assert _parse_level(level, qualifiers) == mock_qualifier.MOCK_1
+        assert _parse_qualifier(level, qualifiers) == mock_qualifier.MOCK_1
 
     def test_parse_level_unhappy(self, mock_qualifier):
         level = "MOCK_MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
         with pytest.raises(ValueError):
-            _parse_level(level, qualifiers)
+            _parse_qualifier(level, qualifiers)
 
     def test_parse_direction(self):
         assert _parse_direction("preceding") == QualifierRuleDirection.PRECEDING
@@ -139,32 +139,32 @@ class UnitTestLoadRules:
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["weken geleden"], "level": "Temporality.HISTORICAL", "direction": "following"},
+                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": ["weken geleden"], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
 
-        rules = load_rules(data=data)
+        rules = parse_rules(data=data)
 
         assert len(rules) == 2
         assert rules[0].pattern == "geen"
-        assert str(rules[0].level) == "Negation.NEGATED"
+        assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "QualifierRuleDirection.PRECEDING"
         assert rules[1].pattern == "weken geleden"
-        assert str(rules[1].level) == "Temporality.HISTORICAL"
+        assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "QualifierRuleDirection.FOLLOWING"
 
     def test_load_rules_json(self):
-        rules = load_rules(input_json="tests/data/qualifier_rules_simple.json")
+        rules = parse_rules(input_json="tests/data/qualifier_rules_simple.json")
 
         assert len(rules) == 2
         assert rules[0].pattern == "geen"
-        assert str(rules[0].level) == "Negation.NEGATED"
+        assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "QualifierRuleDirection.PRECEDING"
         assert rules[1].pattern == "weken geleden"
-        assert str(rules[1].level) == "Temporality.HISTORICAL"
+        assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "QualifierRuleDirection.FOLLOWING"
 
     def test_load_rules_unhappy(self):
         with pytest.raises(ValueError):
-            load_rules(input_json="_.json", data={"a": "b"})
+            parse_rules(input_json="_.json", data={"a": "b"})

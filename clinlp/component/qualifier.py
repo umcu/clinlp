@@ -1,3 +1,6 @@
+""" Implements qualifier detection for entities. The Qualifier class is reusable. The other classes implement
+the context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002). """
+
 import itertools
 import json
 import re
@@ -29,7 +32,7 @@ class QualifierRuleDirection(Enum):
 @dataclass
 class QualifierRule:
     pattern: Union[str, list[dict[str, str]]]
-    level: Qualifier
+    qualifier: Qualifier
     direction: QualifierRuleDirection
 
 
@@ -53,29 +56,32 @@ class MatchedQualifierPattern:
             "end": self.end,
             "scope": self.scope,
             "rule.pattern": self.rule.pattern,
-            "rule.level": str(self.rule.level),
+            "rule.qualifier": str(self.rule.qualifier),
             "rule.direction": str(self.rule.direction),
         }.__repr__()
 
 
-def _parse_level(level: str, qualifiers: dict[str, Qualifier]) -> Qualifier:
-    if not re.match(r"\w+\.\w+", level):
-        raise ValueError(f"Cannot parse level {level}, please adhere to format QualifierClass.level")
+def _parse_qualifier(qualifier: str, qualifiers: dict[str, Qualifier]) -> Qualifier:
 
-    level_class, level = level.split(".")
+    match_regexp = r"\w+\.\w+"
 
-    return qualifiers[level_class][level]
+    if not re.match(match_regexp, qualifier):
+        raise ValueError(f"Cannot parse qualifier {qualifier}, please adhere to format "
+                         f"{match_regexp} (e.g. NegationQualifier.NEGATED)")
+
+    qualifier_class, qualifier = qualifier.split(".")
+
+    return qualifiers[qualifier_class][qualifier]
 
 
 def _parse_direction(direction: str) -> QualifierRuleDirection:
     return QualifierRuleDirection[direction.upper()]
 
 
-def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -> list[QualifierRule]:
+def parse_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -> list[QualifierRule]:
     if input_json and data:
-        raise ValueError(
-            "Please choose either input_json to load data from json, or provide data as dict, but not both."
-        )
+        raise ValueError("Please choose either input_json to load data from json, "
+                         "or provide data as dict, but not both.")
 
     if input_json:
         with open(input_json, "rb") as file:
@@ -89,10 +95,10 @@ def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) ->
     qualifier_rules = []
 
     for rule in data["rules"]:
-        level = _parse_level(rule["level"], qualifiers)
+        qualifier = _parse_qualifier(rule["qualifier"], qualifiers)
         direction = _parse_direction(rule["direction"])
 
-        qualifier_rules += [QualifierRule(pattern, level, direction) for pattern in rule["patterns"]]
+        qualifier_rules += [QualifierRule(pattern, qualifier, direction) for pattern in rule["patterns"]]
 
     return qualifier_rules
 
@@ -167,7 +173,7 @@ class QualifierMatcher:
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.level][matched_rule.rule.direction.name].append(matched_rule)
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction.name].append(matched_rule)
 
         return groups
 
@@ -193,28 +199,28 @@ class QualifierMatcher:
     def _compute_match_scopes(self, matched_patterns: list[MatchedQualifierPattern]) -> ivt.IntervalTree:
         match_scopes = ivt.IntervalTree()
 
-        for _, level_matches in self._group_matched_patterns(matched_patterns).items():
-            preceding_ = level_matches[QualifierRuleDirection.PRECEDING.name]
-            following_ = level_matches[QualifierRuleDirection.FOLLOWING.name]
-            pseudo_ = level_matches[QualifierRuleDirection.PSEUDO.name]
-            termination_ = level_matches[QualifierRuleDirection.TERMINATION.name]
+        for _, qualifier_matches in self._group_matched_patterns(matched_patterns).items():
+            preceding_ = qualifier_matches[QualifierRuleDirection.PRECEDING.name]
+            following_ = qualifier_matches[QualifierRuleDirection.FOLLOWING.name]
+            pseudo_ = qualifier_matches[QualifierRuleDirection.PSEUDO.name]
+            termination_ = qualifier_matches[QualifierRuleDirection.TERMINATION.name]
 
-            level_matches = ivt.IntervalTree()
+            qualifier_matches = ivt.IntervalTree()
 
             # Following, preceding
             for match in itertools.chain(preceding_, following_):
-                level_matches[match.start : match.end] = match
+                qualifier_matches[match.start : match.end] = match
 
             # Pseudo
             for match in pseudo_:
-                level_matches.remove_overlap(match.start, match.end)
+                qualifier_matches.remove_overlap(match.start, match.end)
 
             # Termination
-            level_scopes = ivt.IntervalTree(
-                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in level_matches
+            qualifier_scopes = ivt.IntervalTree(
+                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in qualifier_matches
             )
 
-            match_scopes |= self._limit_scopes_from_terminations(level_scopes, termination_)
+            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination_)
 
         return match_scopes
 
@@ -253,7 +259,7 @@ class QualifierMatcher:
                 qualifiers = set()
 
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
-                    qualifiers.add(str(match_interval.data.rule.level))
+                    qualifiers.add(str(match_interval.data.rule.qualifier))
 
                 ent._.set(self.qualifiers_attr, qualifiers)
 

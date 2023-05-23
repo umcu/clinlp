@@ -33,7 +33,7 @@
   ],
   "rules": [
     {
-      "level": "Experiencer.OTHER",
+      "qualifier": "Experiencer.OTHER",
       "direction": "preceding",
       "patterns": [
         "familiair",
@@ -207,7 +207,7 @@
       ]
     },
     {
-      "level": "Experiencer.OTHER",
+      "qualifier": "Experiencer.OTHER",
       "direction": "following",
       "patterns": [
         "in de familie",
@@ -269,7 +269,7 @@
       ]
     },
     {
-      "level": "Experiencer.OTHER",
+      "qualifier": "Experiencer.OTHER",
       "direction": "pseudo",
       "patterns": [
         "door familie",
@@ -477,7 +477,7 @@
       ]
     },
     {
-      "level": "Experiencer.OTHER",
+      "qualifier": "Experiencer.OTHER",
       "direction": "termination",
       "patterns": [
         "beslist",
@@ -504,7 +504,7 @@
       ]
     },
     {
-      "level": "Negation.NEGATED",
+      "qualifier": "Negation.NEGATED",
       "direction": "preceding",
       "patterns": [
         "afwezigheid van",
@@ -566,7 +566,7 @@
       ]
     },
     {
-      "level": "Negation.NEGATED",
+      "qualifier": "Negation.NEGATED",
       "direction": "following",
       "patterns": [
         "afwezig",
@@ -600,7 +600,7 @@
       ]
     },
     {
-      "level": "Negation.NEGATED",
+      "qualifier": "Negation.NEGATED",
       "direction": "pseudo",
       "patterns": [
         "geen afname",
@@ -637,7 +637,7 @@
       ]
     },
     {
-      "level": "Negation.NEGATED",
+      "qualifier": "Negation.NEGATED",
       "direction": "termination",
       "patterns": [
         "aangezien er",
@@ -725,7 +725,7 @@
       ]
     },
     {
-      "level": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.HYPOTHETICAL",
       "direction": "preceding",
       "patterns": [
         "als er",
@@ -777,7 +777,7 @@
       ]
     },
     {
-      "level": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.HYPOTHETICAL",
       "direction": "following",
       "patterns": [
         "?",
@@ -795,7 +795,7 @@
       ]
     },
     {
-      "level": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.HYPOTHETICAL",
       "direction": "pseudo",
       "patterns": [
         "als baby",
@@ -807,7 +807,7 @@
       ]
     },
     {
-      "level": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.HYPOTHETICAL",
       "direction": "termination",
       "patterns": [
         "aanwezig",
@@ -819,7 +819,7 @@
       ]
     },
     {
-      "level": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.HISTORICAL",
       "direction": "preceding",
       "patterns": [
         "al bekende",
@@ -946,7 +946,7 @@
       ]
     },
     {
-      "level": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.HISTORICAL",
       "direction": "following",
       "patterns": [
         "als baby",
@@ -1072,7 +1072,7 @@
       ]
     },
     {
-      "level": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.HISTORICAL",
       "direction": "pseudo",
       "patterns": [
         "blanco psychiatrische vg",
@@ -1088,7 +1088,7 @@
       ]
     },
     {
-      "level": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.HISTORICAL",
       "direction": "termination",
       "patterns": [
         "actueel",

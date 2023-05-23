@@ -1,7 +1,7 @@
 import pytest
 import spacy
 
-from clinlp.component.qualifier import QualifierMatcher, load_rules
+from clinlp.component.qualifier import QualifierMatcher, parse_rules
 
 
 @pytest.fixture
@@ -22,12 +22,12 @@ class TestUnitQualifierMatcher:
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": [[{"LOWER": "geleden"}]], "level": "Temporality.HISTORICAL", "direction": "following"},
+                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": [[{"LOWER": "geleden"}]], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
 
-        rules = load_rules(data=data)
+        rules = parse_rules(data=data)
 
         qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
 
@@ -63,13 +63,13 @@ class TestUnitQualifierMatcher:
             qm(doc)
 
     def test_match_qualifiers_preceding(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -80,13 +80,13 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
 
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -98,13 +98,13 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
     def test_match_qualifiers_following_multiple_ents(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["uitgesloten"], "level": "Negation.NEGATED", "direction": "following"},
+                    {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
                 ],
             }
         )
@@ -116,14 +116,14 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
     def test_match_qualifiers_pseudo(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"patterns": ["geen toename"], "level": "Negation.NEGATED", "direction": "pseudo"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen toename"], "qualifier": "Negation.NEGATED", "direction": "pseudo"},
                 ],
             }
         )
@@ -134,14 +134,14 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
 
     def test_match_qualifiers_termination_preceding(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"patterns": ["maar"], "level": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["maar"], "qualifier": "Negation.NEGATED", "direction": "termination"},
                 ],
             }
         )
@@ -153,14 +153,14 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
 
     def test_match_qualifiers_termination_following(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["uitgesloten"], "level": "Negation.NEGATED", "direction": "following"},
-                    {"patterns": ["maar"], "level": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
+                    {"patterns": ["maar"], "qualifier": "Negation.NEGATED", "direction": "termination"},
                 ],
             }
         )
@@ -172,13 +172,13 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
     def test_match_qualifiers_multiple_sentences(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -190,16 +190,16 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
 
-    def test_match_qualifier_multiple_levels(self, nlp):
-        rules = load_rules(
+    def test_match_qualifier_multiple_qualifiers(self, nlp):
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                     {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"patterns": ["als kind"], "level": "Temporality.HISTORICAL", "direction": "preceding"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["als kind"], "qualifier": "Temporality.HISTORICAL", "direction": "preceding"},
                 ],
             }
         )
@@ -211,17 +211,17 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
 
-    def test_match_qualifier_terminate_multiple_levels(self, nlp):
-        rules = load_rules(
+    def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                     {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"patterns": [","], "level": "Negation.NEGATED", "direction": "termination"},
-                    {"patterns": ["als kind"], "level": "Temporality.HISTORICAL", "direction": "preceding"},
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": [","], "qualifier": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["als kind"], "qualifier": "Temporality.HISTORICAL", "direction": "preceding"},
                 ],
             }
         )
@@ -236,13 +236,13 @@ class TestUnitQualifierMatcher:
         assert "Temporality.HISTORICAL" in doc.ents[1]._.qualifiers
 
     def test_match_qualifier_multiple_patterns(self, nlp):
-        rules = load_rules(
+        rules = parse_rules(
             data={
                 "qualifiers": [
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"patterns": ["geen", "subklinische"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen", "subklinische"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )

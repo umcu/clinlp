@@ -3,7 +3,7 @@ import json
 import pytest
 import spacy
 
-from clinlp.component.qualifier import load_rules
+from clinlp.component.qualifier import parse_rules
 
 
 @pytest.fixture()
@@ -17,7 +17,7 @@ def nlp():
 
     # recognizer
     qm = nlp.add_pipe("clinlp_qualifier_matcher")
-    rules = load_rules("resources/default_qualifiers.json")
+    rules = parse_rules("resources/default_qualifiers.json")
     qm.add_rules(rules)
 
     return nlp
