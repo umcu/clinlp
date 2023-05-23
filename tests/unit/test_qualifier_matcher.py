@@ -5,14 +5,19 @@ import clinlp
 import clinlp.sentencizer
 from clinlp.qualifier import QualifierMatcher, load_rules
 
-nlp = spacy.blank("clinlp")
-nlp.add_pipe("clinlp_sentencizer")
-ruler = nlp.add_pipe("entity_ruler")
-ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
+
+@pytest.fixture
+def nlp():
+    nlp = spacy.blank("clinlp")
+    nlp.add_pipe("clinlp_sentencizer")
+    ruler = nlp.add_pipe("entity_ruler")
+    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
+
+    return nlp
 
 
 class TestUnitQualifierMatcher:
-    def test_create_qualifier_matcher(self):
+    def test_create_qualifier_matcher(self, nlp):
         data = {
             "qualifiers": [
                 {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
@@ -32,7 +37,7 @@ class TestUnitQualifierMatcher:
         assert len(qm._matcher) == 1
         assert len(qm._phrase_matcher) == 1
 
-    def test_get_sentences_having_entity(self):
+    def test_get_sentences_having_entity(self, nlp):
         text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
         doc = nlp(text)
 
@@ -42,7 +47,7 @@ class TestUnitQualifierMatcher:
         for sent in sents:
             assert "SYMPTOOM" in str(sent)
 
-    def test_match_qualifiers_no_ents(self):
+    def test_match_qualifiers_no_ents(self, nlp):
         text = "tekst zonder entities"
         qm = QualifierMatcher(nlp=nlp, name="_")
         old_doc = nlp(text)
@@ -51,7 +56,7 @@ class TestUnitQualifierMatcher:
 
         assert new_doc == old_doc
 
-    def test_match_qualifiers_no_rules(self):
+    def test_match_qualifiers_no_rules(self, nlp):
         text = "Patient heeft SYMPTOOM (wel ents, geen rules)"
         doc = nlp(text)
         qm = QualifierMatcher(nlp=nlp, name="_")
@@ -59,7 +64,7 @@ class TestUnitQualifierMatcher:
         with pytest.raises(RuntimeError):
             qm(doc)
 
-    def test_match_qualifiers_preceding(self):
+    def test_match_qualifiers_preceding(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -76,7 +81,7 @@ class TestUnitQualifierMatcher:
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
 
-    def test_match_qualifiers_preceding_multiple_ents(self):
+    def test_match_qualifiers_preceding_multiple_ents(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -94,7 +99,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
-    def test_match_qualifiers_following_multiple_ents(self):
+    def test_match_qualifiers_following_multiple_ents(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -112,7 +117,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
-    def test_match_qualifiers_pseudo(self):
+    def test_match_qualifiers_pseudo(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -130,7 +135,7 @@ class TestUnitQualifierMatcher:
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
 
-    def test_match_qualifiers_termination_preceding(self):
+    def test_match_qualifiers_termination_preceding(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -149,7 +154,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
 
-    def test_match_qualifiers_termination_following(self):
+    def test_match_qualifiers_termination_following(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -168,7 +173,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
 
-    def test_match_qualifiers_multiple_sentences(self):
+    def test_match_qualifiers_multiple_sentences(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -187,7 +192,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
 
-    def test_match_qualifier_multiple_levels(self):
+    def test_match_qualifier_multiple_levels(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -208,7 +213,7 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
         assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
 
-    def test_match_qualifier_terminate_multiple_levels(self):
+    def test_match_qualifier_terminate_multiple_levels(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [
@@ -232,7 +237,7 @@ class TestUnitQualifierMatcher:
         assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
         assert "Temporality.HISTORICAL" in doc.ents[1]._.qualifiers
 
-    def test_match_qualifier_multiple_patterns(self):
+    def test_match_qualifier_multiple_patterns(self, nlp):
         rules = load_rules(
             data={
                 "qualifiers": [

@@ -12,8 +12,15 @@ from clinlp.qualifier import (
     load_rules,
 )
 
-mock_qualifier = Qualifier("MOCK", ["MOCK_1", "MOCK_2"])
-mock_doc = Doc(Vocab(), words=["dit", "is", "een", "test"])
+
+@pytest.fixture
+def mock_qualifier():
+    return Qualifier("MOCK", ["MOCK_1", "MOCK_2"])
+
+
+@pytest.fixture
+def mock_doc():
+    return Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
 class TestUnitQualifier:
@@ -57,7 +64,7 @@ class UnitTestQualifierRule:
 
 
 class UnitTestMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self):
+    def test_create_matched_qualifier_pattern(self, mock_qualifier):
         rule = QualifierRule(pattern="_", level=mock_qualifier.MOCK_1, direction=QualifierRuleDirection.PRECEDING)
         start = 0
         end = 10
@@ -69,7 +76,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.end == end
         assert mqp.scope is None
 
-    def test_create_matched_qualifier_pattern_with_offset(self):
+    def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
         rule = QualifierRule(pattern="_", level=mock_qualifier.MOCK_1, direction=QualifierRuleDirection.PRECEDING)
         start = 0
         end = 10
@@ -82,7 +89,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.end == end + offset
         assert mqp.scope is None
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(self):
+    def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
         rule = QualifierRule(pattern="_", level=mock_qualifier.MOCK_1, direction=QualifierRuleDirection.PRECEDING)
         start = 1
         end = 2
@@ -94,7 +101,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_following(self):
+    def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
         rule = QualifierRule(pattern="_", level=mock_qualifier.MOCK_1, direction=QualifierRuleDirection.FOLLOWING)
         start = 1
         end = 2
@@ -108,13 +115,13 @@ class UnitTestMatchedQualifierPattern:
 
 
 class UnitTestLoadRules:
-    def test_parse_level(self):
+    def test_parse_level(self, mock_qualifier):
         level = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
         assert _parse_level(level, qualifiers) == mock_qualifier.MOCK_1
 
-    def test_parse_level_unhappy(self):
+    def test_parse_level_unhappy(self, mock_qualifier):
         level = "MOCK_MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
@@ -134,8 +141,8 @@ class UnitTestLoadRules:
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                {"pattern": "weken geleden", "level": "Temporality.HISTORICAL", "direction": "following"},
+                {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": ["weken geleden"], "level": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
 
