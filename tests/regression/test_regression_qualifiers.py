@@ -17,8 +17,6 @@ def nlp():
 
     # recognizer
     qm = nlp.add_pipe("clinlp_context_matcher")
-    rules = parse_rules("resources/default_qualifiers.json")
-    qm.add_rules(rules)
 
     return nlp
 
