@@ -9,4 +9,4 @@ from .qualifier import (
 )
 from .sentencizer import Sentencizer
 
-Span.set_extension(name=QUALIFIERS_ATTR, default=None, force=True)
+Span.set_extension(name=QUALIFIERS_ATTR, default=None)
