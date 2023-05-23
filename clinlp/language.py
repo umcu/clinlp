@@ -136,7 +136,7 @@ CLINLP_UNITS = [
     "kCal",
     "m2",
     "µm",
-    "mmgh",
+    "mmhg",
     "mmHg",
     "km",
     "km²",
