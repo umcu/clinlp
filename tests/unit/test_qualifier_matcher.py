@@ -1,9 +1,7 @@
 import pytest
 import spacy
 
-import clinlp
-import clinlp.sentencizer
-from clinlp.qualifier import QualifierMatcher, load_rules
+from clinlp.component.qualifier import QualifierMatcher, load_rules
 
 
 @pytest.fixture

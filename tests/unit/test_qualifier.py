@@ -2,11 +2,9 @@ import pytest
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.qualifier import (
+from clinlp.component import Qualifier, QualifierRule, QualifierRuleDirection
+from clinlp.component.qualifier import (
     MatchedQualifierPattern,
-    Qualifier,
-    QualifierRule,
-    QualifierRuleDirection,
     _parse_direction,
     _parse_level,
     load_rules,

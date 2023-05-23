@@ -12,7 +12,7 @@ DEFAULT_SENT_START_PUNCT = ["-", "*", "[", "("]
     assigns=["token.is_sent_start", "doc.sents"],
     default_config={"sent_end_chars": DEFAULT_SENT_ENT_CHARS, "sent_start_punct": DEFAULT_SENT_START_PUNCT},
 )
-class ClinlpSentencizer:
+class Sentencizer:
     def __init__(
         self,
         nlp: Language,

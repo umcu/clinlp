@@ -98,7 +98,7 @@ def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) ->
 
 
 @Language.factory(
-    name="clinlp_qualifier",
+    name="clinlp_qualifier_matcher",
     default_config={"phrase_matcher_attr": "TEXT", "qualifiers_attr": QUALIFIERS_ATTR, "rules": None},
     requires=["doc.sents", "doc.ents"],
 )
