@@ -2,9 +2,11 @@
 
 ![clinlp](media/clinlp.png)
 
+* :hospital: `clinical` + :netherlands: `nl` + :clipboard: `nlp` = :sparkles: clinlp
 * :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
+ 
 
 Read our [principles and goals](#principles-and-goals), futher down :arrow_down:
 
