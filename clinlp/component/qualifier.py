@@ -179,7 +179,11 @@ class ContextMatcher:
             self.add_rules(rules)
 
     def _load_default_rules(self, default_rules: str):
-        self.add_rules(parse_rules(input_json=importlib.resources.path("clinlp.resources", default_rules)))
+
+        with importlib.resources.path("clinlp.resources", default_rules) as path:
+            input_json = path
+
+        self.add_rules(parse_rules(input_json))
 
     def add_rule(self, rule: ContextRule):
         """
