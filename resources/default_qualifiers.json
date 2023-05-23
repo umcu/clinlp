@@ -33,2425 +33,1073 @@
   ],
   "rules": [
     {
-      "pattern": "familiair",
       "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "familiaire",
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "familieleden",
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "familiegeschiedenis",
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "moederszijde",
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vaderszijde",
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in de familie",
-      "level": "Experiencer.OTHER",
-      "direction": "following"
-    },
-    {
-      "pattern": "in familie",
-      "level": "Experiencer.OTHER",
-      "direction": "following"
-    },
-    {
-      "pattern": "door familie",
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "familie",
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "met familie",
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "naar familie",
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "beslist",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "besloot",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "daarnaast",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "geen",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "hijzelf",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "huidig",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "klaagt",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "niet",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "nu",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "patient haar",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "patient zijn",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "patient",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "pt haar",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "pt zijn",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "pt",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "rapporteerde",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "vandaag",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "welke",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "zelf",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": "zijzelf",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": ",",
-      "level": "Experiencer.OTHER",
-      "direction": "termination"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie",
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
+      "direction": "preceding",
+      "patterns": [
+        "familiair",
+        "familiaire",
+        "familieleden",
+        "familiegeschiedenis",
+        "moederszijde",
+        "vaderszijde",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie",
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
           }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie"
-            ]
-          }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "zijn",
-              "haar"
-            ]
-          }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
-          }
-        },
-        {
-          "LOWER": "hun"
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie"
-            ]
-          }
-        },
-        {
-          "LOWER": "'"
-        },
-        {
-          "LOWER": "s"
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "preceding"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": "bij"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie",
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
-          }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "following"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "door",
-              "met",
-              "naar",
-              "volgens",
-              "vertelt",
-              "vertelde",
-              "vertellen",
-              "vertelden"
-            ]
-          }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie",
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
-          }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie",
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
-          }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "belde",
-              "belden",
-              "zei",
-              "zeiden",
-              "vond",
-              "vonden",
-              "vertelt",
-              "vertelde",
-              "vertellen",
-              "vertelden"
-            ]
-          }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "vader",
-              "vdr",
-              "moeder",
-              "mdr",
-              "broer",
-              "broertje",
-              "zus",
-              "zusje",
-              "oom",
-              "tante",
-              "neef",
-              "neefje",
-              "nicht",
-              "nichtje",
-              "opa",
-              "oma",
-              "grootvader",
-              "grootmoeder",
-              "buurman",
-              "buurvrouw",
-              "zoon",
-              "zoontje",
-              "dochter",
-              "dochtertje",
-              "huisgenoot",
-              "huisgenote",
-              "familie",
-              "broers",
-              "broertjes",
-              "zussen",
-              "zusjes",
-              "ooms",
-              "tantes",
-              "neven",
-              "neefjes",
-              "nichten",
-              "nichtjes",
-              "zoons",
-              "zoontjes",
-              "dochters",
-              "dochtertjes",
-              "huisgenoten",
-              "huisgenotes"
-            ]
-          }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "gaf",
-              "gaven"
-            ]
-          }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "aan"
-            ]
-          }
-        }
-      ],
-      "level": "Experiencer.OTHER",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "afwezigheid van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "deed geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "deed niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen aanwijzing voor",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen aanwijzingen voor",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen abnormale",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen bewijs voor",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen klachten van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen klachten van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen oorzaak van ",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen reden tot",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen reden voor",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen sprake van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen suggestie van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen teken van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen tekenen van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "is geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "is niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "konden geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "konden niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kunnen geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kunnen niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "nam af",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "negatief voor",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "niet waarschijnlijk",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "nooit last gehad van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "nooit",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontkend",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontkennend",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontkent",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontwikkelde geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontwikkelde nooit",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ontwikkelt geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "onwaarschijnlijk",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "patient is niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "patient was niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "sluit uit",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "subklinisch",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "subklinische",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "toonde geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "toonde geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "versus",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vrij van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "waren geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "waren niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "was geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "was niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zijn geen",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zijn niet",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zonder indicatie van ",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zonder teken van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zonder tekenen van",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zonder",
-      "level": "Negation.NEGATED",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "afwezig",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "is uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "is verdwenen",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "is weg",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "kan worden uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "laag ingeschat",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "nam af",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet aan de orde",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet aanwezig",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet besproken",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet gezien",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet meer",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet waarschijnlijk",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "onwaarschijnlijk",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "opgelost",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "preventieplan",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "speelt niet",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "waren niet",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "was niet",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "werd uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "werden ontkend",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "werden uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "worden ontkend",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "zijn afwezig",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "zijn ontkend",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "zijn uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "zijn verdwenen",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "zijn weg",
-      "level": "Negation.NEGATED",
-      "direction": "following"
-    },
-    {
-      "pattern": "geen afname",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen oorzaak van",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen toename",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen verandering",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen verbetering",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen verdere",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geen zekere verandering",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "gram negatief",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "herkent zich niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "is misschien niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "is mogelijk niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "kan niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "misschien niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "mogelijk niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet alleen",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet besproken",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet duidelijk",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet gevraagd",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet mogelijk om ",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet noodzakelijkerwijs",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet perse",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet uit te sluiten",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet uitgesloten",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet uitgevraagd",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet uitgevraagd",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet zeker of",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "wel of niet",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "zonder moeite",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "zonder moelijkheid",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "zonder verdere",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet goed",
-      "level": "Negation.NEGATED",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "aangezien er",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "afgezien van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "alhoewel",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "andere mogelijkheden tot",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "andere redenen tot",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "andere redenen voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "behalve",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "behoudens",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "bron van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "bron voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "bronnen van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "bronnen voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "buiten",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "daarentegen",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "dat",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "desalniettemin",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "die",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "doch",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "etiologie van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "etiologie voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "hetgeen",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "hoewel",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "losstaand van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "maar",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "naast",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "niettemin",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "nochtans",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "nog",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "ofschoon",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "ondergeschikt",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "reden tot",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "reden van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "reden voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "redenen tot",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "redenen voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "renenen van",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "soms",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "toch",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "trigger voor",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "uitgezonderd",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "voelt zich",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "wel",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "welke",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": ",",
-      "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": "als",
-          "OP": "?"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "de",
-              "een"
-            ]
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie"
+              ]
+            }
           },
-          "OP": "?"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "bron",
-              "bronnen",
-              "reden",
-              "redenen",
-              "oorzaak",
-              "oorzaken",
-              "oorsprong",
-              "etiologie"
-            ]
+          {
+            "LOWER": {
+              "IN": [
+                "zijn",
+                "haar"
+              ]
+            }
           }
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "van",
-              "voor",
-              "tot"
-            ]
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          },
+          {
+            "LOWER": "hun"
           }
-        }
-      ],
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie"
+              ]
+            }
+          },
+          {
+            "LOWER": "'"
+          },
+          {
+            "LOWER": "s"
+          }
+        ]
+      ]
+    },
+    {
+      "level": "Experiencer.OTHER",
+      "direction": "following",
+      "patterns": [
+        "in de familie",
+        "in familie",
+        [
+          {
+            "LOWER": "bij"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie",
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "level": "Experiencer.OTHER",
+      "direction": "pseudo",
+      "patterns": [
+        "door familie",
+        "familie",
+        "met familie",
+        "naar familie",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "door",
+                "met",
+                "naar",
+                "volgens",
+                "vertelt",
+                "vertelde",
+                "vertellen",
+                "vertelden"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie",
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie",
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "belde",
+                "belden",
+                "zei",
+                "zeiden",
+                "vond",
+                "vonden",
+                "vertelt",
+                "vertelde",
+                "vertellen",
+                "vertelden"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "vader",
+                "vdr",
+                "moeder",
+                "mdr",
+                "broer",
+                "broertje",
+                "zus",
+                "zusje",
+                "oom",
+                "tante",
+                "neef",
+                "neefje",
+                "nicht",
+                "nichtje",
+                "opa",
+                "oma",
+                "grootvader",
+                "grootmoeder",
+                "buurman",
+                "buurvrouw",
+                "zoon",
+                "zoontje",
+                "dochter",
+                "dochtertje",
+                "huisgenoot",
+                "huisgenote",
+                "familie",
+                "broers",
+                "broertjes",
+                "zussen",
+                "zusjes",
+                "ooms",
+                "tantes",
+                "neven",
+                "neefjes",
+                "nichten",
+                "nichtjes",
+                "zoons",
+                "zoontjes",
+                "dochters",
+                "dochtertjes",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "gaf",
+                "gaven"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "aan"
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "level": "Experiencer.OTHER",
+      "direction": "termination",
+      "patterns": [
+        "beslist",
+        "besloot",
+        "daarnaast",
+        "geen",
+        "hijzelf",
+        "huidig",
+        "klaagt",
+        "niet",
+        "nu",
+        "patient haar",
+        "patient zijn",
+        "patient",
+        "pt haar",
+        "pt zijn",
+        "pt",
+        "rapporteerde",
+        "vandaag",
+        "welke",
+        "zelf",
+        "zijzelf",
+        ","
+      ]
+    },
+    {
       "level": "Negation.NEGATED",
-      "direction": "termination"
-    },
-    {
-      "pattern": "als er",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "ambivalent",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "beoordelen van",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "cave",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "dd",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "diagnostiek",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "differentiaal diagnostisch",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "eventueel",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "eventuele",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "evt",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "hypothese",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "hypothesen",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "hypotheses",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "indien er",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "indien",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kan indiceren",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kan worden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kan zijn",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kan",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "kans op",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "mgl",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "mogelijk gerelateerd aan",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "mogelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "mogelijke",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "neiging tot",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "niet duidelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "observeren van",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "onduidelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "rekening houden met",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "risico op",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "twijfel",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "uitsluiten",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "verdenking",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vermoedde",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vermoedden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vermoeden van",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vermoeden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vermoedt",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "voorlopige diagnose",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "wanneer",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "wel of niet",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "wordt gedacht aan",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zorgen voor",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "zou",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "dan",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "?",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "ambivalent",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "kan worden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "kan zijn",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet besproken",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet duidelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "niet uitgevraagd",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "onduidelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "vermoedde",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "vermoedden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "zou worden",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "zou zijn",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "als baby",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "als kind",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "als puber",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "als tiener",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "geduid als",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "niet mogelijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "aanwezig",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "ter preventie",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "zeer waarschijnlijk",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "zeker",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "zonder twijfel",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": ",",
-      "level": "Plausibility.HYPOTHETICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "al bekende",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als baby",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als kind",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als puber",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als tiener",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "bij eerste presentatie",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "destijds",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "eerdere",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "gedocumenteerd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "gedocumenteerde",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geschiedenis van",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "geschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "herinnering",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "herinneringen",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in de kindertijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in de vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in de voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in het verleden",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "in voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "jaar",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "jaren",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "maand",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "maanden",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "niet actueel",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "op jong volwassen leeftijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "op jonge leeftijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "subacute",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "subacuut",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "toen",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "verleden van",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "vroeger",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "werd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
-    },
-    {
-      "pattern": "als baby",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "als kind",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "als puber",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "als tiener",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "geweest",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "heeft gehad",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "heeft meegemaakt",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "heeft plaatsgehad",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "heeft plaatsgevonden",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de geschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de kindertijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de psychiatrische voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in de voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in het verleden",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in jeugd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in remissie",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "in voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "is gebeurd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "is geweest",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "meegemaakt",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "nu in remissie",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "op jong volwassen leeftijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "op jonge leeftijd",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "opgelost",
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": "blanco psychiatrische vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "blanco psychiatrische voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "blanco vg",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "blanco voorgeschiedenis",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "lijkt meer",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "lijkt minder",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "lijkt niet meer",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "lijkt niet minder",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "vg blanco",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "voorgeschiedenis blanco",
-      "level": "Temporality.HISTORICAL",
-      "direction": "pseudo"
-    },
-    {
-      "pattern": "actueel",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "afgenomen",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "afname",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "nu",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "primair",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "toegenomen",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": "toename",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": ",",
-      "level": "Temporality.HISTORICAL",
-      "direction": "termination"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "in",
-              "rond"
-            ]
+      "direction": "preceding",
+      "patterns": [
+        "afwezigheid van",
+        "deed geen",
+        "deed niet",
+        "geen aanwijzing voor",
+        "geen aanwijzingen voor",
+        "geen abnormale",
+        "geen bewijs voor",
+        "geen klachten van",
+        "geen klachten van",
+        "geen oorzaak van ",
+        "geen reden tot",
+        "geen reden voor",
+        "geen sprake van",
+        "geen suggestie van",
+        "geen teken van",
+        "geen tekenen van",
+        "geen",
+        "is geen",
+        "is niet",
+        "konden geen",
+        "konden niet",
+        "kunnen geen",
+        "kunnen niet",
+        "nam af",
+        "negatief voor",
+        "niet waarschijnlijk",
+        "niet",
+        "nooit last gehad van",
+        "nooit",
+        "ontkend",
+        "ontkennend",
+        "ontkent",
+        "ontwikkelde geen",
+        "ontwikkelde nooit",
+        "ontwikkelt geen",
+        "onwaarschijnlijk",
+        "patient is niet",
+        "patient was niet",
+        "sluit uit",
+        "subklinisch",
+        "subklinische",
+        "toonde geen",
+        "toonde geen",
+        "uitgesloten",
+        "versus",
+        "vrij van",
+        "waren geen",
+        "waren niet",
+        "was geen",
+        "was niet",
+        "zijn geen",
+        "zijn niet",
+        "zonder indicatie van ",
+        "zonder teken van",
+        "zonder tekenen van",
+        "zonder"
+      ]
+    },
+    {
+      "level": "Negation.NEGATED",
+      "direction": "following",
+      "patterns": [
+        "afwezig",
+        "is uitgesloten",
+        "is verdwenen",
+        "is weg",
+        "kan worden uitgesloten",
+        "laag ingeschat",
+        "nam af",
+        "niet aan de orde",
+        "niet aanwezig",
+        "niet besproken",
+        "niet gezien",
+        "niet meer",
+        "niet waarschijnlijk",
+        "onwaarschijnlijk",
+        "opgelost",
+        "preventieplan",
+        "speelt niet",
+        "waren niet",
+        "was niet",
+        "werd uitgesloten",
+        "werden ontkend",
+        "werden uitgesloten",
+        "worden ontkend",
+        "zijn afwezig",
+        "zijn ontkend",
+        "zijn uitgesloten",
+        "zijn verdwenen",
+        "zijn weg"
+      ]
+    },
+    {
+      "level": "Negation.NEGATED",
+      "direction": "pseudo",
+      "patterns": [
+        "geen afname",
+        "geen oorzaak van",
+        "geen toename",
+        "geen verandering",
+        "geen verbetering",
+        "geen verdere",
+        "geen zekere verandering",
+        "gram negatief",
+        "herkent zich niet",
+        "is misschien niet",
+        "is mogelijk niet",
+        "kan niet",
+        "misschien niet",
+        "mogelijk niet",
+        "niet alleen",
+        "niet besproken",
+        "niet duidelijk",
+        "niet gevraagd",
+        "niet mogelijk om ",
+        "niet noodzakelijkerwijs",
+        "niet perse",
+        "niet uit te sluiten",
+        "niet uitgesloten",
+        "niet uitgevraagd",
+        "niet uitgevraagd",
+        "niet zeker of",
+        "wel of niet",
+        "zonder moeite",
+        "zonder moelijkheid",
+        "zonder verdere",
+        "niet goed"
+      ]
+    },
+    {
+      "level": "Negation.NEGATED",
+      "direction": "termination",
+      "patterns": [
+        "aangezien er",
+        "afgezien van",
+        "alhoewel",
+        "andere mogelijkheden tot",
+        "andere redenen tot",
+        "andere redenen voor",
+        "behalve",
+        "behoudens",
+        "bron van",
+        "bron voor",
+        "bronnen van",
+        "bronnen voor",
+        "buiten",
+        "daarentegen",
+        "dat",
+        "desalniettemin",
+        "die",
+        "doch",
+        "etiologie van",
+        "etiologie voor",
+        "hetgeen",
+        "hoewel",
+        "losstaand van",
+        "maar",
+        "naast",
+        "niettemin",
+        "nochtans",
+        "nog",
+        "ofschoon",
+        "ondergeschikt",
+        "reden tot",
+        "reden van",
+        "reden voor",
+        "redenen tot",
+        "redenen voor",
+        "renenen van",
+        "soms",
+        "toch",
+        "trigger voor",
+        "uitgezonderd",
+        "voelt zich",
+        "wel",
+        "welke",
+        ",",
+        [
+          {
+            "LOWER": "als",
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "de",
+                "een"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "bron",
+                "bronnen",
+                "reden",
+                "redenen",
+                "oorzaak",
+                "oorzaken",
+                "oorsprong",
+                "etiologie"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "van",
+                "voor",
+                "tot"
+              ]
+            }
           }
-        },
-        {
-          "TEXT": {
-            "REGEX": "^(19|20)\\d{2}$"
-          }
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+        ]
+      ]
     },
     {
-      "pattern": [
-        {
-          "TEXT": {
-            "REGEX": "^(19|20)\\d{2}$"
-          }
-        },
-        {
-          "TEXT": ":"
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+      "level": "Plausibility.HYPOTHETICAL",
+      "direction": "preceding",
+      "patterns": [
+        "als er",
+        "als",
+        "ambivalent",
+        "beoordelen van",
+        "cave",
+        "dd",
+        "diagnostiek",
+        "differentiaal diagnostisch",
+        "eventueel",
+        "eventuele",
+        "evt",
+        "hypothese",
+        "hypothesen",
+        "hypotheses",
+        "indien er",
+        "indien",
+        "kan indiceren",
+        "kan worden",
+        "kan zijn",
+        "kan",
+        "kans op",
+        "mgl",
+        "mogelijk gerelateerd aan",
+        "mogelijk",
+        "mogelijke",
+        "neiging tot",
+        "niet duidelijk",
+        "observeren van",
+        "onduidelijk",
+        "rekening houden met",
+        "risico op",
+        "twijfel",
+        "uitsluiten",
+        "verdenking",
+        "vermoedde",
+        "vermoedden",
+        "vermoeden van",
+        "vermoeden",
+        "vermoedt",
+        "voorlopige diagnose",
+        "wanneer",
+        "wel of niet",
+        "wordt gedacht aan",
+        "zorgen voor",
+        "zou",
+        "dan"
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "jaar",
-              "jaren",
-              "maand",
-              "maanden"
-            ]
-          }
-        },
-        {
-          "LOWER": "geleden"
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+      "level": "Plausibility.HYPOTHETICAL",
+      "direction": "following",
+      "patterns": [
+        "?",
+        "ambivalent",
+        "kan worden",
+        "kan zijn",
+        "niet besproken",
+        "niet duidelijk",
+        "niet uitgevraagd",
+        "onduidelijk",
+        "vermoedde",
+        "vermoedden",
+        "zou worden",
+        "zou zijn"
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": "sinds"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "zijn",
-              "haar"
-            ]
-          }
-        },
-        {
-          "TEXT": {
-            "REGEX": "^\\d{,2}e$"
-          }
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+      "level": "Plausibility.HYPOTHETICAL",
+      "direction": "pseudo",
+      "patterns": [
+        "als baby",
+        "als kind",
+        "als puber",
+        "als tiener",
+        "geduid als",
+        "niet mogelijk"
+      ]
     },
     {
-      "pattern": [
-        {
-          "TEXT": {
-            "REGEX": "^(19|20)\\d{2}$"
-          }
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+      "level": "Plausibility.HYPOTHETICAL",
+      "direction": "termination",
+      "patterns": [
+        "aanwezig",
+        "ter preventie",
+        "zeer waarschijnlijk",
+        "zeker",
+        "zonder twijfel",
+        ","
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": "in"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "januari",
-              "februari",
-              "maart",
-              "april",
-              "mei",
-              "juni",
-              "juli",
-              "augustus",
-              "september",
-              "november",
-              "december"
-            ]
-          }
-        }
-      ],
       "level": "Temporality.HISTORICAL",
-      "direction": "preceding"
+      "direction": "preceding",
+      "patterns": [
+        "al bekende",
+        "als baby",
+        "als kind",
+        "als puber",
+        "als tiener",
+        "bij eerste presentatie",
+        "destijds",
+        "eerdere",
+        "gedocumenteerd",
+        "gedocumenteerde",
+        "geschiedenis van",
+        "geschiedenis",
+        "herinnering",
+        "herinneringen",
+        "in de kindertijd",
+        "in de vg",
+        "in de voorgeschiedenis",
+        "in het verleden",
+        "in voorgeschiedenis",
+        "jaar",
+        "jaren",
+        "maand",
+        "maanden",
+        "niet actueel",
+        "op jong volwassen leeftijd",
+        "op jonge leeftijd",
+        "subacute",
+        "subacuut",
+        "toen",
+        "verleden van",
+        "vg",
+        "voorgeschiedenis",
+        "vroeger",
+        "werd",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "in",
+                "rond"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          },
+          {
+            "TEXT": ":"
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          },
+          {
+            "LOWER": "geleden"
+          }
+        ],
+        [
+          {
+            "LOWER": "sinds"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "zijn",
+                "haar"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d{,2}e$"
+            }
+          }
+        ],
+        [
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": "in"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "november",
+                "december"
+              ]
+            }
+          }
+        ]
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "in",
-              "rond"
-            ]
-          }
-        },
-        {
-          "TEXT": {
-            "REGEX": "^(19|20)\\d{2}$"
-          }
-        }
-      ],
       "level": "Temporality.HISTORICAL",
-      "direction": "following"
+      "direction": "following",
+      "patterns": [
+        "als baby",
+        "als kind",
+        "als puber",
+        "als tiener",
+        "geweest",
+        "heeft gehad",
+        "heeft meegemaakt",
+        "heeft plaatsgehad",
+        "heeft plaatsgevonden",
+        "in de geschiedenis",
+        "in de kindertijd",
+        "in de psychiatrische voorgeschiedenis",
+        "in de vg",
+        "in de vg",
+        "in de voorgeschiedenis",
+        "in de voorgeschiedenis",
+        "in het verleden",
+        "in jeugd",
+        "in remissie",
+        "in voorgeschiedenis",
+        "in voorgeschiedenis",
+        "is gebeurd",
+        "is geweest",
+        "meegemaakt",
+        "nu in remissie",
+        "op jong volwassen leeftijd",
+        "op jonge leeftijd",
+        "opgelost",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "in",
+                "rond"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          },
+          {
+            "LOWER": "geleden"
+          }
+        ],
+        [
+          {
+            "LOWER": "sinds"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "zijn",
+                "haar"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d{,2}e$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": "in"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "november",
+                "december"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": "in"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "november",
+                "december"
+              ]
+            }
+          }
+        ]
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": {
-            "IN": [
-              "jaar",
-              "jaren",
-              "maand",
-              "maanden"
-            ]
-          }
-        },
-        {
-          "LOWER": "geleden"
-        }
-      ],
       "level": "Temporality.HISTORICAL",
-      "direction": "following"
+      "direction": "pseudo",
+      "patterns": [
+        "blanco psychiatrische vg",
+        "blanco psychiatrische voorgeschiedenis",
+        "blanco vg",
+        "blanco voorgeschiedenis",
+        "lijkt meer",
+        "lijkt minder",
+        "lijkt niet meer",
+        "lijkt niet minder",
+        "vg blanco",
+        "voorgeschiedenis blanco"
+      ]
     },
     {
-      "pattern": [
-        {
-          "LOWER": "sinds"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "zijn",
-              "haar"
-            ]
-          }
-        },
-        {
-          "TEXT": {
-            "REGEX": "^\\d{,2}e$"
-          }
-        }
-      ],
       "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": "in"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "januari",
-              "februari",
-              "maart",
-              "april",
-              "mei",
-              "juni",
-              "juli",
-              "augustus",
-              "september",
-              "november",
-              "december"
-            ]
-          }
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
-    },
-    {
-      "pattern": [
-        {
-          "LOWER": "in"
-        },
-        {
-          "LOWER": {
-            "IN": [
-              "januari",
-              "februari",
-              "maart",
-              "april",
-              "mei",
-              "juni",
-              "juli",
-              "augustus",
-              "september",
-              "november",
-              "december"
-            ]
-          }
-        }
-      ],
-      "level": "Temporality.HISTORICAL",
-      "direction": "following"
+      "direction": "termination",
+      "patterns": [
+        "actueel",
+        "afgenomen",
+        "afname",
+        "nu",
+        "primair",
+        "toegenomen",
+        "toename",
+        ","
+      ]
     }
   ]
 }

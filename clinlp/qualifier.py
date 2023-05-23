@@ -86,14 +86,15 @@ def load_rules(input_json: Optional[str] = None, data: Optional[dict] = None) ->
         for qualifier in data["qualifiers"]
     }
 
-    return [
-        QualifierRule(
-            pattern=rule["pattern"],
-            level=_parse_level(rule["level"], qualifiers),
-            direction=_parse_direction(rule["direction"]),
-        )
-        for rule in data["rules"]
-    ]
+    qualifier_rules = []
+
+    for rule in data["rules"]:
+        level = _parse_level(rule["level"], qualifiers)
+        direction = _parse_direction(rule["direction"])
+
+        qualifier_rules += [QualifierRule(pattern, level, direction) for pattern in rule["patterns"]]
+
+    return qualifier_rules
 
 
 @Language.factory(

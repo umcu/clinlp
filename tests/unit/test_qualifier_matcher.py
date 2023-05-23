@@ -19,8 +19,8 @@ class TestUnitQualifierMatcher:
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                {"pattern": [{"LOWER": "geleden"}], "level": "Temporality.HISTORICAL", "direction": "following"},
+                {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": [[{"LOWER": "geleden"}]], "level": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
 
@@ -66,7 +66,7 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -83,7 +83,7 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -101,7 +101,7 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "uitgesloten", "level": "Negation.NEGATED", "direction": "following"},
+                    {"patterns": ["uitgesloten"], "level": "Negation.NEGATED", "direction": "following"},
                 ],
             }
         )
@@ -119,8 +119,8 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"pattern": "geen toename", "level": "Negation.NEGATED", "direction": "pseudo"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen toename"], "level": "Negation.NEGATED", "direction": "pseudo"},
                 ],
             }
         )
@@ -137,8 +137,8 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"pattern": "maar", "level": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["maar"], "level": "Negation.NEGATED", "direction": "termination"},
                 ],
             }
         )
@@ -156,8 +156,8 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "uitgesloten", "level": "Negation.NEGATED", "direction": "following"},
-                    {"pattern": "maar", "level": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["uitgesloten"], "level": "Negation.NEGATED", "direction": "following"},
+                    {"patterns": ["maar"], "level": "Negation.NEGATED", "direction": "termination"},
                 ],
             }
         )
@@ -175,7 +175,7 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
                 ],
             }
         )
@@ -195,8 +195,8 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"pattern": "als kind", "level": "Temporality.HISTORICAL", "direction": "preceding"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": ["als kind"], "level": "Temporality.HISTORICAL", "direction": "preceding"},
                 ],
             }
         )
@@ -216,9 +216,9 @@ class TestUnitQualifierMatcher:
                     {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
                 ],
                 "rules": [
-                    {"pattern": "geen", "level": "Negation.NEGATED", "direction": "preceding"},
-                    {"pattern": ",", "level": "Negation.NEGATED", "direction": "termination"},
-                    {"pattern": "als kind", "level": "Temporality.HISTORICAL", "direction": "preceding"},
+                    {"patterns": ["geen"], "level": "Negation.NEGATED", "direction": "preceding"},
+                    {"patterns": [","], "level": "Negation.NEGATED", "direction": "termination"},
+                    {"patterns": ["als kind"], "level": "Temporality.HISTORICAL", "direction": "preceding"},
                 ],
             }
         )
@@ -231,3 +231,22 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
         assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
         assert "Temporality.HISTORICAL" in doc.ents[1]._.qualifiers
+
+    def test_match_qualifier_multiple_patterns(self):
+        rules = load_rules(
+            data={
+                "qualifiers": [
+                    {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
+                ],
+                "rules": [
+                    {"patterns": ["geen", "subklinische"], "level": "Negation.NEGATED", "direction": "preceding"},
+                ],
+            }
+        )
+
+        text = "Liet subklinisch ONHERKEND_SYMPTOOM en geen SYMPTOOM zien."
+
+        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        doc = qm(nlp(text))
+
+        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
