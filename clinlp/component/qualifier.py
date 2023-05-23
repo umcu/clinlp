@@ -1,6 +1,7 @@
 """ Implements qualifier detection for entities. The Qualifier class is reusable. The other classes implement
 the context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) """
 
+import importlib
 import itertools
 import json
 import re
@@ -17,6 +18,8 @@ from spacy.tokens import Doc, Span
 
 QUALIFIERS_ATTR = "qualifiers"
 PHRASE_MATCHER_ATTR = "TEXT"
+
+DEFAULT_CONTEXT_RULES = "psynlp_context_rules.json"
 
 
 class Qualifier(Enum):
@@ -149,6 +152,7 @@ class ContextMatcher:
         nlp: The Spacy language object to use
         name: The name of the component
         phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH, NORM).
+        default_rules: A filename in clinlp.resources with a set of rules to load by default
         rules: A list of ContextRule
     """
 
@@ -157,6 +161,7 @@ class ContextMatcher:
         nlp: Language,
         name: str,
         phrase_matcher_attr: str = PHRASE_MATCHER_ATTR,
+        default_rules: Optional[str] = DEFAULT_CONTEXT_RULES,
         rules: Optional[list[ContextRule]] = None,
     ):
         self._nlp = nlp
@@ -167,8 +172,14 @@ class ContextMatcher:
 
         self.rules = {}
 
+        if default_rules is not None:
+            self._load_default_rules(default_rules)
+
         if rules:
             self.add_rules(rules)
+
+    def _load_default_rules(self, default_rules: str):
+        self.add_rules(parse_rules(input_json=importlib.resources.path("clinlp.resources", default_rules)))
 
     def add_rule(self, rule: ContextRule):
         """
