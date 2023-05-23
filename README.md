@@ -16,6 +16,12 @@ Read the [principles and goals](#principles-and-goals), futher down :arrow_down:
 
 ## Getting started
 
+### Installation
+```bash
+pip install clinlp
+```
+
+### Example
 ```python
 import clinlp
 import spacy

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clinlp"
-version = "0.0.1"
+version = "0.1.0"
 description = ""
 authors = ["Your Name <you@example.com>"]
 readme = "README.md"
@@ -8,6 +8,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.9"
 spacy = "^3.4.4"
+intervaltree = "^3.1.0"
 
 
 [tool.poetry.group.dev.dependencies]
