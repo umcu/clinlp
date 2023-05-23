@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "clinlp"
 version = "0.1.0"
-description = ""
-authors = ["Your Name <you@example.com>"]
+description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
+authors = ["UMCU DIT Analytics <analytics@umcutrecht.nl>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
