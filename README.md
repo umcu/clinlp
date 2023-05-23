@@ -1,6 +1,6 @@
 # clinlp
 
-![clinlp](media/clinlp_logo_v2.png)
+![clinlp](media/clinlp.png)
 
 * :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp`
 * :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
@@ -8,7 +8,7 @@
 * :triangular_ruler: Useful out of the box, but customization highly recommended
  
 
-Read our [principles and goals](#principles-and-goals), futher down :arrow_down:
+Read the [principles and goals](#principles-and-goals), futher down :arrow_down:
 
 ## Contact and contributing
 
@@ -150,7 +150,7 @@ A set of rules, that checks for negation, temporality, plausibility and experien
 nlp.add_pipe('clinlp_context_matcher')
 ```
 
-A custom set of rules, including different types of qualifiers, can easily be defined. See `[clinlp/resources/psynlp_context_rules.json](clinlp/resources/psynlp_context_rules.json)` for an example, and load it as follows: 
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows: 
 
 ```python
 from clinlp.component.qualifier import parse_rules
@@ -164,7 +164,7 @@ cm.add_rules(parse_rules('my_custom_rules.json'))
 We hope to extend `clinlp` with new functionality and more complete documentation in the near future. In the meantime, if any questions or problems arise, we recommend:
 
 * Checking the source code 
-* Getting in touch ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new)
+* Getting in touch ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new))
 
 ## Principles and goals
 
