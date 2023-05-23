@@ -1,7 +1,7 @@
 import pytest
 import spacy
 
-from clinlp.component.qualifier import QualifierMatcher, parse_rules
+from clinlp.component.qualifier import ContextMatcher, parse_rules
 
 
 @pytest.fixture
@@ -29,7 +29,7 @@ class TestUnitQualifierMatcher:
 
         rules = parse_rules(data=data)
 
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
 
         assert len(qm.rules) == len(rules)
         assert len(qm._matcher) == 1
@@ -39,7 +39,7 @@ class TestUnitQualifierMatcher:
         text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
         doc = nlp(text)
 
-        sents = list(QualifierMatcher._get_sentences_having_entity(doc))
+        sents = list(ContextMatcher._get_sentences_having_entity(doc))
 
         assert len(sents) == 2
         for sent in sents:
@@ -47,7 +47,7 @@ class TestUnitQualifierMatcher:
 
     def test_match_qualifiers_no_ents(self, nlp):
         text = "tekst zonder entities"
-        qm = QualifierMatcher(nlp=nlp, name="_")
+        qm = ContextMatcher(nlp=nlp, name="_")
         old_doc = nlp(text)
 
         new_doc = qm(old_doc)
@@ -57,7 +57,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_no_rules(self, nlp):
         text = "Patient heeft SYMPTOOM (wel ents, geen rules)"
         doc = nlp(text)
-        qm = QualifierMatcher(nlp=nlp, name="_")
+        qm = ContextMatcher(nlp=nlp, name="_")
 
         with pytest.raises(RuntimeError):
             qm(doc)
@@ -74,7 +74,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Patient heeft geen SYMPTOOM."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -91,7 +91,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Patient heeft geen SYMPTOOM of SYMPTOOM."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -109,7 +109,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Aanwezigheid van SYMPTOOM of SYMPTOOM is uitgesloten."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -128,7 +128,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Er is geen toename van SYMPTOOM."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
@@ -146,7 +146,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Er is geen SYMPTOOM, maar wel SYMPTOOM."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -165,7 +165,7 @@ class TestUnitQualifierMatcher:
             }
         )
         text = "Mogelijk SYMPTOOM, maar SYMPTOOM uitgesloten."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
@@ -184,7 +184,7 @@ class TestUnitQualifierMatcher:
         )
 
         text = "Er is geen SYMPTOOM. Daarnaast SYMPTOOM onderzocht."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -205,7 +205,7 @@ class TestUnitQualifierMatcher:
         )
 
         text = "Heeft als kind geen SYMPTOOM gehad."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -227,7 +227,7 @@ class TestUnitQualifierMatcher:
         )
 
         text = "Heeft als kind geen SYMPTOOM, wel SYMPTOOM gehad."
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -249,7 +249,7 @@ class TestUnitQualifierMatcher:
 
         text = "Liet subklinisch ONHERKEND_SYMPTOOM en geen SYMPTOOM zien."
 
-        qm = QualifierMatcher(nlp=nlp, name="_", rules=rules)
+        qm = ContextMatcher(nlp=nlp, name="_", rules=rules)
         doc = qm(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers

@@ -16,7 +16,7 @@ def nlp():
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
-    qm = nlp.add_pipe("clinlp_qualifier_matcher")
+    qm = nlp.add_pipe("clinlp_context_matcher")
     rules = parse_rules("resources/default_qualifiers.json")
     qm.add_rules(rules)
 

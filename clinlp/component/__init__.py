@@ -1,7 +1,12 @@
+from spacy.tokens import Span
+
 from .qualifier import (
+    QUALIFIERS_ATTR,
+    ContextMatcher,
+    ContextRule,
+    ContextRuleDirection,
     Qualifier,
-    QualifierMatcher,
-    QualifierRule,
-    QualifierRuleDirection,
 )
 from .sentencizer import Sentencizer
+
+Span.set_extension(name=QUALIFIERS_ATTR, default=None, force=True)
