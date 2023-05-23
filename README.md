@@ -1,6 +1,6 @@
 # clinlp
 
-![clinlp](media/clinlp logo.v2.png)
+![clinlp](media/clinlp_logo_v2.png)
 
 * :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp`
 * :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
