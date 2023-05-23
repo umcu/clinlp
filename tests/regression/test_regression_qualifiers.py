@@ -3,9 +3,7 @@ import json
 import pytest
 import spacy
 
-import clinlp
-from clinlp import sentencizer
-from clinlp.qualifier import load_rules
+from clinlp.component.qualifier import parse_rules
 
 
 @pytest.fixture()
@@ -18,8 +16,8 @@ def nlp():
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
-    qm = nlp.add_pipe("clinlp_qualifier")
-    rules = load_rules("resources/default_qualifiers.json")
+    qm = nlp.add_pipe("clinlp_context_matcher")
+    rules = parse_rules("resources/default_qualifiers.json")
     qm.add_rules(rules)
 
     return nlp

@@ -253,6 +253,9 @@ def _get_tokenizer_exceptions(
 
 
 def _get_list(base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None):
+    """
+    Create a list, based on a base list, with some additions and removals.
+    """
     _lst = base.copy()
 
     if add is not None:
@@ -289,15 +292,15 @@ def _get_tokenizer_prefix_rules():
 
 
 def _get_tokenizer_prefixes():
-    _punct = _get_list(
+    punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
         add=[",,", "§", "%", "=", "—", "–", r"\+(?![0-9])", "/", "-", r"\+", "~", ",", r"\s"],
         remove=[r"\["],
     )
 
-    _quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`"])
+    quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`"])
 
-    return _punct + _get_ellipses() + _quotes + _get_currencies() + _get_tokenizer_prefix_rules()
+    return punct + _get_ellipses() + quotes + _get_currencies() + _get_tokenizer_prefix_rules()
 
 
 def _get_tokenizer_infix_rules(quotes: list[str]):
@@ -316,11 +319,11 @@ def _get_tokenizer_infix_rules(quotes: list[str]):
 
 
 def _get_tokenizer_infixes():
-    _punct = _get_list(base=[], add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"])
+    punct = _get_list(base=[], add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"])
 
-    _quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`", r"\'"])
+    quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`", r"\'"])
 
-    infixes = _punct + _get_ellipses() + _get_tokenizer_infix_rules(_quotes)
+    infixes = punct + _get_ellipses() + _get_tokenizer_infix_rules(quotes)
 
     return infixes
 
@@ -343,17 +346,17 @@ def _get_tokenizer_suffix_rules(currencies: list[str], units: list[str], punct: 
 
 
 def _get_tokenizer_suffixes():
-    _punct = _get_list(
+    punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT, add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"], remove=[r"\]"]
     )
 
-    _quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES)
+    quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES)
 
     return (
-        _punct
-        + _quotes
+        punct
+        + quotes
         + _get_ellipses()
-        + _get_tokenizer_suffix_rules(currencies=_get_currencies(), units=_get_units(), punct=_punct, quotes=_quotes)
+        + _get_tokenizer_suffix_rules(currencies=_get_currencies(), units=_get_units(), punct=punct, quotes=quotes)
     )
 
 
