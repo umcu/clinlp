@@ -36,8 +36,29 @@ ruler = nlp.add_pipe('entity_ruler')
 
 terms = {
     'covid_19_symptomen': [
-        'verkouden', 'neusverkouden', 'loopneus', 'niezen', 
-        'keelpijn', 'hoesten', 'benauwd', 'kortademig', 'verhoging', 
+        'verkoudheid', 'neusverkoudheid', 'loopneus', 'niezen', 'vermoeidheid',
+        'keelpijn', 'hoesten', 'benauwdheid', 'kortademigheid', 'verhoging', 
+        'koorts', 'verlies van reuk', 'verlies van smaak'
+    ]
+}
+
+for term_description, terms in terms.items():
+    ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
+import clinlp
+import spacy
+
+nlp = spacy.blank("clinlp")
+
+# Sentences
+nlp.add_pipe('clinlp_sentencizer')
+
+# Entities
+ruler = nlp.add_pipe('entity_ruler')
+
+terms = {
+    'covid_19_symptomen': [
+        'verkoudheid', 'neusverkoudheid', 'loopneus', 'niezen', 'vermoeidheid',
+        'keelpijn', 'hoesten', 'benauwdheid', 'kortademigheid', 'verhoging', 
         'koorts', 'verlies van reuk', 'verlies van smaak'
     ]
 }
@@ -49,10 +70,11 @@ for term_description, terms in terms.items():
 nlp.add_pipe('clinlp_context_matcher')
 
 text = (
-    "Patiente bij mij gezien op spreekuur, omdat zij vorige maand pneumonitis heeft "
-    "gehad. Zij had geen last meer van kortademigheid, wel was er nog sprake van "
-    "hoesten, geen afname vermoeidheid."
+    "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
+    "reuk na covid infectie aangaf. Zij had geen last meer van kortademigheid, "
+    "wel was er nog sprake van hoesten, geen afname vermoeidheid."
 )
+
 
 doc = nlp(text)
 ```
