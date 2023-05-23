@@ -1,6 +1,6 @@
 {
   "name": "default_qualifiers",
-  "description": "A set of qualifiers based on the psynlp package, a rule-based approach somewhat tailored to information extraction from clinical text.",
+  "description": "A set of context rules based on the psynlp package, a rule-based approach somewhat tailored to information extraction from clinical text.",
   "qualifiers": [
     {
       "qualifier": "Experiencer",

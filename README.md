@@ -44,27 +44,6 @@ terms = {
 
 for term_description, terms in terms.items():
     ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
-import clinlp
-import spacy
-
-nlp = spacy.blank("clinlp")
-
-# Sentences
-nlp.add_pipe('clinlp_sentencizer')
-
-# Entities
-ruler = nlp.add_pipe('entity_ruler')
-
-terms = {
-    'covid_19_symptomen': [
-        'verkoudheid', 'neusverkoudheid', 'loopneus', 'niezen', 'vermoeidheid',
-        'keelpijn', 'hoesten', 'benauwdheid', 'kortademigheid', 'verhoging', 
-        'koorts', 'verlies van reuk', 'verlies van smaak'
-    ]
-}
-
-for term_description, terms in terms.items():
-    ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
 
 # Qualifiers
 nlp.add_pipe('clinlp_context_matcher')
