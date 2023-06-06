@@ -1,3 +1,5 @@
+import importlib.metadata
+import warnings
 from typing import Callable, Optional
 
 import spacy.lang.char_classes
@@ -382,3 +384,20 @@ class ClinlpDefaults(BaseDefaults):
 class Clinlp(Language):
     lang = "clinlp"
     Defaults = ClinlpDefaults
+
+    def __init__(self, *args, **kwargs):
+        meta = dict(kwargs.pop("meta", {}))
+        clinlp_version = importlib.metadata.version(__package__ or __name__)
+
+        if "clinlp_version" in meta:
+            if meta["clinlp_version"] != clinlp_version:
+                warnings.warn(
+                    f"This spaCy model was built with clinlp version {meta['clinlp_version']}, "
+                    f"but you currently have version {clinlp_version} installed, "
+                    f"potentially leading to unexpected results.",
+                    UserWarning,
+                )
+        else:
+            meta["clinlp_version"] = clinlp_version
+
+        super().__init__(*args, meta=meta, **kwargs)
