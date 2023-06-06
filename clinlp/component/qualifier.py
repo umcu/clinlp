@@ -179,7 +179,6 @@ class ContextMatcher:
             self.add_rules(rules)
 
     def _load_default_rules(self, default_rules: str):
-
         with importlib.resources.path("clinlp.resources", default_rules) as path:
             self.add_rules(parse_rules(path))
 
