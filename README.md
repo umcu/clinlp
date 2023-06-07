@@ -100,7 +100,7 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 
 ### Tokenizer
 
-The `clinlp` tokenizer is builin the blank model:
+The `clinlp` tokenizer is built into the blank model:
 
 ```python
 nlp = spacy.blank('clinlp')
@@ -133,7 +133,7 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second only also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
+Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second one also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
 
 For instance, a matcher that helps recognize COVID19 symptoms:
 
