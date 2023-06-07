@@ -9,4 +9,6 @@ from .qualifier import (
 )
 from .sentencizer import Sentencizer
 
+from .normalizer import Normalizer
+
 Span.set_extension(name=QUALIFIERS_ATTR, default=None)
