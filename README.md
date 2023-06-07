@@ -28,11 +28,14 @@ import spacy
 
 nlp = spacy.blank("clinlp")
 
+# Normalization
+nlp.add_pipe('clinlp_normalizer')
+
 # Sentences
 nlp.add_pipe('clinlp_sentencizer')
 
 # Entities
-ruler = nlp.add_pipe('entity_ruler')
+ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
 
 terms = {
     'covid_19_symptomen': [
@@ -46,7 +49,7 @@ for term_description, terms in terms.items():
     ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
 
 # Qualifiers
-nlp.add_pipe('clinlp_context_matcher')
+nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
 
 text = (
     "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
@@ -90,13 +93,14 @@ for ent in doc.ents:
 Currently, `clinlp` offers the following components, tailored to Dutch Clinical text, further discussed below: 
 
 1. [Tokenizer](#tokenizer)
-2. [Sentence splitter](#sentence-splitter)
-3. [Entity matcher (builtin Spacy)](#entity-matcher)
-4. [Context detection](#context-detection)
+2. [Normalizer](#normalizer)
+3. [Sentence splitter](#sentence-splitter)
+4. [Entity matcher (builtin Spacy)](#entity-matcher)
+5. [Context detection](#context-detection)
 
 ### Tokenizer
 
-The `clinlp` tokenizer is builin the blank model:
+The `clinlp` tokenizer is built into the blank model:
 
 ```python
 nlp = spacy.blank('clinlp')
@@ -108,6 +112,14 @@ It employs some custom rule based logic, including:
 - Custom tokenizing rules (e.g. `xdd` :arrow_right: `x` `dd`)
 - Regarding [DEDUCE](https://github.com/vmenger/deduce) tags as a single token (e.g. `[DATUM-1]`). 
   - Deidentification is not builtin `clinlp` and should be done as a preprocessing step.
+
+### Normalizer
+
+The normalizer sets the `token.norm` attribute, which can be used by further components (entity recognition, qualification) for matching. It currently has two options (enabled by default):
+- Lowercasing
+- Removing diacritings, where possible. For instance, it will map `ë` `->` `e`, but keeps most other non-ascii characters intact (e.g. `µ`, `²`).
+
+Note that this component only has effect when explicitly configuring successor components to match on the `token.norm` attribute. 
 
 ### Sentence splitter
 
@@ -121,12 +133,12 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second only also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
+Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second one also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
 
 For instance, a matcher that helps recognize COVID19 symptoms:
 
 ```python
-ruler = nlp.add_pipe('entity_ruler')
+ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
 
 terms = {
     'covid_19_symptomen': [
@@ -154,7 +166,7 @@ After finding entities, it's often useful to qualify these entities, e.g.: are t
 A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
-nlp.add_pipe('clinlp_context_matcher')
+nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
 ```
 
 A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows: 

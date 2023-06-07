@@ -1,5 +1,6 @@
 from spacy.tokens import Span
 
+from .normalizer import Normalizer
 from .qualifier import (
     QUALIFIERS_ATTR,
     ContextMatcher,
