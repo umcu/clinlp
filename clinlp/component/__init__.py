@@ -1,5 +1,6 @@
 from spacy.tokens import Span
 
+from .normalizer import Normalizer
 from .qualifier import (
     QUALIFIERS_ATTR,
     ContextMatcher,
@@ -8,7 +9,5 @@ from .qualifier import (
     Qualifier,
 )
 from .sentencizer import Sentencizer
-
-from .normalizer import Normalizer
 
 Span.set_extension(name=QUALIFIERS_ATTR, default=None)
