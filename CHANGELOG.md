@@ -12,10 +12,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - version info to model meta (warns if installed `clinlp` version does not match model version)
 - a component for normalizing 
 
-### Changed
-
-- some special tokenizing rules for non-ascii characters
-
 ## 0.1.1 (2023-05-23)
 
 ### Fixed
