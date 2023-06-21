@@ -254,6 +254,30 @@ class TestUnitQualifierMatcher:
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
 
+    def test_overlap_rule_and_ent(self):
+        nlp = spacy.blank("clinlp")
+        nlp.add_pipe("clinlp_sentencizer")
+        ruler = nlp.add_pipe("entity_ruler")
+        ruler.add_patterns([{"label": "symptoom", "pattern": "geen eetlust"}])
+
+        rules = parse_rules(
+            data={
+                "qualifiers": [
+                    {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
+                ],
+                "rules": [
+                    {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                ],
+            }
+        )
+
+        text = "Patient laat weten geen eetlust te hebben"
+
+        qm = ContextMatcher(nlp=nlp, name="_", default_rules=None, rules=rules)
+        doc = qm(nlp(text))
+
+        assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
+
     def test_load_default_rules(self, nlp):
         qm = ContextMatcher(nlp=nlp, name="_")
 
