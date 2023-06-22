@@ -85,7 +85,7 @@ CLINLP_ABBREVIATIONS = [
 ]
 
 CLINLP_REMOVE_ABBREVIATIONS = [
-    'ts.',
+    "ts.",
 ]
 
 CLINLP_UNITS = [
@@ -237,7 +237,6 @@ ALPHA = "a-zA-Z"
 
 
 def _get_abbreviations():
-
     base = set(spacy.lang.nl.tokenizer_exceptions.abbrevs.copy())
 
     for abbrev in CLINLP_REMOVE_ABBREVIATIONS:
