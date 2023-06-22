@@ -326,7 +326,7 @@ class ContextMatcher:
                 qualifiers = set()
 
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
-                    if ent.start + 1 > match_interval.data.end or ent.end < match_interval.data.start + 1:
+                    if (ent.start + 1 > match_interval.data.end) or (ent.end < match_interval.data.start + 1):
                         qualifiers.add(str(match_interval.data.rule.qualifier))
 
                 ent._.set(QUALIFIERS_ATTR, qualifiers)
