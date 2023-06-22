@@ -2,7 +2,7 @@
 
 It's useful to have some operational definitions of a qualifier/context, i.e. what we mean exactly when we talk about negations, hypothetical situations, etc. A good definition gives clarity and sets expectations, both for algorithms and anotators. 
 
-Below is an attempt at such operational definitions, with some further considerations following after that. The following is based on a combination of existing literature and experience working with real-world clinical text and problems. Please feel free to add any edge cases not covered here yet. 
+Below is an attempt at such operational definitions, based on a combination of existing literature and experience working with real-world clinical text and problems. Please feel free to add any edge cases not covered here yet. After the definitions, some additional considerations will follow.
 
 ## Negation
 
@@ -11,8 +11,8 @@ Below is an attempt at such operational definitions, with some further considera
 
 Definition:
 
-* A concept is `Negated` if the text indicates that the concept did not take place or exist
-* A concept is not `Negated` if there is doubt/confusion about presence, or if presence has not been checked (rather this concept is `Hypothetical`, see below)
+* A concept is `Negated` if the text indicates that the concept does not exist or take place
+* A concept is `Affirmed` if there is doubt/confusion about its presence, or if its presence has not been checked (rather this concept is `Hypothetical`, see below)
 
 Examples:
 
@@ -37,7 +37,7 @@ Examples:
 Definition:
 
 * A concept is `Plausible` if there is certainty that the concept is either present or absent.  
-* A concept is `Hypothetical` if it is uncertain what the presence/absence status of a concept is. 
+* A concept is `Hypothetical` if it is uncertain what the presence/absence status of a concept is, or if it might come to exist in the future 
 
 Examples:
 
