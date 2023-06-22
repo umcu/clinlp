@@ -898,24 +898,6 @@
         ],
         [
           {
-            "LOWER": "sinds"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "zijn",
-                "haar"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d{,2}e$"
-            }
-          }
-        ],
-        [
-          {
             "TEXT": {
               "REGEX": "^(19|20)\\d{2}$"
             }
@@ -1009,24 +991,6 @@
         ],
         [
           {
-            "LOWER": "sinds"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "zijn",
-                "haar"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d{,2}e$"
-            }
-          }
-        ],
-        [
-          {
             "LOWER": "in"
           },
           {
@@ -1084,7 +1048,103 @@
         "lijkt niet meer",
         "lijkt niet minder",
         "vg blanco",
-        "voorgeschiedenis blanco"
+        "voorgeschiedenis blanco",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "een",
+                "twee",
+                "drie",
+                "vier",
+                "vijf",
+                "zes",
+                "zeven",
+                "acht",
+                "negen",
+                "tien"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "TEXT": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "oktober",
+                "november",
+                "december"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            },
+            "OP": "?"
+          }
+        ]
       ]
     },
     {
@@ -1096,8 +1156,10 @@
         "afname",
         "nu",
         "primair",
+        "sinds",
         "toegenomen",
         "toename",
+        "vanaf",
         ","
       ]
     }
