@@ -1,8 +1,8 @@
 # Qualifier operational definitions
 
-It's useful to have some operational definitions of a qualifier/context, i.e. what we mean exactly when we talk about a negation, or hypothetical situation. This serves both to set expectation for algorithms that detect context, and as a basic guideline for annotating text. 
+It's useful to have some operational definitions of a qualifier/context, i.e. what we mean exactly when we talk about a negations, hypothetical situations, etc. A good definition gives clarity and sets expectations, both for algorithms and anotators. 
 
-Below is an attempt at such operational definitions, and some further considerations at the bottom. These are based on a combination of existing literature and experience working with real-world clinical text and problems. Please feel free to add any edge cases not covered here yet. 
+Below is an attempt at such operational definitions, with some further considerations following after that. The following is based on a combination of existing literature and experience working with real-world clinical text and problems. Please feel free to add any edge cases not covered here yet. 
 
 ## Negation
 
@@ -20,6 +20,7 @@ Examples:
 * Er was geen sprake van `[CONCEPT]` => `Negated`
 * `[CONCEPT]` werd uitgesloten => `Negated`
 * `[CONCEPT]` niet uitgevraagd => `Affirmed` (nb: will be marked as hypothetical later)
+* `[CONCEPT]` in remissie => `Affirmed`
 
 ## Temporaility
 
@@ -32,7 +33,8 @@ Definition:
 * A concept is `Historical` if the concept was present at some point in history, but not in the last *two weeks*
 
 Examples:
-* `[CONCEPT`] in voorgeschiedenis => `Historical`
+* Patient heeft last van `[CONCEPT]` => `Current`
+* `[CONCEPT]` in voorgeschiedenis => `Historical`
 * In 2012: `[CONCEPT]` => `Historical` (assuming a much later clinical date)
 * Sinds 2012: `[CONCEPT]` => `Current`
 
@@ -49,7 +51,7 @@ Definition:
 Examples:
 
 - Differentiaal diagnostisch valt er te denken aan `[CONCEPT]` => `Hypothetical`
-- `[CONCEPT]` valt niet uit te sluiten => `Hypothetical`, `Negated`
+- `[CONCEPT]` valt niet uit te sluiten => `Hypothetical`
 
 ## Experiencer
 
@@ -62,10 +64,13 @@ Definition:
 
 Examples:
 
+* Patient heeft last van `[CONCEPT]` => `Patient`
+* Moeder van patient heeft last van `[CONCEPT]` => `Other`
+* Familieanamnese positief voor `[CONCEPT]` => `Other`
 
 ## Qualifiers in concepts themselves
 
-Sometimes a concept itself already has some qualification, e.g. `gebrek aan eetlust`. The correct qualification in this text would be: 
+Sometimes a concept itself already contains a qualification, e.g. `gebrek aan eetlust`. The correct qualification in this text would be: 
 
 * Patient heeft `geen eetlust` => `Affirmed`.
 
