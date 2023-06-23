@@ -18,6 +18,7 @@ from spacy.tokens import Doc, Span
 
 QUALIFIERS_ATTR = "qualifiers"
 PHRASE_MATCHER_ATTR = "TEXT"
+MAX_SCOPE = 5
 
 DEFAULT_CONTEXT_RULES = "psynlp_context_rules.json"
 
@@ -69,12 +70,18 @@ class _MatchedContextPattern:
         self.end = end + offset
         self.scope = None
 
-    def set_initial_scope(self, sentence: Span):
+    def set_initial_scope(self, sentence: Span, max_scope: int = None):
+        if max_scope is None:
+            max_scope = len(sentence)
+
+        if max_scope < 1:
+            raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
+
         if self.rule.direction == ContextRuleDirection.PRECEDING:
-            self.scope = (self.start, sentence.end)
+            self.scope = (self.start, min(self.end + max_scope, sentence.end))
 
         elif self.rule.direction == ContextRuleDirection.FOLLOWING:
-            self.scope = (sentence.start, self.end)
+            self.scope = (max(self.start - max_scope, sentence.start), self.end)
 
 
 def _parse_qualifier(qualifier: str, qualifier_classes: dict[str, Qualifier]) -> Qualifier:
@@ -141,7 +148,7 @@ def parse_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -
 
 @Language.factory(
     name="clinlp_context_matcher",
-    default_config={"phrase_matcher_attr": PHRASE_MATCHER_ATTR, "rules": None},
+    default_config={"phrase_matcher_attr": PHRASE_MATCHER_ATTR, "max_scope": MAX_SCOPE, "rules": None},
     requires=["doc.sents", "doc.ents"],
 )
 class ContextMatcher:
@@ -161,6 +168,7 @@ class ContextMatcher:
         nlp: Language,
         name: str,
         phrase_matcher_attr: str = PHRASE_MATCHER_ATTR,
+        max_scope: int = MAX_SCOPE,
         default_rules: Optional[str] = DEFAULT_CONTEXT_RULES,
         rules: Optional[list[ContextRule]] = None,
     ):
@@ -169,6 +177,8 @@ class ContextMatcher:
 
         self._matcher = Matcher(self._nlp.vocab, validate=True)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
+
+        self.max_scope = max_scope
 
         self.rules = {}
 
@@ -317,7 +327,7 @@ class ContextMatcher:
                     rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
                 )
 
-                pattern.set_initial_scope(sentence)
+                pattern.set_initial_scope(sentence, self.max_scope)
                 matched_patterns.append(pattern)
 
             match_scopes = self._compute_match_scopes(matched_patterns)
