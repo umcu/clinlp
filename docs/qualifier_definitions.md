@@ -56,8 +56,8 @@ Examples:
 
 Definition:
 
-* A concept is `Current` if the concept was present in the last *two weeks*, regardless of whether it was present before
-* A concept is `Historical` if the concept was present at some point in history, but not in the last *two weeks*
+* A concept is `Current` if the concept was *present in the last two weeks*, regardless of whether it was present before
+* A concept is `Historical` if the concept was present at some point in history, but *not in the last two weeks*
 
 Examples:
 
@@ -74,7 +74,7 @@ Examples:
 
 Definition:
 
-* Mark as `Other` when the concept was experierienced or applied to someone else than the patient (e.g. a familiy member, clinician)
+* A concept is experienced by `Other` when the concept was experierienced or applied to someone else than the patient (e.g. a familiy member, clinician)
 
 Examples:
 
@@ -96,11 +96,11 @@ Rather, if the concept was just `eetlust`, it would be:
 
 | Text                                           | `[CONCEPT]` qualifier | Notes |
 |------------------------------------------------|-----------------------|-------|
-| Patient heeft `eetlust`                        | `Negated`             |       |
+| Patient heeft geen `eetlust`                   | `Negated`             |       |
 
 ## Multiple qualifiers applying to a concept
 
-Oftentimes multiple qualifiers are applicable to a context. If you have an application in mind where concepts are filtered whenever (at least) one qualifiers applies, it can be easy to forget that multiple are applicable. It is however important that all qualifieres are correctly detected, for example:
+Oftentimes multiple qualifiers are applicable to a concept. If you have an application in mind where concepts are filtered whenever (at least) one qualifiers applies, it can be easy to forget that multiple are applicable. It is however important that all qualifieres are correctly detected, for example:
 
 | Text                                                | `[CONCEPT]` qualifier     | Notes |
 |-----------------------------------------------------|---------------------------|-------|
