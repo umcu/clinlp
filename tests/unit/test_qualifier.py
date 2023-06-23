@@ -29,7 +29,7 @@ class TestUnitQualifier:
         assert q["NEGATED"]
 
 
-class UnitTestQualifierRuleDirection:
+class TestUnitQualifierRuleDirection:
     def test_qualifier_rule_direction_create(self):
         assert ContextRuleDirection.PRECEDING
         assert ContextRuleDirection.FOLLOWING
@@ -37,7 +37,7 @@ class UnitTestQualifierRuleDirection:
         assert ContextRuleDirection.TERMINATION
 
 
-class UnitTestQualifierRule:
+class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
         level = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
@@ -61,9 +61,9 @@ class UnitTestQualifierRule:
         assert qr.direction == direction
 
 
-class UnitTestMatchedQualifierPattern:
+class TestUnitMatchedQualifierPattern:
     def test_create_matched_qualifier_pattern(self, mock_qualifier):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 0
         end = 10
 
@@ -75,7 +75,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 0
         end = 10
         offset = 25
@@ -88,7 +88,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -100,7 +100,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -112,7 +112,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope == (0, 2)
 
 
-class UnitTestLoadRules:
+class TestUnitLoadRules:
     def test_parse_level(self, mock_qualifier):
         level = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
@@ -134,7 +134,7 @@ class UnitTestLoadRules:
 
     def test_load_rules_data(self):
         data = {
-            "qualifier_classes": [
+            "qualifiers": [
                 {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],

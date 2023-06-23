@@ -17,14 +17,14 @@
   ],
   "rules": [
     {
-      "level": "Negation.NEGATED",
+      "qualifier": "Negation.NEGATED",
       "direction": "preceding",
       "patterns": [
         "geen"
       ]
     },
     {
-      "level": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.HISTORICAL",
       "direction": "following",
       "patterns": [
         "weken geleden"
