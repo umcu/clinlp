@@ -36,6 +36,9 @@
       "qualifier": "Experiencer.OTHER",
       "direction": "preceding",
       "patterns": [
+        "familieanamnese",
+        "familie-anamnese",
+        "familie anamnese",
         "familiair",
         "familiaire",
         "familieleden",
@@ -530,7 +533,6 @@
         "konden niet",
         "kunnen geen",
         "kunnen niet",
-        "nam af",
         "negatief voor",
         "niet waarschijnlijk",
         "niet",
@@ -574,8 +576,6 @@
         "is verdwenen",
         "is weg",
         "kan worden uitgesloten",
-        "laag ingeschat",
-        "nam af",
         "niet aan de orde",
         "niet aanwezig",
         "niet besproken",
@@ -584,8 +584,9 @@
         "niet waarschijnlijk",
         "onwaarschijnlijk",
         "opgelost",
-        "preventieplan",
         "speelt niet",
+        "in complete remissie",
+        "in totale remissie",
         "waren niet",
         "was niet",
         "werd uitgesloten",
@@ -608,25 +609,16 @@
         "geen toename",
         "geen verandering",
         "geen verbetering",
-        "geen verdere",
         "geen zekere verandering",
         "gram negatief",
-        "herkent zich niet",
-        "is misschien niet",
-        "is mogelijk niet",
         "kan niet",
-        "misschien niet",
-        "mogelijk niet",
         "niet alleen",
         "niet besproken",
         "niet duidelijk",
         "niet gevraagd",
         "niet mogelijk om ",
-        "niet noodzakelijkerwijs",
-        "niet perse",
         "niet uit te sluiten",
         "niet uitgesloten",
-        "niet uitgevraagd",
         "niet uitgevraagd",
         "niet zeker of",
         "wel of niet",
@@ -733,7 +725,6 @@
         "ambivalent",
         "beoordelen van",
         "cave",
-        "dd",
         "diagnostiek",
         "differentiaal diagnostisch",
         "eventueel",
@@ -768,12 +759,30 @@
         "vermoeden",
         "vermoedt",
         "voorlopige diagnose",
+        "waarschijnlijk",
         "wanneer",
         "wel of niet",
         "wordt gedacht aan",
         "zorgen voor",
         "zou",
-        "dan"
+        "dan",
+        [
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            },
+            "OP": "!"
+          },
+          {
+            "NORM": "dd"
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            },
+            "OP": "!"
+          }
+        ]
       ]
     },
     {
@@ -790,6 +799,7 @@
         "onduidelijk",
         "vermoedde",
         "vermoedden",
+        "waarschijnlijk",
         "zou worden",
         "zou zijn"
       ]
@@ -812,7 +822,6 @@
       "patterns": [
         "aanwezig",
         "ter preventie",
-        "zeer waarschijnlijk",
         "zeker",
         "zonder twijfel",
         ","
@@ -1076,7 +1085,7 @@
           {
             "LOWER": {
               "IN": [
-                "",
+                "1",
                 "2",
                 "3",
                 "4",
