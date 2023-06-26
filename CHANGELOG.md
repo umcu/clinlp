@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - remove a default spacy abbreviation (`ts.`)
+- option for max scope on qualifier rules, limiting the number of tokens it applies to
 
 ### Fixed
 
