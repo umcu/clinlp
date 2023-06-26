@@ -19,6 +19,7 @@
     {
       "qualifier": "Negation.NEGATED",
       "direction": "preceding",
+      "max_scope": 5,
       "patterns": [
         "geen"
       ]

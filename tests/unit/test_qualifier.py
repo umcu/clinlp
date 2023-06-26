@@ -179,7 +179,7 @@ class TestUnitLoadRules:
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 {"patterns": ["weken geleden"], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
@@ -190,9 +190,11 @@ class TestUnitLoadRules:
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
+        assert rules[0].max_scope == 5
         assert rules[1].pattern == "weken geleden"
         assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
+        assert rules[1].max_scope is None
 
     def test_load_rules_json(self):
         rules = parse_rules(input_json="tests/data/qualifier_rules_simple.json")
@@ -201,9 +203,11 @@ class TestUnitLoadRules:
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
+        assert rules[0].max_scope == 5
         assert rules[1].pattern == "weken geleden"
         assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
+        assert rules[1].max_scope is None
 
     def test_load_rules_unhappy(self):
         with pytest.raises(ValueError):

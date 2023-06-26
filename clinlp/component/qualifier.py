@@ -18,7 +18,6 @@ from spacy.tokens import Doc, Span
 
 QUALIFIERS_ATTR = "qualifiers"
 PHRASE_MATCHER_ATTR = "TEXT"
-MAX_SCOPE = 5
 
 DEFAULT_CONTEXT_RULES = "psynlp_context_rules.json"
 
@@ -72,7 +71,6 @@ class _MatchedContextPattern:
         self.scope = None
 
     def set_initial_scope(self, sentence: Span):
-
         max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
