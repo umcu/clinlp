@@ -112,38 +112,44 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (0, 2)
 
     def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING, max_scope=1
+        )
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
-        mqp.set_initial_scope(sentence=sentence, max_scope=1)
+        mqp.set_initial_scope(sentence=sentence)
 
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
     def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=1
+        )
         start = 2
         end = 3
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
-        mqp.set_initial_scope(sentence=sentence, max_scope=1)
+        mqp.set_initial_scope(sentence=sentence)
 
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
     def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=-1
+        )
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
         with pytest.raises(ValueError):
-            mqp.set_initial_scope(sentence=sentence, max_scope=0)
+            mqp.set_initial_scope(sentence=sentence)
 
 
 class TestUnitLoadRules:

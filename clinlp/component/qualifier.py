@@ -51,12 +51,13 @@ class ContextRule:
         pattern: The pattern to look for in text, either a string, or a spacy pattern (list).
         qualifier: The qualifier to modify.
         direction: The context rule direction.
-
+        max_scope: The maximum scope (number of tokens) of the trigger, within sentence boundaries
     """
 
     pattern: Union[str, list[dict[str, str]]]
     qualifier: Qualifier
     direction: ContextRuleDirection
+    max_scope: Optional[int] = None
 
 
 class _MatchedContextPattern:
@@ -70,9 +71,9 @@ class _MatchedContextPattern:
         self.end = end + offset
         self.scope = None
 
-    def set_initial_scope(self, sentence: Span, max_scope: int = None):
-        if max_scope is None:
-            max_scope = len(sentence)
+    def set_initial_scope(self, sentence: Span):
+
+        max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
             raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
@@ -140,15 +141,16 @@ def parse_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -
     for rule in data["rules"]:
         qualifier = _parse_qualifier(rule["qualifier"], qualifiers)
         direction = _parse_direction(rule["direction"])
+        max_scope = rule.get("max_scope", None)
 
-        qualifier_rules += [ContextRule(pattern, qualifier, direction) for pattern in rule["patterns"]]
+        qualifier_rules += [ContextRule(pattern, qualifier, direction, max_scope) for pattern in rule["patterns"]]
 
     return qualifier_rules
 
 
 @Language.factory(
     name="clinlp_context_matcher",
-    default_config={"phrase_matcher_attr": PHRASE_MATCHER_ATTR, "max_scope": MAX_SCOPE, "rules": None},
+    default_config={"phrase_matcher_attr": PHRASE_MATCHER_ATTR, "rules": None},
     requires=["doc.sents", "doc.ents"],
 )
 class ContextMatcher:
@@ -168,7 +170,6 @@ class ContextMatcher:
         nlp: Language,
         name: str,
         phrase_matcher_attr: str = PHRASE_MATCHER_ATTR,
-        max_scope: int = MAX_SCOPE,
         default_rules: Optional[str] = DEFAULT_CONTEXT_RULES,
         rules: Optional[list[ContextRule]] = None,
     ):
@@ -177,8 +178,6 @@ class ContextMatcher:
 
         self._matcher = Matcher(self._nlp.vocab, validate=True)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
-
-        self.max_scope = max_scope
 
         self.rules = {}
 
@@ -327,7 +326,7 @@ class ContextMatcher:
                     rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
                 )
 
-                pattern.set_initial_scope(sentence, self.max_scope)
+                pattern.set_initial_scope(sentence)
                 matched_patterns.append(pattern)
 
             match_scopes = self._compute_match_scopes(matched_patterns)

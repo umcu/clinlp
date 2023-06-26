@@ -14,7 +14,8 @@
       "levels": [
         "AFFIRMED",
         "NEGATED"
-      ]
+      ],
+      "max_scope": 5
     },
     {
       "qualifier": "Plausibility",
