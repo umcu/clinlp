@@ -3,6 +3,8 @@ import json
 import pytest
 import spacy
 
+import clinlp
+
 
 @pytest.fixture()
 def nlp():
@@ -14,7 +16,7 @@ def nlp():
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
-    qm = nlp.add_pipe("clinlp_context_matcher")
+    _ = nlp.add_pipe("clinlp_context_algorithm")
 
     return nlp
 

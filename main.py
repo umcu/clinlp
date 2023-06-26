@@ -1,6 +1,6 @@
 import spacy
 
-from clinlp.qualifier.rule_based import parse_rules
+from clinlp.qualifier.context_algorithm import parse_rules
 
 def show_demo():
 
@@ -62,7 +62,7 @@ def show_demo():
 
 def show_load_rules():
 
-    from clinlp.qualifier.rule_based import parse_rules
+    from clinlp.qualifier.context_algorithm import parse_rules
 
     rules = parse_rules("clinlp/qualifier_classes.json")
 

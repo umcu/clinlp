@@ -1,7 +1,11 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
-from spacy.tokens import Doc
+from spacy.tokens import Doc, Span
+
+QUALIFIERS_ATTR = "qualifiers"
+
+Span.set_extension(name=QUALIFIERS_ATTR, default=None)
 
 
 class Qualifier(Enum):
