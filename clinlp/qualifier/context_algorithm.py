@@ -16,7 +16,7 @@ from spacy.tokens import Doc, Span
 from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
 
 _DEFAULT_CONTEXT_RULES_PATH = str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json"))
-PHRASE_MATCHER_ATTR = "TEXT"
+_DEFAULT_PHRASE_MATCHER_ATTR = "TEXT"
 
 
 class ContextRuleDirection(Enum):
@@ -80,7 +80,7 @@ class _MatchedContextPattern:
 @Language.factory(
     name="clinlp_context_algorithm",
     default_config={
-        "phrase_matcher_attr": PHRASE_MATCHER_ATTR,
+        "phrase_matcher_attr": _DEFAULT_PHRASE_MATCHER_ATTR,
         "rules": _DEFAULT_CONTEXT_RULES_PATH,
         "load_rules": True,
     },
@@ -88,7 +88,7 @@ class _MatchedContextPattern:
 )
 class ContextAlgorithm(QualifierDetector):
     """
-    Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline.
+    Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline component.
 
     Args:
         nlp: The Spacy language object to use
@@ -103,7 +103,7 @@ class ContextAlgorithm(QualifierDetector):
         self,
         nlp: Language,
         name: str,
-        phrase_matcher_attr: str = PHRASE_MATCHER_ATTR,
+        phrase_matcher_attr: str = _DEFAULT_PHRASE_MATCHER_ATTR,
         load_rules=True,
         rules: Optional[Union[str | dict]] = _DEFAULT_CONTEXT_RULES_PATH,
     ):
@@ -123,6 +123,29 @@ class ContextAlgorithm(QualifierDetector):
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
+
+    def add_rule(self, rule: ContextRule):
+        """
+        Add a rule.
+        """
+        rule_key = f"rule_{len(self.rules)}"
+        self.rules[rule_key] = rule
+
+        if isinstance(rule.pattern, str):
+            self._phrase_matcher.add(key=rule_key, docs=[self._nlp(rule.pattern)])
+
+        elif isinstance(rule.pattern, list):
+            self._matcher.add(key=rule_key, patterns=[rule.pattern])
+
+        else:
+            raise ValueError(f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}")
+
+    def add_rules(self, rules: list[ContextRule]):
+        """
+        Add multiple rules.
+        """
+        for rule in rules:
+            self.add_rule(rule)
 
     @staticmethod
     def _parse_qualifier(qualifier: str, qualifier_classes: dict[str, Qualifier]) -> Qualifier:
@@ -180,32 +203,6 @@ class ContextAlgorithm(QualifierDetector):
             qualifier_rules += [ContextRule(pattern, qualifier, direction, max_scope) for pattern in rule["patterns"]]
 
         return qualifier_rules
-
-    def add_rule(self, rule: ContextRule):
-        """
-        Add a rule.
-        """
-        rule_key = f"rule_{len(self.rules)}"
-        self.rules[rule_key] = rule
-
-        if isinstance(rule.pattern, str):
-            self._phrase_matcher.add(key=rule_key, docs=[self._nlp(rule.pattern)])
-
-        elif isinstance(rule.pattern, list):
-            self._matcher.add(key=rule_key, patterns=[rule.pattern])
-
-        else:
-            raise ValueError(f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}")
-
-    def add_rules(self, rules: list[ContextRule]):
-        """
-        Add multiple rules.
-        """
-        for rule in rules:
-            self.add_rule(rule)
-
-    def __len__(self):
-        return len(self.rules)
 
     @staticmethod
     def _get_sentences_having_entity(doc: Doc) -> Iterator[Span]:
@@ -331,3 +328,6 @@ class ContextAlgorithm(QualifierDetector):
                 ent._.set(QUALIFIERS_ATTR, qualifiers)
 
         return doc
+
+    def __len__(self):
+        return len(self.rules)
