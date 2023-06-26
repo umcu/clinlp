@@ -166,7 +166,7 @@ class ContextAlgorithm(QualifierDetector):
                 rules = json.load(file)
 
         qualifiers = {
-            qualifier["qualifier"]: Qualifier(qualifier["qualifier"], qualifier["levels"])
+            qualifier["qualifier"]: Qualifier(qualifier["qualifier"], qualifier["values"])
             for qualifier in rules["qualifiers"]
         }
 

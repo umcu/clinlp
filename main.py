@@ -27,8 +27,8 @@ def show_demo():
     # Context
     qualifier_data = {
         'qualifier_classes': [
-            {'qualifier': 'Negation', 'levels': ['AFFIRMED', 'NEGATED']},
-            {'qualifier': 'Temporality', 'levels': ["CURRENT", "HISTORICAL"]},
+            {'qualifier': 'Negation', 'values': ['AFFIRMED', 'NEGATED']},
+            {'qualifier': 'Temporality', 'values': ["CURRENT", "HISTORICAL"]},
         ],
         "rules": [
             {'pattern': "geen", "qualifier": "Negation.NEGATED", "direction": "preceding"},
