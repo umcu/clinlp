@@ -3,7 +3,7 @@ import spacy
 from spacy import Vocab
 from spacy.tokens import Doc
 
-from clinlp.component import Normalizer
+from clinlp import Normalizer
 
 
 @pytest.fixture

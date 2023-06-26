@@ -1,6 +1,6 @@
 import spacy
 
-from clinlp.component.qualifier import parse_rules
+from clinlp.qualifier.rule_based import parse_rules
 
 def show_demo():
 
@@ -62,7 +62,7 @@ def show_demo():
 
 def show_load_rules():
 
-    from clinlp.component.qualifier import parse_rules
+    from clinlp.qualifier.rule_based import parse_rules
 
     rules = parse_rules("clinlp/qualifier_classes.json")
 
@@ -115,7 +115,6 @@ def load_resources():
 def check_versioning():
 
     import spacy
-    import clinlp
 
     nlp = spacy.blank('clinlp')
 
@@ -126,7 +125,6 @@ def check_versioning():
 def check_load_model():
 
     import spacy
-    import clinlp
 
     spacy.load("test_version_model")
 

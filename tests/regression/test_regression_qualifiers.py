@@ -3,8 +3,6 @@ import json
 import pytest
 import spacy
 
-from clinlp.component.qualifier import parse_rules
-
 
 @pytest.fixture()
 def nlp():

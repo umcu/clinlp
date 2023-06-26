@@ -3,7 +3,7 @@ from unittest.mock import patch
 import pytest
 import spacy
 
-from clinlp.component import Sentencizer
+from clinlp import Sentencizer
 
 
 class MockToken:

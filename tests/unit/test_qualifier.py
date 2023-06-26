@@ -2,8 +2,8 @@ import pytest
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.component import ContextRule, ContextRuleDirection, Qualifier
-from clinlp.component.qualifier import (
+from clinlp.qualifier import ContextRule, ContextRuleDirection, Qualifier
+from clinlp.qualifier.rule_based import (
     _MatchedContextPattern,
     _parse_direction,
     _parse_qualifier,

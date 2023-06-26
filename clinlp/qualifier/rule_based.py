@@ -16,18 +16,12 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
+from clinlp.qualifier.qualifier import Qualifier, QualifierDetector
+
 QUALIFIERS_ATTR = "qualifiers"
 PHRASE_MATCHER_ATTR = "TEXT"
 
 DEFAULT_CONTEXT_RULES = "psynlp_context_rules.json"
-
-
-class Qualifier(Enum):
-    """
-    A qualifier modifies an entity (e.g. negation, temporality, plausibility, etc.).
-    """
-
-    ...
 
 
 class ContextRuleDirection(Enum):
@@ -151,7 +145,7 @@ def parse_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -
     default_config={"phrase_matcher_attr": PHRASE_MATCHER_ATTR, "rules": None},
     requires=["doc.sents", "doc.ents"],
 )
-class ContextMatcher:
+class ContextMatcher(QualifierDetector):
     """
     Implements a very simple version of the context algorithm.
 

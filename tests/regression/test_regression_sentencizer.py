@@ -2,7 +2,7 @@ import json
 
 import spacy
 
-from clinlp.component import Sentencizer
+from clinlp import Sentencizer
 
 
 class MockToken:

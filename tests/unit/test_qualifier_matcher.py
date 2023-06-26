@@ -1,7 +1,7 @@
 import pytest
 import spacy
 
-from clinlp.component.qualifier import ContextMatcher, parse_rules
+from clinlp.qualifier.rule_based import ContextMatcher, parse_rules
 
 
 @pytest.fixture

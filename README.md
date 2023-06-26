@@ -169,10 +169,10 @@ A set of rules, that checks for negation, temporality, plausibility and experien
 nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
 ```
 
-A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows: 
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
 
 ```python
-from clinlp.component.qualifier import parse_rules
+from clinlp.qualifier.rule_based import parse_rules
 
 cm = nlp.add_pipe('clinlp_context_matcher', config={'default_rules': None})
 cm.add_rules(parse_rules('my_custom_rules.json'))
