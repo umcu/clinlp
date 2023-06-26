@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 
 - issue where entity and context trigger were overlapping (e.g. `geen eetlust`)
+- some tests that were not auto-discovered by pytest due to naming
 
 ## 0.2.0 (2023-06-07)
 
