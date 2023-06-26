@@ -29,7 +29,7 @@ class TestUnitQualifier:
         assert q["NEGATED"]
 
 
-class UnitTestQualifierRuleDirection:
+class TestUnitQualifierRuleDirection:
     def test_qualifier_rule_direction_create(self):
         assert ContextRuleDirection.PRECEDING
         assert ContextRuleDirection.FOLLOWING
@@ -37,7 +37,7 @@ class UnitTestQualifierRuleDirection:
         assert ContextRuleDirection.TERMINATION
 
 
-class UnitTestQualifierRule:
+class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
         level = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
@@ -61,9 +61,9 @@ class UnitTestQualifierRule:
         assert qr.direction == direction
 
 
-class UnitTestMatchedQualifierPattern:
+class TestUnitMatchedQualifierPattern:
     def test_create_matched_qualifier_pattern(self, mock_qualifier):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 0
         end = 10
 
@@ -75,7 +75,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 0
         end = 10
         offset = 25
@@ -88,7 +88,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -100,7 +100,7 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", level=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
+        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -111,8 +111,48 @@ class UnitTestMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
+    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_qualifier, mock_doc):
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING, max_scope=1
+        )
+        start = 1
+        end = 2
+        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+        sentence = Span(mock_doc, start=0, end=4)
 
-class UnitTestLoadRules:
+        mqp.set_initial_scope(sentence=sentence)
+
+        assert mqp.scope is not None
+        assert mqp.scope == (1, 3)
+
+    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_qualifier, mock_doc):
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=1
+        )
+        start = 2
+        end = 3
+        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+        sentence = Span(mock_doc, start=0, end=4)
+
+        mqp.set_initial_scope(sentence=sentence)
+
+        assert mqp.scope is not None
+        assert mqp.scope == (1, 3)
+
+    def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_qualifier, mock_doc):
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=-1
+        )
+        start = 1
+        end = 2
+        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+        sentence = Span(mock_doc, start=0, end=4)
+
+        with pytest.raises(ValueError):
+            mqp.set_initial_scope(sentence=sentence)
+
+
+class TestUnitLoadRules:
     def test_parse_level(self, mock_qualifier):
         level = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
@@ -134,12 +174,12 @@ class UnitTestLoadRules:
 
     def test_load_rules_data(self):
         data = {
-            "qualifier_classes": [
+            "qualifiers": [
                 {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
                 {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
                 {"patterns": ["weken geleden"], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
             ],
         }
@@ -150,9 +190,11 @@ class UnitTestLoadRules:
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
+        assert rules[0].max_scope == 5
         assert rules[1].pattern == "weken geleden"
         assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
+        assert rules[1].max_scope is None
 
     def test_load_rules_json(self):
         rules = parse_rules(input_json="tests/data/qualifier_rules_simple.json")
@@ -161,9 +203,11 @@ class UnitTestLoadRules:
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.NEGATED"
         assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
+        assert rules[0].max_scope == 5
         assert rules[1].pattern == "weken geleden"
         assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
+        assert rules[1].max_scope is None
 
     def test_load_rules_unhappy(self):
         with pytest.raises(ValueError):

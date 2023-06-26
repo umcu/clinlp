@@ -50,12 +50,13 @@ class ContextRule:
         pattern: The pattern to look for in text, either a string, or a spacy pattern (list).
         qualifier: The qualifier to modify.
         direction: The context rule direction.
-
+        max_scope: The maximum scope (number of tokens) of the trigger, within sentence boundaries
     """
 
     pattern: Union[str, list[dict[str, str]]]
     qualifier: Qualifier
     direction: ContextRuleDirection
+    max_scope: Optional[int] = None
 
 
 class _MatchedContextPattern:
@@ -70,11 +71,16 @@ class _MatchedContextPattern:
         self.scope = None
 
     def set_initial_scope(self, sentence: Span):
+        max_scope = self.rule.max_scope or len(sentence)
+
+        if max_scope < 1:
+            raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
+
         if self.rule.direction == ContextRuleDirection.PRECEDING:
-            self.scope = (self.start, sentence.end)
+            self.scope = (self.start, min(self.end + max_scope, sentence.end))
 
         elif self.rule.direction == ContextRuleDirection.FOLLOWING:
-            self.scope = (sentence.start, self.end)
+            self.scope = (max(self.start - max_scope, sentence.start), self.end)
 
 
 def _parse_qualifier(qualifier: str, qualifier_classes: dict[str, Qualifier]) -> Qualifier:
@@ -133,8 +139,9 @@ def parse_rules(input_json: Optional[str] = None, data: Optional[dict] = None) -
     for rule in data["rules"]:
         qualifier = _parse_qualifier(rule["qualifier"], qualifiers)
         direction = _parse_direction(rule["direction"])
+        max_scope = rule.get("max_scope", None)
 
-        qualifier_rules += [ContextRule(pattern, qualifier, direction) for pattern in rule["patterns"]]
+        qualifier_rules += [ContextRule(pattern, qualifier, direction, max_scope) for pattern in rule["patterns"]]
 
     return qualifier_rules
 

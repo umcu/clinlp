@@ -506,6 +506,7 @@
     {
       "qualifier": "Negation.NEGATED",
       "direction": "preceding",
+      "max_scope": 5,
       "patterns": [
         "afwezigheid van",
         "deed geen",
@@ -568,6 +569,7 @@
     {
       "qualifier": "Negation.NEGATED",
       "direction": "following",
+      "max_scope": 5,
       "patterns": [
         "afwezig",
         "is uitgesloten",
