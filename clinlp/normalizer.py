@@ -4,14 +4,19 @@ import spacy
 from spacy import Language
 from spacy.tokens import Doc
 
+_defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
+
 
 @spacy.language.Language.factory(
     "clinlp_normalizer",
     assigns=["token.norm"],
-    default_config={"lowercase": True, "map_non_ascii": True},
 )
+def make_normalizer(nlp: Language, name: str, **_defaults_normalizer):
+    return Normalizer(**_defaults_normalizer)
+
+
 class Normalizer:
-    def __init__(self, nlp: Language, name: str, lowercase=True, map_non_ascii=True):
+    def __init__(self, lowercase=True, map_non_ascii=True):
         self.lowercase = lowercase
         self.map_non_ascii = map_non_ascii
 
