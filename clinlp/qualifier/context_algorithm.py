@@ -13,10 +13,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
-
-_DEFAULT_CONTEXT_RULES_PATH = str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json"))
-_DEFAULT_PHRASE_MATCHER_ATTR = "TEXT"
+from clinlp.qualifier.qualifier import Qualifier, QualifierDetector
 
 
 class ContextRuleDirection(Enum):
@@ -77,15 +74,18 @@ class _MatchedContextPattern:
             self.scope = (max(self.start - max_scope, sentence.start), self.end)
 
 
-@Language.factory(
-    name="clinlp_context_algorithm",
-    default_config={
-        "phrase_matcher_attr": _DEFAULT_PHRASE_MATCHER_ATTR,
-        "rules": _DEFAULT_CONTEXT_RULES_PATH,
-        "load_rules": True,
-    },
-    requires=["doc.sents", "doc.ents"],
-)
+_defaults_context_algorithm = {
+    "phrase_matcher_attr": "TEXT",
+    "rules": str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json")),
+    "load_rules": True,
+}
+
+
+@Language.factory(name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=["span._.qualifiers"])
+def make_context_algorithm(nlp: Language, name: str, **_defaults_context_algorithm):
+    return ContextAlgorithm(nlp, **_defaults_context_algorithm)
+
+
 class ContextAlgorithm(QualifierDetector):
     """
     Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline component.
@@ -102,13 +102,12 @@ class ContextAlgorithm(QualifierDetector):
     def __init__(
         self,
         nlp: Language,
-        name: str,
-        phrase_matcher_attr: str = _DEFAULT_PHRASE_MATCHER_ATTR,
-        load_rules=True,
-        rules: Optional[Union[str | dict]] = _DEFAULT_CONTEXT_RULES_PATH,
+        phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
+        load_rules=_defaults_context_algorithm["load_rules"],
+        rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
+        **kwargs,
     ):
         self._nlp = nlp
-        self.name = name
 
         self._matcher = Matcher(self._nlp.vocab, validate=True)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
