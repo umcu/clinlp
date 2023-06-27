@@ -13,7 +13,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.qualifier.qualifier import Qualifier, QualifierDetector
+from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
 
 
 class ContextRuleDirection(Enum):
@@ -81,7 +81,9 @@ _defaults_context_algorithm = {
 }
 
 
-@Language.factory(name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=["span._.qualifiers"])
+@Language.factory(
+    name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"]
+)
 def make_context_algorithm(nlp: Language, name: str, **_defaults_context_algorithm):
     return ContextAlgorithm(nlp, **_defaults_context_algorithm)
 
