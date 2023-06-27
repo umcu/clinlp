@@ -11,11 +11,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - remove a default spacy abbreviation (`ts.`)
 - option for max scope on qualifier rules, limiting the number of tokens it applies to
+- a base class `QualifierDetector` for qualifier detection
 
 ### Fixed
 
 - issue where entity and context trigger were overlapping (e.g. `geen eetlust`)
 - some tests that were not auto-discovered by pytest due to naming
+
+### Changed
+- refactored context algorithm to allow adding new qualifier detectors
+- use maker functions for creating components rather than on the class directly
+- made default configs a bit simpeler
+- move qualifier adding for context algorithm to base class
 
 ## 0.2.0 (2023-06-07)
 
