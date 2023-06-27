@@ -172,8 +172,6 @@ nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
 
 ```python
-from clinlp.qualifier.context_algorithm import parse_rules
-
 cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
 ```
 
