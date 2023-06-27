@@ -9,7 +9,10 @@ readme = "README.md"
 python = "^3.9"
 spacy = "^3.5.3"
 intervaltree = "^3.1.0"
+transformers = "^4.30.2"
 
+[tool.poetry.extras]
+transformers = ["transformers"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"
