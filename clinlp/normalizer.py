@@ -16,7 +16,9 @@ def make_normalizer(nlp: Language, name: str, **_defaults_normalizer):
 
 
 class Normalizer:
-    def __init__(self, lowercase=True, map_non_ascii=True):
+    def __init__(
+        self, lowercase=_defaults_normalizer["lowercase"], map_non_ascii=_defaults_normalizer["map_non_ascii"]
+    ):
         self.lowercase = lowercase
         self.map_non_ascii = map_non_ascii
 
