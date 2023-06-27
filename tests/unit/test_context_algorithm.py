@@ -29,7 +29,7 @@ def mock_doc():
 
 @pytest.fixture
 def ca():
-    return ContextAlgorithm(nlp=spacy.blank("clinlp"), name="_", load_rules=False)
+    return ContextAlgorithm(nlp=spacy.blank("clinlp"), load_rules=False)
 
 
 class TestUnitQualifierRuleDirection:
@@ -168,7 +168,7 @@ class TestUnitQualifierMatcher:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
 
         assert len(ca.rules) == len(rules["rules"])
         assert len(ca._matcher) == 1
@@ -266,7 +266,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Patient heeft geen SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -282,7 +282,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Patient heeft geen SYMPTOOM of SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -299,7 +299,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Aanwezigheid van SYMPTOOM of SYMPTOOM is uitgesloten."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -317,7 +317,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Er is geen toename van SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
@@ -334,7 +334,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Er is geen SYMPTOOM, maar wel SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -352,7 +352,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Mogelijk SYMPTOOM, maar SYMPTOOM uitgesloten."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
@@ -369,7 +369,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Er is geen SYMPTOOM. Daarnaast SYMPTOOM onderzocht."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -388,7 +388,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Heeft als kind geen SYMPTOOM gehad."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -408,7 +408,7 @@ class TestUnitQualifierMatcher:
         }
 
         text = "Heeft als kind geen SYMPTOOM, wel SYMPTOOM gehad."
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -428,7 +428,7 @@ class TestUnitQualifierMatcher:
 
         text = "Liet subklinisch ONHERKEND_SYMPTOOM en geen SYMPTOOM zien."
 
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
@@ -450,12 +450,12 @@ class TestUnitQualifierMatcher:
 
         text = "Patient laat weten geen eetlust te hebben"
 
-        ca = ContextAlgorithm(nlp=nlp, name="_", rules=rules)
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
 
     def test_load_default_rules(self, nlp):
-        ca = ContextAlgorithm(nlp=nlp, name="_")
+        ca = ContextAlgorithm(nlp=nlp)
 
         assert len(ca.rules) > 100
