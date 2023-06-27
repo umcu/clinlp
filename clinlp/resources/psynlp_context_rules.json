@@ -4,28 +4,28 @@
   "qualifiers": [
     {
       "qualifier": "Experiencer",
-      "levels": [
+      "values": [
         "PATIENT",
         "OTHER"
       ]
     },
     {
       "qualifier": "Negation",
-      "levels": [
+      "values": [
         "AFFIRMED",
         "NEGATED"
       ]
     },
     {
       "qualifier": "Plausibility",
-      "levels": [
+      "values": [
         "PLAUSIBLE",
         "HYPOTHETICAL"
       ]
     },
     {
       "qualifier": "Temporality",
-      "levels": [
+      "values": [
         "CURRENT",
         "HISTORICAL"
       ]

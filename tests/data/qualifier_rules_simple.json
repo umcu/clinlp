@@ -2,14 +2,14 @@
   "qualifiers": [
     {
       "qualifier": "Negation",
-      "levels": [
+      "values": [
         "AFFIRMED",
         "NEGATED"
       ]
     },
     {
       "qualifier": "Temporality",
-      "levels": [
+      "values": [
         "CURRENT",
         "HISTORICAL"
       ]

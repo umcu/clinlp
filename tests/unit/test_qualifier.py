@@ -1,24 +1,27 @@
-import pytest
-from spacy.tokens import Doc, Span
-from spacy.vocab import Vocab
+from unittest.mock import patch
 
-from clinlp.component import ContextRule, ContextRuleDirection, Qualifier
-from clinlp.component.qualifier import (
-    _MatchedContextPattern,
-    _parse_direction,
-    _parse_qualifier,
-    parse_rules,
-)
+import pytest
+import spacy
+from spacy.tokens import Span
+
+import clinlp
+from clinlp.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+
+
+@pytest.fixture
+def nlp():
+    return spacy.blank("clinlp")
+
+
+@pytest.fixture
+def entity():
+    doc = spacy.blank("clinlp")("dit is een test")
+    return doc[2:3]
 
 
 @pytest.fixture
 def mock_qualifier():
-    return Qualifier("MOCK", ["MOCK_1", "MOCK_2"])
-
-
-@pytest.fixture
-def mock_doc():
-    return Doc(Vocab(), words=["dit", "is", "een", "test"])
+    return Qualifier("test", ["test1", "test2"])
 
 
 class TestUnitQualifier:
@@ -28,187 +31,54 @@ class TestUnitQualifier:
         assert q["AFFIRMED"]
         assert q["NEGATED"]
 
+    def test_spacy_has_extension(self):
+        assert Span.has_extension(QUALIFIERS_ATTR)
 
-class TestUnitQualifierRuleDirection:
-    def test_qualifier_rule_direction_create(self):
-        assert ContextRuleDirection.PRECEDING
-        assert ContextRuleDirection.FOLLOWING
-        assert ContextRuleDirection.PSEUDO
-        assert ContextRuleDirection.TERMINATION
-
-
-class TestUnitQualifierRule:
-    def test_create_qualifier_rule_1(self):
-        pattern = "test"
-        level = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
-        direction = ContextRuleDirection.PRECEDING
-
-        qr = ContextRule(pattern, level, direction)
-
-        assert qr.pattern == pattern
-        assert qr.qualifier == level
-        assert qr.direction == direction
-
-    def test_create_qualifier_rule_2(self):
-        pattern = [{"LOWER": "test"}]
-        level = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
-        direction = ContextRuleDirection.PRECEDING
-
-        qr = ContextRule(pattern, level, direction)
-
-        assert qr.pattern == pattern
-        assert qr.qualifier == level
-        assert qr.direction == direction
+    def test_spacy_extension_default(self, nlp):
+        doc = nlp("dit is een test")
+        assert getattr(doc[0:3]._, QUALIFIERS_ATTR) is None
 
 
-class TestUnitMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self, mock_qualifier):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
-        start = 0
-        end = 10
+class TestUnitQualifierDetector:
+    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    def test_create_qualifier_detector(self):
+        _ = QualifierDetector()
 
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    def test_initialize_qualifiers(self, entity):
+        qd = QualifierDetector()
 
-        assert mqp.rule is rule
-        assert mqp.start == start
-        assert mqp.end == end
-        assert mqp.scope is None
+        qd._initialize_qualifiers(entity)
 
-    def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
-        start = 0
-        end = 10
-        offset = 25
+        assert getattr(entity._, QUALIFIERS_ATTR) == set()
 
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end, offset=offset)
+    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    def test_add_qualifier_no_init(self, entity, mock_qualifier):
+        qd = QualifierDetector()
 
-        assert mqp.rule is rule
-        assert mqp.start == start + offset
-        assert mqp.end == end + offset
-        assert mqp.scope is None
+        qd.add_qualifier_to_ent(entity, mock_qualifier.test1)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
-        start = 1
-        end = 2
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
-        sentence = Span(mock_doc, start=0, end=4)
+        assert len(getattr(entity._, QUALIFIERS_ATTR)) == 1
+        assert str(mock_qualifier.test1) in getattr(entity._, QUALIFIERS_ATTR)
 
-        mqp.set_initial_scope(sentence=sentence)
+    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    def test_add_qualifier_with_init(self, entity, mock_qualifier):
+        qd = QualifierDetector()
 
-        assert mqp.scope is not None
-        assert mqp.scope == (1, 4)
+        qd._initialize_qualifiers(entity)
+        qd.add_qualifier_to_ent(entity, mock_qualifier.test1)
 
-    def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
-        start = 1
-        end = 2
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
-        sentence = Span(mock_doc, start=0, end=4)
+        assert len(getattr(entity._, QUALIFIERS_ATTR)) == 1
+        assert str(mock_qualifier.test1) in getattr(entity._, QUALIFIERS_ATTR)
 
-        mqp.set_initial_scope(sentence=sentence)
+    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    def test_add_qualifier_multiple(self, entity, mock_qualifier):
+        qd = QualifierDetector()
+        qd._initialize_qualifiers(entity)
 
-        assert mqp.scope is not None
-        assert mqp.scope == (0, 2)
+        qd.add_qualifier_to_ent(entity, mock_qualifier.test1)
+        qd.add_qualifier_to_ent(entity, mock_qualifier.test2)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING, max_scope=1
-        )
-        start = 1
-        end = 2
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
-        sentence = Span(mock_doc, start=0, end=4)
-
-        mqp.set_initial_scope(sentence=sentence)
-
-        assert mqp.scope is not None
-        assert mqp.scope == (1, 3)
-
-    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=1
-        )
-        start = 2
-        end = 3
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
-        sentence = Span(mock_doc, start=0, end=4)
-
-        mqp.set_initial_scope(sentence=sentence)
-
-        assert mqp.scope is not None
-        assert mqp.scope == (1, 3)
-
-    def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_qualifier, mock_doc):
-        rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=-1
-        )
-        start = 1
-        end = 2
-        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
-        sentence = Span(mock_doc, start=0, end=4)
-
-        with pytest.raises(ValueError):
-            mqp.set_initial_scope(sentence=sentence)
-
-
-class TestUnitLoadRules:
-    def test_parse_level(self, mock_qualifier):
-        level = "MOCK.MOCK_1"
-        qualifiers = {"MOCK": mock_qualifier}
-
-        assert _parse_qualifier(level, qualifiers) == mock_qualifier.MOCK_1
-
-    def test_parse_level_unhappy(self, mock_qualifier):
-        level = "MOCK_MOCK_1"
-        qualifiers = {"MOCK": mock_qualifier}
-
-        with pytest.raises(ValueError):
-            _parse_qualifier(level, qualifiers)
-
-    def test_parse_direction(self):
-        assert _parse_direction("preceding") == ContextRuleDirection.PRECEDING
-        assert _parse_direction("following") == ContextRuleDirection.FOLLOWING
-        assert _parse_direction("pseudo") == ContextRuleDirection.PSEUDO
-        assert _parse_direction("termination") == ContextRuleDirection.TERMINATION
-
-    def test_load_rules_data(self):
-        data = {
-            "qualifiers": [
-                {"qualifier": "Negation", "levels": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "levels": ["CURRENT", "HISTORICAL"]},
-            ],
-            "rules": [
-                {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["weken geleden"], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
-            ],
-        }
-
-        rules = parse_rules(data=data)
-
-        assert len(rules) == 2
-        assert rules[0].pattern == "geen"
-        assert str(rules[0].qualifier) == "Negation.NEGATED"
-        assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
-        assert rules[0].max_scope == 5
-        assert rules[1].pattern == "weken geleden"
-        assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
-        assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
-        assert rules[1].max_scope is None
-
-    def test_load_rules_json(self):
-        rules = parse_rules(input_json="tests/data/qualifier_rules_simple.json")
-
-        assert len(rules) == 2
-        assert rules[0].pattern == "geen"
-        assert str(rules[0].qualifier) == "Negation.NEGATED"
-        assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
-        assert rules[0].max_scope == 5
-        assert rules[1].pattern == "weken geleden"
-        assert str(rules[1].qualifier) == "Temporality.HISTORICAL"
-        assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
-        assert rules[1].max_scope is None
-
-    def test_load_rules_unhappy(self):
-        with pytest.raises(ValueError):
-            parse_rules(input_json="_.json", data={"a": "b"})
+        assert len(getattr(entity._, QUALIFIERS_ATTR)) == 2
+        assert str(mock_qualifier.test1) in getattr(entity._, QUALIFIERS_ATTR)
+        assert str(mock_qualifier.test2) in getattr(entity._, QUALIFIERS_ATTR)

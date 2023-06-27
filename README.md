@@ -49,7 +49,7 @@ for term_description, terms in terms.items():
     ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
 
 # Qualifiers
-nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
+nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 
 text = (
     "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
@@ -159,23 +159,20 @@ For more info, it's useful to check out these spaCy documentation pages:
 
 Note that the `DependencyMatcher` cannot be used, and neither are part of speech tags available, as no good models for determining this information for clinical text exist (yet).  
 
-### Context detection
+### Qualifier detection
 
 After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) for this purpose. This algorithm is fairly accurate, and quite transparent and fast. Better solutions will hopefully be added to `clinlp` in the future. 
 
 A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
-nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
+nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 ```
 
-A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows: 
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
 
 ```python
-from clinlp.component.qualifier import parse_rules
-
-cm = nlp.add_pipe('clinlp_context_matcher', config={'default_rules': None})
-cm.add_rules(parse_rules('my_custom_rules.json'))
+cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
 ```
 
 ### Where to go from here

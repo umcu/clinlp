@@ -2,7 +2,7 @@ import json
 
 import spacy
 
-from clinlp.component import Sentencizer
+from clinlp import Sentencizer
 
 
 class MockToken:
@@ -17,7 +17,7 @@ def get_mock_tokens(texts: list[str]):
 
 class TestClinlpSentencizerRegression:
     def test_default_clinlp_sentencizer_examples(self):
-        sentencizer = Sentencizer(spacy.blank("clinlp"))
+        sentencizer = Sentencizer()
 
         with open("tests/data/sentencizer_cases.json", "rb") as file:
             data = json.load(file)["data"]

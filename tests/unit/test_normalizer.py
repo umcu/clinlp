@@ -3,12 +3,7 @@ import spacy
 from spacy import Vocab
 from spacy.tokens import Doc
 
-from clinlp.component import Normalizer
-
-
-@pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
+from clinlp import Normalizer
 
 
 @pytest.fixture
@@ -36,18 +31,18 @@ class TestNormalizer:
         assert Normalizer._map_non_ascii_char("²") == "²"
         assert Normalizer._map_non_ascii_char("1") == "1"
 
-    def test_map_non_ascii_string(self, nlp):
-        assert Normalizer(nlp, "_")._map_non_ascii_string("abcde") == "abcde"
-        assert Normalizer(nlp, "_")._map_non_ascii_string("abcdé") == "abcde"
-        assert Normalizer(nlp, "_")._map_non_ascii_string("äbcdé") == "abcde"
+    def test_map_non_ascii_string(self):
+        assert Normalizer()._map_non_ascii_string("abcde") == "abcde"
+        assert Normalizer()._map_non_ascii_string("abcdé") == "abcde"
+        assert Normalizer()._map_non_ascii_string("äbcdé") == "abcde"
         assert (
-            Normalizer(nlp, "_")._map_non_ascii_string("patiënt heeft 1.6m² lichaamsoppervlak")
+            Normalizer()._map_non_ascii_string("patiënt heeft 1.6m² lichaamsoppervlak")
             == "patient heeft 1.6m² lichaamsoppervlak"
         )
 
-    def test_call_normalizer_default(self, nlp, mock_doc):
+    def test_call_normalizer_default(self, mock_doc):
         expected_norms = ["patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer(nlp, "_")
+        normalizer = Normalizer()
 
         doc = normalizer(mock_doc)
 
@@ -55,9 +50,9 @@ class TestNormalizer:
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
-    def test_call_normalizer_disable_lowercase(self, nlp, mock_doc):
+    def test_call_normalizer_disable_lowercase(self, mock_doc):
         expected_norms = ["Patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer(nlp, "_", lowercase=False)
+        normalizer = Normalizer(lowercase=False)
 
         doc = normalizer(mock_doc)
 
@@ -65,9 +60,9 @@ class TestNormalizer:
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
-    def test_call_normalizer_disable_map_non_ascii(self, nlp, mock_doc):
+    def test_call_normalizer_disable_map_non_ascii(self, mock_doc):
         expected_norms = ["patiënt", "250", "µg", "toedienen"]
-        normalizer = Normalizer(nlp, "_", map_non_ascii=False)
+        normalizer = Normalizer(map_non_ascii=False)
 
         doc = normalizer(mock_doc)
 
