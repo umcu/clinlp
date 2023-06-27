@@ -3,10 +3,8 @@ from typing import Optional
 import spacy.tokens
 from spacy.language import Language
 
-_defaults_sentencizer = {
-    'sent_end_chars': [".", "!", "?", "\n", "\r"],
-    'sent_start_punct': ["-", "*", "[", "("]
-}
+_defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("]}
+
 
 @spacy.language.Language.factory(
     "clinlp_sentencizer",
@@ -22,9 +20,10 @@ class Sentencizer:
         sent_end_chars: Optional[list[str]] = None,
         sent_start_punct: Optional[list[str]] = None,
     ):
-
-        self.sent_end_chars = _defaults_sentencizer['sent_end_chars'] if sent_end_chars is None else sent_end_chars
-        self.sent_start_punct = _defaults_sentencizer['sent_start_punct'] if sent_start_punct is None else sent_start_punct
+        self.sent_end_chars = _defaults_sentencizer["sent_end_chars"] if sent_end_chars is None else sent_end_chars
+        self.sent_start_punct = (
+            _defaults_sentencizer["sent_start_punct"] if sent_start_punct is None else sent_start_punct
+        )
 
         self.sent_end_chars = set(self.sent_end_chars)
         self.sent_start_punct = set(self.sent_start_punct)
