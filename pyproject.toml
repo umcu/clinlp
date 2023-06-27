@@ -9,7 +9,7 @@ readme = "README.md"
 python = "^3.9"
 spacy = "^3.5.3"
 intervaltree = "^3.1.0"
-transformers = "^4.30.2"
+transformers = {extras = ["torch"], version = "^4.30.2"}
 
 [tool.poetry.extras]
 transformers = ["transformers"]
