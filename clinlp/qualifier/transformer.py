@@ -1,5 +1,5 @@
 import statistics
-from typing import Optional
+from typing import Callable, Optional, Tuple
 
 import torch
 from spacy import Language
@@ -10,8 +10,10 @@ from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDete
 
 _defaults_negation_transformer = {
     "token_window": 32,
+    "probas_aggregator": statistics.mean,
     "threshold": 0.5,
-    "placeholder": None
+    "strip_entities": True,
+    "placeholder": None,
 }
 
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
@@ -27,12 +29,17 @@ class NegationTransformer(QualifierDetector):
         self,
         nlp: Language,
         token_window: int = _defaults_negation_transformer["token_window"],
+        probas_aggregator: Callable = _defaults_negation_transformer["probas_aggregator"],
         threshold: float = _defaults_negation_transformer["threshold"],
+        strip_entities: bool = _defaults_negation_transformer["strip_entities"],
         placeholder: Optional[str] = _defaults_negation_transformer["placeholder"],
+        **kwargs,
     ):
         self.nlp = nlp
         self.token_window = token_window
+        self.probas_aggregator = probas_aggregator
         self.threshold = threshold
+        self.strip_entities = strip_entities
         self.placeholder = placeholder
 
         self.negation_qualifier = Qualifier("Negation", ["Affirmed", "Negated"])
@@ -40,9 +47,12 @@ class NegationTransformer(QualifierDetector):
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
 
-    def get_text_span_for_entity(self, ent: Span):
-        start_token_i = max(0, ent.start - self.token_window)
-        end_token_i = min(len(ent.doc), ent.end + self.token_window)
+        super().__init__(**kwargs)
+
+    @staticmethod
+    def _get_ent_window(self, ent: Span, token_window: int) -> Tuple[str, int, int]:
+        start_token_i = max(0, ent.start - token_window)
+        end_token_i = min(len(ent.doc), ent.end + token_window)
 
         text_span = ent.doc[start_token_i:end_token_i]
 
@@ -51,7 +61,8 @@ class NegationTransformer(QualifierDetector):
 
         return str(text_span), ent_start_char, ent_end_char
 
-    def trim_ent(self, text: str, ent_start_char: int, ent_end_char: int):
+    @staticmethod
+    def _trim_ent_boundaries(text: str, ent_start_char: int, ent_end_char: int) -> Tuple[str, int, int]:
         entity = text[ent_start_char:ent_end_char]
 
         ent_start_char += len(entity) - len(entity.lstrip())
@@ -59,46 +70,43 @@ class NegationTransformer(QualifierDetector):
 
         return text, ent_start_char, ent_end_char
 
-    def use_placeholder(self, text: str, ent_start_char: int, ent_end_char: int):
-        text = text[0:ent_start_char] + self.placeholder + text[ent_end_char:]
-        ent_end_char = ent_start_char + len(self.placeholder)
+    @staticmethod
+    def _fill_ent_placeholder(
+        self, text: str, ent_start_char: int, ent_end_char: int, placeholder: str
+    ) -> Tuple[str, int, int]:
+        text = text[0:ent_start_char] + placeholder + text[ent_end_char:]
+        ent_end_char = ent_start_char + len(placeholder)
 
-        return (text, ent_start_char, ent_end_char)
+        return text, ent_start_char, ent_end_char
 
-    def negation_probs(self, text: str, ent_start_char: int, ent_end_char: int):
+    def _get_negation_prob(
+        self, text: str, ent_start_char: int, ent_end_char: int, probas_aggregator: Callable
+    ) -> float:
         inputs = self.tokenizer(text, return_tensors="pt")
         output = self.model.forward(inputs["input_ids"])
         probas = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
 
-        input_tokens = self.tokenizer.convert_ids_to_tokens(inputs["input_ids"][0])
-
         start_token = inputs.char_to_token(ent_start_char)
         end_token = inputs.char_to_token(ent_end_char - 1) + 1
 
-        probs = [
-            {
-                "token": input_tokens[idx],
-                "proba_negated": proba_arr[0] + proba_arr[2],
-                "in_ent": True if start_token <= idx < end_token else False,
-            }
-            for idx, proba_arr in enumerate(probas)
-        ]
-
-        return probs, start_token, end_token
+        return probas_aggregator(probas[start_token:end_token])
 
     def detect_qualifiers(self, doc: Doc):
         for ent in doc.ents:
-            text, ent_start_char, ent_end_char = self.get_text_span_for_entity(ent)
-            text, ent_start_char, ent_end_char = self.trim_ent(text, ent_start_char, ent_end_char)
+            text, ent_start_char, ent_end_char = self._get_ent_window(ent, token_window=self.token_window)
+
+            if self.strip_entities:
+                text, ent_start_char, ent_end_char = self._trim_ent_boundaries(text, ent_start_char, ent_end_char)
 
             if self.placeholder is not None:
-                text, ent_start_char, ent_end_char = self.use_placeholder(text, ent_start_char, ent_end_char)
+                text, ent_start_char, ent_end_char = self._fill_ent_placeholder(
+                    text, ent_start_char, ent_end_char, placeholder=self.placeholder
+                )
 
-            probs, start_token, end_token = self.negation_probs(text, ent_start_char, ent_end_char)
-
-            prob = statistics.mean(pos["proba_negated"] for pos in probs[start_token:end_token])
-
-            if prob > self.threshold:
+            if (
+                self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
+                > self.threshold
+            ):
                 self.add_qualifier_to_ent(ent, self.negation_qualifier.Negated)
 
         return doc
