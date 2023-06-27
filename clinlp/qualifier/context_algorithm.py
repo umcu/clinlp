@@ -123,6 +123,8 @@ class ContextAlgorithm(QualifierDetector):
             rules = self._parse_rules(rules)
             self.add_rules(rules)
 
+        super().__init__(**kwargs)
+
     def add_rule(self, rule: ContextRule):
         """
         Add a rule.
@@ -295,6 +297,9 @@ class ContextAlgorithm(QualifierDetector):
         if len(self.rules) == 0:
             raise RuntimeError("Cannot match qualifiers without any ContextRule.")
 
+        for ent in doc.ents:
+            self._initialize_qualifiers(ent)
+
         for sentence in self._get_sentences_having_entity(doc):
             with warnings.catch_warnings():
                 # a UserWarning will trigger when one of the matchers is empty
@@ -320,13 +325,9 @@ class ContextAlgorithm(QualifierDetector):
             match_scopes = self._compute_match_scopes(matched_patterns)
 
             for ent in sentence.ents:
-                qualifiers = set()
-
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
                     if (ent.start + 1 > match_interval.data.end) or (ent.end < match_interval.data.start + 1):
-                        qualifiers.add(str(match_interval.data.rule.qualifier))
-
-                ent._.set(QUALIFIERS_ATTR, qualifiers)
+                        self.add_qualifier_to_ent(ent, match_interval.data.rule.qualifier)
 
         return doc
 
