@@ -286,19 +286,13 @@ class ContextAlgorithm(QualifierDetector):
 
         return match_scopes
 
-    def __call__(self, doc: Doc):
+    def detect_qualifiers(self, doc: Doc):
         """
         Apply the Context Algorithm to a doc.
         """
 
-        if len(doc.ents) == 0:
-            return doc
-
         if len(self.rules) == 0:
             raise RuntimeError("Cannot match qualifiers without any ContextRule.")
-
-        for ent in doc.ents:
-            self._initialize_qualifiers(ent)
 
         for sentence in self._get_sentences_having_entity(doc):
             with warnings.catch_warnings():
