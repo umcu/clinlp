@@ -3,27 +3,28 @@ from typing import Optional
 import spacy.tokens
 from spacy.language import Language
 
-DEFAULT_SENT_ENT_CHARS = [".", "!", "?", "\n", "\r"]
-DEFAULT_SENT_START_PUNCT = ["-", "*", "[", "("]
-
+_defaults_sentencizer = {
+    'sent_end_chars': [".", "!", "?", "\n", "\r"],
+    'sent_start_punct': ["-", "*", "[", "("]
+}
 
 @spacy.language.Language.factory(
     "clinlp_sentencizer",
     assigns=["token.is_sent_start", "doc.sents"],
-    default_config={"sent_end_chars": DEFAULT_SENT_ENT_CHARS, "sent_start_punct": DEFAULT_SENT_START_PUNCT},
 )
+def make_sentencizer(nlp: Language, name: str, **_defaults_sentencizer):
+    return Sentencizer(**_defaults_sentencizer)
+
+
 class Sentencizer:
     def __init__(
         self,
-        nlp: Language,
-        name="clinlp_sentencizer",
         sent_end_chars: Optional[list[str]] = None,
         sent_start_punct: Optional[list[str]] = None,
     ):
-        self.name = name
 
-        self.sent_end_chars = DEFAULT_SENT_ENT_CHARS if sent_end_chars is None else sent_end_chars
-        self.sent_start_punct = DEFAULT_SENT_START_PUNCT if sent_start_punct is None else sent_start_punct
+        self.sent_end_chars = _defaults_sentencizer['sent_end_chars'] if sent_end_chars is None else sent_end_chars
+        self.sent_start_punct = _defaults_sentencizer['sent_start_punct'] if sent_start_punct is None else sent_start_punct
 
         self.sent_end_chars = set(self.sent_end_chars)
         self.sent_start_punct = set(self.sent_start_punct)
