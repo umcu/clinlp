@@ -117,7 +117,7 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 raise ValueError(
-                    "Did not provide rules. Set `parse_rules` to False if you " "want to add `ContextRule` manually."
+                    "Did not provide rules. Set `parse_rules` to False if you want to add `ContextRule` manually."
                 )
 
             rules = self._parse_rules(rules)

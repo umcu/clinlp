@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from enum import Enum
-from typing import Optional
 
 from spacy.tokens import Doc, Span
 
@@ -13,8 +12,6 @@ class Qualifier(Enum):
     """
     A qualifier modifies an entity (e.g. negation, temporality, plausibility, etc.).
     """
-
-    pass
 
 
 class QualifierDetector(ABC):
