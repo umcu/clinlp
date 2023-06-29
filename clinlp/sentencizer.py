@@ -7,9 +7,7 @@ _defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_st
 
 
 @spacy.language.Language.factory(
-    "clinlp_sentencizer",
-    assigns=["token.is_sent_start", "doc.sents"],
-    default_config=_defaults_sentencizer
+    "clinlp_sentencizer", assigns=["token.is_sent_start", "doc.sents"], default_config=_defaults_sentencizer
 )
 def make_sentencizer(nlp: Language, name: str, sent_end_chars, sent_start_punct):
     return Sentencizer(sent_end_chars, sent_start_punct)

@@ -19,13 +19,19 @@ _defaults_negation_transformer = {
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
 
 
-@Language.factory(name="clinlp_negation_transformer", requires=["doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"], default_config=_defaults_negation_transformer)
-def make_negation_transformer(nlp: Language, name: str, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold):
+@Language.factory(
+    name="clinlp_negation_transformer",
+    requires=["doc.ents"],
+    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    default_config=_defaults_negation_transformer,
+)
+def make_negation_transformer(
+    nlp: Language, name: str, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold
+):
     return NegationTransformer(nlp, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold)
 
 
 class NegationTransformer(QualifierDetector):
-
     def __init__(
         self,
         nlp: Language,
@@ -87,7 +93,7 @@ class NegationTransformer(QualifierDetector):
         start_token = inputs.char_to_token(ent_start_char)
         end_token = inputs.char_to_token(ent_end_char - 1)
 
-        return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token:end_token+1])
+        return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
 
     def detect_qualifiers(self, doc: Doc):
         for ent in doc.ents:

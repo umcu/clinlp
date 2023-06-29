@@ -76,16 +76,19 @@ class _MatchedContextPattern:
 
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
-    "rules": str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json")),
     "load_rules": True,
+    "rules": str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json")),
 }
 
 
 @Language.factory(
-    name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"], default_config=_defaults_context_algorithm
+    name="clinlp_context_algorithm",
+    requires=["doc.sents", "doc.ents"],
+    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    default_config=_defaults_context_algorithm,
 )
-def make_context_algorithm(nlp: Language, name: str, phrase_matcher_attr, rules, load_rules):
-    return ContextAlgorithm(nlp, phrase_matcher_attr, rules, load_rules)
+def make_context_algorithm(nlp: Language, name: str, phrase_matcher_attr, load_rules, rules):
+    return ContextAlgorithm(nlp, phrase_matcher_attr, load_rules, rules)
 
 
 class ContextAlgorithm(QualifierDetector):
@@ -94,10 +97,9 @@ class ContextAlgorithm(QualifierDetector):
 
     Args:
         nlp: The Spacy language object to use
-        name: The name of the component
         phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH, NORM).
-        rules: A dictionary of rules, or a path to a json containing the rules (see clinlp.resources dir for example).
         load_rules: Whether to parse any rules. Set this to `False` to use ContextAlgorithm.add_rules to
+        rules: A dictionary of rules, or a path to a json containing the rules (see clinlp.resources dir for example).
         add ContextRules manually.
     """
 
