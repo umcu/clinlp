@@ -16,14 +16,11 @@ def get_class_init_signature(cls):
         if "__init__" in C.__dict__:
             argspec = inspect.getfullargspec(C)
 
-            print(argspec)
-
-
             if argspec.defaults is None:
                 args += argspec.args[1:]
             else:
-                args += argspec.args[1 : len(argspec.defaults)-1]
-                kwargs |= dict(zip(argspec.args[len(argspec.defaults)-1 :], argspec.defaults))
+                args += argspec.args[1 : len(argspec.defaults) - 1]
+                kwargs |= dict(zip(argspec.args[len(argspec.defaults) - 1 :], argspec.defaults))
 
     return args, kwargs
 

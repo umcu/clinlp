@@ -4,7 +4,7 @@ import spacy
 from spacy import Language
 from spacy.tokens import Doc
 
-from clinlp.utils import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent
 
 _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 

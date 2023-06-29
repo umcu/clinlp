@@ -7,8 +7,7 @@ from spacy.tokens import Doc, Span
 from transformers import AutoTokenizer, RobertaForTokenClassification
 
 from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
-
-from clinlp.utils import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent
 
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
 

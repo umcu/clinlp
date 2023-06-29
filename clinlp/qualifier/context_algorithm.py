@@ -14,7 +14,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
 from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
-from clinlp.utils import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent
 
 
 class ContextRuleDirection(Enum):

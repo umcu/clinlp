@@ -456,7 +456,6 @@ class TestUnitQualifierMatcher:
         assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
 
     def test_load_default_rules(self, nlp):
-
         ca = ContextAlgorithm(nlp=nlp)
 
         assert len(ca.rules) > 100

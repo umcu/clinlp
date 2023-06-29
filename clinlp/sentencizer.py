@@ -3,7 +3,7 @@ from typing import Optional
 import spacy.tokens
 from spacy.language import Language
 
-from clinlp.utils import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent
 
 _defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("]}
 
