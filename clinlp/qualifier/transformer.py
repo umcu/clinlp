@@ -10,47 +10,45 @@ from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDete
 
 _defaults_negation_transformer = {
     "token_window": 32,
-    "probas_aggregator": statistics.mean,
-    "threshold": 0.5,
     "strip_entities": True,
     "placeholder": None,
+    "probas_aggregator": statistics.mean,
+    "negation_threshold": 0.5,
 }
 
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
 
 
-@Language.factory(name="clinlp_negation_transformer", requires=["doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"])
-def make_negation_transformer(nlp: Language, name: str, **_defaults_negation_transformer):
-    return NegationTransformer(nlp, **_defaults_negation_transformer)
+@Language.factory(name="clinlp_negation_transformer", requires=["doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"], default_config=_defaults_negation_transformer)
+def make_negation_transformer(nlp: Language, name: str, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold):
+    return NegationTransformer(nlp, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold)
 
 
 class NegationTransformer(QualifierDetector):
+
     def __init__(
         self,
         nlp: Language,
         token_window: int = _defaults_negation_transformer["token_window"],
-        probas_aggregator: Callable = _defaults_negation_transformer["probas_aggregator"],
-        threshold: float = _defaults_negation_transformer["threshold"],
         strip_entities: bool = _defaults_negation_transformer["strip_entities"],
         placeholder: Optional[str] = _defaults_negation_transformer["placeholder"],
-        **kwargs,
+        probas_aggregator: Callable = _defaults_negation_transformer["probas_aggregator"],
+        negation_threshold: float = _defaults_negation_transformer["negation_threshold"],
     ):
         self.nlp = nlp
         self.token_window = token_window
-        self.probas_aggregator = probas_aggregator
-        self.threshold = threshold
         self.strip_entities = strip_entities
         self.placeholder = placeholder
+        self.probas_aggregator = probas_aggregator
+        self.negation_threshold = negation_threshold
 
         self.negation_qualifier = Qualifier("Negation", ["Affirmed", "Negated"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
 
-        super().__init__(**kwargs)
-
     @staticmethod
-    def _get_ent_window(self, ent: Span, token_window: int) -> Tuple[str, int, int]:
+    def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
         start_token_i = max(0, ent.start - token_window)
         end_token_i = min(len(ent.doc), ent.end + token_window)
 
@@ -72,7 +70,7 @@ class NegationTransformer(QualifierDetector):
 
     @staticmethod
     def _fill_ent_placeholder(
-        self, text: str, ent_start_char: int, ent_end_char: int, placeholder: str
+        text: str, ent_start_char: int, ent_end_char: int, placeholder: str
     ) -> Tuple[str, int, int]:
         text = text[0:ent_start_char] + placeholder + text[ent_end_char:]
         ent_end_char = ent_start_char + len(placeholder)
@@ -87,9 +85,9 @@ class NegationTransformer(QualifierDetector):
         probas = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
 
         start_token = inputs.char_to_token(ent_start_char)
-        end_token = inputs.char_to_token(ent_end_char - 1) + 1
+        end_token = inputs.char_to_token(ent_end_char - 1)
 
-        return probas_aggregator(probas[start_token:end_token])
+        return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token:end_token+1])
 
     def detect_qualifiers(self, doc: Doc):
         for ent in doc.ents:
@@ -105,7 +103,7 @@ class NegationTransformer(QualifierDetector):
 
             if (
                 self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
-                > self.threshold
+                > self.negation_threshold
             ):
                 self.add_qualifier_to_ent(ent, self.negation_qualifier.Negated)
 

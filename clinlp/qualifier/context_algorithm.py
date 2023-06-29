@@ -82,10 +82,10 @@ _defaults_context_algorithm = {
 
 
 @Language.factory(
-    name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"]
+    name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=[f"span._.{QUALIFIERS_ATTR}"], default_config=_defaults_context_algorithm
 )
-def make_context_algorithm(nlp: Language, name: str, **_defaults_context_algorithm):
-    return ContextAlgorithm(nlp, **_defaults_context_algorithm)
+def make_context_algorithm(nlp: Language, name: str, phrase_matcher_attr, rules, load_rules):
+    return ContextAlgorithm(nlp, phrase_matcher_attr, rules, load_rules)
 
 
 class ContextAlgorithm(QualifierDetector):
@@ -107,7 +107,6 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
         load_rules=_defaults_context_algorithm["load_rules"],
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
-        **kwargs,
     ):
         self._nlp = nlp
 
@@ -119,13 +118,11 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 raise ValueError(
-                    "Did not provide rules. Set `parse_rules` to False if you want to add `ContextRule` manually."
+                    "Did not provide rules. Set `load_rules` to False if you want to add `ContextRule` manually."
                 )
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
-
-        super().__init__(**kwargs)
 
     def add_rule(self, rule: ContextRule):
         """
