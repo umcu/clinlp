@@ -1,6 +1,5 @@
 import unicodedata
 
-import spacy
 from spacy import Language
 from spacy.tokens import Doc
 
@@ -9,7 +8,7 @@ from clinlp.util import clinlp_autocomponent
 _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 
 
-@spacy.language.Language.factory("clinlp_normalizer", assigns=["token.norm"], default_config=_defaults_normalizer)
+@Language.factory("clinlp_normalizer", assigns=["token.norm"], default_config=_defaults_normalizer)
 @clinlp_autocomponent
 class Normalizer:
     def __init__(
@@ -24,14 +23,13 @@ class Normalizer:
 
     @staticmethod
     def _map_non_ascii_char(char: str) -> str:
-        """
-        TODO: What if there's a non-mappable ascii (µ) and a mappable (é) in the same string?
-        """
+        if len(char) != 1:
+            raise ValueError("Please only use the _map_non_ascii_char method on strings of length 1.")
 
-        s = unicodedata.normalize("NFD", char)
-        s = str(s.encode("ascii", "ignore").decode("utf-8"))
+        normalized_char = unicodedata.normalize("NFD", char)
+        normalized_char = str(normalized_char.encode("ascii", "ignore").decode("utf-8"))
 
-        return s if len(s) > 0 else char
+        return normalized_char if len(normalized_char) > 0 else char
 
     def _map_non_ascii_string(self, text: str) -> str:
         return "".join(self._map_non_ascii_char(char) for char in text)
