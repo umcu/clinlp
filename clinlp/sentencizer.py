@@ -8,7 +8,7 @@ from clinlp.util import clinlp_autocomponent
 _defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("]}
 
 
-@spacy.language.Language.factory(
+@Language.factory(
     "clinlp_sentencizer", assigns=["token.is_sent_start", "doc.sents"], default_config=_defaults_sentencizer
 )
 @clinlp_autocomponent
