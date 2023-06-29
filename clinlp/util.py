@@ -12,15 +12,16 @@ def get_class_init_signature(cls):
     args = []
     kwargs = {}
 
-    for C in cls.__mro__:
-        if "__init__" in C.__dict__:
-            argspec = inspect.getfullargspec(C)
+    for mro_class in cls.__mro__:
+        if "__init__" in mro_class.__dict__:
+            argspec = inspect.getfullargspec(mro_class)
 
             if argspec.defaults is None:
                 args += argspec.args[1:]
             else:
-                args += argspec.args[1 : len(argspec.defaults) - 1]
-                kwargs |= dict(zip(argspec.args[len(argspec.defaults) - 1 :], argspec.defaults))
+                first_arg_wit_default = len(argspec.args) - len(argspec.defaults)
+                args += argspec.args[1:first_arg_wit_default]
+                kwargs |= dict(zip(argspec.args[first_arg_wit_default:], argspec.defaults))
 
     return args, kwargs
 
