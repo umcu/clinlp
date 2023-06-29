@@ -3,16 +3,15 @@ from typing import Optional
 import spacy.tokens
 from spacy.language import Language
 
+from clinlp.utils import clinlp_autocomponent
+
 _defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("]}
 
 
 @spacy.language.Language.factory(
     "clinlp_sentencizer", assigns=["token.is_sent_start", "doc.sents"], default_config=_defaults_sentencizer
 )
-def make_sentencizer(nlp: Language, name: str, sent_end_chars, sent_start_punct):
-    return Sentencizer(sent_end_chars, sent_start_punct)
-
-
+@clinlp_autocomponent
 class Sentencizer:
     def __init__(
         self,

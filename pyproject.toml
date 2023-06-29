@@ -10,6 +10,7 @@ python = "^3.9"
 spacy = "^3.5.3"
 intervaltree = "^3.1.0"
 transformers = {extras = ["torch"], version = "^4.30.2"}
+makefun = "^1.15.1"
 
 [tool.poetry.extras]
 transformers = ["transformers"]

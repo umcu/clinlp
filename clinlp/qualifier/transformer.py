@@ -8,6 +8,10 @@ from transformers import AutoTokenizer, RobertaForTokenClassification
 
 from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
 
+from clinlp.utils import clinlp_autocomponent
+
+TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
+
 _defaults_negation_transformer = {
     "token_window": 32,
     "strip_entities": True,
@@ -16,8 +20,6 @@ _defaults_negation_transformer = {
     "negation_threshold": 0.5,
 }
 
-TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
-
 
 @Language.factory(
     name="clinlp_negation_transformer",
@@ -25,12 +27,7 @@ TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
     assigns=[f"span._.{QUALIFIERS_ATTR}"],
     default_config=_defaults_negation_transformer,
 )
-def make_negation_transformer(
-    nlp: Language, name: str, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold
-):
-    return NegationTransformer(nlp, token_window, strip_entities, placeholder, probas_aggregator, negation_threshold)
-
-
+@clinlp_autocomponent
 class NegationTransformer(QualifierDetector):
     def __init__(
         self,

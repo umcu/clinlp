@@ -14,6 +14,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
 from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+from clinlp.utils import clinlp_autocomponent
 
 
 class ContextRuleDirection(Enum):
@@ -87,10 +88,7 @@ _defaults_context_algorithm = {
     assigns=[f"span._.{QUALIFIERS_ATTR}"],
     default_config=_defaults_context_algorithm,
 )
-def make_context_algorithm(nlp: Language, name: str, phrase_matcher_attr, load_rules, rules):
-    return ContextAlgorithm(nlp, phrase_matcher_attr, load_rules, rules)
-
-
+@clinlp_autocomponent
 class ContextAlgorithm(QualifierDetector):
     """
     Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline component.
