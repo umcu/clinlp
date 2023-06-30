@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clinlp"
-version = "0.2.0"
+version = "0.3.0"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 authors = ["UMCU DIT Analytics <analytics@umcutrecht.nl>"]
 readme = "README.md"
