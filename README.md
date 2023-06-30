@@ -96,7 +96,9 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 2. [Normalizer](#normalizer)
 3. [Sentence splitter](#sentence-splitter)
 4. [Entity matcher (builtin Spacy)](#entity-matcher)
-5. [Context detection](#context-detection)
+5. [Qualifier detection (=context)](#qualifier-detection)
+    - [Context Algorithm](#context-algorithm)
+    - [Transformer based negation detection](#transformer-based-negation-detection)
 
 ### Tokenizer
 
@@ -161,9 +163,11 @@ Note that the `DependencyMatcher` cannot be used, and neither are part of speech
 
 ### Qualifier detection
 
-After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) for this purpose. This algorithm is fairly accurate, and quite transparent and fast. Better solutions will hopefully be added to `clinlp` in the future. 
+After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002), and a [transformer-based negation detector](https://doi.org/10.48550/arxiv.2209.00470). 
 
-A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
+#### Context Algorithm
+
+The rule-based Context Algorithm is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
 nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
@@ -174,6 +178,25 @@ A custom set of rules, including different types of qualifiers, can easily be de
 ```python
 cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
 ```
+
+#### Transformer based negation detection
+
+`clinlp` also includes a wrapper around the transformer based negation detector, as described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/MedRoBERTa.nl_NegationDetection). It is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
+
+First, install the additional dependencies:
+
+```bash
+pip install "clinlp[transformers]"
+```
+
+Then add it using:
+
+```python
+tn = nlp.add_pipe('clinlp_negation_transformer')
+```
+
+Some configuration options, like the number of tokens to consider, can be specified in the `config` argument. 
+
 
 ### Where to go from here
 

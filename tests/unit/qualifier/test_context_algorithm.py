@@ -174,24 +174,24 @@ class TestUnitQualifierMatcher:
         assert len(ca._matcher) == 1
         assert len(ca._phrase_matcher) == 1
 
-    def test_parse_value(self, mock_qualifier):
+    def test_parse_value(self, mock_qualifier, ca):
         value = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
-        assert ContextAlgorithm._parse_qualifier(value, qualifiers) == mock_qualifier.MOCK_1
+        assert ca._parse_qualifier(value, qualifiers) == mock_qualifier.MOCK_1
 
-    def test_parse_value_unhappy(self, mock_qualifier):
+    def test_parse_value_unhappy(self, mock_qualifier, ca):
         value = "MOCK_MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
         with pytest.raises(ValueError):
-            ContextAlgorithm._parse_qualifier(value, qualifiers)
+            ca._parse_qualifier(value, qualifiers)
 
-    def test_parse_direction(self):
-        assert ContextAlgorithm._parse_direction("preceding") == ContextRuleDirection.PRECEDING
-        assert ContextAlgorithm._parse_direction("following") == ContextRuleDirection.FOLLOWING
-        assert ContextAlgorithm._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
-        assert ContextAlgorithm._parse_direction("termination") == ContextRuleDirection.TERMINATION
+    def test_parse_direction(self, ca):
+        assert ca._parse_direction("preceding") == ContextRuleDirection.PRECEDING
+        assert ca._parse_direction("following") == ContextRuleDirection.FOLLOWING
+        assert ca._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
+        assert ca._parse_direction("termination") == ContextRuleDirection.TERMINATION
 
     def test_load_rules_data(self, ca):
         rules = {
@@ -230,11 +230,11 @@ class TestUnitQualifierMatcher:
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
 
-    def test_get_sentences_having_entity(self, nlp):
+    def test_get_sentences_having_entity(self, nlp, ca):
         text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
         doc = nlp(text)
 
-        sents = list(ContextAlgorithm._get_sentences_having_entity(doc))
+        sents = list(ca._get_sentences_having_entity(doc))
 
         assert len(sents) == 2
         for sent in sents:

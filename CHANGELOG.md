@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - remove a default spacy abbreviation (`ts.`)
 - option for max scope on qualifier rules, limiting the number of tokens it applies to
+- a transformer based pipeline for negation detection (`clinlp_negation_transformer`)
 - a base class `QualifierDetector` for qualifier detection
 
 ### Fixed
@@ -20,8 +21,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - refactored context algorithm to allow adding new qualifier detectors
-- use maker functions for creating components rather than on the class directly
-- made default configs a bit simpeler
+- the `@clinlp_autocomponent` wrapper as a utility function, which makes creating components with inheritance and arbitrary config a bit easier
+- made default configs a bit simpeler and DRY
 - move qualifier adding for context algorithm to base class
 
 ## 0.2.0 (2023-06-07)

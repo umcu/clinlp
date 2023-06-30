@@ -13,7 +13,8 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.qualifier.qualifier import Qualifier, QualifierDetector
+from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+from clinlp.util import clinlp_autocomponent
 
 
 class ContextRuleDirection(Enum):
@@ -76,26 +77,27 @@ class _MatchedContextPattern:
 
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
-    "rules": str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json")),
     "load_rules": True,
+    "rules": str(importlib.resources.path("clinlp.resources", "psynlp_context_rules.json")),
 }
 
 
-@Language.factory(name="clinlp_context_algorithm", requires=["doc.sents", "doc.ents"], assigns=["span._.qualifiers"])
-def make_context_algorithm(nlp: Language, name: str, **_defaults_context_algorithm):
-    return ContextAlgorithm(nlp, **_defaults_context_algorithm)
-
-
+@Language.factory(
+    name="clinlp_context_algorithm",
+    requires=["doc.sents", "doc.ents"],
+    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    default_config=_defaults_context_algorithm,
+)
+@clinlp_autocomponent
 class ContextAlgorithm(QualifierDetector):
     """
     Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline component.
 
     Args:
         nlp: The Spacy language object to use
-        name: The name of the component
         phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH, NORM).
-        rules: A dictionary of rules, or a path to a json containing the rules (see clinlp.resources dir for example).
         load_rules: Whether to parse any rules. Set this to `False` to use ContextAlgorithm.add_rules to
+        rules: A dictionary of rules, or a path to a json containing the rules (see clinlp.resources dir for example).
         add ContextRules manually.
     """
 
@@ -105,7 +107,6 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
         load_rules=_defaults_context_algorithm["load_rules"],
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
-        **kwargs,
     ):
         self._nlp = nlp
 
@@ -117,13 +118,11 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 raise ValueError(
-                    "Did not provide rules. Set `parse_rules` to False if you want to add `ContextRule` manually."
+                    "Did not provide rules. Set `load_rules` to False if you want to add `ContextRule` manually."
                 )
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
-
-        super().__init__(**kwargs)
 
     def add_rule(self, rule: ContextRule):
         """
@@ -286,19 +285,13 @@ class ContextAlgorithm(QualifierDetector):
 
         return match_scopes
 
-    def __call__(self, doc: Doc):
+    def detect_qualifiers(self, doc: Doc):
         """
         Apply the Context Algorithm to a doc.
         """
 
-        if len(doc.ents) == 0:
-            return doc
-
         if len(self.rules) == 0:
             raise RuntimeError("Cannot match qualifiers without any ContextRule.")
-
-        for ent in doc.ents:
-            self._initialize_qualifiers(ent)
 
         for sentence in self._get_sentences_having_entity(doc):
             with warnings.catch_warnings():

@@ -16,14 +16,23 @@ class Qualifier(Enum):
 
 class QualifierDetector(ABC):
     def _initialize_qualifiers(self, entity: Span):
-        setattr(entity._, QUALIFIERS_ATTR, set())
+        if getattr(entity._, QUALIFIERS_ATTR) is None:
+            setattr(entity._, QUALIFIERS_ATTR, set())
 
     def add_qualifier_to_ent(self, entity: Span, new_qualifier: Qualifier):
-        if getattr(entity._, QUALIFIERS_ATTR) is None:
-            self._initialize_qualifiers(entity)
+        self._initialize_qualifiers(entity)
 
         getattr(entity._, QUALIFIERS_ATTR).add(str(new_qualifier))
 
     @abstractmethod
-    def __call__(self, doc: Doc):
+    def detect_qualifiers(self, doc: Doc):
         pass
+
+    def __call__(self, doc: Doc):
+        if len(doc.ents) == 0:
+            return doc
+
+        for ent in doc.ents:
+            self._initialize_qualifiers(ent)
+
+        return self.detect_qualifiers(doc)

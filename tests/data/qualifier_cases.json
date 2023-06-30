@@ -4,6 +4,7 @@
       "text": "2004 poli interne vanwege ENTITY.",
       "ents": [
         {
+          "ent_id": 0,
           "start": 4,
           "end": 5,
           "text": "ENTITY",
@@ -17,12 +18,16 @@
       "text": "Geen ENTITY klachten; niet ENTITY.",
       "ents": [
         {
+          "ent_id": 1,
           "start": 1,
           "end": 2,
           "text": "ENTITY",
-          "qualifiers": []
+          "qualifiers": [
+            "Negation.NEGATED"
+          ]
         },
         {
+          "ent_id": 1,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
@@ -36,6 +41,7 @@
       "text": "Gaat pas slapen als hij ENTITY is.",
       "ents": [
         {
+          "ent_id": 3,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
@@ -49,6 +55,7 @@
       "text": "Bij kliniek sinds [DATUM-1] jaar continue en toenemende ENTITY in de benen",
       "ents": [
         {
+          "ent_id": 4,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -62,6 +69,7 @@
       "text": "2022 sept gastroscopie: 11 cm van de ENTITY ENTITY",
       "ents": [
         {
+          "ent_id": 5,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -70,6 +78,7 @@
           ]
         },
         {
+          "ent_id": 6,
           "start": 9,
           "end": 10,
           "text": "ENTITY",
@@ -83,6 +92,7 @@
       "text": "resp: geen ENTITY, kan krachtig ENTITY",
       "ents": [
         {
+          "ent_id": 7,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -91,6 +101,7 @@
           ]
         },
         {
+          "ent_id": 8,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -104,6 +115,7 @@
       "text": "Gezien geen aanwijzingen voor cardiologische oorzaak thoracale ENTITY, geen poliklinische follow-up",
       "ents": [
         {
+          "ent_id": 9,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -117,6 +129,7 @@
       "text": "Patiënt werd op [DATUM-10] opgenomen via de SEH in verband met ENTITY",
       "ents": [
         {
+          "ent_id": 10,
           "start": 11,
           "end": 12,
           "text": "ENTITY",
@@ -130,12 +143,14 @@
       "text": "Wordt u ziek 1 tot 2 weken voor de operatie (ENTITY, ENTITY of andere gezondheidsproblemen)?",
       "ents": [
         {
+          "ent_id": 11,
           "start": 11,
           "end": 12,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 12,
           "start": 13,
           "end": 14,
           "text": "ENTITY",
@@ -149,6 +164,7 @@
       "text": "S: Dhr heeft geen ENTITY geuit. ",
       "ents": [
         {
+          "ent_id": 13,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
@@ -162,12 +178,14 @@
       "text": "Heden wel mild macrocytaire ENTITY, zonder zichtbaar ENTITY. ",
       "ents": [
         {
+          "ent_id": 14,
           "start": 4,
           "end": 5,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 15,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -181,6 +199,7 @@
       "text": "Interventieradioloog gebeld, nagaan post renale ENTITY?",
       "ents": [
         {
+          "ent_id": 16,
           "start": 6,
           "end": 7,
           "text": "ENTITY",
@@ -194,6 +213,7 @@
       "text": "S1S2, geen ENTITY, HA rond 70/min ",
       "ents": [
         {
+          "ent_id": 17,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -207,6 +227,7 @@
       "text": "vanochtend jammerig/ oncomfortabel, onduidelijk of dit ENTITY/ onbekendheid vpk is ",
       "ents": [
         {
+          "ent_id": 18,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -220,6 +241,7 @@
       "text": "2022: milde ENTITY infcet (ENTITY zonder ENTITY of ENTITY).",
       "ents": [
         {
+          "ent_id": 19,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -228,6 +250,7 @@
           ]
         },
         {
+          "ent_id": 20,
           "start": 6,
           "end": 7,
           "text": "ENTITY",
@@ -236,6 +259,7 @@
           ]
         },
         {
+          "ent_id": 21,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -245,6 +269,7 @@
           ]
         },
         {
+          "ent_id": 22,
           "start": 10,
           "end": 11,
           "text": "ENTITY",
@@ -259,6 +284,7 @@
       "text": "Dochter van patiente heeft ook vergelijkbare klachten van ENTITY en ENTITY. ",
       "ents": [
         {
+          "ent_id": 23,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -267,6 +293,7 @@
           ]
         },
         {
+          "ent_id": 24,
           "start": 10,
           "end": 11,
           "text": "ENTITY",
@@ -280,6 +307,7 @@
       "text": "Nuchter, niet gespuugd of ENTITY geweest. ",
       "ents": [
         {
+          "ent_id": 25,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
@@ -294,12 +322,14 @@
       "text": "Extremiteiten: slanke, soepele ENTITY, geen ENTITY",
       "ents": [
         {
+          "ent_id": 26,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 27,
           "start": 8,
           "end": 9,
           "text": "ENTITY",
@@ -313,6 +343,7 @@
       "text": "U kan nog een paar dagen last hebben van ENTITY.",
       "ents": [
         {
+          "ent_id": 28,
           "start": 9,
           "end": 10,
           "text": "ENTITY",
@@ -326,12 +357,14 @@
       "text": "Positieve ENTITY maar geen ENTITY.",
       "ents": [
         {
+          "ent_id": 29,
           "start": 1,
           "end": 2,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 30,
           "start": 4,
           "end": 5,
           "text": "ENTITY",
@@ -345,6 +378,7 @@
       "text": "Overname [INSTELLING-1] verdenking ENTITY",
       "ents": [
         {
+          "ent_id": 31,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -358,6 +392,7 @@
       "text": "Er zou een erfelijke vorm van ENTITY in de familie zitten, hier wordt patiënte nog op getest.",
       "ents": [
         {
+          "ent_id": 32,
           "start": 6,
           "end": 7,
           "text": "ENTITY",
@@ -371,6 +406,7 @@
       "text": "kan goed op de geopereerde kant liggen, dan geen ENTITY.",
       "ents": [
         {
+          "ent_id": 33,
           "start": 10,
           "end": 11,
           "text": "ENTITY",
@@ -385,6 +421,7 @@
       "text": "Familie anamnese: broer t-cel ENTITY dunnedarm ENTITY gerelateerd",
       "ents": [
         {
+          "ent_id": 34,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -393,6 +430,7 @@
           ]
         },
         {
+          "ent_id": 35,
           "start": 9,
           "end": 10,
           "text": "ENTITY",
@@ -406,6 +444,7 @@
       "text": "Ook een keer ENTITY en ENTITY gelaat gehad in 2014, weet niet welke kant. ",
       "ents": [
         {
+          "ent_id": 36,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -414,6 +453,7 @@
           ]
         },
         {
+          "ent_id": 37,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
@@ -427,6 +467,7 @@
       "text": "Mw voelt zich nog beroerd, veel ENTITY li flank merkt weinig verbetering.",
       "ents": [
         {
+          "ent_id": 38,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -438,6 +479,7 @@
       "text": "In rust hijgt hij van de ENTITY.",
       "ents": [
         {
+          "ent_id": 39,
           "start": 6,
           "end": 7,
           "text": "ENTITY",
@@ -449,12 +491,14 @@
       "text": "CRT-D drager in verband met ENTITY bij ENTITY totaal AV",
       "ents": [
         {
+          "ent_id": 40,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 41,
           "start": 9,
           "end": 10,
           "text": "ENTITY",
@@ -466,6 +510,7 @@
       "text": "LO/ Alg ind: niet acuut ENTITY, helder en ENTITY",
       "ents": [
         {
+          "ent_id": 42,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -474,6 +519,7 @@
           ]
         },
         {
+          "ent_id": 43,
           "start": 11,
           "end": 12,
           "text": "ENTITY",
@@ -485,6 +531,7 @@
       "text": "Uiteindelijk is het fraai gelukt om de ENTITY macroscopisch compleet te verwijderen.",
       "ents": [
         {
+          "ent_id": 44,
           "start": 7,
           "end": 8,
           "text": "ENTITY",
@@ -496,6 +543,7 @@
       "text": "Hij is motorisch ENTITY en snel afgeleid.",
       "ents": [
         {
+          "ent_id": 45,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
@@ -507,12 +555,14 @@
       "text": "Indicatie: analyse ENTITY, elder geduid als bij ENTITY.",
       "ents": [
         {
+          "ent_id": 46,
           "start": 3,
           "end": 4,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 47,
           "start": 9,
           "end": 10,
           "text": "ENTITY",
@@ -524,6 +574,7 @@
       "text": "Mw is ENTITY aanwezig, moe na het familiebezoek ",
       "ents": [
         {
+          "ent_id": 48,
           "start": 2,
           "end": 3,
           "text": "ENTITY",
@@ -535,12 +586,14 @@
       "text": "Exp: ENTITY en ENTITY antalgisch beperkt",
       "ents": [
         {
+          "ent_id": 49,
           "start": 2,
           "end": 3,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 50,
           "start": 4,
           "end": 5,
           "text": "ENTITY",
@@ -552,16 +605,22 @@
       "text": "DD recente ENTITY in peripelviene ENTITY",
       "ents": [
         {
+          "ent_id": 51,
           "start": 2,
           "end": 3,
           "text": "ENTITY",
-          "qualifiers": []
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
         },
         {
+          "ent_id": 52,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
-          "qualifiers": []
+          "qualifiers": [
+            "Plausibility.HYPOTHETICAL"
+          ]
         }
       ]
     },
@@ -569,6 +628,7 @@
       "text": "geen ENTITY, wel meer ENTITY overdag, komt door haar spierziekte ENTITY",
       "ents": [
         {
+          "ent_id": 53,
           "start": 1,
           "end": 2,
           "text": "ENTITY",
@@ -577,12 +637,14 @@
           ]
         },
         {
+          "ent_id": 54,
           "start": 5,
           "end": 6,
           "text": "ENTITY",
           "qualifiers": []
         },
         {
+          "ent_id": 55,
           "start": 12,
           "end": 13,
           "text": "ENTITY",
