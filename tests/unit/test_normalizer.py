@@ -32,10 +32,8 @@ class TestNormalizer:
         assert Normalizer()._map_non_ascii_char("1") == "1"
 
     def test_map_non_ascii_char_nonchar(self):
-
         with pytest.raises(ValueError):
-            Normalizer()._map_non_ascii_char('ab')
-
+            Normalizer()._map_non_ascii_char("ab")
 
     def test_map_non_ascii_string(self):
         assert Normalizer()._map_non_ascii_string("abcde") == "abcde"
