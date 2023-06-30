@@ -56,8 +56,6 @@ def clinlp_autocomponent(cls):
             if (k in component_args or k in component_kwargs) and (not isinstance(v, _UnusedArgument))
         }
 
-        print("cls_kwargs=", cls_kwargs)
-
         return cls(**cls_kwargs)
 
     return make_component
