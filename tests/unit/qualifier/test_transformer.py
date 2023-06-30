@@ -4,7 +4,6 @@ import pytest
 import spacy
 
 import clinlp
-import clinlp.qualifier
 from clinlp.qualifier import QUALIFIERS_ATTR, NegationTransformer
 
 

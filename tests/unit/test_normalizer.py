@@ -1,5 +1,4 @@
 import pytest
-import spacy
 from spacy import Vocab
 from spacy.tokens import Doc
 
