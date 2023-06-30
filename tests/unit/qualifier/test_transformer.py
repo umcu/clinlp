@@ -72,7 +72,7 @@ class TestNegationTransformer:
         doc = n.detect_qualifiers(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, QUALIFIERS_ATTR) == {"Negation.Negated"}
+        assert getattr(doc.ents[0]._, QUALIFIERS_ATTR) == {"Negation.NEGATED"}
 
     def test_detect_qualifiers_small_window(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")

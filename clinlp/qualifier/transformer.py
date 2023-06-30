@@ -44,7 +44,7 @@ class NegationTransformer(QualifierDetector):
         self.probas_aggregator = probas_aggregator
         self.negation_threshold = negation_threshold
 
-        self.negation_qualifier = Qualifier("Negation", ["Affirmed", "Negated"])
+        self.negation_qualifier = Qualifier("Negation", ["AFFIRMED", "NEGATED"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
@@ -107,6 +107,6 @@ class NegationTransformer(QualifierDetector):
                 self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
                 > self.negation_threshold
             ):
-                self.add_qualifier_to_ent(ent, self.negation_qualifier.Negated)
+                self.add_qualifier_to_ent(ent, self.negation_qualifier.NEGATED)
 
         return doc
