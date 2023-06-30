@@ -183,6 +183,14 @@ cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_
 
 `clinlp` also includes a wrapper around the transformer based negation detector, as described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/MedRoBERTa.nl_NegationDetection). It is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
 
+First, install the additional dependencies:
+
+```bash
+pip install "clinlp[transformers]"
+```
+
+Then add it using:
+
 ```python
 tn = nlp.add_pipe('clinlp_negation_transformer')
 ```
