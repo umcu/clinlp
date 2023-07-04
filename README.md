@@ -57,7 +57,6 @@ text = (
     "wel was er nog sprake van hoesten, geen afname vermoeidheid."
 )
 
-
 doc = nlp(text)
 ```
 
@@ -75,7 +74,7 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent, ent.start, ent.end, ent._.qualifiers)
+  print(ent.start, ent.end, ent, ent._.qualifiers)
 
 ```
 
@@ -135,9 +134,9 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second one also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
+Currently, the spaCy builtin `EntityRuler` can be used for finding (named) entities in text. It accepts both literal phrases (single terms or multi-word expressions) and [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns), which give more control over the specific sequence of tokens to match. The spaCy `EntityRuler` is not necessarily tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained. A better or more specific NER module will hopefully be added in the future. 
 
-For instance, a matcher that helps recognize COVID19 symptoms:
+For instance, a matcher that helps recognize COVID-19 symptoms:
 
 ```python
 ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
@@ -155,19 +154,18 @@ for term_description, terms in terms.items():
 ```
 
 For more info, it's useful to check out these spaCy documentation pages:
+* [[spaCy API] EntityRuler](https://spacy.io/api/entityruler)
 * [Rule based matching](https://spacy.io/usage/rule-based-matching)
-* [[spaCy API] Matcher](https://spacy.io/api/matcher)
-* [[spaCy API] PhraseMatcher](https://spacy.io/api/phrasematcher)
 
-Note that the `DependencyMatcher` cannot be used, and neither are part of speech tags available, as no good models for determining this information for clinical text exist (yet).  
+Note that Part of Speech tags and dependency trees and cannot be used in `clinlp`, as no good models for determining this information for clinical text exist (yet).  
 
 ### Qualifier detection
 
-After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002), and a [transformer-based negation detector](https://doi.org/10.48550/arxiv.2209.00470). 
+After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. 
 
 #### Context Algorithm
 
-The rule-based Context Algorithm is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
+The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
 nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
