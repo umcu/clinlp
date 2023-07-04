@@ -57,7 +57,6 @@ text = (
     "wel was er nog sprake van hoesten, geen afname vermoeidheid."
 )
 
-
 doc = nlp(text)
 ```
 
@@ -75,7 +74,7 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent, ent.start, ent.end, ent._.qualifiers)
+  print(ent.start, ent.end, ent, ent._.qualifiers)
 
 ```
 
@@ -135,7 +134,7 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the spaCy builtin `EntityRuler` can be used for finding (named) entities in text. It accepts both literal phrases (both single terms and multi-word expressions) and [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns), giving more control over the specific sequence of tokens to match. The spaCy `EntityRuler` is not necessarily tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained. A better or more specific NER module will hopefully be added in the future. 
+Currently, the spaCy builtin `EntityRuler` can be used for finding (named) entities in text. It accepts both literal phrases (single terms or multi-word expressions) and [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns), which give more control over the specific sequence of tokens to match. The spaCy `EntityRuler` is not necessarily tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained. A better or more specific NER module will hopefully be added in the future. 
 
 For instance, a matcher that helps recognize COVID-19 symptoms:
 
