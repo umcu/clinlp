@@ -1,5 +1,5 @@
 import statistics
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, List
 
 import torch
 from spacy import Language
@@ -17,13 +17,14 @@ _defaults_negation_transformer = {
     "placeholder": None,
     "probas_aggregator": statistics.mean,
     "negation_threshold": 0.5,
+    "affirmed_threshold": 0.5,
 }
 
 
 @Language.factory(
     name="clinlp_negation_transformer",
     requires=["doc.ents"],
-    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    assigns=[f"token._.{QUALIFIERS_ATTR}"],
     default_config=_defaults_negation_transformer,
 )
 @clinlp_autocomponent
@@ -36,6 +37,7 @@ class NegationTransformer(QualifierDetector):
         placeholder: Optional[str] = _defaults_negation_transformer["placeholder"],
         probas_aggregator: Callable = _defaults_negation_transformer["probas_aggregator"],
         negation_threshold: float = _defaults_negation_transformer["negation_threshold"],
+        affirmed_threshold: float = _defaults_negation_transformer["affirmed_threshold"],
     ):
         self.nlp = nlp
         self.token_window = token_window
@@ -43,8 +45,9 @@ class NegationTransformer(QualifierDetector):
         self.placeholder = placeholder
         self.probas_aggregator = probas_aggregator
         self.negation_threshold = negation_threshold
+        self.affirmed_threshold = affirmed_threshold
 
-        self.negation_qualifier = Qualifier("Negation", ["AFFIRMED", "NEGATED"])
+        self.negation_qualifier = Qualifier("Negation", ["AFFIRMED", "NEGATED", "UNKNOWN"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
@@ -79,6 +82,21 @@ class NegationTransformer(QualifierDetector):
 
         return text, ent_start_char, ent_end_char
 
+    # INPROGRESS: add batch processing
+    def _get_negation_prob_batch(self, texts: List[str], ent_indices: List[Tuple[int, int]], probas_aggregator: Callable) -> List[float]:
+        inputs = self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        output = self.model(**inputs)
+        probas = torch.nn.functional.softmax(output.logits, dim=-1).detach().numpy()
+
+        results = []
+        for i, (start_char, end_char) in enumerate(ent_indices):
+            start_token = inputs[i].char_to_token(start_char)
+            end_token = inputs[i].char_to_token(end_char - 1)
+
+            results.append(probas_aggregator(pos[0] + pos[2] for pos in probas[i][start_token : end_token + 1]))
+
+        return results
+    
     def _get_negation_prob(
         self, text: str, ent_start_char: int, ent_end_char: int, probas_aggregator: Callable
     ) -> float:
@@ -90,8 +108,15 @@ class NegationTransformer(QualifierDetector):
         end_token = inputs.char_to_token(ent_end_char - 1)
 
         return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
+    
+    #TODO: add batch processing to perform  self._get_ent_window,
+    # self._trim_ent_boundaries and self._fill_ent_placeholder
 
     def detect_qualifiers(self, doc: Doc):
+        # TODO: perhaps good to add a document-level qualifier that does not rely on the entities and instead 
+        #  aggregates the proba over strided spans with fixed length, and subsequently give a document-level qualification
+        #  I think we then have to add .cats qualifiers instead of token/span qualifiers
+
         for ent in doc.ents:
             text, ent_start_char, ent_end_char = self._get_ent_window(ent, token_window=self.token_window)
 
@@ -103,10 +128,11 @@ class NegationTransformer(QualifierDetector):
                     text, ent_start_char, ent_end_char, placeholder=self.placeholder
                 )
 
-            if (
-                self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
-                > self.negation_threshold
-            ):
-                self.add_qualifier_to_ent(ent, self.negation_qualifier.NEGATED)
-
+            proba = self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
+            if ( proba > self.negation_threshold ):
+                self.add_qualifier_to_ent(ent, self.negation_qualifier.NEGATED, proba)
+            elif ( 1-proba > self.affirmed_threshold ):
+                self.add_qualifier_to_ent(ent, self.negation_qualifier.AFFIRMED, proba)
+            else:
+                self.add_qualifier_to_ent(ent, self.negation_qualifier.UNKNOWN, proba)
         return doc

@@ -39,7 +39,7 @@ class TestRegressionTransformer:
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
                     assert predicted_ent._.qualifiers == set(
-                        q for q in example_ent["qualifiers"] if q == "Negation.NEGATED"
+                        q for q in example_ent["qualifiers"] if q['label'] == "Negation.NEGATED"
                     )
                 except AssertionError:
                     print(
