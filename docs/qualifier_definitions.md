@@ -9,10 +9,10 @@ Below is an attempt at such operational definitions, based on a combination of e
 - `Affirmed` (default)
 - `Negated`
 
-Definition:
+For negation, we folow the definition the orignal [NegEx algorithm by Chapman et al. (2001)](https://www.sciencedirect.com/science/article/pii/S1532046401910299): *findings and diseases explicitly or implicitly described as absent in a patient*. This implies a couple of things:
 
-* A concept is `Negated` if the text indicates that the concept does not exist or take place
-* A concept is `Affirmed` if there is doubt/confusion about its presence, or if its presence has not been checked (rather this concept is `Hypothetical`, see below)
+* Findings that are implicitly described as absent, like `no evidence for [CONCPT]` are negated
+* Findings that are only uncertain, like `unlikely [CONCEPT]` are not negated
 
 Examples:
 
@@ -23,21 +23,18 @@ Examples:
 | `[CONCEPT]` werd uitgesloten        | `Negated`             |                                                                         |
 | `[CONCEPT]` in remissie             | `Affirmed`            | indicates concept is still present to some degree                       |
 | `[CONCEPT]` in complete remissie    | `Negated`             | indicates concept is no longer present                                  |
-| Geen aanwijzing voor  `[CONCEPT]`   | `Negated`             | assuming it has been checked                                            |
-| `[CONCEPT]` niet uitgevraagd        | `Affirmed`            | affirmed because it does not indicate absence, but also  `Hypothetical` |
-| `[CONCEPT]` niet waarschijnlijk     | `Negated`             | negated, because it indicates absence, but also  `Hypothetical`         |
+| Geen aanwijzing voor  `[CONCEPT]`   | `Negated`             | implicit negation, we here assume it has been checked                                            |
 | `[CONCEPT]` laag ingeschat          | `Affirmed`            | 'laag', but not definitly absent                                        |
-| Subklinische  `[CONCEPT]`           | `Negated`             | too small to be present, means absent                                   |
+| Subklinische  `[CONCEPT]`           | `Negated`             | 'subklinisch' is defined as too small to be observable (yet), which we interpret as absent                                   |
+| `[CONCEPT]` niet uitgevraagd        | `Affirmed`            | affirmed because it does not indicate absence, but also  `Hypothetical` |
+| `[CONCEPT]` niet waarschijnlijk     | `Affirmed`             | affirmed because it does not indicate absence, but also  `Hypothetical`         |
 |                                     |                       |                                                                         |
 ## Plausibility
 
 - `Plausible`
 - `Hypothetical`
 
-Definition:
-
-* A concept is `Plausible` if there is certainty that the concept is either present or absent.  
-* A concept is `Hypothetical` if it is uncertain what the presence/absence status of a concept is, or if it might come to exist in the future 
+A good definition of whether something is hypothetical seems lacking in literature, so we create our own: *findings or diseases that are described as being uncertain, unclear, or present only in future or hypothetical situations*. 
 
 Examples:
 
@@ -48,16 +45,14 @@ Examples:
 | Eventuele  `[CONCEPT]`                                        | `Hypothetical`        |       |
 | `[CONCEPT]` niet waarschijnlijk                               | `Hypothetical`        |       |
 | `waarschijnlijk [CONCEPT]`                                    | `Hypothetical`        |       |
+| `[CONCEPT] niet uitgevraagd`                                  | `Hypothetical`        |       |
 
 ## Temporaility
 
 - `Current` (default)
 - `Historical`
 
-Definition:
-
-* A concept is `Current` if the concept was *present in the last two weeks*, regardless of whether it was present before
-* A concept is `Historical` if the concept was present at some point in history, but *not in the last two weeks*
+We follow the definition of the original [ConText algorithm by Harkema et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19435614/): *findings or diseases that were present at some point in history, but not in the last two weeks*. 
 
 Examples:
 
@@ -72,9 +67,7 @@ Examples:
 - `Patient` (default)
 - `Other`
 
-Definition:
-
-* A concept is experienced by `Other` when the concept was experierienced or applied to someone else than the patient (e.g. a familiy member, clinician)
+There is also no clear definition for experiencer, but fortunately this one is far less ambiguous. We go with: *diseases or findings experierienced or applicable to someone else than the patient (e.g. a familiy member, clinician)*
 
 Examples:
 
