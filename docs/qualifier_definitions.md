@@ -9,10 +9,12 @@ Below is an attempt at such operational definitions, based on a combination of e
 - `Affirmed` (default)
 - `Negated`
 
-For negation, we folow the definition the orignal [NegEx algorithm by Chapman et al. (2001)](https://www.sciencedirect.com/science/article/pii/S1532046401910299): *findings and diseases explicitly or implicitly described as absent in a patient*. This implies a couple of things:
+For negation, we folow the definition the orignal [NegEx algorithm by Chapman et al. (2001)](https://www.sciencedirect.com/science/article/pii/S1532046401910299): *findings and diseases explicitly or implicitly described as absent in a patient*. 
 
-* Findings that are implicitly described as absent, like `no evidence for [CONCPT]` are negated
-* Findings that are only uncertain, like `unlikely [CONCEPT]` are not negated
+Some implications of this definition:
+
+* Findings that are implicitly described as absent, like `no evidence for [CONCPT]` are considered `Negated`
+* Findings that are merely uncertain, like `unlikely [CONCEPT]` are considered `Affirmed`, as they cannot be ruled out. 
 
 Examples:
 
@@ -52,7 +54,7 @@ Examples:
 - `Current` (default)
 - `Historical`
 
-We follow the definition of the original [ConText algorithm by Harkema et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19435614/): *findings or diseases that were present at some point in history, but not in the last two weeks*. 
+We use a definition based on the original [ConText algorithm by Harkema et al. (2009)](https://pubmed.ncbi.nlm.nih.gov/19435614/): *findings or diseases that were present at some point in history, but not in the last two weeks*. 
 
 Examples:
 
