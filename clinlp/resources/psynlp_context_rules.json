@@ -1,6 +1,6 @@
 {
   "name": "default_qualifiers",
-  "description": "A set of context rules based on the psynlp package, a rule-based approach somewhat tailored to information extraction from clinical text.",
+  "description": "A set of context rules intially based on the psynlp package, somewhat tailored on a per use case basis.",
   "qualifiers": [
     {
       "qualifier": "Experiencer",
@@ -36,6 +36,9 @@
       "qualifier": "Experiencer.OTHER",
       "direction": "preceding",
       "patterns": [
+        "familieanamnese",
+        "familie-anamnese",
+        "familie anamnese",
         "familiair",
         "familiaire",
         "familieleden",
@@ -531,7 +534,6 @@
         "konden niet",
         "kunnen geen",
         "kunnen niet",
-        "nam af",
         "negatief voor",
         "niet waarschijnlijk",
         "niet",
@@ -543,7 +545,6 @@
         "ontwikkelde geen",
         "ontwikkelde nooit",
         "ontwikkelt geen",
-        "onwaarschijnlijk",
         "patient is niet",
         "patient was niet",
         "sluit uit",
@@ -576,18 +577,14 @@
         "is verdwenen",
         "is weg",
         "kan worden uitgesloten",
-        "laag ingeschat",
-        "nam af",
         "niet aan de orde",
         "niet aanwezig",
-        "niet besproken",
         "niet gezien",
         "niet meer",
-        "niet waarschijnlijk",
-        "onwaarschijnlijk",
         "opgelost",
-        "preventieplan",
         "speelt niet",
+        "in complete remissie",
+        "in totale remissie",
         "waren niet",
         "was niet",
         "werd uitgesloten",
@@ -610,25 +607,16 @@
         "geen toename",
         "geen verandering",
         "geen verbetering",
-        "geen verdere",
         "geen zekere verandering",
         "gram negatief",
-        "herkent zich niet",
-        "is misschien niet",
-        "is mogelijk niet",
         "kan niet",
-        "misschien niet",
-        "mogelijk niet",
         "niet alleen",
         "niet besproken",
         "niet duidelijk",
         "niet gevraagd",
         "niet mogelijk om ",
-        "niet noodzakelijkerwijs",
-        "niet perse",
         "niet uit te sluiten",
         "niet uitgesloten",
-        "niet uitgevraagd",
         "niet uitgevraagd",
         "niet zeker of",
         "wel of niet",
@@ -735,7 +723,6 @@
         "ambivalent",
         "beoordelen van",
         "cave",
-        "dd",
         "diagnostiek",
         "differentiaal diagnostisch",
         "eventueel",
@@ -756,9 +743,11 @@
         "mogelijk",
         "mogelijke",
         "neiging tot",
+        "niet besproken",
         "niet duidelijk",
         "observeren van",
         "onduidelijk",
+        "onwaarschijnlijk",
         "rekening houden met",
         "risico op",
         "twijfel",
@@ -770,12 +759,30 @@
         "vermoeden",
         "vermoedt",
         "voorlopige diagnose",
+        "waarschijnlijk",
         "wanneer",
         "wel of niet",
         "wordt gedacht aan",
         "zorgen voor",
         "zou",
-        "dan"
+        "dan",
+        [
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            },
+            "OP": "!"
+          },
+          {
+            "NORM": "dd"
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            },
+            "OP": "!"
+          }
+        ]
       ]
     },
     {
@@ -789,9 +796,12 @@
         "niet besproken",
         "niet duidelijk",
         "niet uitgevraagd",
+        "niet waarschijnlijk",
         "onduidelijk",
+        "onwaarschijnijk",
         "vermoedde",
         "vermoedden",
+        "waarschijnlijk",
         "zou worden",
         "zou zijn"
       ]
@@ -814,7 +824,6 @@
       "patterns": [
         "aanwezig",
         "ter preventie",
-        "zeer waarschijnlijk",
         "zeker",
         "zonder twijfel",
         ","
@@ -896,24 +905,6 @@
           },
           {
             "LOWER": "geleden"
-          }
-        ],
-        [
-          {
-            "LOWER": "sinds"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "zijn",
-                "haar"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d{,2}e$"
-            }
           }
         ],
         [
@@ -1011,24 +1002,6 @@
         ],
         [
           {
-            "LOWER": "sinds"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "zijn",
-                "haar"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d{,2}e$"
-            }
-          }
-        ],
-        [
-          {
             "LOWER": "in"
           },
           {
@@ -1086,7 +1059,103 @@
         "lijkt niet meer",
         "lijkt niet minder",
         "vg blanco",
-        "voorgeschiedenis blanco"
+        "voorgeschiedenis blanco",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "een",
+                "twee",
+                "drie",
+                "vier",
+                "vijf",
+                "zes",
+                "zeven",
+                "acht",
+                "negen",
+                "tien"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "TEXT": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "oktober",
+                "november",
+                "december"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            },
+            "OP": "?"
+          }
+        ]
       ]
     },
     {
@@ -1098,8 +1167,10 @@
         "afname",
         "nu",
         "primair",
+        "sinds",
         "toegenomen",
         "toename",
+        "vanaf",
         ","
       ]
     }
