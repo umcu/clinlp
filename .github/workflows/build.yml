@@ -32,7 +32,7 @@ jobs:
 
     - name: Setup testing dependencies
       run: |
-        pip install dist/clinlp-*.whl
+        find dist/*.whl | xargs -I {} pip install {}"[transformers]"
         poetry install --only dev
 
     - name: Test build

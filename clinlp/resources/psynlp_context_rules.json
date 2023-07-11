@@ -4,28 +4,28 @@
   "qualifiers": [
     {
       "qualifier": "Experiencer",
-      "levels": [
+      "values": [
         "PATIENT",
         "OTHER"
       ]
     },
     {
       "qualifier": "Negation",
-      "levels": [
+      "values": [
         "AFFIRMED",
         "NEGATED"
       ]
     },
     {
       "qualifier": "Plausibility",
-      "levels": [
+      "values": [
         "PLAUSIBLE",
         "HYPOTHETICAL"
       ]
     },
     {
       "qualifier": "Temporality",
-      "levels": [
+      "values": [
         "CURRENT",
         "HISTORICAL"
       ]
@@ -509,6 +509,7 @@
     {
       "qualifier": "Negation.NEGATED",
       "direction": "preceding",
+      "max_scope": 5,
       "patterns": [
         "afwezigheid van",
         "deed geen",
@@ -569,6 +570,7 @@
     {
       "qualifier": "Negation.NEGATED",
       "direction": "following",
+      "max_scope": 5,
       "patterns": [
         "afwezig",
         "is uitgesloten",

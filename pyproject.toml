@@ -1,15 +1,19 @@
 [tool.poetry]
 name = "clinlp"
-version = "0.2.0"
+version = "0.3.1"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 authors = ["UMCU DIT Analytics <analytics@umcutrecht.nl>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.9"
-spacy = "^3.4.4"
+python = "^3.10"
+spacy = "^3.5.3"
 intervaltree = "^3.1.0"
+transformers = {extras = ["torch"], version = "^4.30.2"}
+makefun = "^1.15.1"
 
+[tool.poetry.extras]
+transformers = ["transformers"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^7.2.2"

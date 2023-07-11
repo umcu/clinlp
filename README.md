@@ -49,14 +49,13 @@ for term_description, terms in terms.items():
     ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
 
 # Qualifiers
-nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
+nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 
 text = (
     "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
     "reuk na covid infectie aangaf. Zij had geen last meer van kortademigheid, "
     "wel was er nog sprake van hoesten, geen afname vermoeidheid."
 )
-
 
 doc = nlp(text)
 ```
@@ -75,7 +74,7 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent, ent.start, ent.end, ent._.qualifiers)
+  print(ent.start, ent.end, ent, ent._.qualifiers)
 
 ```
 
@@ -96,7 +95,9 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 2. [Normalizer](#normalizer)
 3. [Sentence splitter](#sentence-splitter)
 4. [Entity matcher (builtin Spacy)](#entity-matcher)
-5. [Context detection](#context-detection)
+5. [Qualifier detection (=context)](#qualifier-detection)
+    - [Context Algorithm](#context-algorithm)
+    - [Transformer based negation detection](#transformer-based-negation-detection)
 
 ### Tokenizer
 
@@ -133,9 +134,9 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-Currently, the spaCy builtin `PhraseMatcher` and `Matcher` can be used for finding (named) entities in text. The first one accepts literal phrases only, that are matched in the tokenized text, while the second one also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These are not tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained.
+Currently, the spaCy builtin `EntityRuler` can be used for finding (named) entities in text. It accepts both literal phrases (single terms or multi-word expressions) and [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns), which give more control over the specific sequence of tokens to match. The spaCy `EntityRuler` is not necessarily tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained. A better or more specific NER module will hopefully be added in the future. 
 
-For instance, a matcher that helps recognize COVID19 symptoms:
+For instance, a matcher that helps recognize COVID-19 symptoms:
 
 ```python
 ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
@@ -153,30 +154,47 @@ for term_description, terms in terms.items():
 ```
 
 For more info, it's useful to check out these spaCy documentation pages:
+* [[spaCy API] EntityRuler](https://spacy.io/api/entityruler)
 * [Rule based matching](https://spacy.io/usage/rule-based-matching)
-* [[spaCy API] Matcher](https://spacy.io/api/matcher)
-* [[spaCy API] PhraseMatcher](https://spacy.io/api/phrasematcher)
 
-Note that the `DependencyMatcher` cannot be used, and neither are part of speech tags available, as no good models for determining this information for clinical text exist (yet).  
+Note that Part of Speech tags and dependency trees and cannot be used in `clinlp`, as no good models for determining this information for clinical text exist (yet).  
 
-### Context detection
+### Qualifier detection
 
-After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements the rule-based [Context algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) for this purpose. This algorithm is fairly accurate, and quite transparent and fast. Better solutions will hopefully be added to `clinlp` in the future. 
+After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. 
 
-A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
+#### Context Algorithm
 
-```python
-nlp.add_pipe('clinlp_context_matcher', config={'phrase_matcher_attr': 'NORM'})
-```
-
-A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows: 
+The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
-from clinlp.component.qualifier import parse_rules
-
-cm = nlp.add_pipe('clinlp_context_matcher', config={'default_rules': None})
-cm.add_rules(parse_rules('my_custom_rules.json'))
+nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 ```
+
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
+
+```python
+cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
+```
+
+#### Transformer based negation detection
+
+`clinlp` also includes a wrapper around the transformer based negation detector, as described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/MedRoBERTa.nl_NegationDetection). It is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
+
+First, install the additional dependencies:
+
+```bash
+pip install "clinlp[transformers]"
+```
+
+Then add it using:
+
+```python
+tn = nlp.add_pipe('clinlp_negation_transformer')
+```
+
+Some configuration options, like the number of tokens to consider, can be specified in the `config` argument. 
+
 
 ### Where to go from here
 
