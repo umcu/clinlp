@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 
 - updated rules for context algorithm to be consistent with definitions
+- added some rules for context algorithm
 
 ### Fixed
 
