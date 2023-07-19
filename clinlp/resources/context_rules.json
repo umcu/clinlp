@@ -573,6 +573,7 @@
       "max_scope": 5,
       "patterns": [
         "afwezig",
+        "gestaakt",
         "is uitgesloten",
         "is verdwenen",
         "is weg",
@@ -607,6 +608,7 @@
         "geen toename",
         "geen verandering",
         "geen verbetering",
+        "geen verklaring",
         "geen zekere verandering",
         "gram negatief",
         "kan niet",
@@ -614,12 +616,14 @@
         "niet besproken",
         "niet duidelijk",
         "niet gevraagd",
+        "niet geindiceerd",
         "niet mogelijk om ",
         "niet uit te sluiten",
         "niet uitgesloten",
         "niet uitgevraagd",
         "niet zeker of",
         "wel of niet",
+        "zonder effect op",
         "zonder moeite",
         "zonder moelijkheid",
         "zonder verdere",
@@ -723,6 +727,7 @@
         "ambivalent",
         "beoordelen van",
         "cave",
+        "dd",
         "diagnostiek",
         "differentiaal diagnostisch",
         "eventueel",
@@ -750,6 +755,9 @@
         "onwaarschijnlijk",
         "rekening houden met",
         "risico op",
+        "screen",
+        "screening",
+        "te verwachten",
         "twijfel",
         "uitsluiten",
         "verdenking",
@@ -758,6 +766,7 @@
         "vermoeden van",
         "vermoeden",
         "vermoedt",
+        "verwachte",
         "voorlopige diagnose",
         "waarschijnlijk",
         "wanneer",
@@ -765,24 +774,8 @@
         "wordt gedacht aan",
         "zorgen voor",
         "zou",
-        "dan",
-        [
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            },
-            "OP": "!"
-          },
-          {
-            "NORM": "dd"
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            },
-            "OP": "!"
-          }
-        ]
+        "werkdiagnose",
+        "dan"
       ]
     },
     {
@@ -791,12 +784,17 @@
       "patterns": [
         "?",
         "ambivalent",
+        "kan niet worden uitgesloten",
         "kan worden",
         "kan zijn",
+        "kon niet worden uitgesloten",
         "niet besproken",
         "niet duidelijk",
         "niet uitgevraagd",
+        "niet uit te sluiten",
         "niet waarschijnlijk",
+        "screen",
+        "screening",
         "onduidelijk",
         "onwaarschijnijk",
         "vermoedde",
@@ -814,8 +812,33 @@
         "als kind",
         "als puber",
         "als tiener",
+        "dd bij",
         "geduid als",
-        "niet mogelijk"
+        "kan passen bij",
+        "niet mogelijk",
+        "werkdiagnose voor",
+        "waarschijnlijk bij",
+        "onwaarschijnlijk bij",
+        [
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          },
+          {
+            "NORM": "dd"
+          }
+        ],
+        [
+          {
+            "NORM": "dd"
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          }
+        ]
       ]
     },
     {
@@ -841,6 +864,7 @@
         "bij eerste presentatie",
         "destijds",
         "eerdere",
+        "ex-",
         "gedocumenteerd",
         "gedocumenteerde",
         "geschiedenis van",
