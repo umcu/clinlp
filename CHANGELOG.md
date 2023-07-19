@@ -12,7 +12,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
-- updated rules for context algorithm to be consistent with definitions 
+- updated rules for context algorithm to be consistent with definitions
+
+### Fixed
+
+- ambiguity of `dd` for context rules (can mean differential diagnosis, and daily dosage) 
+- importing `clinlp` caused a bug when extras were missing
+
 
 ## 0.3.1 2023-06-30
 
