@@ -602,12 +602,12 @@
       ]
     },
     {
-      "text": "met DD recente ENTITY in peripelviene ENTITY",
+      "text": "DD recente ENTITY in peripelviene ENTITY",
       "ents": [
         {
           "ent_id": 51,
-          "start": 3,
-          "end": 4,
+          "start": 2,
+          "end": 3,
           "text": "ENTITY",
           "qualifiers": [
             "Plausibility.HYPOTHETICAL"
@@ -615,8 +615,8 @@
         },
         {
           "ent_id": 52,
-          "start": 6,
-          "end": 7,
+          "start": 5,
+          "end": 6,
           "text": "ENTITY",
           "qualifiers": [
             "Plausibility.HYPOTHETICAL"
@@ -647,6 +647,18 @@
           "ent_id": 55,
           "start": 12,
           "end": 13,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
+    },
+    {
+      "text": "4dd 1000mg ivm ENTITY",
+      "ents": [
+        {
+          "ent_id": 56,
+          "start": 5,
+          "end": 6,
           "text": "ENTITY",
           "qualifiers": []
         }

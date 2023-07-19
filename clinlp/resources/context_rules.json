@@ -723,6 +723,7 @@
         "ambivalent",
         "beoordelen van",
         "cave",
+        "dd",
         "diagnostiek",
         "differentiaal diagnostisch",
         "eventueel",
@@ -765,24 +766,7 @@
         "wordt gedacht aan",
         "zorgen voor",
         "zou",
-        "dan",
-        [
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            },
-            "OP": "!"
-          },
-          {
-            "NORM": "dd"
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            },
-            "OP": "!"
-          }
-        ]
+        "dan"
       ]
     },
     {
@@ -815,7 +799,27 @@
         "als puber",
         "als tiener",
         "geduid als",
-        "niet mogelijk"
+        "niet mogelijk",
+        [
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          },
+          {
+            "NORM": "dd"
+          }
+        ],
+        [
+          {
+            "NORM": "dd"
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          }
+        ]
       ]
     },
     {
