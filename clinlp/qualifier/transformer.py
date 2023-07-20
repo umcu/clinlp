@@ -135,11 +135,8 @@ class NegationTransformer(QualifierDetector):
             prob = self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
 
             if prob > self.negation_threshold:
-                qualifier = self.negation_factory.get_qualifier("NEGATED", prob=prob)
-            elif 1-prob > self.affirmed_threshold:
-                qualifier = self.negation_factory.get_qualifier("AFFIRMED", prob=prob)
-            else:
-                qualifier = self.negation_factory.get_qualifier("UNKNOWN", prob=prob)
+                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("NEGATED", prob=prob))
+            elif prob > self.affirmed_threshold:
+                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("UNKNOWN", prob=prob))
 
-            self.add_qualifier_to_ent(ent, qualifier)
         return doc
