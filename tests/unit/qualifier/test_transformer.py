@@ -4,7 +4,8 @@ import pytest
 import spacy
 
 import clinlp
-from clinlp.qualifier import QUALIFIERS_ATTR, NegationTransformer
+from clinlp.qualifier import NegationTransformer
+from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture
@@ -71,7 +72,7 @@ class TestNegationTransformer:
         doc = n.detect_qualifiers(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, QUALIFIERS_ATTR) == {"Negation.NEGATED"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.NEGATED"}
 
     def test_detect_qualifiers_small_window(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
@@ -79,7 +80,7 @@ class TestNegationTransformer:
         doc = n.detect_qualifiers(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, QUALIFIERS_ATTR) is None
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) is None
 
     def test_detect_qualifiers_without_negation(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
@@ -87,4 +88,4 @@ class TestNegationTransformer:
         doc = n.detect_qualifiers(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, QUALIFIERS_ATTR) is None
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) is None

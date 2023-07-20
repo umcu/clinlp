@@ -74,7 +74,7 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent.start, ent.end, ent, ent._.qualifiers)
+  print(ent.start, ent.end, ent, ent._.qualifiers_str)
 
 ```
 
@@ -118,7 +118,7 @@ It employs some custom rule based logic, including:
 
 The normalizer sets the `token.norm` attribute, which can be used by further components (entity recognition, qualification) for matching. It currently has two options (enabled by default):
 - Lowercasing
-- Removing diacritings, where possible. For instance, it will map `ë` `->` `e`, but keeps most other non-ascii characters intact (e.g. `µ`, `²`).
+- Removing diacritics, where possible. For instance, it will map `ë` `->` `e`, but keeps most other non-ascii characters intact (e.g. `µ`, `²`).
 
 Note that this component only has effect when explicitly configuring successor components to match on the `token.norm` attribute. 
 

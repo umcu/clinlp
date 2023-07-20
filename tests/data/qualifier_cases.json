@@ -651,6 +651,18 @@
           "qualifiers": []
         }
       ]
+    },
+    {
+      "text": "4dd 1000mg ivm ENTITY",
+      "ents": [
+        {
+          "ent_id": 56,
+          "start": 5,
+          "end": 6,
+          "text": "ENTITY",
+          "qualifiers": []
+        }
+      ]
     }
   ]
 }

@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## (unreleased)
+
+### Added
+- definition for qualifiers (negation, plausibility, temporality, experiencer)
+
+### Changed
+
+- updated rules for context algorithm to be consistent with definitions
+- added some rules for context algorithm
+- refactored `Qualifier` class from enum to a separate class, that accomodates other fields (like prob)
+- use `entity._.qualifiers` to obtain `Qualifier` classes, `entity._.qualifier_str` for strings, and `entity._.qualifier_dict` for dicts 
+
+### Fixed
+
+- ambiguity of `dd` for context rules (can mean differential diagnosis, and daily dosage) 
+- importing `clinlp` caused a bug when extras were missing
+
+
 ## 0.3.1 2023-06-30
 
 ### Removed

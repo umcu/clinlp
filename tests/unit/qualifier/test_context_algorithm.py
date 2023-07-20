@@ -3,8 +3,14 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.qualifier import ContextRule, ContextRuleDirection, Qualifier
+from clinlp.qualifier import (
+    ContextRule,
+    ContextRuleDirection,
+    Qualifier,
+    QualifierFactory,
+)
 from clinlp.qualifier.context_algorithm import ContextAlgorithm, _MatchedContextPattern
+from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture
@@ -19,7 +25,7 @@ def nlp():
 
 @pytest.fixture
 def mock_qualifier():
-    return Qualifier("MOCK", ["MOCK_1", "MOCK_2"])
+    return QualifierFactory("MOCK", ["MOCK_1", "MOCK_2"])
 
 
 @pytest.fixture
@@ -43,30 +49,32 @@ class TestUnitQualifierRuleDirection:
 class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
-        value = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).get_qualifier("NEGATED")
         direction = ContextRuleDirection.PRECEDING
 
-        qr = ContextRule(pattern, value, direction)
+        qr = ContextRule(pattern, qualifier, direction)
 
         assert qr.pattern == pattern
-        assert qr.qualifier == value
+        assert qr.qualifier == qualifier
         assert qr.direction == direction
 
     def test_create_qualifier_rule_2(self):
         pattern = [{"LOWER": "test"}]
-        value = Qualifier("NEGATION", ["AFFIRMED", "NEGATED"]).NEGATED
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).get_qualifier("NEGATED")
         direction = ContextRuleDirection.PRECEDING
 
-        qr = ContextRule(pattern, value, direction)
+        qr = ContextRule(pattern, qualifier, direction)
 
         assert qr.pattern == pattern
-        assert qr.qualifier == value
+        assert qr.qualifier == qualifier
         assert qr.direction == direction
 
 
 class TestUnitMatchedQualifierPattern:
     def test_create_matched_qualifier_pattern(self, mock_qualifier):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+        )
         start = 0
         end = 10
 
@@ -78,7 +86,9 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+        )
         start = 0
         end = 10
         offset = 25
@@ -91,7 +101,9 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+        )
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -103,7 +115,9 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
-        rule = ContextRule(pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING)
+        rule = ContextRule(
+            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.FOLLOWING
+        )
         start = 1
         end = 2
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
@@ -116,7 +130,10 @@ class TestUnitMatchedQualifierPattern:
 
     def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_qualifier, mock_doc):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.PRECEDING, max_scope=1
+            pattern="_",
+            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            direction=ContextRuleDirection.PRECEDING,
+            max_scope=1,
         )
         start = 1
         end = 2
@@ -130,7 +147,10 @@ class TestUnitMatchedQualifierPattern:
 
     def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_qualifier, mock_doc):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=1
+            pattern="_",
+            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            direction=ContextRuleDirection.FOLLOWING,
+            max_scope=1,
         )
         start = 2
         end = 3
@@ -144,7 +164,10 @@ class TestUnitMatchedQualifierPattern:
 
     def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_qualifier, mock_doc):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.MOCK_1, direction=ContextRuleDirection.FOLLOWING, max_scope=-1
+            pattern="_",
+            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            direction=ContextRuleDirection.FOLLOWING,
+            max_scope=-1,
         )
         start = 1
         end = 2
@@ -159,8 +182,8 @@ class TestUnitQualifierMatcher:
     def test_create_qualifier_matcher(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -178,7 +201,7 @@ class TestUnitQualifierMatcher:
         value = "MOCK.MOCK_1"
         qualifiers = {"MOCK": mock_qualifier}
 
-        assert ca._parse_qualifier(value, qualifiers) == mock_qualifier.MOCK_1
+        assert ca._parse_qualifier(value, qualifiers) == mock_qualifier.get_qualifier("MOCK_1")
 
     def test_parse_value_unhappy(self, mock_qualifier, ca):
         value = "MOCK_MOCK_1"
@@ -196,8 +219,8 @@ class TestUnitQualifierMatcher:
     def test_load_rules_data(self, ca):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -258,7 +281,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_preceding(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -269,12 +292,12 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -285,13 +308,13 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_following_multiple_ents(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
@@ -302,13 +325,13 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_pseudo(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -320,12 +343,12 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
+        assert "Negation.NEGATED" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_termination_preceding(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -337,13 +360,13 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_termination_following(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
@@ -355,13 +378,13 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_multiple_sentences(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -372,14 +395,14 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifier_multiple_qualifiers(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -391,14 +414,14 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Temporality.HISTORICAL" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -411,15 +434,15 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
-        assert "Negation.NEGATED" not in doc.ents[1]._.qualifiers
-        assert "Temporality.HISTORICAL" in doc.ents[0]._.qualifiers
-        assert "Temporality.HISTORICAL" in doc.ents[1]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.NEGATED" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Temporality.HISTORICAL" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Temporality.HISTORICAL" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifier_multiple_patterns(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen", "subklinische"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -431,7 +454,7 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" in doc.ents[0]._.qualifiers
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_overlap_rule_and_ent(self):
         nlp = spacy.blank("clinlp")
@@ -441,7 +464,7 @@ class TestUnitQualifierMatcher:
 
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -453,7 +476,7 @@ class TestUnitQualifierMatcher:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.NEGATED" not in doc.ents[0]._.qualifiers
+        assert "Negation.NEGATED" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_load_default_rules(self, nlp):
         ca = ContextAlgorithm(nlp=nlp)

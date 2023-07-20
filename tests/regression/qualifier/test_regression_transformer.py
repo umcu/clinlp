@@ -4,6 +4,7 @@ import pytest
 import spacy
 
 import clinlp
+from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture()
@@ -38,12 +39,12 @@ class TestRegressionTransformer:
                     assert predicted_ent.start == example_ent["start"]
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
-                    assert predicted_ent._.qualifiers == set(
-                        q for q in example_ent["qualifiers"] if q['label'] == "Negation.NEGATED"
+                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR) == set(
+                        q for q in example_ent["qualifiers"] if q == "Negation.NEGATED"
                     )
                 except AssertionError:
                     print(
-                        f"Incorrect (#{example_ent['ent_id']}): text={example['text']}, example_ent={example_ent}, predicted qualifiers={predicted_ent._.qualifiers}"
+                        f"Incorrect (#{example_ent['ent_id']}): text={example['text']}, example_ent={example_ent}, predicted qualifiers={getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 

@@ -6,7 +6,11 @@ from spacy import Language
 from spacy.tokens import Doc, Span
 from transformers import AutoTokenizer, RobertaForTokenClassification
 
-from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+from clinlp.qualifier.qualifier import (
+    ATTR_QUALIFIERS,
+    QualifierDetector,
+    QualifierFactory,
+)
 from clinlp.util import clinlp_autocomponent
 
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
@@ -24,7 +28,7 @@ _defaults_negation_transformer = {
 @Language.factory(
     name="clinlp_negation_transformer",
     requires=["doc.ents"],
-    assigns=[f"token._.{QUALIFIERS_ATTR}"],
+    assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
 @clinlp_autocomponent
@@ -47,7 +51,7 @@ class NegationTransformer(QualifierDetector):
         self.negation_threshold = negation_threshold
         self.affirmed_threshold = affirmed_threshold
 
-        self.negation_qualifier = Qualifier("Negation", ["AFFIRMED", "NEGATED", "UNKNOWN"])
+        self.negation_factory = QualifierFactory("Negation", ["AFFIRMED", "UNKNOWN", "NEGATED"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
@@ -96,7 +100,7 @@ class NegationTransformer(QualifierDetector):
             results.append(probas_aggregator(pos[0] + pos[2] for pos in probas[i][start_token : end_token + 1]))
 
         return results
-    
+
     def _get_negation_prob(
         self, text: str, ent_start_char: int, ent_end_char: int, probas_aggregator: Callable
     ) -> float:
@@ -108,12 +112,12 @@ class NegationTransformer(QualifierDetector):
         end_token = inputs.char_to_token(ent_end_char - 1)
 
         return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
-    
+
     #TODO: add batch processing to perform  self._get_ent_window,
     # self._trim_ent_boundaries and self._fill_ent_placeholder
 
     def detect_qualifiers(self, doc: Doc):
-        # TODO: perhaps good to add a document-level qualifier that does not rely on the entities and instead 
+        # TODO: perhaps good to add a document-level qualifier that does not rely on the entities and instead
         #  aggregates the proba over strided spans with fixed length, and subsequently give a document-level qualification
         #  I think we then have to add .cats qualifiers instead of token/span qualifiers
 
