@@ -6,7 +6,11 @@ from spacy import Language
 from spacy.tokens import Doc, Span
 from transformers import AutoTokenizer, RobertaForTokenClassification
 
-from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+from clinlp.qualifier.qualifier import (
+    ATTR_QUALIFIERS,
+    QualifierDetector,
+    QualifierFactory,
+)
 from clinlp.util import clinlp_autocomponent
 
 TRANSFORMER_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
@@ -23,7 +27,7 @@ _defaults_negation_transformer = {
 @Language.factory(
     name="clinlp_negation_transformer",
     requires=["doc.ents"],
-    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
 @clinlp_autocomponent
@@ -44,7 +48,7 @@ class NegationTransformer(QualifierDetector):
         self.probas_aggregator = probas_aggregator
         self.negation_threshold = negation_threshold
 
-        self.negation_qualifier = Qualifier("Negation", ["AFFIRMED", "NEGATED"])
+        self.negation_factory = QualifierFactory("Negation", ["AFFIRMED", "NEGATED"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
@@ -107,6 +111,6 @@ class NegationTransformer(QualifierDetector):
                 self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
                 > self.negation_threshold
             ):
-                self.add_qualifier_to_ent(ent, self.negation_qualifier.NEGATED)
+                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("NEGATED"))
 
         return doc
