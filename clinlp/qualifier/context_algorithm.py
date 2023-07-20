@@ -231,9 +231,7 @@ class ContextAlgorithm(QualifierDetector):
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(
-                matched_rule
-            )
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(matched_rule)
 
         return groups
 

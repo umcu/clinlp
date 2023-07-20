@@ -21,6 +21,7 @@ _defaults_negation_transformer = {
     "placeholder": None,
     "probas_aggregator": statistics.mean,
     "negation_threshold": 0.5,
+    "affirmed_threshold": 0.5,
 }
 
 
@@ -40,6 +41,7 @@ class NegationTransformer(QualifierDetector):
         placeholder: Optional[str] = _defaults_negation_transformer["placeholder"],
         probas_aggregator: Callable = _defaults_negation_transformer["probas_aggregator"],
         negation_threshold: float = _defaults_negation_transformer["negation_threshold"],
+        affirmed_threshold: float = _defaults_negation_transformer["affirmed_threshold"],
     ):
         self.nlp = nlp
         self.token_window = token_window
@@ -47,8 +49,9 @@ class NegationTransformer(QualifierDetector):
         self.placeholder = placeholder
         self.probas_aggregator = probas_aggregator
         self.negation_threshold = negation_threshold
+        self.affirmed_threshold = affirmed_threshold
 
-        self.negation_factory = QualifierFactory("Negation", ["AFFIRMED", "NEGATED"])
+        self.negation_factory = QualifierFactory("Negation", ["AFFIRMED", "UNKNOWN", "NEGATED"])
 
         self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_REPO)
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
@@ -107,10 +110,11 @@ class NegationTransformer(QualifierDetector):
                     text, ent_start_char, ent_end_char, placeholder=self.placeholder
                 )
 
-            if (
-                self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
-                > self.negation_threshold
-            ):
-                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("NEGATED"))
+            prob = self._get_negation_prob(text, ent_start_char, ent_end_char, probas_aggregator=self.probas_aggregator)
+
+            if prob > self.negation_threshold:
+                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("NEGATED", prob=prob))
+            elif prob > self.affirmed_threshold:
+                self.add_qualifier_to_ent(ent, self.negation_factory.get_qualifier("UNKNOWN", prob=prob))
 
         return doc
