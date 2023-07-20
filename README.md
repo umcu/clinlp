@@ -74,7 +74,7 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent.start, ent.end, ent, ent._.qualifiers)
+  print(ent.start, ent.end, ent, ent._.qualifiers_str)
 
 ```
 

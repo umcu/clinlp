@@ -13,7 +13,12 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.qualifier.qualifier import QUALIFIERS_ATTR, Qualifier, QualifierDetector
+from clinlp.qualifier.qualifier import (
+    ATTR_QUALIFIERS,
+    Qualifier,
+    QualifierDetector,
+    QualifierFactory,
+)
 from clinlp.util import clinlp_autocomponent
 
 
@@ -85,7 +90,7 @@ _defaults_context_algorithm = {
 @Language.factory(
     name="clinlp_context_algorithm",
     requires=["doc.sents", "doc.ents"],
-    assigns=[f"span._.{QUALIFIERS_ATTR}"],
+    assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_context_algorithm,
 )
 @clinlp_autocomponent
@@ -148,13 +153,13 @@ class ContextAlgorithm(QualifierDetector):
             self.add_rule(rule)
 
     @staticmethod
-    def _parse_qualifier(qualifier: str, qualifier_classes: dict[str, Qualifier]) -> Qualifier:
+    def _parse_qualifier(qualifier: str, factories: dict[str, QualifierFactory]) -> Qualifier:
         """
         Parse a Qualifier from string.
 
         Args:
             qualifier: The qualifier (e.g. Negation.NEGATED).
-            qualifier_classes: A mapping of string to qualifier class.
+            factories: A mapping of string to qualifier class.
 
         Returns: A qualifier, as specified.
         """
@@ -168,8 +173,9 @@ class ContextAlgorithm(QualifierDetector):
             )
 
         qualifier_class, qualifier = qualifier.split(".")
+        qualifier_factory = factories[qualifier_class]
 
-        return qualifier_classes[qualifier_class][qualifier]
+        return qualifier_factory.get_qualifier(value=qualifier)
 
     @staticmethod
     def _parse_direction(direction: str) -> ContextRuleDirection:
@@ -188,15 +194,15 @@ class ContextAlgorithm(QualifierDetector):
             with open(rules, "rb") as file:
                 rules = json.load(file)
 
-        qualifiers = {
-            qualifier["qualifier"]: Qualifier(qualifier["qualifier"], qualifier["values"])
+        factories = {
+            qualifier["name"]: QualifierFactory(qualifier["name"], qualifier["values"])
             for qualifier in rules["qualifiers"]
         }
 
         qualifier_rules = []
 
         for rule in rules["rules"]:
-            qualifier = self._parse_qualifier(rule["qualifier"], qualifiers)
+            qualifier = self._parse_qualifier(rule["qualifier"], factories)
             direction = self._parse_direction(rule["direction"])
             max_scope = rule.get("max_scope", None)
 
@@ -225,9 +231,9 @@ class ContextAlgorithm(QualifierDetector):
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.qualifier][matched_rule.rule.direction.name].append(
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(
                 matched_rule
-            )  # TODO: don't use name?
+            )
 
         return groups
 
@@ -260,11 +266,11 @@ class ContextAlgorithm(QualifierDetector):
         """
         match_scopes = ivt.IntervalTree()
 
-        for _, qualifier_matches in self._group_matched_patterns(matched_patterns).items():
-            preceding = qualifier_matches[ContextRuleDirection.PRECEDING.name]
-            following = qualifier_matches[ContextRuleDirection.FOLLOWING.name]
-            pseudo = qualifier_matches[ContextRuleDirection.PSEUDO.name]
-            termination_ = qualifier_matches[ContextRuleDirection.TERMINATION.name]
+        for qualifier_matches in self._group_matched_patterns(matched_patterns).values():
+            preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
+            following = qualifier_matches[ContextRuleDirection.FOLLOWING]
+            pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
+            termination = qualifier_matches[ContextRuleDirection.TERMINATION]
 
             qualifier_matches = ivt.IntervalTree()
 
@@ -281,7 +287,7 @@ class ContextAlgorithm(QualifierDetector):
                 ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in qualifier_matches
             )
 
-            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination_)
+            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination)
 
         return match_scopes
 

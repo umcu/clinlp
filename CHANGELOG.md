@@ -14,6 +14,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - updated rules for context algorithm to be consistent with definitions
 - added some rules for context algorithm
+- refactored `Qualifier` class from enum to a separate class, that accomodates other fields (like prob)
+- use `entity._.qualifiers` to obtain `Qualifier` classes, `entity._.qualifier_str` for strings, and `entity._.qualifier_dict` for dicts 
 
 ### Fixed
 
