@@ -1,5 +1,5 @@
 import statistics
-from typing import Callable, Optional, Tuple
+from typing import Callable, Optional, Tuple, List
 
 import torch
 from spacy import Language
@@ -86,6 +86,21 @@ class NegationTransformer(QualifierDetector):
 
         return text, ent_start_char, ent_end_char
 
+    # INPROGRESS: add batch processing
+    def _get_negation_prob_batch(self, texts: List[str], ent_indices: List[Tuple[int, int]], probas_aggregator: Callable) -> List[float]:
+        inputs = self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
+        output = self.model(**inputs)
+        probas = torch.nn.functional.softmax(output.logits, dim=-1).detach().numpy()
+
+        results = []
+        for i, (start_char, end_char) in enumerate(ent_indices):
+            start_token = inputs[i].char_to_token(start_char)
+            end_token = inputs[i].char_to_token(end_char - 1)
+
+            results.append(probas_aggregator(pos[0] + pos[2] for pos in probas[i][start_token : end_token + 1]))
+
+        return results
+
     def _get_negation_prob(
         self, text: str, ent_start_char: int, ent_end_char: int, probas_aggregator: Callable
     ) -> float:
@@ -98,7 +113,14 @@ class NegationTransformer(QualifierDetector):
 
         return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
 
+    #TODO: add batch processing to perform  self._get_ent_window,
+    # self._trim_ent_boundaries and self._fill_ent_placeholder
+
     def detect_qualifiers(self, doc: Doc):
+        # TODO: perhaps good to add a document-level qualifier that does not rely on the entities and instead
+        #  aggregates the proba over strided spans with fixed length, and subsequently give a document-level qualification
+        #  I think we then have to add .cats qualifiers instead of token/span qualifiers
+
         for ent in doc.ents:
             text, ent_start_char, ent_end_char = self._get_ent_window(ent, token_window=self.token_window)
 
