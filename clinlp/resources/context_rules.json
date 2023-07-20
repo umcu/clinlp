@@ -3,28 +3,28 @@
   "description": "A set of context rules intially based on the psynlp package, somewhat tailored on a per use case basis.",
   "qualifiers": [
     {
-      "qualifier": "Experiencer",
+      "name": "Experiencer",
       "values": [
         "PATIENT",
         "OTHER"
       ]
     },
     {
-      "qualifier": "Negation",
+      "name": "Negation",
       "values": [
         "AFFIRMED",
         "NEGATED"
       ]
     },
     {
-      "qualifier": "Plausibility",
+      "name": "Plausibility",
       "values": [
         "PLAUSIBLE",
         "HYPOTHETICAL"
       ]
     },
     {
-      "qualifier": "Temporality",
+      "name": "Temporality",
       "values": [
         "CURRENT",
         "HISTORICAL"

@@ -182,8 +182,8 @@ class TestUnitQualifierMatcher:
     def test_create_qualifier_matcher(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -219,8 +219,8 @@ class TestUnitQualifierMatcher:
     def test_load_rules_data(self, ca):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -281,7 +281,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_preceding(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -297,7 +297,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -314,7 +314,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_following_multiple_ents(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
@@ -331,7 +331,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_pseudo(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -348,7 +348,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_termination_preceding(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -366,7 +366,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_termination_following(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
@@ -384,7 +384,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifiers_multiple_sentences(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -401,8 +401,8 @@ class TestUnitQualifierMatcher:
     def test_match_qualifier_multiple_qualifiers(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -420,8 +420,8 @@ class TestUnitQualifierMatcher:
     def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-                {"qualifier": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -442,7 +442,7 @@ class TestUnitQualifierMatcher:
     def test_match_qualifier_multiple_patterns(self, nlp):
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen", "subklinische"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -464,7 +464,7 @@ class TestUnitQualifierMatcher:
 
         rules = {
             "qualifiers": [
-                {"qualifier": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},

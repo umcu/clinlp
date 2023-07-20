@@ -195,7 +195,7 @@ class ContextAlgorithm(QualifierDetector):
                 rules = json.load(file)
 
         factories = {
-            qualifier["qualifier"]: QualifierFactory(qualifier["qualifier"], qualifier["values"])
+            qualifier["name"]: QualifierFactory(qualifier["name"], qualifier["values"])
             for qualifier in rules["qualifiers"]
         }
 
@@ -266,7 +266,7 @@ class ContextAlgorithm(QualifierDetector):
         """
         match_scopes = ivt.IntervalTree()
 
-        for _, qualifier_matches in self._group_matched_patterns(matched_patterns).items():
+        for qualifier_matches in self._group_matched_patterns(matched_patterns).values():
             preceding = qualifier_matches[ContextRuleDirection.PRECEDING.name]
             following = qualifier_matches[ContextRuleDirection.FOLLOWING.name]
             pseudo = qualifier_matches[ContextRuleDirection.PSEUDO.name]
