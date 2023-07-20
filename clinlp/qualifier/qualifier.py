@@ -34,19 +34,16 @@ Span.set_extension(name=ATTR_QUALIFIERS_DICT, getter=qualifiers_to_dict)
 
 @dataclass(frozen=True)
 class Qualifier:
-    name: str = field(hash=True)
-    value: str
-    ordinal: int
-    prob: Optional[float] = None
+    name: str = field(compare=True)
+    value: str = field(compare=True)
+    ordinal: int = field(compare=False)
+    prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self):
         return {"label": str(self), "prob": self.prob}
 
     def __str__(self):
         return f"{self.name}.{self.value}"
-
-    def __repr__(self):
-        return self.to_dict().__repr__()
 
 
 class QualifierFactory:
