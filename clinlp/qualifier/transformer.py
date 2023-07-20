@@ -99,7 +99,6 @@ class NegationTransformer(QualifierDetector):
         return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
 
     def detect_qualifiers(self, doc: Doc):
-
         for ent in doc.ents:
             text, ent_start_char, ent_end_char = self._get_ent_window(ent, token_window=self.token_window)
 
