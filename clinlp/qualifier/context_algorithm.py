@@ -231,9 +231,9 @@ class ContextAlgorithm(QualifierDetector):
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.qualifier][matched_rule.rule.direction.name].append(
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(
                 matched_rule
-            )  # TODO: don't use name?
+            )
 
         return groups
 
@@ -267,10 +267,10 @@ class ContextAlgorithm(QualifierDetector):
         match_scopes = ivt.IntervalTree()
 
         for qualifier_matches in self._group_matched_patterns(matched_patterns).values():
-            preceding = qualifier_matches[ContextRuleDirection.PRECEDING.name]
-            following = qualifier_matches[ContextRuleDirection.FOLLOWING.name]
-            pseudo = qualifier_matches[ContextRuleDirection.PSEUDO.name]
-            termination_ = qualifier_matches[ContextRuleDirection.TERMINATION.name]
+            preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
+            following = qualifier_matches[ContextRuleDirection.FOLLOWING]
+            pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
+            termination = qualifier_matches[ContextRuleDirection.TERMINATION]
 
             qualifier_matches = ivt.IntervalTree()
 
@@ -287,7 +287,7 @@ class ContextAlgorithm(QualifierDetector):
                 ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in qualifier_matches
             )
 
-            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination_)
+            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination)
 
         return match_scopes
 
