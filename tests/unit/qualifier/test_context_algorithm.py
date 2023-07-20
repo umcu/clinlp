@@ -220,7 +220,7 @@ class TestUnitQualifierMatcher:
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -402,7 +402,7 @@ class TestUnitQualifierMatcher:
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
@@ -421,7 +421,7 @@ class TestUnitQualifierMatcher:
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
-        {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
                 {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
