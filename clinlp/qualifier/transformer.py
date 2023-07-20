@@ -1,5 +1,5 @@
 import statistics
-from typing import Callable, Optional, Tuple, List
+from typing import Callable, List, Optional, Tuple
 
 import torch
 from spacy import Language
@@ -87,7 +87,9 @@ class NegationTransformer(QualifierDetector):
         return text, ent_start_char, ent_end_char
 
     # INPROGRESS: add batch processing
-    def _get_negation_prob_batch(self, texts: List[str], ent_indices: List[Tuple[int, int]], probas_aggregator: Callable) -> List[float]:
+    def _get_negation_prob_batch(
+        self, texts: List[str], ent_indices: List[Tuple[int, int]], probas_aggregator: Callable
+    ) -> List[float]:
         inputs = self.tokenizer(texts, return_tensors="pt", padding=True, truncation=True, max_length=512)
         output = self.model(**inputs)
         probas = torch.nn.functional.softmax(output.logits, dim=-1).detach().numpy()
@@ -113,7 +115,7 @@ class NegationTransformer(QualifierDetector):
 
         return probas_aggregator(pos[0] + pos[2] for pos in probas[start_token : end_token + 1])
 
-    #TODO: add batch processing to perform  self._get_ent_window,
+    # TODO: add batch processing to perform  self._get_ent_window,
     # self._trim_ent_boundaries and self._fill_ent_placeholder
 
     def detect_qualifiers(self, doc: Doc):
