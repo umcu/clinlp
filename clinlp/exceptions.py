@@ -1,0 +1,2 @@
+class VersionMismatchWarning(Warning):
+    pass
