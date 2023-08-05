@@ -10,6 +10,8 @@ from spacy.language import BaseDefaults, Language
 from spacy.symbols import ORTH
 from spacy.util import update_exc
 
+from clinlp.exceptions import VersionMismatchWarning
+
 CLINLP_ABBREVIATIONS = [
     "dhr.",
     "dr.",
@@ -404,7 +406,7 @@ class Clinlp(Language):
                     f"This spaCy model was built with clinlp version {meta['clinlp_version']}, "
                     f"but you currently have version {clinlp_version} installed, "
                     f"potentially leading to unexpected results.",
-                    UserWarning,
+                    VersionMismatchWarning,
                 )
         else:
             meta["clinlp_version"] = clinlp_version
