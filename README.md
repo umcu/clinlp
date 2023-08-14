@@ -171,7 +171,7 @@ The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) 
 nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 ```
 
-A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/context_rules.json`](clinlp/resources/context_rules.json) for an example, and load it as follows:
 
 ```python
 cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
