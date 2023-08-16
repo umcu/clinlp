@@ -43,14 +43,14 @@ class Term:
 @Language.factory(
     name="clinlp_ner",
     requires=["doc.sents", "doc.ents"],
-    assigns=[f"doc.ents"],
+    assigns=["doc.ents"],
     default_config=_defaults_clinlp_ner,
 )
 @clinlp_autocomponent
 class ClinlpNer(Term):
     def __init__(self, nlp: Language, **kwargs):
         self.nlp = nlp
-        self.attr = kwargs.get('attr', _defaults_clinlp_ner['attr'])
+        self.attr = kwargs.get("attr", _defaults_clinlp_ner["attr"])
         self.term_defaults = kwargs
 
         self._matcher = Matcher(self.nlp.vocab)
@@ -91,7 +91,6 @@ class ClinlpNer(Term):
                     self._matcher.add(key=identifier, patterns=[concept_term.to_spacy_pattern(self.nlp)])
 
     def _get_matches(self, doc: Doc):
-
         if len(self.terms) == 0:
             return RuntimeError("No concepts added.")
 
@@ -106,7 +105,6 @@ class ClinlpNer(Term):
         return matches
 
     def __call__(self, doc: Doc):
-
         matches = self._get_matches(doc)
 
         pos_matches = []

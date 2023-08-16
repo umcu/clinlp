@@ -55,7 +55,7 @@ class QualifierFactory:
 
         self.values = values
 
-    def get_qualifier(self, value: Optional[str] = None, *args, **kwargs):
+    def get_qualifier(self, *args, value: Optional[str] = None, **kwargs):
         if value is None:
             value = self.values[0]
 
