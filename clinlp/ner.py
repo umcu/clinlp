@@ -9,7 +9,7 @@ from spacy.tokens import Span
 from clinlp.util import clinlp_autocomponent
 
 _defaults_clinlp_ner = {"attr": "TEXT", "proximity": 0, "fuzzy": 0, "fuzzy_min_len": 0, "pseudo": False}
-
+_non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 @dataclass
 class Term:
@@ -61,13 +61,12 @@ class ClinlpNer(Term):
 
     @property
     def _use_phrase_matcher(self):
-        non_phrase_matcher_settings = ["proximity", "fuzzy", "fuzzy_min_len"]
 
-        for field in non_phrase_matcher_settings:
-            if field in self.term_defaults and self.term_defaults[field] != _defaults_clinlp_ner[field]:
-                return False
-
-        return True
+        return all(
+            self.term_defaults[field] == _defaults_clinlp_ner[field]
+            for field in _non_phrase_matcher_fields
+            if field in self.term_defaults
+        )
 
     def load_concepts(self, concepts: str | dict):
         for concept, concept_terms in concepts.items():
