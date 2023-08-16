@@ -60,7 +60,7 @@ class ClinlpNer(Term):
         self.term_concept = {}
 
     @property
-    def use_phrase_matcher(self):
+    def _use_phrase_matcher(self):
         non_phrase_matcher_settings = ["proximity", "fuzzy", "fuzzy_min_len"]
 
         for field in non_phrase_matcher_settings:
@@ -78,7 +78,7 @@ class ClinlpNer(Term):
                 self.term_concept[identifier] = concept
 
                 if isinstance(concept_term, str):
-                    if self.use_phrase_matcher:
+                    if self._use_phrase_matcher:
                         self._phrase_matcher.add(key=identifier, docs=[self.nlp(concept_term)])
                     else:
                         concept_term = Term(concept_term, **self.term_defaults).to_spacy_pattern(self.nlp)
@@ -90,7 +90,8 @@ class ClinlpNer(Term):
                 elif isinstance(concept_term, Term):
                     self._matcher.add(key=identifier, patterns=[concept_term.to_spacy_pattern(self.nlp)])
 
-    def __call__(self, doc: Doc):
+    def _get_matches(self, doc: Doc):
+
         if len(self.terms) == 0:
             return RuntimeError("No concepts added.")
 
@@ -101,6 +102,12 @@ class ClinlpNer(Term):
 
         if len(self._phrase_matcher) > 0:
             matches += list(self._phrase_matcher(doc))
+
+        return matches
+
+    def __call__(self, doc: Doc):
+
+        matches = self._get_matches(doc)
 
         pos_matches = []
         neg_matches = ivt.IntervalTree()

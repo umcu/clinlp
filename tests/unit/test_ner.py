@@ -54,12 +54,12 @@ class TestClinlpNer:
         assert ClinlpNer(nlp=nlp)
 
     def test_use_phrase_matcher(self, nlp):
-        assert ClinlpNer(nlp=nlp).use_phrase_matcher
-        assert ClinlpNer(nlp=nlp, attr="NORM").use_phrase_matcher
-        assert not ClinlpNer(nlp=nlp, proximity=1).use_phrase_matcher
-        assert not ClinlpNer(nlp=nlp, fuzzy=1).use_phrase_matcher
-        assert not ClinlpNer(nlp=nlp, fuzzy_min_len=1).use_phrase_matcher
-        assert ClinlpNer(nlp=nlp, pseudo=1).use_phrase_matcher
+        assert ClinlpNer(nlp=nlp)._use_phrase_matcher
+        assert ClinlpNer(nlp=nlp, attr="NORM")._use_phrase_matcher
+        assert not ClinlpNer(nlp=nlp, proximity=1)._use_phrase_matcher
+        assert not ClinlpNer(nlp=nlp, fuzzy=1)._use_phrase_matcher
+        assert not ClinlpNer(nlp=nlp, fuzzy_min_len=1)._use_phrase_matcher
+        assert ClinlpNer(nlp=nlp, pseudo=1)._use_phrase_matcher
 
     def test_load_concepts(self, nlp):
         ner = ClinlpNer(nlp=nlp)
