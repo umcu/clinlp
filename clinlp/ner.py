@@ -9,21 +9,22 @@ from spacy.tokens import Span
 
 from clinlp.util import clinlp_autocomponent
 
-MAX_LEN = float("inf")
+_defaults_clinlp_ner = {"attr": "TEXT", "proximity": 0, "fuzzy": 0, "fuzzy_min_len": float("inf"), "pseudo": False}
 
 
 @dataclass
 class Term:
     phrase: str
-    attr: str = "TEXT"
-    proximity: Optional[int] = 0
-    fuzzy: Optional[int] = 0
-    fuzzy_min_len: Optional[int] = MAX_LEN
-    pseudo: Optional[bool] = False
+    attr: str = (_defaults_clinlp_ner["attr"],)
+    proximity: Optional[int] = _defaults_clinlp_ner["proximity"]
+    fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"]
+    fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"]
+    pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"]
 
     def to_spacy_pattern(self, nlp: Language):
         spacy_pattern = []
-        tokens = [token.text for token in nlp(self.phrase)]
+
+        tokens = [token.text for token in nlp.tokenizer(self.phrase)]
 
         for token in tokens:
             if (self.fuzzy > 0) and (len(token) < self.fuzzy_min_len):
@@ -39,36 +40,26 @@ class Term:
         return spacy_pattern
 
 
+@Language.factory(
+    name="clinlp_ner",
+    requires=["doc.sents", "doc.ents"],
+    assigns=[f"doc.ents"],
+    default_config=_defaults_clinlp_ner,
+)
 @clinlp_autocomponent
-class ClinlpMatcher:
-    concepts: dict
-    attr: str = "TEXT"
-    fuzzy: Optional[int] = 0
-    fuzzy_min_len: Optional[int] = float("inf")
-
-    def __init__(
-        self,
-        nlp: Language,
-        concepts: dict,
-        attr: str = "TEXT",
-        fuzzy: Optional[int] = 0,
-        fuzzy_min_len: Optional[int] = MAX_LEN,
-    ):
+class ClinlpNer:
+    def __init__(self, nlp: Language, **kwargs):
         self.nlp = nlp
-        self.concepts = concepts
-        self.attr = attr
-        self.fuzzy = fuzzy
-        self.fuzzy_min_len = fuzzy_min_len
+        self.term_defaults = kwargs
+        self.use_phrase_matcher = any(_defaults_clinlp_ner[k] != v for k, v in self.term_defaults.items())
 
         self._matcher = Matcher(self.nlp.vocab)
-        self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
+        self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=_defaults_clinlp_ner["attr"])
 
         self.rules = {}
         self.rule_labels = {}
 
-        self._init_rules(concepts)
-
-    def _init_rules(self, concepts: dict):
+    def load_concepts(self, concepts: dict):
         for concept, terms in concepts.items():
             for term in terms:
                 identifier = str(len(self.rules))
@@ -77,7 +68,11 @@ class ClinlpMatcher:
                 self.rule_labels[identifier] = concept
 
                 if isinstance(term, str):
-                    self._phrase_matcher.add(key=identifier, docs=[self.nlp(term)])
+                    if self.use_phrase_matcher:
+                        self._phrase_matcher.add(key=identifier, docs=[self.nlp(term)])
+                    else:
+                        term = Term(term, **self.term_defaults).to_spacy_pattern(self.nlp)
+                        self._matcher.add(key=identifier, patterns=[term])
 
                 elif isinstance(term, list):
                     self._matcher.add(key=identifier, patterns=[term])
@@ -86,6 +81,9 @@ class ClinlpMatcher:
                     self._matcher.add(key=identifier, patterns=[term.to_spacy_pattern(self.nlp)])
 
     def __call__(self, doc: Doc):
+        if len(self.rules) == 0:
+            return RuntimeError("No concepts added.")
+
         matches = itertools.chain(self._matcher(doc), self._phrase_matcher(doc))
 
         pos_matches = []
