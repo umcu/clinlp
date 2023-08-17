@@ -160,8 +160,8 @@ class EntityMatcher:
         ents = []
 
         for match_id, start, end in pos_matches:
-            if all(
-                self._concepts[match_id] != self._concepts[neg_match_id.data]
+            if not any(
+                self._concepts[match_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
                 ents.append(Span(doc=doc, start=start, end=end, label=self._concepts[match_id]))
