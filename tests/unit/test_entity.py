@@ -87,6 +87,23 @@ class TestClinlpNer:
         assert len(ner._phrase_matcher) + len(ner._matcher) == 6
         assert len(ner._terms) == 6
 
+    def test_match_overwrite(self, nlp):
+        ner = EntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
+
+        concepts = {"delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]}
+
+        ner.load_concepts(concepts)
+
+        assert ents(ner(nlp("delier"))) == [("delier", 0, 1, "delier")]
+        assert ents(ner(nlp("Delier"))) == [("Delier", 0, 1, "delier")]
+        assert ents(ner(nlp("delir"))) == [("delir", 0, 1, "delier")]
+        assert ents(ner(nlp("delirant"))) == [("delirant", 0, 1, "delier")]
+        assert ents(ner(nlp("delirnt"))) == []
+        assert ents(ner(nlp("Delirant"))) == [("Delirant", 0, 1, "delier")]
+        assert ents(ner(nlp("dos"))) == []
+        assert ents(ner(nlp("doss"))) == []
+        assert ents(ner(nlp("DOS"))) == [("DOS", 0, 1, "delier")]
+
     def test_match(self, nlp):
         ner = EntityMatcher(nlp=nlp)
         ner.load_concepts({"delier": ["delier", "delirant"]})
@@ -159,7 +176,7 @@ class TestClinlpNer:
     def test_ner_level_term_settings(self, nlp):
         ner = EntityMatcher(nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5)
 
-        ner.load_concepts({"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig")]})
+        ner.load_concepts({"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)]})
 
         assert ents(ner(nlp("was kluts even kwijt"))) == [("kluts even kwijt", 1, 4, "delier")]
         assert ents(ner(nlp("wekt indruk delierant te zijn"))) == [("delierant", 2, 3, "delier")]

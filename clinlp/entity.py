@@ -15,27 +15,36 @@ _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 @dataclass
 class Term:
     phrase: str
-    attr: Optional[str] = _defaults_clinlp_ner["attr"]
-    proximity: Optional[int] = _defaults_clinlp_ner["proximity"]
-    fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"]
-    fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"]
-    pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"]
+    attr: Optional[str] = None
+    proximity: Optional[int] = None
+    fuzzy: Optional[int] = None
+    fuzzy_min_len: Optional[int] = None
+    pseudo: Optional[bool] = None
+
+    def set_fields(self, field_values: dict):
+        for field, value in field_values.items():
+            setattr(self, field, value)
 
     def to_spacy_pattern(self, nlp: Language):
+        fields = {
+            field: getattr(self, field) or _defaults_clinlp_ner[field]
+            for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
+        }
+
         spacy_pattern = []
 
         phrase_tokens = [token.text for token in nlp.tokenizer(self.phrase)]
 
         for i, token in enumerate(phrase_tokens):
-            if (self.fuzzy > 0) and (len(token) >= self.fuzzy_min_len):
-                token_pattern = {f"FUZZY{self.fuzzy}": token}
+            if (fields["fuzzy"] > 0) and (len(token) >= fields["fuzzy_min_len"]):
+                token_pattern = {f"FUZZY{fields['fuzzy']}": token}
             else:
                 token_pattern = token
 
-            spacy_pattern.append({self.attr: token_pattern})
+            spacy_pattern.append({fields["attr"]: token_pattern})
 
             if i != len(phrase_tokens) - 1:
-                for _ in range(self.proximity):
+                for _ in range(fields["proximity"]):
                     spacy_pattern.append({"OP": "?"})
 
         return spacy_pattern
@@ -102,11 +111,24 @@ class EntityMatcher:
                     self._matcher.add(key=identifier, patterns=[concept_term])
 
                 elif isinstance(concept_term, Term):
-                    self._matcher.add(key=identifier, patterns=[concept_term.to_spacy_pattern(self.nlp)])
+                    term_args_with_override = {}
+
+                    for field in self.term_args:
+                        if getattr(concept_term, field) is not None:
+                            term_args_with_override[field] = getattr(concept_term, field)
+                        else:
+                            term_args_with_override[field] = self.term_args[field]
+
+                    self._matcher.add(
+                        key=identifier,
+                        patterns=[
+                            Term(phrase=concept_term.phrase, **term_args_with_override).to_spacy_pattern(self.nlp)
+                        ],
+                    )
 
     def _get_matches(self, doc: Doc):
         if len(self._terms) == 0:
-            return RuntimeError("No _concepts added.")
+            raise RuntimeError("No concepts added.")
 
         matches = []
 
