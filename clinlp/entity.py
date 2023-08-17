@@ -122,6 +122,12 @@ class EntityMatcher:
                         ],
                     )
 
+                else:
+                    raise ValueError(
+                        f"Not sure how to load a term with type {type(concept_term)}, "
+                        f"please provide str, list or clinlp.Term"
+                    )
+
     def _get_matches(self, doc: Doc):
         if len(self._terms) == 0:
             raise RuntimeError("No concepts added.")
