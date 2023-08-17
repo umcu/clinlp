@@ -160,7 +160,7 @@ entity_matcher = nlp.add_pipe("clinlp_entity_matcher")
 entity_matcher.load_concepts(concepts)
 
 ```
-> :bulb: The `clinlp_ner` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
+> :bulb: The `clinlp_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
 
 #### Attribute
 
