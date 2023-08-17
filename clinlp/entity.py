@@ -11,6 +11,7 @@ from clinlp.util import clinlp_autocomponent
 _defaults_clinlp_ner = {"attr": "TEXT", "proximity": 0, "fuzzy": 0, "fuzzy_min_len": 0, "pseudo": False}
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
+
 @dataclass
 class Term:
     phrase: str
@@ -44,43 +45,57 @@ class Term:
     name="clinlp_ner",
     requires=["doc.sents", "doc.ents"],
     assigns=["doc.ents"],
-    default_config=_defaults_clinlp_ner,
+    **{"default_config": _defaults_clinlp_ner},
 )
 @clinlp_autocomponent
-class ClinlpNer(Term):
-    def __init__(self, nlp: Language, **kwargs):
+class EntityMatcher:
+    def __init__(
+        self,
+        nlp: Language,
+        attr: Optional[str] = _defaults_clinlp_ner["attr"],
+        proximity: Optional[int] = _defaults_clinlp_ner["proximity"],
+        fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"],
+        fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"],
+        pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"],
+    ):
         self.nlp = nlp
-        self.attr = kwargs.get("attr", _defaults_clinlp_ner["attr"])
-        self.term_defaults = kwargs
+        self.attr = attr
+
+        self.term_args = {
+            "attr": attr,
+            "proximity": proximity,
+            "fuzzy": fuzzy,
+            "fuzzy_min_len": fuzzy_min_len,
+            "pseudo": pseudo,
+        }
 
         self._matcher = Matcher(self.nlp.vocab)
         self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=self.attr)
 
-        self.terms = {}
-        self.term_concept = {}
+        self._terms = {}
+        self._concepts = {}
 
     @property
     def _use_phrase_matcher(self):
-
         return all(
-            self.term_defaults[field] == _defaults_clinlp_ner[field]
+            self.term_args[field] == _defaults_clinlp_ner[field]
             for field in _non_phrase_matcher_fields
-            if field in self.term_defaults
+            if field in self.term_args
         )
 
     def load_concepts(self, concepts: str | dict):
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
-                identifier = str(len(self.terms))
+                identifier = str(len(self._terms))
 
-                self.terms[identifier] = concept_term
-                self.term_concept[identifier] = concept
+                self._terms[identifier] = concept_term
+                self._concepts[identifier] = concept
 
                 if isinstance(concept_term, str):
                     if self._use_phrase_matcher:
                         self._phrase_matcher.add(key=identifier, docs=[self.nlp(concept_term)])
                     else:
-                        concept_term = Term(concept_term, **self.term_defaults).to_spacy_pattern(self.nlp)
+                        concept_term = Term(concept_term, **self.term_args).to_spacy_pattern(self.nlp)
                         self._matcher.add(key=identifier, patterns=[concept_term])
 
                 elif isinstance(concept_term, list):
@@ -90,8 +105,8 @@ class ClinlpNer(Term):
                     self._matcher.add(key=identifier, patterns=[concept_term.to_spacy_pattern(self.nlp)])
 
     def _get_matches(self, doc: Doc):
-        if len(self.terms) == 0:
-            return RuntimeError("No concepts added.")
+        if len(self._terms) == 0:
+            return RuntimeError("No _concepts added.")
 
         matches = []
 
@@ -111,7 +126,7 @@ class ClinlpNer(Term):
 
         for match_id, start, end in matches:
             rule_id = self.nlp.vocab.strings[match_id]
-            term = self.terms[rule_id]
+            term = self._terms[rule_id]
 
             if isinstance(term, Term) and term.pseudo:
                 neg_matches[start:end] = rule_id
@@ -121,13 +136,11 @@ class ClinlpNer(Term):
         ents = []
 
         for match_id, start, end in pos_matches:
-            if any(
-                self.term_concept[match_id] == self.term_concept[neg_match_id.data]
+            if all(
+                self._concepts[match_id] != self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
-                continue
-
-            ents.append(Span(doc=doc, start=start, end=end, label=self.term_concept[match_id]))
+                ents.append(Span(doc=doc, start=start, end=end, label=self._concepts[match_id]))
 
         doc.set_ents(entities=ents)
 

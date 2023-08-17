@@ -1,7 +1,7 @@
 import importlib.util
 
+from .entity import EntityMatcher, Term
 from .language import Clinlp
-from .ner import ClinlpNer, Term
 from .normalizer import Normalizer
 from .qualifier import ContextAlgorithm
 from .sentencizer import Sentencizer
