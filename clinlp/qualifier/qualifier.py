@@ -55,7 +55,7 @@ class QualifierFactory:
 
         self.values = values
 
-    def get_qualifier(self, value: Optional[str] = None, *args, **kwargs):
+    def get_qualifier(self, value: Optional[str] = None, **kwargs):
         if value is None:
             value = self.values[0]
 
@@ -64,7 +64,7 @@ class QualifierFactory:
                 f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}.d"
             )
 
-        return Qualifier(name=self.name, value=value, ordinal=self.values.index(value), *args, **kwargs)
+        return Qualifier(name=self.name, value=value, ordinal=self.values.index(value), **kwargs)
 
 
 class QualifierDetector(ABC):

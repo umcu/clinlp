@@ -115,7 +115,7 @@ class ContextAlgorithm(QualifierDetector):
     ):
         self._nlp = nlp
 
-        self._matcher = Matcher(self._nlp.vocab, validate=True)
+        self._matcher = Matcher(self._nlp.vocab)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
 
         self.rules = {}

@@ -1,5 +1,6 @@
 import importlib.util
 
+from .entity import EntityMatcher, Term
 from .language import Clinlp
 from .normalizer import Normalizer
 from .qualifier import ContextAlgorithm

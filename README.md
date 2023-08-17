@@ -6,7 +6,6 @@
 * :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
- 
 
 Read the [principles and goals](#principles-and-goals), futher down :arrow_down:
 
@@ -23,38 +22,40 @@ pip install clinlp
 
 ### Example
 ```python
-import clinlp
 import spacy
+from clinlp import Term
 
 nlp = spacy.blank("clinlp")
 
 # Normalization
-nlp.add_pipe('clinlp_normalizer')
+nlp.add_pipe("clinlp_normalizer")
 
 # Sentences
-nlp.add_pipe('clinlp_sentencizer')
+nlp.add_pipe("clinlp_sentencizer")
 
 # Entities
-ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
-
-terms = {
-    'covid_19_symptomen': [
-        'verkoudheid', 'neusverkoudheid', 'loopneus', 'niezen', 'vermoeidheid',
-        'keelpijn', 'hoesten', 'benauwdheid', 'kortademigheid', 'verhoging', 
-        'koorts', 'verlies van reuk', 'verlies van smaak'
+concepts = {
+    "prematuriteit": [
+        "preterm", "<p3", "prematuriteit", "partus praematurus"
+    ],
+    "hypotensie": [
+        "hypotensie", Term("bd verlaagd", proximity=1)
+    ],
+    "veneus_infarct": [
+        "veneus infarkt", Term("VI", attr="TEXT")
     ]
 }
 
-for term_description, terms in terms.items():
-    ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
+entity_matcher.load_concepts(concepts)
 
 # Qualifiers
-nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
+nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
 
 text = (
-    "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
-    "reuk na covid infectie aangaf. Zij had geen last meer van kortademigheid, "
-    "wel was er nog sprake van hoesten, geen afname vermoeidheid."
+    "Preterme neonaat (<p3), bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie "
+    "bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen "
+    "verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
 )
 
 doc = nlp(text)
@@ -65,7 +66,7 @@ Find information in the doc object:
 ```python
 from spacy import displacy
 
-displacy.render(doc, style='ent')
+displacy.render(doc, style="ent")
 ```
 
 ![example_doc_render.png](media/example_doc_render.png)
@@ -74,14 +75,17 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent.start, ent.end, ent, ent._.qualifiers_str)
-
+  print(ent, ent._.qualifiers_str)
 ```
 
-* `11` `14` `verlies van reuk` `{'Temporality.HISTORICAL'}`
-* `25` `26` `kortademigheid` `{'Negation.NEGATED'}`
-* `33` `34` `hoesten` `{}`
-* `37` `38` `vermoeidheid` `{}`
+* `Preterme` `set()`
+* `<p3` `set()`
+* `bd enigszins verlaagd` `set()`
+* `hypotensie` `{'Experiencer.OTHER'}`
+* `veneus infarkt` `{'Negation.NEGATED'}`
+* `partus prematurus` `set()`
+* `VI` `{'Plausibility.HYPOTHETICAL'}`
+
 
 ## Documentation
 
@@ -94,8 +98,8 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 1. [Tokenizer](#tokenizer)
 2. [Normalizer](#normalizer)
 3. [Sentence splitter](#sentence-splitter)
-4. [Entity matcher (builtin Spacy)](#entity-matcher)
-5. [Qualifier detection (=context)](#qualifier-detection)
+4. [Entity matcher](#entity-matcher)
+5. [Qualifier detection (negation, historical, etc.)](#qualifier-detection)
     - [Context Algorithm](#context-algorithm)
     - [Transformer based negation detection](#transformer-based-negation-detection)
 
@@ -104,7 +108,7 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 The `clinlp` tokenizer is built into the blank model:
 
 ```python
-nlp = spacy.blank('clinlp')
+nlp = spacy.blank("clinlp")
 ```
 
 It employs some custom rule based logic, including:
@@ -116,65 +120,161 @@ It employs some custom rule based logic, including:
 
 ### Normalizer
 
-The normalizer sets the `token.norm` attribute, which can be used by further components (entity recognition, qualification) for matching. It currently has two options (enabled by default):
+The normalizer sets the `Token.norm` attribute, which can be used by further components (entity matching, qualification). It currently has two options (enabled by default):
 - Lowercasing
-- Removing diacritics, where possible. For instance, it will map `ë` `->` `e`, but keeps most other non-ascii characters intact (e.g. `µ`, `²`).
+- Removing diacritics, where possible. For instance, it will map `ë` :arrow_right: `e`, but keeps most other non-ascii characters intact (e.g. `µ`, `²`).
 
-Note that this component only has effect when explicitly configuring successor components to match on the `token.norm` attribute. 
+Note that this component only has effect when explicitly configuring successor components to match on the `Token.norm` attribute. 
 
 ### Sentence splitter
 
 The sentence splitter can be added as follows:
 
 ```python
-nlp.add_pipe('clinlp_sentencizer')
+nlp.add_pipe("clinlp_sentencizer")
 ```
 
 It is designed to detect sentence boundaries in clinical text, whenever a character that demarks a sentence ending is matched (e.g. newline, period, question mark). It also correctly detects items in an enumerations (e.g. starting with `-` or `*`). 
 
 ### Entity matcher
 
-Currently, the spaCy builtin `EntityRuler` can be used for finding (named) entities in text. It accepts both literal phrases (single terms or multi-word expressions) and [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns), which give more control over the specific sequence of tokens to match. The spaCy `EntityRuler` is not necessarily tailored for the clinical domain, but nevertheless useful when a somewhat coherent list of relevant patterns can be generated/obtained. A better or more specific NER module will hopefully be added in the future. 
+`clinlp` includes a `clinlp_entity_matcher` component that can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and matching pseudo/negative terms. 
 
-For instance, a matcher that helps recognize COVID-19 symptoms:
+The most basic example would be the following, with further options described below:
 
 ```python
-ruler = nlp.add_pipe('entity_ruler', config={'phrase_matcher_attr': "NORM"})
-
-terms = {
-    'covid_19_symptomen': [
-        'verkouden', 'neusverkouden', 'loopneus', 'niezen', 
-        'keelpijn', 'hoesten', 'benauwd', 'kortademig', 'verhoging', 
-        'koorts', 'verlies van reuk', 'verlies van smaak'
+concepts = {
+    "sepsis": [
+        "sepsis",
+        "lijnsepsis",
+        "systemische infectie",
+        "bacteriemie",
+    ],
+    "veneus_infarct": [
+        "veneus infarct",
+        "VI",
     ]
 }
 
-for term_description, terms in terms.items():
-    ruler.add_patterns([{'label': term_description, 'pattern': term} for term in terms])
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher")
+entity_matcher.load_concepts(concepts)
+
+```
+> :bulb: The `clinlp_ner` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
+
+#### Attribute
+
+Specify the token attribute the entity matcher should use as follows (by default `TEXT`):
+
+```python
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM"})
 ```
 
-For more info, it's useful to check out these spaCy documentation pages:
-* [[spaCy API] EntityRuler](https://spacy.io/api/entityruler)
-* [Rule based matching](https://spacy.io/usage/rule-based-matching)
+Any [Token attribute](https://spacy.io/api/token#attributes) can be used, but in the above example the `clinlp_normalizer` should be added before the entity matcher, or the `NORM` attribute is simply the literal text. `clinlp` does not include Part of Speech tags and dependency trees, at least not until a reliable model for Dutch clinical text is created, though it's always possible to add a relevant component from a trained (general) Dutch model if needed.
 
-Note that Part of Speech tags and dependency trees and cannot be used in `clinlp`, as no good models for determining this information for clinical text exist (yet).  
+#### Proximity matching
+
+The proxmity setting defines how many tokens can optionally be skipped between the tokens of a pattern. With `proxmity` set to `1`, the pattern `slaapt slecht` will also match `slaapt vaak slecht`, but not `slaapt al weken slecht`. 
+
+```python
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"proximity": 1})
+```
+
+#### Fuzzy matching
+
+Fuzzy matching enables finding misspelled variants of terms. For instance, with `fuzzy` set to `1`, the pattern `diabetes` will also match `diabets`, `ddiabetes`, or `diabetis`, but not `diabetse` or `ddiabetess`. The threshold is based on Levenshtein distance with insertions, deletions and replacements (but not swaps).  
+
+```python
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1})
+```
+
+Additionally, the `fuzzy_min_len` argument can be used to specify the minimum length of a phrase for fuzzy matching. This also works for multi-token phrases. For example, with `fuzzy` set to `1` and `fuzzy_min_len` set to `5`, the pattern `bloeding graad ii` would also match `bloedin graad ii`, but not `bloeding graad iii`. 
+
+```python
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1, "fuzzy_min_len": 5})
+```
+
+#### Terms
+The settings above are described at the matcher level, but can all be overridden at the term level by adding a `Term` to a concept, rather than a literal phrase:
+
+```python
+from clinlp import Term
+
+concepts = {
+    "sepsis": [
+        "sepsis",
+        "lijnsepsis",
+        Term("early onset", proximity=1),
+        Term("late onset", proximity=1),
+        Term("EOS", attr="TEXT", fuzzy=0),
+        Term("LOS", attr="TEXT", fuzzy=0)
+    ]
+}
+
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
+entity_matcher.load_concepts(concepts)
+```
+
+In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled. 
+
+#### Pseudo/negative phrases
+
+On the term level, it is possible to add pseudo or negative patterns, for those phrases that need to be excluded. For example:
+
+```python
+concepts = {
+    "prematuriteit": [
+        "prematuur",
+        Term("prematuur ademhalingspatroon", pseudo=True),
+    ]  
+}
+```
+
+In this case `prematuur` will be matched, but not in the context of `prematuur ademhalingspatroon` (which may indicate prematurity, but is not a definitive diagnosis).
+
+#### Spacy patterns
+
+Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
+
+```python
+concepts = {
+    "delier": [
+        Term("delier", attr="NORM"),
+        Term("DOS", attr="TEXT"),
+        [
+             {"NORM": {"IN": ["zag", "ziet", "hoort", "hoorde", "ruikt", "rook"]}},
+             {"OP": "?"},
+             {"OP": "?"},
+             {"OP": "?"},
+             {"NORM": {"FUZZY1": "dingen"}},
+             {"OP": "?"},
+             {"NORM": "die"},
+             {"NORM": "er"},
+             {"OP": "?"},
+             {"NORM": "niet"},
+             {"OP": "?"},
+             {"NORM": {"IN": ["zijn", "waren"]}}
+        ],
+    ]
+}
+```
 
 ### Qualifier detection
 
-After finding entities, it's often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. 
+After finding entities, it"s often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. 
 
 #### Context Algorithm
 
 The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
 
 ```python
-nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
+nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
 ```
 
-A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/psynlp_context_rules.json`](clinlp/resources/psynlp_context_rules.json) for an example, and load it as follows:
+A custom set of rules, including different types of qualifiers, can easily be defined. See [`clinlp/resources/context_rules.json`](clinlp/resources/context_rules.json) for an example, and load it as follows:
 
 ```python
-cm = nlp.add_pipe('clinlp_context_algorithm', config={'rules': '/path/to/my_own_ruleset.json'})
+cm = nlp.add_pipe("clinlp_context_algorithm", config={"rules": "/path/to/my_own_ruleset.json"})
 ```
 
 #### Transformer based negation detection
@@ -190,7 +290,7 @@ pip install "clinlp[transformers]"
 Then add it using:
 
 ```python
-tn = nlp.add_pipe('clinlp_negation_transformer')
+tn = nlp.add_pipe("clinlp_negation_transformer")
 ```
 
 Some configuration options, like the number of tokens to consider, can be specified in the `config` argument. 
