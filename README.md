@@ -78,13 +78,13 @@ for ent in doc.ents:
   print(ent.start, ent.end, ent, ent._.qualifiers_str)
 ```
 
-`0` `1` `Preterme` `set()`
-`3` `5` `<p3` `set()`
-`7` `10` `bd enigszins verlaagd` `set()`
-`14` `15` `hypotensie` `{'Experiencer.OTHER'}`
-`22` `24` `veneus infarkt` `{'Negation.NEGATED'}`
-`30` `32` `partus prematurus` `set()`
-`36` `37` `VI` `{'Plausibility.HYPOTHETICAL'}`
+* `0` `1` `Preterme` `set()`
+* `3` `5` `<p3` `set()`
+* `7` `10` `bd enigszins verlaagd` `set()`
+* `14` `15` `hypotensie` `{'Experiencer.OTHER'}`
+* `22` `24` `veneus infarkt` `{'Negation.NEGATED'}`
+* `30` `32` `partus prematurus` `set()`
+* `36` `37` `VI` `{'Plausibility.HYPOTHETICAL'}`
 
 ## Documentation
 
