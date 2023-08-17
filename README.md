@@ -22,8 +22,8 @@ pip install clinlp
 
 ### Example
 ```python
-import clinlp
 import spacy
+from clinlp import Term
 
 nlp = spacy.blank("clinlp")
 
@@ -35,23 +35,27 @@ nlp.add_pipe('clinlp_sentencizer')
 
 # Entities
 concepts = {
-    'covid_19_symptomen': [
-        'verkoudheid', 'neusverkoudheid', 'loopneus', 'niezen', 'vermoeidheid',
-        'keelpijn', 'hoesten', 'benauwdheid', 'kortademigheid', 'verhoging', 
-        'koorts', 'verlies van reuk', 'verlies van smaak'
+    'prematuriteit': [
+        'prematuur', 'preterm', 'prematuriteit', 'partus praematurus'
+    ],
+    'hypotensie': [
+        'hypotensie', Term('bd verlaagd', proximity=1)
+    ],
+    'veneus_infarct': [
+        'veneus infarkt', Term('VI', attr="TEXT")
     ]
 }
 
-clinlp_ner = nlp.add_pipe('clinlp_entity_matcher')
-clinlp_ner.load_concepts(concepts)
+entity_matcher = nlp.add_pipe('clinlp_entity_matcher', config={'fuzzy': 1})
+entity_matcher.load_concepts(concepts)
 
 # Qualifiers
 nlp.add_pipe('clinlp_context_algorithm', config={'phrase_matcher_attr': 'NORM'})
 
 text = (
-    "Patiente bij mij gezien op spreekuur, omdat zij vorige maand verlies van "
-    "reuk na covid infectie aangaf. Zij had geen last meer van kortademigheid, "
-    "wel was er nog sprake van hoesten, geen afname vermoeidheid."
+    "Preterme neonaat (<p3), bd enigszins verlaagd, eveneens sprake van hypotensie "
+    "bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen "
+    "verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
 )
 
 doc = nlp(text)
@@ -75,10 +79,12 @@ for ent in doc.ents:
 
 ```
 
-* `11` `14` `verlies van reuk` `{'Temporality.HISTORICAL'}`
-* `25` `26` `kortademigheid` `{'Negation.NEGATED'}`
-* `33` `34` `hoesten` `{}`
-* `37` `38` `vermoeidheid` `{}`
+`3` `5` `<p3` `set()`
+`7` `10` `bd enigszins verlaagd` `set()`
+`14` `15` `hypotensie` `{'Experiencer.OTHER'}`
+`22` `24` `veneus infarkt` `{'Negation.NEGATED'}`
+`30` `32` `partus prematurus` `set()`
+`36` `37` `VI` `{'Plausibility.HYPOTHETICAL'}`
 
 ## Documentation
 
