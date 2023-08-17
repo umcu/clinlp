@@ -21,10 +21,6 @@ class Term:
     fuzzy_min_len: Optional[int] = None
     pseudo: Optional[bool] = None
 
-    def set_fields(self, field_values: dict):
-        for field, value in field_values.items():
-            setattr(self, field, value)
-
     def to_spacy_pattern(self, nlp: Language):
         fields = {
             field: getattr(self, field) or _defaults_clinlp_ner[field]
