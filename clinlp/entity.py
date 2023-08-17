@@ -113,11 +113,11 @@ class EntityMatcher:
                 elif isinstance(concept_term, Term):
                     term_args_with_override = {}
 
-                    for field in self.term_args:
+                    for field, value in self.term_args.items():
                         if getattr(concept_term, field) is not None:
                             term_args_with_override[field] = getattr(concept_term, field)
                         else:
-                            term_args_with_override[field] = self.term_args[field]
+                            term_args_with_override[field] = value
 
                     self._matcher.add(
                         key=identifier,
