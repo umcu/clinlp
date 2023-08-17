@@ -36,7 +36,7 @@ nlp.add_pipe("clinlp_sentencizer")
 # Entities
 concepts = {
     "prematuriteit": [
-        "prematuur", "preterm", "prematuriteit", "partus praematurus"
+        "preterm", "<p3", "prematuriteit", "partus praematurus"
     ],
     "hypotensie": [
         "hypotensie", Term("bd verlaagd", proximity=1)
@@ -46,14 +46,14 @@ concepts = {
     ]
 }
 
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1})
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
 entity_matcher.load_concepts(concepts)
 
 # Qualifiers
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
 
 text = (
-    "Preterme neonaat (<p3), bd enigszins verlaagd, eveneens sprake van hypotensie "
+    "Preterme neonaat (<p3), bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie "
     "bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen "
     "verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
 )
@@ -76,9 +76,9 @@ With relevant qualifiers:
 ```python
 for ent in doc.ents:
   print(ent.start, ent.end, ent, ent._.qualifiers_str)
-
 ```
 
+`0` `1` `Preterme` `set()`
 `3` `5` `<p3` `set()`
 `7` `10` `bd enigszins verlaagd` `set()`
 `14` `15` `hypotensie` `{'Experiencer.OTHER'}`
