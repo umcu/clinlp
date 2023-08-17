@@ -42,10 +42,10 @@ class Term:
 
 
 @Language.factory(
-    name="clinlp_ner",
+    name="clinlp_entity_matcher",
     requires=["doc.sents", "doc.ents"],
     assigns=["doc.ents"],
-    **{"default_config": _defaults_clinlp_ner},
+    default_config=_defaults_clinlp_ner,
 )
 @clinlp_autocomponent
 class EntityMatcher:
