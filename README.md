@@ -42,7 +42,7 @@ concepts = {
         "hypotensie", Term("bd verlaagd", proximity=1)
     ],
     "veneus_infarct": [
-        "veneus infarkt", Term("VI", attr="TEXT")
+        "veneus infarct", Term("VI", attr="TEXT")
     ]
 }
 
