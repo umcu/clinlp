@@ -75,16 +75,17 @@ With relevant qualifiers:
 
 ```python
 for ent in doc.ents:
-  print(ent.start, ent.end, ent, ent._.qualifiers_str)
+  print(ent, ent._.qualifiers_str)
 ```
 
-* `0` `1` `Preterme` `set()`
-* `3` `5` `<p3` `set()`
-* `7` `10` `bd enigszins verlaagd` `set()`
-* `14` `15` `hypotensie` `{'Experiencer.OTHER'}`
-* `22` `24` `veneus infarkt` `{'Negation.NEGATED'}`
-* `30` `32` `partus prematurus` `set()`
-* `36` `37` `VI` `{'Plausibility.HYPOTHETICAL'}`
+* `Preterme` `set()`
+* `<p3` `set()`
+* `bd enigszins verlaagd` `set()`
+* `hypotensie` `{'Experiencer.OTHER'}`
+* `veneus infarkt` `{'Negation.NEGATED'}`
+* `partus prematurus` `set()`
+* `VI` `{'Plausibility.HYPOTHETICAL'}`
+
 
 ## Documentation
 
@@ -137,7 +138,7 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-For convenience, `clinlp` includes a `clinlp_entity_matcher` component that can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and matching pseudo/negative terms. 
+`clinlp` includes a `clinlp_entity_matcher` component that can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and matching pseudo/negative terms. 
 
 The most basic example would be the following, with further options described below:
 
@@ -159,7 +160,7 @@ entity_matcher = nlp.add_pipe("clinlp_entity_matcher")
 entity_matcher.load_concepts(concepts)
 
 ```
-> The `clinlp_ner` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
+> :bulb: The `clinlp_ner` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
 
 #### Attribute
 
@@ -214,7 +215,7 @@ entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "
 entity_matcher.load_concepts(concepts)
 ```
 
-In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in combination the `NORM` attribute and the fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled. 
+In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled. 
 
 #### Pseudo/negative phrases
 
@@ -233,7 +234,7 @@ In this case `prematuur` will be matched, but not in the context of `prematuur a
 
 #### Spacy patterns
 
-Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.). 
+Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
 
 ```python
 concepts = {
