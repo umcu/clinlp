@@ -211,12 +211,8 @@ class TestClinlpNer:
         ]
 
     def test_match_overlap(self, nlp):
-
         ner = EntityMatcher(nlp=nlp)
 
         ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
 
-        assert ents(ner(nlp("patient heeft oesophagus atresie"))) == [
-            ("oesophagus atresie", 2, 4, "slokdarmatresie")
-        ]
-
+        assert ents(ner(nlp("patient heeft oesophagus atresie"))) == [("oesophagus atresie", 2, 4, "slokdarmatresie")]

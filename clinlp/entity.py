@@ -160,10 +160,8 @@ class EntityMatcher:
 
         disjoint_ents = [ents[0]]
 
-        for i, ent in enumerate(ents[1:]):
-
+        for _, ent in enumerate(ents[1:]):
             if ent.start <= disjoint_ents[-1].end:
-
                 print(str(ent), str(disjoint_ents[-1]))
 
                 if len(str(disjoint_ents[-1])) < len(str(ent)):
