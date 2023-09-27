@@ -5,22 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 0.5.2 2023-09-27
+## 0.5.2 (2023-09-27)
 
 ### Fixed
 - removed accidental print statement
 
-## 0.5.1 2023-09-27
+## 0.5.1 (2023-09-27)
 
 ### Fixed
 - a bug with overlapping entities
 
-## 0.5.0 2023-08-17 
+## 0.5.0 (2023-08-17)
 
 ### Added
 - a custom component for entity recognition, with options for proximity, fuzzy and pseudo matching
 
-## 0.4.0 2023-08-05
+## 0.4.0 (2023-08-05)
 
 ### Added
 - definition for qualifiers (negation, plausibility, temporality, experiencer)
@@ -38,12 +38,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - importing `clinlp` caused a bug when extras were missing
 
 
-## 0.3.1 2023-06-30
+## 0.3.1 (2023-06-30)
 
 ### Removed
 - support for python 3.9
 
-## 0.3.0 2023-06-30
+## 0.3.0 (2023-06-30)
 
 ### Added
 
