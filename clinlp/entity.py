@@ -142,6 +142,37 @@ class EntityMatcher:
 
         return matches
 
+    @staticmethod
+    def _resolve_ents_overlap(ents: list[Span]) -> list[Span]:
+        """
+        Resolves overlap between spans. Current logic: take the longest.
+
+        Args:
+            ents: The input Spans, with possible overlap.
+
+        Returns: The Spans without any overlap.
+        """
+
+        if len(ents) == 0:
+            return ents
+
+        ents = sorted(ents, key=lambda span: span.start)
+
+        disjoint_ents = [ents[0]]
+
+        for i, ent in enumerate(ents[1:]):
+
+            if ent.start <= disjoint_ents[-1].end:
+
+                print(str(ent), str(disjoint_ents[-1]))
+
+                if len(str(disjoint_ents[-1])) < len(str(ent)):
+                    disjoint_ents[-1] = ent
+            else:
+                disjoint_ents.append(ent)
+
+        return disjoint_ents
+
     def __call__(self, doc: Doc):
         matches = self._get_matches(doc)
 
@@ -166,6 +197,7 @@ class EntityMatcher:
             ):
                 ents.append(Span(doc=doc, start=start, end=end, label=self._concepts[match_id]))
 
+        ents = self._resolve_ents_overlap(ents)
         doc.set_ents(entities=ents)
 
         return doc
