@@ -162,8 +162,6 @@ class EntityMatcher:
 
         for _, ent in enumerate(ents[1:]):
             if ent.start <= disjoint_ents[-1].end:
-                print(str(ent), str(disjoint_ents[-1]))
-
                 if len(str(disjoint_ents[-1])) < len(str(ent)):
                     disjoint_ents[-1] = ent
             else:
