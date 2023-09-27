@@ -39,9 +39,9 @@ class TestUnitQualifier:
         assert str(Qualifier("Negation", "NEGATED", ordinal=1)) == "Negation.NEGATED"
 
     def test_qualifier_dict(self):
-        assert Qualifier("Negation", "NEGATED", ordinal=1).to_dict() == {"label": "Negation.NEGATED", "prob": None}
+        assert Qualifier("Negation", "NEGATED", ordinal=1).to_dict() == {"name": "Negation", "value": "NEGATED", "prob": None}
         assert Qualifier("Negation", "NEGATED", ordinal=1, prob=0.8).to_dict() == {
-            "label": "Negation.NEGATED",
+            "name": "Negation", "value": "NEGATED",
             "prob": 0.8,
         }
 

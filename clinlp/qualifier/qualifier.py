@@ -40,7 +40,7 @@ class Qualifier:
     prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self):
-        return {"label": str(self), "prob": self.prob}
+        return {"name": self.name, "value": self.value, "prob": self.prob}
 
     def __str__(self):
         return f"{self.name}.{self.value}"
