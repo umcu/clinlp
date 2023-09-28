@@ -9,10 +9,10 @@
           "end": 5,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -26,10 +26,10 @@
           "end": 2,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -38,10 +38,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -55,10 +55,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -72,10 +72,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -89,10 +89,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -101,10 +101,10 @@
           "end": 10,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -118,10 +118,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -130,10 +130,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -147,10 +147,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -164,10 +164,10 @@
           "end": 12,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -181,10 +181,10 @@
           "end": 12,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -193,10 +193,10 @@
           "end": 14,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -210,10 +210,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -227,10 +227,10 @@
           "end": 5,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -239,10 +239,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -256,10 +256,10 @@
           "end": 7,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -273,10 +273,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -290,10 +290,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -307,10 +307,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -319,10 +319,10 @@
           "end": 7,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -331,10 +331,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.NEGATED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Negated",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -343,10 +343,10 @@
           "end": 11,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.NEGATED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Negated",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -360,10 +360,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Experiencer.OTHER",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE"
+            "Experiencer.Other",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible"
           ]
         },
         {
@@ -372,10 +372,10 @@
           "end": 11,
           "text": "ENTITY",
           "qualifiers": [
-            "Experiencer.OTHER",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE"
+            "Experiencer.Other",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible"
           ]
         }
       ]
@@ -389,10 +389,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.NEGATED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Negated",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -406,10 +406,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -418,10 +418,10 @@
           "end": 9,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -435,10 +435,10 @@
           "end": 10,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -452,10 +452,10 @@
           "end": 2,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -464,10 +464,10 @@
           "end": 5,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -481,10 +481,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -498,10 +498,10 @@
           "end": 7,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -515,10 +515,10 @@
           "end": 11,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Negated",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -532,10 +532,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Experiencer.OTHER",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE"
+            "Experiencer.Other",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible"
           ]
         },
         {
@@ -544,10 +544,10 @@
           "end": 10,
           "text": "ENTITY",
           "qualifiers": [
-            "Experiencer.OTHER",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE"
+            "Experiencer.Other",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible"
           ]
         }
       ]
@@ -561,10 +561,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -573,10 +573,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Temporality.HISTORICAL",
-            "Negation.AFFIRMED",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Temporality.Historical",
+            "Negation.Affirmed",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -590,10 +590,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -607,10 +607,10 @@
           "end": 7,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -624,10 +624,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -636,10 +636,10 @@
           "end": 10,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -653,10 +653,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -665,10 +665,10 @@
           "end": 12,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -682,10 +682,10 @@
           "end": 8,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -699,10 +699,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -716,10 +716,10 @@
           "end": 4,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -728,10 +728,10 @@
           "end": 10,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -745,10 +745,10 @@
           "end": 3,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -762,10 +762,10 @@
           "end": 3,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -774,10 +774,10 @@
           "end": 5,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -791,10 +791,10 @@
           "end": 3,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -803,10 +803,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Plausibility.HYPOTHETICAL",
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Experiencer.PATIENT"
+            "Plausibility.Hypothetical",
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -820,10 +820,10 @@
           "end": 2,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.NEGATED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Negated",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -832,10 +832,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         },
         {
@@ -844,10 +844,10 @@
           "end": 13,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]
@@ -861,10 +861,10 @@
           "end": 6,
           "text": "ENTITY",
           "qualifiers": [
-            "Negation.AFFIRMED",
-            "Temporality.CURRENT",
-            "Plausibility.PLAUSIBLE",
-            "Experiencer.PATIENT"
+            "Negation.Affirmed",
+            "Temporality.Current",
+            "Plausibility.Plausible",
+            "Experiencer.Patient"
           ]
         }
       ]

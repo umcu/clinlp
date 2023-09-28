@@ -39,9 +39,7 @@ class TestRegressionTransformer:
                     assert predicted_ent.start == example_ent["start"]
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
-                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(
-                        set(q for q in example_ent["qualifiers"] if q == "Negation.NEGATED")
-                    )
+                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issubset(example_ent["qualifiers"])
                 except AssertionError:
                     print(
                         f"Incorrect (#{example_ent['ent_id']}): text={example['text']}, example_ent={example_ent}, predicted qualifiers={getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"

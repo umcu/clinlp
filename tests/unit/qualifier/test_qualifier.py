@@ -41,35 +41,35 @@ def mock_factory_2():
 
 class TestUnitQualifier:
     def test_qualifier(self):
-        assert Qualifier("Negation", "AFFIRMED", ordinal=0)
-        assert Qualifier("Negation", "NEGATED", ordinal=1)
-        assert Qualifier("Negation", "NEGATED", ordinal=1, prob=1)
+        assert Qualifier("Negation", "Affirmed", ordinal=0)
+        assert Qualifier("Negation", "Negated", ordinal=1)
+        assert Qualifier("Negation", "Negated", ordinal=1, prob=1)
 
     def test_qualifier_str(self):
-        assert str(Qualifier("Negation", "NEGATED", ordinal=1)) == "Negation.NEGATED"
+        assert str(Qualifier("Negation", "Negated", ordinal=1)) == "Negation.Negated"
 
     def test_qualifier_dict(self):
-        assert Qualifier("Negation", "NEGATED", ordinal=1).to_dict() == {
+        assert Qualifier("Negation", "Negated", ordinal=1).to_dict() == {
             "name": "Negation",
-            "value": "NEGATED",
+            "value": "Negated",
             "prob": None,
         }
-        assert Qualifier("Negation", "NEGATED", ordinal=1, prob=0.8).to_dict() == {
+        assert Qualifier("Negation", "Negated", ordinal=1, prob=0.8).to_dict() == {
             "name": "Negation",
-            "value": "NEGATED",
+            "value": "Negated",
             "prob": 0.8,
         }
 
     def test_compare_equality(self):
-        assert Qualifier("Negation", "NEGATED", ordinal=1) == Qualifier("Negation", "NEGATED", ordinal=1)
-        assert Qualifier("Negation", "NEGATED", ordinal=1) == Qualifier("Negation", "NEGATED", ordinal=1, prob=0.8)
-        assert Qualifier("Negation", "NEGATED", ordinal=1) != Qualifier("Negation", "AFFIRMED", ordinal=0)
+        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1)
+        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1, prob=0.8)
+        assert Qualifier("Negation", "Negated", ordinal=1) != Qualifier("Negation", "Affirmed", ordinal=0)
 
     def test_hash_in_set(self):
-        qualifiers = {Qualifier("Negation", "AFFIRMED", ordinal=0, prob=1)}
+        qualifiers = {Qualifier("Negation", "Affirmed", ordinal=0, prob=1)}
 
-        assert Qualifier("Negation", "AFFIRMED", ordinal=0, prob=0.5) in qualifiers
-        assert Qualifier("Negation", "NEGATED", ordinal=1, prob=0.5) not in qualifiers
+        assert Qualifier("Negation", "Affirmed", ordinal=0, prob=0.5) in qualifiers
+        assert Qualifier("Negation", "Negated", ordinal=1, prob=0.5) not in qualifiers
         assert Qualifier("Temporality", "HISTORICAL", ordinal=1, prob=0.5) not in qualifiers
 
     def test_spacy_has_extension(self):
@@ -84,20 +84,20 @@ class TestUnitQualifier:
 
 class TestUnitQualifierFactory:
     def test_create_factory(self):
-        assert QualifierFactory("Negation", ["AFFIRMED", "NEGATED"])
+        assert QualifierFactory("Negation", ["Affirmed", "Negated"])
 
     def test_use_factory(self):
-        factory = QualifierFactory("Negation", ["AFFIRMED", "NEGATED"])
+        factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
 
-        assert factory.create(value="AFFIRMED").ordinal == 0
-        assert factory.create(value="NEGATED").ordinal == 1
-        assert factory.create(value="AFFIRMED") == Qualifier("Negation", "AFFIRMED", ordinal=0)
+        assert factory.create(value="Affirmed").ordinal == 0
+        assert factory.create(value="Negated").ordinal == 1
+        assert factory.create(value="Affirmed") == Qualifier("Negation", "Affirmed", ordinal=0)
 
     def test_use_factory_unhappy(self):
-        factory = QualifierFactory("Negation", ["AFFIRMED", "NEGATED"])
+        factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
 
         with pytest.raises(ValueError):
-            _ = factory.create(value="UNKNOWN")
+            _ = factory.create(value="Unknown")
 
 
 class TestUnitQualifierDetector:

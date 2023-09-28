@@ -102,7 +102,7 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.NEGATED"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Negated"}
 
     def test_detect_qualifiers_small_window(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
@@ -110,7 +110,7 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.AFFIRMED"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Affirmed"}
 
     def test_detect_qualifiers_without_negation(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
@@ -118,4 +118,4 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.AFFIRMED"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Affirmed"}

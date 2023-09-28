@@ -55,7 +55,7 @@ class NegationTransformer(QualifierDetector):
         self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_REPO)
 
     def qualifier_factories(self) -> dict[str, QualifierFactory]:
-        return {"Negation": QualifierFactory("Negation", ["AFFIRMED", "UNKNOWN", "NEGATED"])}
+        return {"Negation": QualifierFactory("Negation", ["Affirmed", "Unknown", "Negated"])}
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
@@ -125,10 +125,10 @@ class NegationTransformer(QualifierDetector):
             if prob > self.negation_threshold:
                 self.add_qualifier_to_ent(
                     ent,
-                    self.qualifier_factories()["Negation"].create("NEGATED", prob=prob),
+                    self.qualifier_factories()["Negation"].create("Negated", prob=prob),
                 )
             elif prob > self.affirmed_threshold:
                 self.add_qualifier_to_ent(
                     ent,
-                    self.qualifier_factories()["Negation"].create("UNKNOWN", prob=prob),
+                    self.qualifier_factories()["Negation"].create("Unknown", prob=prob),
                 )
