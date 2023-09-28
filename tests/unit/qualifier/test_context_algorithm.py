@@ -3,6 +3,8 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
+from unittest.mock import patch
+
 from clinlp.qualifier import (
     ContextRule,
     ContextRuleDirection,
@@ -24,7 +26,7 @@ def nlp():
 
 
 @pytest.fixture
-def mock_qualifier():
+def mock_factory():
     return QualifierFactory("MOCK", ["MOCK_1", "MOCK_2"])
 
 
@@ -49,7 +51,9 @@ class TestUnitQualifierRuleDirection:
 class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
-        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).get_qualifier("NEGATED")
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create(
+            "NEGATED"
+        )
         direction = ContextRuleDirection.PRECEDING
 
         qr = ContextRule(pattern, qualifier, direction)
@@ -60,7 +64,9 @@ class TestUnitQualifierRule:
 
     def test_create_qualifier_rule_2(self):
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).get_qualifier("NEGATED")
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create(
+            "NEGATED"
+        )
         direction = ContextRuleDirection.PRECEDING
 
         qr = ContextRule(pattern, qualifier, direction)
@@ -71,9 +77,11 @@ class TestUnitQualifierRule:
 
 
 class TestUnitMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self, mock_qualifier):
+    def test_create_matched_qualifier_pattern(self, mock_factory):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+            pattern="_",
+            qualifier=mock_factory.create("MOCK_1"),
+            direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
         end = 10
@@ -85,9 +93,11 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end
         assert mqp.scope is None
 
-    def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier):
+    def test_create_matched_qualifier_pattern_with_offset(self, mock_factory):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+            pattern="_",
+            qualifier=mock_factory.create("MOCK_1"),
+            direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
         end = 10
@@ -100,9 +110,13 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end + offset
         assert mqp.scope is None
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_qualifier, mock_doc):
+    def test_matched_qualifier_pattern_initial_scope_preceding(
+        self, mock_factory, mock_doc
+    ):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.PRECEDING
+            pattern="_",
+            qualifier=mock_factory.create("MOCK_1"),
+            direction=ContextRuleDirection.PRECEDING,
         )
         start = 1
         end = 2
@@ -114,9 +128,13 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_following(self, mock_qualifier, mock_doc):
+    def test_matched_qualifier_pattern_initial_scope_following(
+        self, mock_factory, mock_doc
+    ):
         rule = ContextRule(
-            pattern="_", qualifier=mock_qualifier.get_qualifier("MOCK_1"), direction=ContextRuleDirection.FOLLOWING
+            pattern="_",
+            qualifier=mock_factory.create("MOCK_1"),
+            direction=ContextRuleDirection.FOLLOWING,
         )
         start = 1
         end = 2
@@ -128,10 +146,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_qualifier, mock_doc):
+    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
+        self, mock_factory, mock_doc
+    ):
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            qualifier=mock_factory.create("MOCK_1"),
             direction=ContextRuleDirection.PRECEDING,
             max_scope=1,
         )
@@ -145,10 +165,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_qualifier, mock_doc):
+    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(
+        self, mock_factory, mock_doc
+    ):
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            qualifier=mock_factory.create("MOCK_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=1,
         )
@@ -162,10 +184,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_qualifier, mock_doc):
+    def test_matched_qualifier_pattern_initial_scope_invalid_scope(
+        self, mock_factory, mock_doc
+    ):
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier.get_qualifier("MOCK_1"),
+            qualifier=mock_factory.create("MOCK_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=-1,
         )
@@ -178,7 +202,7 @@ class TestUnitMatchedQualifierPattern:
             mqp.initialize_scope(sentence=sentence)
 
 
-class TestUnitQualifierMatcher:
+class TestUnitContextAlgorithm:
     def test_create_qualifier_matcher(self, nlp):
         rules = {
             "qualifiers": [
@@ -186,8 +210,16 @@ class TestUnitQualifierMatcher:
                 {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": [[{"LOWER": "geleden"}]], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": [[{"LOWER": "geleden"}]],
+                    "qualifier": "Temporality.HISTORICAL",
+                    "direction": "following",
+                },
             ],
         }
 
@@ -197,15 +229,17 @@ class TestUnitQualifierMatcher:
         assert len(ca._matcher) == 1
         assert len(ca._phrase_matcher) == 1
 
-    def test_parse_value(self, mock_qualifier, ca):
+    def test_parse_value(self, mock_factory, ca):
         value = "MOCK.MOCK_1"
-        qualifiers = {"MOCK": mock_qualifier}
+        qualifier_factories = {"MOCK": mock_factory}
 
-        assert ca._parse_qualifier(value, qualifiers) == mock_qualifier.get_qualifier("MOCK_1")
+        assert ca._parse_qualifier(value, qualifier_factories) == mock_factory.create(
+            "MOCK_1"
+        )
 
-    def test_parse_value_unhappy(self, mock_qualifier, ca):
+    def test_parse_value_unhappy(self, mock_factory, ca):
         value = "MOCK_MOCK_1"
-        qualifiers = {"MOCK": mock_qualifier}
+        qualifiers = {"MOCK": mock_factory}
 
         with pytest.raises(ValueError):
             ca._parse_qualifier(value, qualifiers)
@@ -223,8 +257,17 @@ class TestUnitQualifierMatcher:
                 {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "max_scope": 5, "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["weken geleden"], "qualifier": "Temporality.HISTORICAL", "direction": "following"},
+                {
+                    "patterns": ["geen"],
+                    "max_scope": 5,
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": ["weken geleden"],
+                    "qualifier": "Temporality.HISTORICAL",
+                    "direction": "following",
+                },
             ],
         }
 
@@ -284,7 +327,11 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -294,13 +341,39 @@ class TestUnitQualifierMatcher:
 
         assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
+    def test_match_qualifiers_preceding_with_default(self, nlp):
+        rules = {
+            "qualifiers": [
+                {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
+                {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
+            ],
+            "rules": [
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+            ],
+        }
+
+        text = "Patient heeft geen SYMPTOOM."
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert "Negation.NEGATED" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Temporality.CURRENT" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -317,7 +390,11 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
+                {
+                    "patterns": ["uitgesloten"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "following",
+                },
             ],
         }
 
@@ -334,8 +411,16 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["geen toename"], "qualifier": "Negation.NEGATED", "direction": "pseudo"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": ["geen toename"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "pseudo",
+                },
             ],
         }
 
@@ -351,8 +436,16 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["maar"], "qualifier": "Negation.NEGATED", "direction": "termination"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": ["maar"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "termination",
+                },
             ],
         }
 
@@ -369,8 +462,16 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["uitgesloten"], "qualifier": "Negation.NEGATED", "direction": "following"},
-                {"patterns": ["maar"], "qualifier": "Negation.NEGATED", "direction": "termination"},
+                {
+                    "patterns": ["uitgesloten"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "following",
+                },
+                {
+                    "patterns": ["maar"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "termination",
+                },
             ],
         }
 
@@ -387,7 +488,11 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -405,8 +510,16 @@ class TestUnitQualifierMatcher:
                 {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": ["als kind"], "qualifier": "Temporality.HISTORICAL", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": ["als kind"],
+                    "qualifier": "Temporality.HISTORICAL",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -424,9 +537,21 @@ class TestUnitQualifierMatcher:
                 {"name": "Temporality", "values": ["CURRENT", "HISTORICAL"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
-                {"patterns": [","], "qualifier": "Negation.NEGATED", "direction": "termination"},
-                {"patterns": ["als kind"], "qualifier": "Temporality.HISTORICAL", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": [","],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "termination",
+                },
+                {
+                    "patterns": ["als kind"],
+                    "qualifier": "Temporality.HISTORICAL",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -445,7 +570,11 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen", "subklinische"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {
+                    "patterns": ["geen", "subklinische"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
             ],
         }
 
@@ -467,7 +596,11 @@ class TestUnitQualifierMatcher:
                 {"name": "Negation", "values": ["AFFIRMED", "NEGATED"]},
             ],
             "rules": [
-                {"patterns": ["geen"], "qualifier": "Negation.NEGATED", "direction": "preceding"},
+                {
+                    "patterns": ["geen"],
+                    "qualifier": "Negation.NEGATED",
+                    "direction": "preceding",
+                },
             ],
         }
 

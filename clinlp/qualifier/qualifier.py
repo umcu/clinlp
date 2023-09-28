@@ -9,8 +9,8 @@ ATTR_QUALIFIERS_STR = f"{ATTR_QUALIFIERS}_str"
 ATTR_QUALIFIERS_DICT = f"{ATTR_QUALIFIERS}_dict"
 
 
-def qualifiers_to_str(ent: Span):
-    qualifiers = getattr(ent._, ATTR_QUALIFIERS)
+def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
+    qualifiers = getattr(getattr(ent, "_"), ATTR_QUALIFIERS)
 
     if qualifiers is None:
         return None
@@ -18,8 +18,8 @@ def qualifiers_to_str(ent: Span):
     return {str(q) for q in qualifiers}
 
 
-def qualifiers_to_dict(ent: Span):
-    qualifiers = getattr(ent._, ATTR_QUALIFIERS)
+def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
+    qualifiers = getattr(getattr(ent, "_"), ATTR_QUALIFIERS)
 
     if qualifiers is None:
         return None
@@ -32,6 +32,14 @@ Span.set_extension(name=ATTR_QUALIFIERS_STR, getter=qualifiers_to_str)
 Span.set_extension(name=ATTR_QUALIFIERS_DICT, getter=qualifiers_to_dict)
 
 
+def get_qualifiers(entity: Span) -> set["Qualifier"]:
+    return getattr(getattr(entity, "_"), ATTR_QUALIFIERS)
+
+
+def set_qualifiers(entity: Span, qualifiers: set["Qualifier"]) -> None:
+    setattr(getattr(entity, "_"), ATTR_QUALIFIERS, qualifiers)
+
+
 @dataclass(frozen=True)
 class Qualifier:
     name: str = field(compare=True)
@@ -39,10 +47,10 @@ class Qualifier:
     ordinal: int = field(compare=False)
     prob: Optional[float] = field(default=None, compare=False)
 
-    def to_dict(self):
+    def to_dict(self) -> dict:
         return {"name": self.name, "value": self.value, "prob": self.prob}
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.name}.{self.value}"
 
 
@@ -55,39 +63,69 @@ class QualifierFactory:
 
         self.values = values
 
-    def get_qualifier(self, value: Optional[str] = None, **kwargs):
+    def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         if value is None:
             value = self.values[0]
 
         if value not in self.values:
             raise ValueError(
-                f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}.d"
+                f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}."
             )
 
-        return Qualifier(name=self.name, value=value, ordinal=self.values.index(value), **kwargs)
+        return Qualifier(
+            name=self.name, value=value, ordinal=self.values.index(value), **kwargs
+        )
 
 
 class QualifierDetector(ABC):
     """For usage as a spaCy pipeline component"""
 
-    def _initialize_qualifiers(self, entity: Span):
-        setattr(entity._, ATTR_QUALIFIERS, set())
-
-    def add_qualifier_to_ent(self, entity: Span, new_qualifier: Qualifier):
-        if getattr(entity._, ATTR_QUALIFIERS) is None:
-            self._initialize_qualifiers(entity)
-
-        getattr(entity._, ATTR_QUALIFIERS).add(new_qualifier)
-
     @abstractmethod
-    def detect_qualifiers(self, doc: Doc):
+    def qualifier_factories(self) -> dict[str, QualifierFactory]:
         pass
 
-    def __call__(self, doc: Doc):
+    @abstractmethod
+    def _detect_qualifiers(self, doc: Doc) -> None:
+        pass
+
+    @staticmethod
+    def add_qualifier_to_ent(entity: Span, new_qualifier: Qualifier) -> None:
+        qualifiers = get_qualifiers(entity)
+
+        if qualifiers is None:
+            raise RuntimeError(
+                "Cannot add qualifier to entity with non-initialized qualifiers."
+            )
+
+        try:
+            old_qualifier = next(
+                iter(q for q in qualifiers if q.name == new_qualifier.name)
+            )
+
+            if new_qualifier.ordinal >= old_qualifier.ordinal:
+                qualifiers.remove(old_qualifier)
+                qualifiers.add(new_qualifier)
+
+        except StopIteration:
+            qualifiers.add(new_qualifier)
+
+        set_qualifiers(entity, qualifiers)
+
+    def _initialize_ent_qualifiers(self, entity: Span) -> None:
+        if get_qualifiers(entity) is None:
+            set_qualifiers(entity, set())
+
+        for _, factory in self.qualifier_factories().items():
+            print("xxx =", factory.create())
+            self.add_qualifier_to_ent(entity, factory.create())
+
+    def __call__(self, doc: Doc) -> Doc:
         if len(doc.ents) == 0:
             return doc
 
         for ent in doc.ents:
-            self._initialize_qualifiers(ent)
+            self._initialize_ent_qualifiers(ent)
 
-        return self.detect_qualifiers(doc)
+        self._detect_qualifiers(doc)
+
+        return doc
