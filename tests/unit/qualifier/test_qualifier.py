@@ -62,16 +62,25 @@ class TestUnitQualifier:
         }
 
     def test_compare_equality(self):
-        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1)
-        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1, prob=0.8)
-        assert Qualifier("Negation", "Negated", ordinal=1) != Qualifier("Negation", "Affirmed", ordinal=0)
+        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier(
+            "Negation", "Negated", ordinal=1
+        )
+        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier(
+            "Negation", "Negated", ordinal=1, prob=0.8
+        )
+        assert Qualifier("Negation", "Negated", ordinal=1) != Qualifier(
+            "Negation", "Affirmed", ordinal=0
+        )
 
     def test_hash_in_set(self):
         qualifiers = {Qualifier("Negation", "Affirmed", ordinal=0, prob=1)}
 
         assert Qualifier("Negation", "Affirmed", ordinal=0, prob=0.5) in qualifiers
         assert Qualifier("Negation", "Negated", ordinal=1, prob=0.5) not in qualifiers
-        assert Qualifier("Temporality", "HISTORICAL", ordinal=1, prob=0.5) not in qualifiers
+        assert (
+            Qualifier("Temporality", "HISTORICAL", ordinal=1, prob=0.5)
+            not in qualifiers
+        )
 
     def test_spacy_has_extension(self):
         assert Span.has_extension(ATTR_QUALIFIERS)
@@ -98,7 +107,9 @@ class TestUnitQualifierFactory:
 
         assert factory.create(value="Affirmed").ordinal == 0
         assert factory.create(value="Negated").ordinal == 1
-        assert factory.create(value="Affirmed") == Qualifier("Negation", "Affirmed", ordinal=0)
+        assert factory.create(value="Affirmed") == Qualifier(
+            "Negation", "Affirmed", ordinal=0
+        )
 
     def test_use_factory_unhappy(self):
         factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
@@ -128,7 +139,7 @@ class TestUnitQualifierDetector:
 
         with patch(
             "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
-            lambda _: factories,
+            factories,
         ):
             qd._initialize_ent_qualifiers(entity)
 
@@ -146,7 +157,7 @@ class TestUnitQualifierDetector:
 
         with patch(
             "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
-            lambda _: factories,
+            factories,
         ):
             qd._initialize_ent_qualifiers(entity)
 
@@ -165,7 +176,7 @@ class TestUnitQualifierDetector:
 
         with patch(
             "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
-            lambda _: factories,
+            factories,
         ):
             qd._initialize_ent_qualifiers(entity)
 
@@ -186,7 +197,7 @@ class TestUnitQualifierDetector:
 
         with patch(
             "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
-            lambda _: factories,
+            factories,
         ):
             qd._initialize_ent_qualifiers(entity)
 
@@ -205,7 +216,7 @@ class TestUnitQualifierDetector:
 
         with patch(
             "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
-            lambda _: factories,
+            factories,
         ):
             qd._initialize_ent_qualifiers(entity)
 
