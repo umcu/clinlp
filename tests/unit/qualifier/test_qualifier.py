@@ -10,6 +10,7 @@ from clinlp.qualifier import (
     QualifierDetector,
     QualifierFactory,
     get_qualifiers,
+    set_qualifiers,
 )
 from clinlp.qualifier.qualifier import (
     ATTR_QUALIFIERS,
@@ -80,6 +81,12 @@ class TestUnitQualifier:
     def test_spacy_extension_default(self, nlp):
         doc = nlp("dit is een test")
         assert get_qualifiers(doc[0:3]) is None
+
+    def test_set_qualifiers(self, mock_factory, entity):
+        qualifiers = {mock_factory.create()}
+        set_qualifiers(entity, qualifiers)
+
+        assert get_qualifiers(entity) == qualifiers
 
 
 class TestUnitQualifierFactory:
