@@ -116,7 +116,6 @@ class QualifierDetector(ABC):
             set_qualifiers(entity, set())
 
         for _, factory in self.qualifier_factories().items():
-            print("xxx =", factory.create())
             self.add_qualifier_to_ent(entity, factory.create())
 
     def __call__(self, doc: Doc) -> Doc:
