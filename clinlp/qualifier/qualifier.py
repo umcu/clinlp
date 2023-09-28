@@ -72,9 +72,7 @@ class QualifierFactory:
                 f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}."
             )
 
-        return Qualifier(
-            name=self.name, value=value, ordinal=self.values.index(value), **kwargs
-        )
+        return Qualifier(name=self.name, value=value, ordinal=self.values.index(value), **kwargs)
 
 
 class QualifierDetector(ABC):
@@ -94,14 +92,10 @@ class QualifierDetector(ABC):
         qualifiers = get_qualifiers(entity)
 
         if qualifiers is None:
-            raise RuntimeError(
-                "Cannot add qualifier to entity with non-initialized qualifiers."
-            )
+            raise RuntimeError("Cannot add qualifier to entity with non-initialized qualifiers.")
 
         try:
-            old_qualifier = next(
-                iter(q for q in qualifiers if q.name == new_qualifier.name)
-            )
+            old_qualifier = next(iter(q for q in qualifiers if q.name == new_qualifier.name))
 
             if new_qualifier.ordinal >= old_qualifier.ordinal:
                 qualifiers.remove(old_qualifier)
