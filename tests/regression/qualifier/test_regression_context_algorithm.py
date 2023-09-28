@@ -40,9 +40,7 @@ class TestRegressionContextAlgorithm:
                     assert predicted_ent.start == example_ent["start"]
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
-                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(set(
-                        example_ent["qualifiers"]
-                    ))
+                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(set(example_ent["qualifiers"]))
 
                 except AssertionError:
                     print(

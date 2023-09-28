@@ -1,9 +1,9 @@
+from unittest.mock import patch
+
 import pytest
 import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
-
-from unittest.mock import patch
 
 from clinlp.qualifier import (
     ContextRule,
@@ -51,9 +51,7 @@ class TestUnitQualifierRuleDirection:
 class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
-        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create(
-            "NEGATED"
-        )
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create("NEGATED")
         direction = ContextRuleDirection.PRECEDING
 
         qr = ContextRule(pattern, qualifier, direction)
@@ -64,9 +62,7 @@ class TestUnitQualifierRule:
 
     def test_create_qualifier_rule_2(self):
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create(
-            "NEGATED"
-        )
+        qualifier = QualifierFactory("NEGATION", ["AFFIRMED", "NEGATED"]).create("NEGATED")
         direction = ContextRuleDirection.PRECEDING
 
         qr = ContextRule(pattern, qualifier, direction)
@@ -110,9 +106,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end + offset
         assert mqp.scope is None
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(
-        self, mock_factory, mock_doc
-    ):
+    def test_matched_qualifier_pattern_initial_scope_preceding(self, mock_factory, mock_doc):
         rule = ContextRule(
             pattern="_",
             qualifier=mock_factory.create("MOCK_1"),
@@ -128,9 +122,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_following(
-        self, mock_factory, mock_doc
-    ):
+    def test_matched_qualifier_pattern_initial_scope_following(self, mock_factory, mock_doc):
         rule = ContextRule(
             pattern="_",
             qualifier=mock_factory.create("MOCK_1"),
@@ -146,9 +138,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
-        self, mock_factory, mock_doc
-    ):
+    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(self, mock_factory, mock_doc):
         rule = ContextRule(
             pattern="_",
             qualifier=mock_factory.create("MOCK_1"),
@@ -165,9 +155,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(
-        self, mock_factory, mock_doc
-    ):
+    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(self, mock_factory, mock_doc):
         rule = ContextRule(
             pattern="_",
             qualifier=mock_factory.create("MOCK_1"),
@@ -184,9 +172,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_invalid_scope(
-        self, mock_factory, mock_doc
-    ):
+    def test_matched_qualifier_pattern_initial_scope_invalid_scope(self, mock_factory, mock_doc):
         rule = ContextRule(
             pattern="_",
             qualifier=mock_factory.create("MOCK_1"),
@@ -233,9 +219,7 @@ class TestUnitContextAlgorithm:
         value = "MOCK.MOCK_1"
         qualifier_factories = {"MOCK": mock_factory}
 
-        assert ca._parse_qualifier(value, qualifier_factories) == mock_factory.create(
-            "MOCK_1"
-        )
+        assert ca._parse_qualifier(value, qualifier_factories) == mock_factory.create("MOCK_1")
 
     def test_parse_value_unhappy(self, mock_factory, ca):
         value = "MOCK_MOCK_1"

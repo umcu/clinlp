@@ -17,9 +17,7 @@ def nlp():
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
-    _ = nlp.add_pipe(
-        "clinlp_negation_transformer", config={"token_window": 32, "placeholder": "X"}
-    )
+    _ = nlp.add_pipe("clinlp_negation_transformer", config={"token_window": 32, "placeholder": "X"})
 
     return nlp
 
@@ -42,11 +40,7 @@ class TestRegressionTransformer:
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
                     assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(
-                        set(
-                            q
-                            for q in example_ent["qualifiers"]
-                            if q == "Negation.NEGATED"
-                        )
+                        set(q for q in example_ent["qualifiers"] if q == "Negation.NEGATED")
                     )
                 except AssertionError:
                     print(
