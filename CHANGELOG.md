@@ -9,7 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - qualifier detectors now add all default qualifiers (e.g. 'Affirmed', for `Negation`)
-- use titelcase for qualifier values
+- use titlecase for qualifier values
 
 ## 0.5.2 (2023-09-27)
 
