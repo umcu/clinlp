@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - qualifier detectors now add all default qualifiers (e.g. 'Affirmed', for `Negation`)
 - use titlecase for qualifier values
 
+## 0.5.3 (2023-10-02)
+
+### Fixed
+- a bug with importlib causing an `AttributeError` on importing `clinlp`
+
 ## 0.5.2 (2023-09-27)
 
 ### Fixed
