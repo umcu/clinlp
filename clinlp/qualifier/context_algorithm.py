@@ -1,4 +1,4 @@
-import importlib
+import importlib.resources
 import itertools
 import json
 import re
@@ -143,7 +143,9 @@ class ContextAlgorithm(QualifierDetector):
             self._matcher.add(key=rule_key, patterns=[rule.pattern])
 
         else:
-            raise ValueError(f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}")
+            raise ValueError(
+                f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}"
+            )
 
     def add_rules(self, rules: list[ContextRule]):
         """
@@ -153,7 +155,9 @@ class ContextAlgorithm(QualifierDetector):
             self.add_rule(rule)
 
     @staticmethod
-    def _parse_qualifier(qualifier: str, factories: dict[str, QualifierFactory]) -> Qualifier:
+    def _parse_qualifier(
+        qualifier: str, factories: dict[str, QualifierFactory]
+    ) -> Qualifier:
         """
         Parse a Qualifier from string.
 
@@ -206,7 +210,10 @@ class ContextAlgorithm(QualifierDetector):
             direction = self._parse_direction(rule["direction"])
             max_scope = rule.get("max_scope", None)
 
-            qualifier_rules += [ContextRule(pattern, qualifier, direction, max_scope) for pattern in rule["patterns"]]
+            qualifier_rules += [
+                ContextRule(pattern, qualifier, direction, max_scope)
+                for pattern in rule["patterns"]
+            ]
 
         return qualifier_rules
 
@@ -224,14 +231,18 @@ class ContextAlgorithm(QualifierDetector):
         return self.rules[self._nlp.vocab.strings[match_id]]
 
     @staticmethod
-    def _group_matched_patterns(matched_patterns: list[_MatchedContextPattern]) -> defaultdict:
+    def _group_matched_patterns(
+        matched_patterns: list[_MatchedContextPattern],
+    ) -> defaultdict:
         """
         Group matched patterns by qualifier and direction.
         """
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(matched_rule)
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(
+                matched_rule
+            )
 
         return groups
 
@@ -248,23 +259,33 @@ class ContextAlgorithm(QualifierDetector):
                 scopes.remove(interval)
                 match = interval.data
 
-                if match.rule.direction == ContextRuleDirection.PRECEDING and terminate_match.start > match.end:
+                if (
+                    match.rule.direction == ContextRuleDirection.PRECEDING
+                    and terminate_match.start > match.end
+                ):
                     match.scope = (match.scope[0], terminate_match.start)
 
-                if match.rule.direction == ContextRuleDirection.FOLLOWING and terminate_match.end < match.start:
+                if (
+                    match.rule.direction == ContextRuleDirection.FOLLOWING
+                    and terminate_match.end < match.start
+                ):
                     match.scope = (terminate_match.end, match.scope[1])
 
                 scopes[match.scope[0] : match.scope[1]] = match
 
         return scopes
 
-    def _compute_match_scopes(self, matched_patterns: list[_MatchedContextPattern]) -> ivt.IntervalTree:
+    def _compute_match_scopes(
+        self, matched_patterns: list[_MatchedContextPattern]
+    ) -> ivt.IntervalTree:
         """
         Compute the scope for each matched pattern, return them as an IntervalTree.
         """
         match_scopes = ivt.IntervalTree()
 
-        for qualifier_matches in self._group_matched_patterns(matched_patterns).values():
+        for qualifier_matches in self._group_matched_patterns(
+            matched_patterns
+        ).values():
             preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
             following = qualifier_matches[ContextRuleDirection.FOLLOWING]
             pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
@@ -282,10 +303,13 @@ class ContextAlgorithm(QualifierDetector):
 
             # Termination
             qualifier_scopes = ivt.IntervalTree(
-                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in qualifier_matches
+                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data)
+                for i in qualifier_matches
             )
 
-            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination)
+            match_scopes |= self._limit_scopes_from_terminations(
+                qualifier_scopes, termination
+            )
 
         return match_scopes
 
@@ -302,7 +326,9 @@ class ContextAlgorithm(QualifierDetector):
                 # a UserWarning will trigger when one of the matchers is empty
                 warnings.simplefilter("ignore", UserWarning)
 
-                matches = itertools.chain(self._matcher(sentence), self._phrase_matcher(sentence))
+                matches = itertools.chain(
+                    self._matcher(sentence), self._phrase_matcher(sentence)
+                )
 
             matched_patterns = []
 
@@ -313,7 +339,10 @@ class ContextAlgorithm(QualifierDetector):
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
                 pattern = _MatchedContextPattern(
-                    rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
+                    rule=self._get_rule_from_match_id(match_id),
+                    start=start,
+                    end=end,
+                    offset=offset,
                 )
 
                 pattern.initialize_scope(sentence)
@@ -323,8 +352,12 @@ class ContextAlgorithm(QualifierDetector):
 
             for ent in sentence.ents:
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
-                    if (ent.start + 1 > match_interval.data.end) or (ent.end < match_interval.data.start + 1):
-                        self.add_qualifier_to_ent(ent, match_interval.data.rule.qualifier)
+                    if (ent.start + 1 > match_interval.data.end) or (
+                        ent.end < match_interval.data.start + 1
+                    ):
+                        self.add_qualifier_to_ent(
+                            ent, match_interval.data.rule.qualifier
+                        )
 
         return doc
 
