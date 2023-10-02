@@ -44,35 +44,46 @@ def set_qualifiers(entity: Span, qualifiers: set["Qualifier"]) -> None:
 class Qualifier:
     name: str = field(compare=True)
     value: str = field(compare=True)
-    ordinal: int = field(compare=False)
+    is_default: bool = field(compare=True)
     prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self) -> dict:
-        return {"name": self.name, "value": self.value, "prob": self.prob}
+        return {
+            "name": self.name,
+            "value": self.value,
+            "is_default": self.is_default,
+            "prob": self.prob,
+        }
 
     def __str__(self) -> str:
         return f"{self.name}.{self.value}"
 
 
 class QualifierFactory:
-    def __init__(self, name: str, values: list[str]):
+    def __init__(self, name: str, values: list[str], default: Optional[str] = None):
         self.name = name
+        self.default = default or values[0]
 
         if len(set(values)) != len(values):
             raise ValueError(f"Please do not provide any duplicate values ({values})")
+
+        if self.default not in values:
+            raise ValueError(f"Default {default} not in provided value {values}")
 
         self.values = values
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         if value is None:
-            value = self.values[0]
+            value = self.default
 
         if value not in self.values:
             raise ValueError(
                 f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}."
             )
 
-        return Qualifier(name=self.name, value=value, ordinal=self.values.index(value), **kwargs)
+        is_default = value == self.default
+
+        return Qualifier(name=self.name, value=value, is_default=is_default, **kwargs)
 
 
 class QualifierDetector(ABC):
@@ -92,14 +103,17 @@ class QualifierDetector(ABC):
         qualifiers = get_qualifiers(entity)
 
         if qualifiers is None:
-            raise RuntimeError("Cannot add qualifier to entity with non-initialized qualifiers.")
+            raise RuntimeError(
+                "Cannot add qualifier to entity with non-initialized qualifiers."
+            )
 
         try:
-            old_qualifier = next(iter(q for q in qualifiers if q.name == new_qualifier.name))
+            old_qualifier = next(
+                iter(q for q in qualifiers if q.name == new_qualifier.name)
+            )
 
-            if new_qualifier.ordinal >= old_qualifier.ordinal:
-                qualifiers.remove(old_qualifier)
-                qualifiers.add(new_qualifier)
+            qualifiers.remove(old_qualifier)
+            qualifiers.add(new_qualifier)
 
         except StopIteration:
             qualifiers.add(new_qualifier)

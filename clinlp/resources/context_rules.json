@@ -7,28 +7,32 @@
       "values": [
         "Patient",
         "Other"
-      ]
+      ],
+      "default": "Patient"
     },
     {
       "name": "Negation",
       "values": [
         "Affirmed",
         "Negated"
-      ]
+      ],
+      "default": "Affirmed"
     },
     {
       "name": "Plausibility",
       "values": [
         "Plausible",
         "Hypothetical"
-      ]
+      ],
+      "default": "Plausible"
     },
     {
       "name": "Temporality",
       "values": [
         "Current",
         "Historical"
-      ]
+      ],
+      "default": "Current"
     }
   ],
   "rules": [

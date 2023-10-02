@@ -42,36 +42,56 @@ def mock_factory_2():
 
 class TestUnitQualifier:
     def test_qualifier(self):
-        assert Qualifier("Negation", "Affirmed", ordinal=0)
-        assert Qualifier("Negation", "Negated", ordinal=1)
-        assert Qualifier("Negation", "Negated", ordinal=1, prob=1)
+        assert Qualifier("Negation", "Affirmed", is_default=False)
+        assert Qualifier("Negation", "Negated", is_default=True)
+        assert Qualifier("Negation", "Negated", is_default=True, prob=1)
 
     def test_qualifier_str(self):
-        assert str(Qualifier("Negation", "Negated", ordinal=1)) == "Negation.Negated"
+        assert (
+            str(Qualifier("Negation", "Negated", is_default=True)) == "Negation.Negated"
+        )
 
     def test_qualifier_dict(self):
-        assert Qualifier("Negation", "Negated", ordinal=1).to_dict() == {
+        assert Qualifier("Negation", "Negated", is_default=True).to_dict() == {
             "name": "Negation",
             "value": "Negated",
+            "is_default": True,
             "prob": None,
         }
-        assert Qualifier("Negation", "Negated", ordinal=1, prob=0.8).to_dict() == {
+        assert Qualifier(
+            "Negation", "Negated", is_default=True, prob=0.8
+        ).to_dict() == {
             "name": "Negation",
             "value": "Negated",
+            "is_default": True,
             "prob": 0.8,
         }
 
     def test_compare_equality(self):
-        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1)
-        assert Qualifier("Negation", "Negated", ordinal=1) == Qualifier("Negation", "Negated", ordinal=1, prob=0.8)
-        assert Qualifier("Negation", "Negated", ordinal=1) != Qualifier("Negation", "Affirmed", ordinal=0)
+        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
+            "Negation", "Negated", is_default=True
+        )
+        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
+            "Negation", "Negated", is_default=True, prob=0.8
+        )
+        assert Qualifier("Negation", "Negated", is_default=True) != Qualifier(
+            "Negation", "Affirmed", is_default=False
+        )
 
     def test_hash_in_set(self):
-        qualifiers = {Qualifier("Negation", "Affirmed", ordinal=0, prob=1)}
+        qualifiers = {Qualifier("Negation", "Affirmed", is_default=False, prob=1)}
 
-        assert Qualifier("Negation", "Affirmed", ordinal=0, prob=0.5) in qualifiers
-        assert Qualifier("Negation", "Negated", ordinal=1, prob=0.5) not in qualifiers
-        assert Qualifier("Temporality", "HISTORICAL", ordinal=1, prob=0.5) not in qualifiers
+        assert (
+            Qualifier("Negation", "Affirmed", is_default=False, prob=0.5) in qualifiers
+        )
+        assert (
+            Qualifier("Negation", "Negated", is_default=True, prob=0.5)
+            not in qualifiers
+        )
+        assert (
+            Qualifier("Temporality", "HISTORICAL", is_default=True, prob=0.5)
+            not in qualifiers
+        )
 
     def test_spacy_has_extension(self):
         assert Span.has_extension(ATTR_QUALIFIERS)
@@ -96,9 +116,22 @@ class TestUnitQualifierFactory:
     def test_use_factory(self):
         factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
 
-        assert factory.create(value="Affirmed").ordinal == 0
-        assert factory.create(value="Negated").ordinal == 1
-        assert factory.create(value="Affirmed") == Qualifier("Negation", "Affirmed", ordinal=0)
+        assert factory.create(value="Affirmed").is_default
+        assert not factory.create(value="Negated").is_default
+        assert factory.create(value="Affirmed") == Qualifier(
+            "Negation", "Affirmed", is_default=True
+        )
+
+    def test_use_factory_nondefault(self):
+        factory = QualifierFactory(
+            "Negation", ["Affirmed", "Negated"], default="Negated"
+        )
+
+        assert not factory.create(value="Affirmed").is_default
+        assert factory.create(value="Negated").is_default
+        assert factory.create(value="Affirmed") == Qualifier(
+            "Negation", "Affirmed", is_default=False
+        )
 
     def test_use_factory_unhappy(self):
         factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
@@ -121,7 +154,7 @@ class TestUnitQualifierDetector:
             qd.add_qualifier_to_ent(entity, qualifier)
 
     @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_same_ordinal(self, entity, mock_factory):
+    def test_add_qualifier_default(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
         qualifier = mock_factory.create("test1")
@@ -139,7 +172,7 @@ class TestUnitQualifierDetector:
         assert mock_factory.create("test2") not in get_qualifiers(entity)
 
     @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_higher_ordinal(self, entity, mock_factory):
+    def test_add_qualifier_non_default(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
         qualifier = mock_factory.create("test2")
@@ -157,7 +190,7 @@ class TestUnitQualifierDetector:
         assert qualifier in get_qualifiers(entity)
 
     @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_lower_ordinal(self, entity, mock_factory):
+    def test_add_qualifier_overwrite_nondefault(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
         qualifier_1 = mock_factory.create("test1")
@@ -173,8 +206,8 @@ class TestUnitQualifierDetector:
         qd.add_qualifier_to_ent(entity, qualifier_1)
 
         assert len(get_qualifiers(entity)) == 1
-        assert qualifier_1 not in get_qualifiers(entity)
-        assert qualifier_2 in get_qualifiers(entity)
+        assert qualifier_1 in get_qualifiers(entity)
+        assert qualifier_2 not in get_qualifiers(entity)
 
     @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_multiple(self, entity, mock_factory, mock_factory_2):
