@@ -1,4 +1,4 @@
-import importlib
+import importlib.resources
 import itertools
 import json
 import re
@@ -224,7 +224,9 @@ class ContextAlgorithm(QualifierDetector):
         return self.rules[self._nlp.vocab.strings[match_id]]
 
     @staticmethod
-    def _group_matched_patterns(matched_patterns: list[_MatchedContextPattern]) -> defaultdict:
+    def _group_matched_patterns(
+        matched_patterns: list[_MatchedContextPattern],
+    ) -> defaultdict:
         """
         Group matched patterns by qualifier and direction.
         """
@@ -313,7 +315,10 @@ class ContextAlgorithm(QualifierDetector):
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
                 pattern = _MatchedContextPattern(
-                    rule=self._get_rule_from_match_id(match_id), start=start, end=end, offset=offset
+                    rule=self._get_rule_from_match_id(match_id),
+                    start=start,
+                    end=end,
+                    offset=offset,
                 )
 
                 pattern.initialize_scope(sentence)
