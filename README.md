@@ -71,7 +71,7 @@ displacy.render(doc, style="ent")
 
 ![example_doc_render.png](media/example_doc_render.png)
 
-With relevant qualifiers:
+With relevant qualifiers (defaults omitted for readability):
 
 ```python
 for ent in doc.ents:
@@ -261,7 +261,7 @@ concepts = {
 
 ### Qualifier detection
 
-After finding entities, it"s often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. 
+After finding entities, it"s often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Affirmed` for `Negation`).   
 
 #### Context Algorithm
 

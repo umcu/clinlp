@@ -3,21 +3,21 @@
     {
       "name": "Negation",
       "values": [
-        "AFFIRMED",
-        "NEGATED"
+        "Affirmed",
+        "Negated"
       ]
     },
     {
       "name": "Temporality",
       "values": [
-        "CURRENT",
-        "HISTORICAL"
+        "Current",
+        "Historical"
       ]
     }
   ],
   "rules": [
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -25,7 +25,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "following",
       "patterns": [
         "weken geleden"

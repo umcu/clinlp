@@ -56,13 +56,15 @@ class _MatchedContextPattern:
     A matched Context pattern, that should be processed further.
     """
 
-    def __init__(self, rule: ContextRule, start: int, end: int, offset: int = 0):
+    def __init__(
+        self, rule: ContextRule, start: int, end: int, offset: int = 0
+    ) -> None:
         self.rule = rule
         self.start = start + offset
         self.end = end + offset
         self.scope = None
 
-    def initialize_scope(self, sentence: Span):
+    def initialize_scope(self, sentence: Span) -> None:
         """
         Sets the scope this pattern ranges over, based on the sentence. This is either the window determined in
         the `max_scope` of the rule, or the sentence boundaries if no `max_scope` is set.
@@ -112,13 +114,14 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
         load_rules=_defaults_context_algorithm["load_rules"],
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
-    ):
+    ) -> None:
         self._nlp = nlp
 
         self._matcher = Matcher(self._nlp.vocab)
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
 
         self.rules = {}
+        self._qualifier_factories = {}
 
         if load_rules:
             if rules is None:
@@ -129,7 +132,11 @@ class ContextAlgorithm(QualifierDetector):
             rules = self._parse_rules(rules)
             self.add_rules(rules)
 
-    def add_rule(self, rule: ContextRule):
+    @property
+    def qualifier_factories(self) -> dict[str, QualifierFactory]:
+        return self._qualifier_factories
+
+    def add_rule(self, rule: ContextRule) -> None:
         """
         Add a rule.
         """
@@ -143,9 +150,11 @@ class ContextAlgorithm(QualifierDetector):
             self._matcher.add(key=rule_key, patterns=[rule.pattern])
 
         else:
-            raise ValueError(f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}")
+            raise ValueError(
+                f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}"
+            )
 
-    def add_rules(self, rules: list[ContextRule]):
+    def add_rules(self, rules: list[ContextRule]) -> None:
         """
         Add multiple rules.
         """
@@ -153,13 +162,14 @@ class ContextAlgorithm(QualifierDetector):
             self.add_rule(rule)
 
     @staticmethod
-    def _parse_qualifier(qualifier: str, factories: dict[str, QualifierFactory]) -> Qualifier:
+    def _parse_qualifier(
+        qualifier: str, qualifier_factories: dict[str, QualifierFactory]
+    ) -> Qualifier:
         """
         Parse a Qualifier from string.
 
         Args:
             qualifier: The qualifier (e.g. Negation.NEGATED).
-            factories: A mapping of string to qualifier class.
 
         Returns: A qualifier, as specified.
         """
@@ -173,9 +183,8 @@ class ContextAlgorithm(QualifierDetector):
             )
 
         qualifier_class, qualifier = qualifier.split(".")
-        qualifier_factory = factories[qualifier_class]
 
-        return qualifier_factory.get_qualifier(value=qualifier)
+        return qualifier_factories[qualifier_class].create(value=qualifier)
 
     @staticmethod
     def _parse_direction(direction: str) -> ContextRuleDirection:
@@ -194,19 +203,22 @@ class ContextAlgorithm(QualifierDetector):
             with open(rules, "rb") as file:
                 rules = json.load(file)
 
-        factories = {
-            qualifier["name"]: QualifierFactory(qualifier["name"], qualifier["values"])
-            for qualifier in rules["qualifiers"]
-        }
+        for qualifier in rules["qualifiers"]:
+            self._qualifier_factories[qualifier["name"]] = QualifierFactory(**qualifier)
 
         qualifier_rules = []
 
         for rule in rules["rules"]:
-            qualifier = self._parse_qualifier(rule["qualifier"], factories)
+            qualifier = self._parse_qualifier(
+                rule["qualifier"], self.qualifier_factories
+            )
             direction = self._parse_direction(rule["direction"])
             max_scope = rule.get("max_scope", None)
 
-            qualifier_rules += [ContextRule(pattern, qualifier, direction, max_scope) for pattern in rule["patterns"]]
+            qualifier_rules += [
+                ContextRule(pattern, qualifier, direction, max_scope)
+                for pattern in rule["patterns"]
+            ]
 
         return qualifier_rules
 
@@ -233,7 +245,9 @@ class ContextAlgorithm(QualifierDetector):
         groups = defaultdict(lambda: defaultdict(list))
 
         for matched_rule in matched_patterns:
-            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(matched_rule)
+            groups[matched_rule.rule.qualifier][matched_rule.rule.direction].append(
+                matched_rule
+            )
 
         return groups
 
@@ -250,23 +264,33 @@ class ContextAlgorithm(QualifierDetector):
                 scopes.remove(interval)
                 match = interval.data
 
-                if match.rule.direction == ContextRuleDirection.PRECEDING and terminate_match.start > match.end:
+                if (
+                    match.rule.direction == ContextRuleDirection.PRECEDING
+                    and terminate_match.start > match.end
+                ):
                     match.scope = (match.scope[0], terminate_match.start)
 
-                if match.rule.direction == ContextRuleDirection.FOLLOWING and terminate_match.end < match.start:
+                if (
+                    match.rule.direction == ContextRuleDirection.FOLLOWING
+                    and terminate_match.end < match.start
+                ):
                     match.scope = (terminate_match.end, match.scope[1])
 
                 scopes[match.scope[0] : match.scope[1]] = match
 
         return scopes
 
-    def _compute_match_scopes(self, matched_patterns: list[_MatchedContextPattern]) -> ivt.IntervalTree:
+    def _compute_match_scopes(
+        self, matched_patterns: list[_MatchedContextPattern]
+    ) -> ivt.IntervalTree:
         """
         Compute the scope for each matched pattern, return them as an IntervalTree.
         """
         match_scopes = ivt.IntervalTree()
 
-        for qualifier_matches in self._group_matched_patterns(matched_patterns).values():
+        for qualifier_matches in self._group_matched_patterns(
+            matched_patterns
+        ).values():
             preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
             following = qualifier_matches[ContextRuleDirection.FOLLOWING]
             pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
@@ -284,14 +308,17 @@ class ContextAlgorithm(QualifierDetector):
 
             # Termination
             qualifier_scopes = ivt.IntervalTree(
-                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data) for i in qualifier_matches
+                ivt.Interval(i.data.scope[0], i.data.scope[1], i.data)
+                for i in qualifier_matches
             )
 
-            match_scopes |= self._limit_scopes_from_terminations(qualifier_scopes, termination)
+            match_scopes |= self._limit_scopes_from_terminations(
+                qualifier_scopes, termination
+            )
 
         return match_scopes
 
-    def detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc):
         """
         Apply the Context Algorithm to a doc.
         """
@@ -304,7 +331,9 @@ class ContextAlgorithm(QualifierDetector):
                 # a UserWarning will trigger when one of the matchers is empty
                 warnings.simplefilter("ignore", UserWarning)
 
-                matches = itertools.chain(self._matcher(sentence), self._phrase_matcher(sentence))
+                matches = itertools.chain(
+                    self._matcher(sentence), self._phrase_matcher(sentence)
+                )
 
             matched_patterns = []
 
@@ -328,10 +357,12 @@ class ContextAlgorithm(QualifierDetector):
 
             for ent in sentence.ents:
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
-                    if (ent.start + 1 > match_interval.data.end) or (ent.end < match_interval.data.start + 1):
-                        self.add_qualifier_to_ent(ent, match_interval.data.rule.qualifier)
+                    if (ent.start + 1 > match_interval.data.end) or (
+                        ent.end < match_interval.data.start + 1
+                    ):
+                        self.add_qualifier_to_ent(
+                            ent, match_interval.data.rule.qualifier
+                        )
 
-        return doc
-
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.rules)

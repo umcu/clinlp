@@ -5,35 +5,39 @@
     {
       "name": "Experiencer",
       "values": [
-        "PATIENT",
-        "OTHER"
-      ]
+        "Patient",
+        "Other"
+      ],
+      "default": "Patient"
     },
     {
       "name": "Negation",
       "values": [
-        "AFFIRMED",
-        "NEGATED"
-      ]
+        "Affirmed",
+        "Negated"
+      ],
+      "default": "Affirmed"
     },
     {
       "name": "Plausibility",
       "values": [
-        "PLAUSIBLE",
-        "HYPOTHETICAL"
-      ]
+        "Plausible",
+        "Hypothetical"
+      ],
+      "default": "Plausible"
     },
     {
       "name": "Temporality",
       "values": [
-        "CURRENT",
-        "HISTORICAL"
-      ]
+        "Current",
+        "Historical"
+      ],
+      "default": "Current"
     }
   ],
   "rules": [
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "preceding",
       "patterns": [
         "familieanamnese",
@@ -210,7 +214,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "following",
       "patterns": [
         "in de familie",
@@ -272,7 +276,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "pseudo",
       "patterns": [
         "door familie",
@@ -480,7 +484,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "termination",
       "patterns": [
         "beslist",
@@ -507,7 +511,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -568,7 +572,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "following",
       "max_scope": 5,
       "patterns": [
@@ -600,7 +604,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "pseudo",
       "patterns": [
         "geen afname",
@@ -631,7 +635,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "termination",
       "patterns": [
         "aangezien er",
@@ -719,7 +723,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "preceding",
       "patterns": [
         "als er",
@@ -779,7 +783,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "following",
       "patterns": [
         "?",
@@ -805,7 +809,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "pseudo",
       "patterns": [
         "als baby",
@@ -842,7 +846,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "termination",
       "patterns": [
         "aanwezig",
@@ -853,7 +857,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "preceding",
       "patterns": [
         "al bekende",
@@ -963,7 +967,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "following",
       "patterns": [
         "als baby",
@@ -1071,7 +1075,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "pseudo",
       "patterns": [
         "blanco psychiatrische vg",
@@ -1183,7 +1187,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "termination",
       "patterns": [
         "actueel",
