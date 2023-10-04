@@ -8,7 +8,13 @@ from spacy.tokens import Span
 
 from clinlp.util import clinlp_autocomponent
 
-_defaults_clinlp_ner = {"attr": "TEXT", "proximity": 0, "fuzzy": 0, "fuzzy_min_len": 0, "pseudo": False}
+_defaults_clinlp_ner = {
+    "attr": "TEXT",
+    "proximity": 0,
+    "fuzzy": 0,
+    "fuzzy_min_len": 0,
+    "pseudo": False,
+}
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 
@@ -98,9 +104,13 @@ class EntityMatcher:
 
                 if isinstance(concept_term, str):
                     if self._use_phrase_matcher:
-                        self._phrase_matcher.add(key=identifier, docs=[self.nlp(concept_term)])
+                        self._phrase_matcher.add(
+                            key=identifier, docs=[self.nlp(concept_term)]
+                        )
                     else:
-                        concept_term = Term(concept_term, **self.term_args).to_spacy_pattern(self.nlp)
+                        concept_term = Term(
+                            concept_term, **self.term_args
+                        ).to_spacy_pattern(self.nlp)
                         self._matcher.add(key=identifier, patterns=[concept_term])
 
                 elif isinstance(concept_term, list):
@@ -111,14 +121,18 @@ class EntityMatcher:
 
                     for field, value in self.term_args.items():
                         if getattr(concept_term, field) is not None:
-                            term_args_with_override[field] = getattr(concept_term, field)
+                            term_args_with_override[field] = getattr(
+                                concept_term, field
+                            )
                         else:
                             term_args_with_override[field] = value
 
                     self._matcher.add(
                         key=identifier,
                         patterns=[
-                            Term(phrase=concept_term.phrase, **term_args_with_override).to_spacy_pattern(self.nlp)
+                            Term(
+                                phrase=concept_term.phrase, **term_args_with_override
+                            ).to_spacy_pattern(self.nlp)
                         ],
                     )
 
@@ -161,7 +175,7 @@ class EntityMatcher:
         disjoint_ents = [ents[0]]
 
         for _, ent in enumerate(ents[1:]):
-            if ent.start <= disjoint_ents[-1].end:
+            if ent.start < disjoint_ents[-1].end:
                 if len(str(disjoint_ents[-1])) < len(str(ent)):
                     disjoint_ents[-1] = ent
             else:
@@ -191,7 +205,9 @@ class EntityMatcher:
                 self._concepts[match_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
-                ents.append(Span(doc=doc, start=start, end=end, label=self._concepts[match_id]))
+                ents.append(
+                    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
+                )
 
         ents = self._resolve_ents_overlap(ents)
         doc.set_ents(entities=ents)
