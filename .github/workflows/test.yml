@@ -32,15 +32,10 @@ jobs:
       with:
         virtualenvs-create: false
 
-    - name: Setup dev dependencies
-      run: poetry install --only dev
-
-    - name: Build package
-      run: poetry build
-
     - name: Install package with extras
       run: |
-        find dist/*.whl | xargs -I {} pip install {}"[transformers]"
+        poetry install --with dev
+        pip install ".[transformers]"
 
     - name: Test with pytest
       run: |
