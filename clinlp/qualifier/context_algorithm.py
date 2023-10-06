@@ -85,7 +85,7 @@ class _MatchedContextPattern:
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
     "load_rules": True,
-    "rules": str(importlib.resources.path("clinlp.resources", "context_rules.json")),
+    "rules": str(importlib.resources.files("clinlp.resources").joinpath("context_rules.json")),
 }
 
 
