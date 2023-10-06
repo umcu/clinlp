@@ -21,7 +21,9 @@ def get_class_init_signature(cls):
             else:
                 first_arg_wit_default = len(argspec.args) - len(argspec.defaults)
                 args += argspec.args[1:first_arg_wit_default]
-                kwargs |= dict(zip(argspec.args[first_arg_wit_default:], argspec.defaults))
+                kwargs |= dict(
+                    zip(argspec.args[first_arg_wit_default:], argspec.defaults)
+                )
 
     return args, kwargs
 
@@ -40,10 +42,16 @@ def clinlp_autocomponent(cls):
         make_component_args = ["name"] + make_component_args
 
     for arg in make_component_args:
-        params.append(Parameter(arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()))
+        params.append(
+            Parameter(
+                arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
+            )
+        )
 
     for kwarg, default in component_kwargs.items():
-        params.append(Parameter(kwarg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=default))
+        params.append(
+            Parameter(kwarg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=default)
+        )
 
     @with_signature(Signature(params), func_name="make_component")
     def make_component(*args, **kwargs):
@@ -53,7 +61,8 @@ def clinlp_autocomponent(cls):
         cls_kwargs = {
             k: v
             for k, v in kwargs.items()
-            if (k in component_args or k in component_kwargs) and (not isinstance(v, _UnusedArgument))
+            if (k in component_args or k in component_kwargs)
+            and (not isinstance(v, _UnusedArgument))
         }
 
         return cls(**cls_kwargs)

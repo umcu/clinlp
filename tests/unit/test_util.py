@@ -3,7 +3,7 @@ import spacy
 from spacy import Language
 from thinc.api import ConfigValidationError
 
-import clinlp
+import clinlp  # noqa: F401
 from clinlp.util import _UnusedArgument, clinlp_autocomponent, get_class_init_signature
 
 
@@ -89,15 +89,36 @@ class TestUnitClinlpAutocomponent:
         assert MyClass(nlp="nlp", name="test").setting_2 == "max"
         assert MyClass(setting_1=64, setting_2="min").setting_1 == 64
         assert MyClass(setting_1=64, setting_2="min").setting_2 == "min"
-        assert MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_1 == 64
-        assert MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_2 == "min"
+        assert (
+            MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_1
+            == 64
+        )
+        assert (
+            MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_2
+            == "min"
+        )
 
         assert add_pipe_for_test("myclass_test1", name="test").setting_1 == 32
         assert add_pipe_for_test("myclass_test1", name="test").setting_2 == "max"
-        assert add_pipe_for_test("myclass_test1", config={"setting_1": 64}).setting_1 == 64
-        assert add_pipe_for_test("myclass_test1", config={"setting_2": "min"}).setting_2 == "min"
-        assert add_pipe_for_test("myclass_test1", config={"setting_1": 64}, name="test").setting_1 == 64
-        assert add_pipe_for_test("myclass_test1", config={"setting_2": "min"}, name="test").setting_2 == "min"
+        assert (
+            add_pipe_for_test("myclass_test1", config={"setting_1": 64}).setting_1 == 64
+        )
+        assert (
+            add_pipe_for_test("myclass_test1", config={"setting_2": "min"}).setting_2
+            == "min"
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test1", config={"setting_1": 64}, name="test"
+            ).setting_1
+            == 64
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test1", config={"setting_2": "min"}, name="test"
+            ).setting_2
+            == "min"
+        )
 
         with pytest.raises(TypeError):
             MyClass(setting_3="None")
@@ -120,9 +141,21 @@ class TestUnitClinlpAutocomponent:
 
         assert add_pipe_for_test("myclass_test2", name="test").setting_1 == 32
         assert add_pipe_for_test("myclass_test2", name="test").name == "test"
-        assert add_pipe_for_test("myclass_test2", config={"setting_1": 64}).setting_1 == 64
-        assert add_pipe_for_test("myclass_test2", config={"setting_1": 64}, name="test").setting_1 == 64
-        assert add_pipe_for_test("myclass_test2", config={"setting_1": 64}, name="test").name == "test"
+        assert (
+            add_pipe_for_test("myclass_test2", config={"setting_1": 64}).setting_1 == 64
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test2", config={"setting_1": 64}, name="test"
+            ).setting_1
+            == 64
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test2", config={"setting_1": 64}, name="test"
+            ).name
+            == "test"
+        )
 
         with pytest.raises(TypeError):
             MyClass(setting_1=10)
@@ -141,7 +174,10 @@ class TestUnitClinlpAutocomponent:
 
         assert MyClass().setting_1 == 1024
         assert add_pipe_for_test("myclass_test3").setting_1 == 1024
-        assert add_pipe_for_test("myclass_test3", config={"setting_1": 2048}).setting_1 == 2048
+        assert (
+            add_pipe_for_test("myclass_test3", config={"setting_1": 2048}).setting_1
+            == 2048
+        )
 
     def test_with_inheritance(self):
         _base_defaults = {"base_arg": 1}
@@ -152,7 +188,9 @@ class TestUnitClinlpAutocomponent:
             def __init__(self, base_arg=_base_defaults["base_arg"]):
                 self.base_arg = base_arg
 
-        @Language.factory(name="myclass_test4", default_config=_sub_defaults | _base_defaults)
+        @Language.factory(
+            name="myclass_test4", default_config=_sub_defaults | _base_defaults
+        )
         @clinlp_autocomponent
         class MyClass(MyClassBase):
             def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
@@ -169,6 +207,18 @@ class TestUnitClinlpAutocomponent:
         assert add_pipe_for_test("myclass_test4").sub_arg == 2
         assert add_pipe_for_test("myclass_test4").base_arg == 1
         assert add_pipe_for_test("myclass_test4", config={"sub_arg": 20}).sub_arg == 20
-        assert add_pipe_for_test("myclass_test4", config={"base_arg": 10}).base_arg == 10
-        assert add_pipe_for_test("myclass_test4", config={"sub_arg": 20, "base_arg": 10}).sub_arg == 20
-        assert add_pipe_for_test("myclass_test4", config={"sub_arg": 20, "base_arg": 10}).base_arg == 10
+        assert (
+            add_pipe_for_test("myclass_test4", config={"base_arg": 10}).base_arg == 10
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test4", config={"sub_arg": 20, "base_arg": 10}
+            ).sub_arg
+            == 20
+        )
+        assert (
+            add_pipe_for_test(
+                "myclass_test4", config={"sub_arg": 20, "base_arg": 10}
+            ).base_arg
+            == 10
+        )

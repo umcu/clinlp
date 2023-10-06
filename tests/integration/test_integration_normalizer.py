@@ -1,6 +1,6 @@
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 
 
 class TestNormalizerIntegration:
@@ -13,7 +13,9 @@ class TestNormalizerIntegration:
         terms = {"symptomen": ["caries"]}
 
         for term_description, terms in terms.items():
-            ruler.add_patterns([{"label": term_description, "pattern": term} for term in terms])
+            ruler.add_patterns(
+                [{"label": term_description, "pattern": term} for term in terms]
+            )
 
         doc = nlp("patient heeft veel last van cariës")
 

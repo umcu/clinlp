@@ -8,11 +8,15 @@ from clinlp.util import clinlp_autocomponent
 _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 
 
-@Language.factory("clinlp_normalizer", assigns=["token.norm"], default_config=_defaults_normalizer)
+@Language.factory(
+    "clinlp_normalizer", assigns=["token.norm"], default_config=_defaults_normalizer
+)
 @clinlp_autocomponent
 class Normalizer:
     def __init__(
-        self, lowercase=_defaults_normalizer["lowercase"], map_non_ascii=_defaults_normalizer["map_non_ascii"]
+        self,
+        lowercase=_defaults_normalizer["lowercase"],
+        map_non_ascii=_defaults_normalizer["map_non_ascii"],
     ):
         self.lowercase = lowercase
         self.map_non_ascii = map_non_ascii
@@ -24,7 +28,9 @@ class Normalizer:
     @staticmethod
     def _map_non_ascii_char(char: str) -> str:
         if len(char) != 1:
-            raise ValueError("Please only use the _map_non_ascii_char method on strings of length 1.")
+            raise ValueError(
+                "Please only use the _map_non_ascii_char method on strings of length 1."
+            )
 
         normalized_char = unicodedata.normalize("NFD", char)
         normalized_char = str(normalized_char.encode("ascii", "ignore").decode("utf-8"))

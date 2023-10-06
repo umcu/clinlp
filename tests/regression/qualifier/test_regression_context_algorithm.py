@@ -3,7 +3,7 @@ import json
 import pytest
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
@@ -40,11 +40,17 @@ class TestRegressionContextAlgorithm:
                     assert predicted_ent.start == example_ent["start"]
                     assert predicted_ent.end == example_ent["end"]
                     assert str(predicted_ent) == example_ent["text"]
-                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(set(example_ent["qualifiers"]))
+                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(
+                        set(example_ent["qualifiers"])
+                    )
 
                 except AssertionError:
                     print(
-                        f"Incorrect (#{example_ent['ent_id']}): text={example['text']}, example_ent={example_ent}, predicted qualifiers={getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
+                        f"Incorrect (#{example_ent['ent_id']}): "
+                        f"text={example['text']}, "
+                        f"example_ent={example_ent}, "
+                        f"predicted qualifiers="
+                        f"{getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 

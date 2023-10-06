@@ -2,7 +2,7 @@ import json
 
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 
 
 class TestTokenizerRegression:
@@ -13,4 +13,6 @@ class TestTokenizerRegression:
             data = json.load(file)["data"]
 
         for example in data:
-            assert [token.text for token in tokenizer(example["text"])] == example["tokens"]
+            assert [token.text for token in tokenizer(example["text"])] == example[
+                "tokens"
+            ]

@@ -2,7 +2,7 @@ import warnings
 
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 from clinlp.exceptions import VersionMismatchWarning
 
 

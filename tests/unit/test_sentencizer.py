@@ -27,23 +27,60 @@ class TestUnitClinlpSentencizer:
 
     def test_clinlp_sentencizer_predict_1(self):
         sentencizer = Sentencizer(sent_end_chars=[], sent_start_punct=[])
-        tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "met", "twee", "zinnen"])
-        assert sentencizer._get_sentence_starts(tokens) == [True, False, False, False, False, False, False, False]
+        tokens = get_mock_tokens(
+            ["dit", "is", "een", "test", "\n", "met", "twee", "zinnen"]
+        )
+        assert sentencizer._get_sentence_starts(tokens) == [
+            True,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+            False,
+        ]
 
     def test_clinlp_sentencizer_predict_2(self):
         sentencizer = Sentencizer(sent_end_chars=["\n"], sent_start_punct=[])
-        tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "met", "twee", "zinnen"])
-        assert sentencizer._get_sentence_starts(tokens) == [True, False, False, False, False, True, False, False]
+        tokens = get_mock_tokens(
+            ["dit", "is", "een", "test", "\n", "met", "twee", "zinnen"]
+        )
+        assert sentencizer._get_sentence_starts(tokens) == [
+            True,
+            False,
+            False,
+            False,
+            False,
+            True,
+            False,
+            False,
+        ]
 
     def test_clinlp_sentencizer_predict_3(self):
         sentencizer = Sentencizer(sent_end_chars=["\n"], sent_start_punct=[])
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "."])
-        assert sentencizer._get_sentence_starts(tokens) == [True, False, False, False, False, False]
+        assert sentencizer._get_sentence_starts(tokens) == [
+            True,
+            False,
+            False,
+            False,
+            False,
+            False,
+        ]
 
     def test_clinlp_sentencizer_predict_4(self):
         sentencizer = Sentencizer(sent_end_chars=["\n"], sent_start_punct=["*"])
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "*", "opsomming"])
-        assert sentencizer._get_sentence_starts(tokens) == [True, False, False, False, False, True, False]
+        assert sentencizer._get_sentence_starts(tokens) == [
+            True,
+            False,
+            False,
+            False,
+            False,
+            True,
+            False,
+        ]
 
     def test_clinlp_sentencizer_start(self):
         sentencizer = Sentencizer(sent_start_punct=["-", "*"])
@@ -71,7 +108,9 @@ class TestUnitClinlpSentencizer:
         tokens = get_mock_tokens(["Dit", "is", "een", "test"])
         expected_returns = [True, False, False, False]
 
-        with patch.object(sentencizer, "_get_sentence_starts", return_value=expected_returns):
+        with patch.object(
+            sentencizer, "_get_sentence_starts", return_value=expected_returns
+        ):
             sentencizer(tokens)
 
             for token, expected_return in zip(tokens, expected_returns):

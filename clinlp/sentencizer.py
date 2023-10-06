@@ -5,11 +5,16 @@ from spacy.language import Language
 
 from clinlp.util import clinlp_autocomponent
 
-_defaults_sentencizer = {"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("]}
+_defaults_sentencizer = {
+    "sent_end_chars": [".", "!", "?", "\n", "\r"],
+    "sent_start_punct": ["-", "*", "[", "("],
+}
 
 
 @Language.factory(
-    "clinlp_sentencizer", assigns=["token.is_sent_start", "doc.sents"], default_config=_defaults_sentencizer
+    "clinlp_sentencizer",
+    assigns=["token.is_sent_start", "doc.sents"],
+    default_config=_defaults_sentencizer,
 )
 @clinlp_autocomponent
 class Sentencizer:
@@ -18,9 +23,15 @@ class Sentencizer:
         sent_end_chars: Optional[list[str]] = None,
         sent_start_punct: Optional[list[str]] = None,
     ):
-        self.sent_end_chars = _defaults_sentencizer["sent_end_chars"] if sent_end_chars is None else sent_end_chars
+        self.sent_end_chars = (
+            _defaults_sentencizer["sent_end_chars"]
+            if sent_end_chars is None
+            else sent_end_chars
+        )
         self.sent_start_punct = (
-            _defaults_sentencizer["sent_start_punct"] if sent_start_punct is None else sent_start_punct
+            _defaults_sentencizer["sent_start_punct"]
+            if sent_start_punct is None
+            else sent_start_punct
         )
 
         self.sent_end_chars = set(self.sent_end_chars)
@@ -30,7 +41,11 @@ class Sentencizer:
         """
         Determines whether a token can start a sentence
         """
-        return token.text[0].isalnum() or (token.text[0] in {"["}) or (token.text in self.sent_start_punct)
+        return (
+            token.text[0].isalnum()
+            or (token.text[0] in {"["})
+            or (token.text in self.sent_start_punct)
+        )
 
     def _token_can_end_sent(self, token: spacy.tokens.Token):
         """

@@ -39,10 +39,12 @@ class ContextRule:
     A Context rule, as in the original Context Algorithm.
 
     Args:
-        pattern: The pattern to look for in text. Either a string, or a spacy pattern (list).
+        pattern: The pattern to look for in text. Either a string, or a spacy pattern
+        (list).
         qualifier: The qualifier to apply.
         direction: The Context rule direction.
-        max_scope: The maximum scope (number of tokens) of the trigger, or None for using sentence boundaries.
+        max_scope: The maximum scope (number of tokens) of the trigger, or None for
+        using sentence boundaries.
     """
 
     pattern: Union[str, list[dict[str, str]]]
@@ -66,8 +68,9 @@ class _MatchedContextPattern:
 
     def initialize_scope(self, sentence: Span) -> None:
         """
-        Sets the scope this pattern ranges over, based on the sentence. This is either the window determined in
-        the `max_scope` of the rule, or the sentence boundaries if no `max_scope` is set.
+        Sets the scope this pattern ranges over, based on the sentence. This is either
+        the window determined in the `max_scope` of the rule, or the sentence
+        boundaries if no `max_scope` is set.
         """
 
         max_scope = self.rule.max_scope or len(sentence)
@@ -85,7 +88,9 @@ class _MatchedContextPattern:
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
     "load_rules": True,
-    "rules": str(importlib.resources.files("clinlp.resources").joinpath("context_rules.json")),
+    "rules": str(
+        importlib.resources.files("clinlp.resources").joinpath("context_rules.json")
+    ),
 }
 
 
@@ -98,14 +103,17 @@ _defaults_context_algorithm = {
 @clinlp_autocomponent
 class ContextAlgorithm(QualifierDetector):
     """
-    Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as a spaCy pipeline component.
+    Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as
+    a spaCy pipeline component.
 
     Args:
         nlp: The Spacy language object to use
-        phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH, NORM).
-        load_rules: Whether to parse any rules. Set this to `False` to use ContextAlgorithm.add_rules to
-        rules: A dictionary of rules, or a path to a json containing the rules (see clinlp.resources dir for example).
-        add ContextRules manually.
+        phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH,
+        NORM).
+        load_rules: Whether to parse any rules. Set this to `False` to use
+        ContextAlgorithm.add_rules to add ContextRules manually.
+        rules: A dictionary of rules, or a path to a json containing the rules
+        (see clinlp.resources dir for example).
     """
 
     def __init__(
@@ -126,7 +134,8 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 raise ValueError(
-                    "Did not provide rules. Set `load_rules` to False if you want to add `ContextRule` manually."
+                    "Did not provide rules. Set `load_rules` to False if you "
+                    "want to add `ContextRule` manually."
                 )
 
             rules = self._parse_rules(rules)
@@ -151,7 +160,8 @@ class ContextAlgorithm(QualifierDetector):
 
         else:
             raise ValueError(
-                f"Don't know how to process ContextRule with pattern of type {type(rule.pattern)}"
+                f"Don't know how to process ContextRule with pattern of "
+                f"type {type(rule.pattern)}"
             )
 
     def add_rules(self, rules: list[ContextRule]) -> None:
@@ -231,7 +241,8 @@ class ContextAlgorithm(QualifierDetector):
 
     def _get_rule_from_match_id(self, match_id: int) -> ContextRule:
         """
-        Get the rule that was matched, from the match_id (first element of match tuple returned by matcher).
+        Get the rule that was matched, from the match_id (first element of match tuple
+        returned by matcher).
         """
         return self.rules[self._nlp.vocab.strings[match_id]]
 
@@ -256,7 +267,8 @@ class ContextAlgorithm(QualifierDetector):
         scopes: ivt.IntervalTree, terminations: list[_MatchedContextPattern]
     ) -> ivt.IntervalTree:
         """
-        Determine the scope of terminating matched context pattern, return them as IntervalTree.
+        Determine the scope of terminating matched context pattern, return them
+        as IntervalTree.
         """
 
         for terminate_match in terminations:
@@ -340,7 +352,8 @@ class ContextAlgorithm(QualifierDetector):
             for match_id, start, end in matches:
                 rule = self._get_rule_from_match_id(match_id)
 
-                # spacy Matcher handles offset differently than PhraseMatcher, when applying the matcher to a sentence
+                # spacy Matcher handles offset differently than PhraseMatcher,
+                # when applying the matcher to a sentence
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
                 pattern = _MatchedContextPattern(
