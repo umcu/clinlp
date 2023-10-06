@@ -31,7 +31,11 @@ class TestTerm:
     def test_spacy_pattern_proximity(self, nlp):
         t = Term("kluts kwijt", proximity=1)
 
-        assert t.to_spacy_pattern(nlp) == [{"TEXT": "kluts"}, {"OP": "?"}, {"TEXT": "kwijt"}]
+        assert t.to_spacy_pattern(nlp) == [
+            {"TEXT": "kluts"},
+            {"OP": "?"},
+            {"TEXT": "kwijt"},
+        ]
 
     def test_spacy_pattern_fuzzy(self, nlp):
         t = Term(phrase="diabetes", fuzzy=3)
@@ -41,7 +45,11 @@ class TestTerm:
     def test_spacy_pattern_fuzzy_min_len(self, nlp):
         t = Term(phrase="bloeding graad iv", fuzzy=1, fuzzy_min_len=6)
 
-        assert t.to_spacy_pattern(nlp) == [{"TEXT": {"FUZZY1": "bloeding"}}, {"TEXT": "graad"}, {"TEXT": "iv"}]
+        assert t.to_spacy_pattern(nlp) == [
+            {"TEXT": {"FUZZY1": "bloeding"}},
+            {"TEXT": "graad"},
+            {"TEXT": "iv"},
+        ]
 
     def test_spacy_pattern_pseudo(self, nlp):
         t = Term(phrase="diabetes", pseudo=True)
@@ -65,7 +73,11 @@ class TestClinlpNer:
         ner = EntityMatcher(nlp=nlp)
 
         concepts = {
-            "concept_1": [Term("term1", fuzzy=1), "term2", [{"TEXT": {"FUZZY1": "term3"}}]],
+            "concept_1": [
+                Term("term1", fuzzy=1),
+                "term2",
+                [{"TEXT": {"FUZZY1": "term3"}}],
+            ],
             "concept_2": ["term4", Term("term5"), [{"NORM": "term6"}]],
         }
 
@@ -78,7 +90,11 @@ class TestClinlpNer:
         ner = EntityMatcher(nlp=nlp, attr="NORM", fuzzy=1, fuzzy_min_len=10)
 
         concepts = {
-            "concept_1": [Term("term1", fuzzy=1), "term2", [{"TEXT": {"FUZZY1": "term3"}}]],
+            "concept_1": [
+                Term("term1", fuzzy=1),
+                "term2",
+                [{"TEXT": {"FUZZY1": "term3"}}],
+            ],
             "concept_2": ["term4", Term("term5"), [{"NORM": "term6"}]],
         }
 
@@ -90,7 +106,9 @@ class TestClinlpNer:
     def test_match_overwrite(self, nlp):
         ner = EntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
 
-        concepts = {"delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]}
+        concepts = {
+            "delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]
+        }
 
         ner.load_concepts(concepts)
 
@@ -129,10 +147,16 @@ class TestClinlpNer:
 
     def test_match_proximity(self, nlp):
         ner = EntityMatcher(nlp=nlp)
-        ner.load_concepts({"delier": [Term("delier"), Term("kluts kwijt", proximity=1)]})
+        ner.load_concepts(
+            {"delier": [Term("delier"), Term("kluts kwijt", proximity=1)]}
+        )
 
-        assert ents(ner(nlp("dhr was kluts kwijt"))) == [("kluts kwijt", 2, 4, "delier")]
-        assert ents(ner(nlp("dhr was kluts even kwijt"))) == [("kluts even kwijt", 2, 5, "delier")]
+        assert ents(ner(nlp("dhr was kluts kwijt"))) == [
+            ("kluts kwijt", 2, 4, "delier")
+        ]
+        assert ents(ner(nlp("dhr was kluts even kwijt"))) == [
+            ("kluts even kwijt", 2, 5, "delier")
+        ]
         assert ents(ner(nlp("dhr was kluts gister en vandaag kwijt"))) == []
 
     def test_match_fuzzy(self, nlp):
@@ -153,33 +177,54 @@ class TestClinlpNer:
             }
         )
 
-        assert ents(ner(nlp("bloeding graad ii"))) == [("bloeding graad ii", 0, 3, "bloeding")]
-        assert ents(ner(nlp("Bloeding graad ii"))) == [("Bloeding graad ii", 0, 3, "bloeding")]
+        assert ents(ner(nlp("bloeding graad ii"))) == [
+            ("bloeding graad ii", 0, 3, "bloeding")
+        ]
+        assert ents(ner(nlp("Bloeding graad ii"))) == [
+            ("Bloeding graad ii", 0, 3, "bloeding")
+        ]
         assert ents(ner(nlp("bleoding graad ii"))) == []
-        assert ents(ner(nlp("bbloeding graad ii"))) == [("bbloeding graad ii", 0, 3, "bloeding")]
+        assert ents(ner(nlp("bbloeding graad ii"))) == [
+            ("bbloeding graad ii", 0, 3, "bloeding")
+        ]
         assert ents(ner(nlp("bloeding graadd ii"))) == []
 
     def test_match_pseudo(self, nlp):
         ner = EntityMatcher(nlp=nlp)
-        ner.load_concepts({"delier": ["onrustige", Term("onrustige benen", pseudo=True)]})
+        ner.load_concepts(
+            {"delier": ["onrustige", Term("onrustige benen", pseudo=True)]}
+        )
 
         assert ents(ner(nlp("onrustige indruk"))) == [("onrustige", 0, 1, "delier")]
         assert ents(ner(nlp("onrustige benen"))) == []
 
     def test_match_pseudo_different_concepts(self, nlp):
         ner = EntityMatcher(nlp=nlp)
-        ner.load_concepts({"delier": ["onrustige"], "geen_delier": [Term("onrustige benen", pseudo=True)]})
+        ner.load_concepts(
+            {
+                "delier": ["onrustige"],
+                "geen_delier": [Term("onrustige benen", pseudo=True)],
+            }
+        )
 
         assert ents(ner(nlp("onrustige indruk"))) == [("onrustige", 0, 1, "delier")]
         assert ents(ner(nlp("onrustige benen"))) == [("onrustige", 0, 1, "delier")]
 
     def test_ner_level_term_settings(self, nlp):
-        ner = EntityMatcher(nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5)
+        ner = EntityMatcher(
+            nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5
+        )
 
-        ner.load_concepts({"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)]})
+        ner.load_concepts(
+            {"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)]}
+        )
 
-        assert ents(ner(nlp("was kluts even kwijt"))) == [("kluts even kwijt", 1, 4, "delier")]
-        assert ents(ner(nlp("wekt indruk delierant te zijn"))) == [("delierant", 2, 3, "delier")]
+        assert ents(ner(nlp("was kluts even kwijt"))) == [
+            ("kluts even kwijt", 1, 4, "delier")
+        ]
+        assert ents(ner(nlp("wekt indruk delierant te zijn"))) == [
+            ("delierant", 2, 3, "delier")
+        ]
         assert ents(ner(nlp("status na Delier"))) == [("Delier", 2, 3, "delier")]
         assert ents(ner(nlp("onrustig"))) == [("onrustig", 0, 1, "delier")]
         assert ents(ner(nlp("onrustigg"))) == []
@@ -187,7 +232,9 @@ class TestClinlpNer:
     def test_match_mixed_patterns(self, nlp):
         ner = EntityMatcher(nlp=nlp)
 
-        ner.load_concepts({"delier": ["delier", Term("delirant"), [{"TEXT": "delirium"}]]})
+        ner.load_concepts(
+            {"delier": ["delier", Term("delirant"), [{"TEXT": "delirium"}]]}
+        )
 
         assert ents(ner(nlp("delier"))) == [("delier", 0, 1, "delier")]
         assert ents(ner(nlp("delirant"))) == [("delirant", 0, 1, "delier")]
@@ -215,4 +262,16 @@ class TestClinlpNer:
 
         ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
 
-        assert ents(ner(nlp("patient heeft oesophagus atresie"))) == [("oesophagus atresie", 2, 4, "slokdarmatresie")]
+        assert ents(ner(nlp("patient heeft oesophagus atresie"))) == [
+            ("oesophagus atresie", 2, 4, "slokdarmatresie")
+        ]
+
+    def test_match_overlap_adjacent(self, nlp):
+        ner = EntityMatcher(nlp=nlp)
+
+        ner.load_concepts({"anemie": ["erytrocyten", "transfusie"]})
+
+        assert ents(ner(nlp("patient kreeg erytrocyten transfusie"))) == [
+            ("erytrocyten", 2, 3, "anemie"),
+            ("transfusie", 3, 4, "anemie"),
+        ]
