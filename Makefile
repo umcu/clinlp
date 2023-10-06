@@ -8,4 +8,4 @@ clean:
 	rm -rf .pytest_cache
 	rm -rf dist
 
-.PHONY: lint
+.PHONY: lint clean
