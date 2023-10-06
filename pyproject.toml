@@ -43,4 +43,4 @@ per-file-ignores = [
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = "--cov clinlp/ --cov-fail-under=85"
+addopts = "--cov=clinlp --cov-fail-under=85"
