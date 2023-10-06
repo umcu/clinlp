@@ -27,11 +27,11 @@ jobs:
       with:
         virtualenvs-create: false
 
-    - name: Build package
-      run: poetry build
-
     - name: Setup dev dependencies
       run: poetry install --only dev
+
+    - name: Build package
+      run: poetry build
 
     - name: Install package with extras
       run: |
