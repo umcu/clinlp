@@ -3,11 +3,7 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.qualifier import (
-    ContextRule,
-    ContextRuleDirection,
-    QualifierFactory,
-)
+from clinlp.qualifier import ContextRule, ContextRuleDirection, QualifierFactory
 from clinlp.qualifier.context_algorithm import ContextAlgorithm, _MatchedContextPattern
 from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
