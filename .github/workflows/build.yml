@@ -30,13 +30,15 @@ jobs:
     - name: Build package
       run: poetry build
 
-    - name: Setup testing dependencies
+    - name: Setup dev dependencies
+      run: poetry install --only dev
+
+    - name: Install package with extras
       run: |
         find dist/*.whl | xargs -I {} pip install {}"[transformers]"
-        poetry install --only dev
 
     - name: Test build
-      run: make test
+      run: pytest tests/
 
     - name: Set up Pypi credentials
       run: poetry config pypi-token.pypi ${{ SECRETS.PYPI_TOKEN }}
