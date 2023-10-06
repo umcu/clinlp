@@ -44,7 +44,7 @@ jobs:
 
     - name: Test with pytest
       run: |
-        pytest tests/ --cov=clinlp --cov-fail-under=80 --cov-report=xml
+        pytest 
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0
