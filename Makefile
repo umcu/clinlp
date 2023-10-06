@@ -1,4 +1,4 @@
-MAX_LINE_LENGTH := 120
+MAX_LINE_LENGTH := 88
 CHECK ?= 0
 
 format_dirs := clinlp/ tests/

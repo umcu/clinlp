@@ -259,13 +259,17 @@ def _get_tokenizer_exceptions(
             del tokenizer_exceptions[emoticon]
 
     for abbrev_transform in abbrev_transforms:
-        abbr_update = {abbrev_transform(a): [{ORTH: abbrev_transform(a)}] for a in abbreviations}
+        abbr_update = {
+            abbrev_transform(a): [{ORTH: abbrev_transform(a)}] for a in abbreviations
+        }
         tokenizer_exceptions = update_exc(tokenizer_exceptions, abbr_update)
 
     return update_exc(tokenizer_exceptions, CLINLP_TOKENIZER_EXCEPTIONS)
 
 
-def _get_list(base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None):
+def _get_list(
+    base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None
+):
     """
     Create a list, based on a base list, with some additions and removals.
     """
@@ -307,13 +311,33 @@ def _get_tokenizer_prefix_rules():
 def _get_tokenizer_prefixes():
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
-        add=[",,", "§", "%", "=", "—", "–", r"\+(?![0-9])", "/", "-", r"\+", "~", ",", r"\s"],
+        add=[
+            ",,",
+            "§",
+            "%",
+            "=",
+            "—",
+            "–",
+            r"\+(?![0-9])",
+            "/",
+            "-",
+            r"\+",
+            "~",
+            ",",
+            r"\s",
+        ],
         remove=[r"\["],
     )
 
     quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`"])
 
-    return punct + _get_ellipses() + quotes + _get_currencies() + _get_tokenizer_prefix_rules()
+    return (
+        punct
+        + _get_ellipses()
+        + quotes
+        + _get_currencies()
+        + _get_tokenizer_prefix_rules()
+    )
 
 
 def _get_tokenizer_infix_rules(quotes: list[str]):
@@ -332,7 +356,10 @@ def _get_tokenizer_infix_rules(quotes: list[str]):
 
 
 def _get_tokenizer_infixes():
-    punct = _get_list(base=[], add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"])
+    punct = _get_list(
+        base=[],
+        add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"],
+    )
 
     quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`", r"\'"])
 
@@ -341,12 +368,16 @@ def _get_tokenizer_infixes():
     return infixes
 
 
-def _get_tokenizer_suffix_rules(currencies: list[str], units: list[str], punct: list[str], quotes: list[str]):
+def _get_tokenizer_suffix_rules(
+    currencies: list[str], units: list[str], punct: list[str], quotes: list[str]
+):
     return [
         r"(?<=[0-9])\+",
         r"(?<=°[FfCcKk])\.",
         r"(?<=[0-9])(?:{c})".format(c="|".join(currencies)),
-        r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(al=ALPHA_LOWER, e=r"%²\-\+", q="".join(quotes), p="|".join(punct)),
+        r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(
+            al=ALPHA_LOWER, e=r"%²\-\+", q="".join(quotes), p="|".join(punct)
+        ),
         r"(?<=[{au}][{au}])\.".format(au=ALPHA_UPPER),
         r"(?<=[0-9]\])\S+",
         r"(?<!([A-Z]-\d|-\d\d))\]",  # tricky one
@@ -360,7 +391,9 @@ def _get_tokenizer_suffix_rules(currencies: list[str], units: list[str], punct: 
 
 def _get_tokenizer_suffixes():
     punct = _get_list(
-        base=spacy.lang.punctuation.LIST_PUNCT, add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"], remove=[r"\]"]
+        base=spacy.lang.punctuation.LIST_PUNCT,
+        add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],
+        remove=[r"\]"],
     )
 
     quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES)
@@ -369,7 +402,9 @@ def _get_tokenizer_suffixes():
         punct
         + quotes
         + _get_ellipses()
-        + _get_tokenizer_suffix_rules(currencies=_get_currencies(), units=_get_units(), punct=punct, quotes=quotes)
+        + _get_tokenizer_suffix_rules(
+            currencies=_get_currencies(), units=_get_units(), punct=punct, quotes=quotes
+        )
     )
 
 
@@ -403,9 +438,10 @@ class Clinlp(Language):
         if "clinlp_version" in meta:
             if meta["clinlp_version"] != clinlp_version:
                 warnings.warn(
-                    f"This spaCy model was built with clinlp version {meta['clinlp_version']}, "
-                    f"but you currently have version {clinlp_version} installed, "
-                    f"potentially leading to unexpected results.",
+                    f"This spaCy model was built with clinlp version "
+                    f"{meta['clinlp_version']}, but you currently have version "
+                    f"{clinlp_version} installed, potentially leading to unexpected "
+                    f"results.",
                     VersionMismatchWarning,
                 )
         else:

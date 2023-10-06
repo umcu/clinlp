@@ -67,7 +67,9 @@ class TestNegationTransformer:
     def test_fill_ent_placeholder(self, nlp):
         n = NegationTransformer(nlp=nlp)
 
-        assert n._fill_ent_placeholder("geen SYMPTOOM,", 5, 13, placeholder="SYMPTOOM") == ("geen SYMPTOOM,", 5, 13)
+        assert n._fill_ent_placeholder(
+            "geen SYMPTOOM,", 5, 13, placeholder="SYMPTOOM"
+        ) == ("geen SYMPTOOM,", 5, 13)
         assert n._fill_ent_placeholder("geen SYMPTOOM,", 5, 13, placeholder="X") == (
             "geen X,",
             5,
