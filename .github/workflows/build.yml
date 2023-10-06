@@ -38,7 +38,7 @@ jobs:
         find dist/*.whl | xargs -I {} pip install {}"[transformers]"
 
     - name: Test build
-      run: pytest tests/
+      run: python -m pytest
 
     - name: Set up Pypi credentials
       run: poetry config pypi-token.pypi ${{ SECRETS.PYPI_TOKEN }}
