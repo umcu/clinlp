@@ -1,7 +1,5 @@
 import json
 
-import spacy
-
 from clinlp import Sentencizer
 
 

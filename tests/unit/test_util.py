@@ -3,7 +3,7 @@ import spacy
 from spacy import Language
 from thinc.api import ConfigValidationError
 
-import clinlp
+import clinlp  # noqa: F401
 from clinlp.util import _UnusedArgument, clinlp_autocomponent, get_class_init_signature
 
 

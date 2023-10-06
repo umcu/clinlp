@@ -1,4 +1,4 @@
-from abc import ABC, abstractmethod, abstractproperty
+from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional
 
@@ -78,7 +78,8 @@ class QualifierFactory:
 
         if value not in self.values:
             raise ValueError(
-                f"The qualifier {self.name} cannot take value '{value}'. Please choose one of {self.values}."
+                f"The qualifier {self.name} cannot take value '{value}'. "
+                f"Please choose one of {self.values}."
             )
 
         is_default = value == self.default

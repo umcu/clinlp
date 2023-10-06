@@ -1,6 +1,6 @@
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 
 
 class TestNormalizerIntegration:

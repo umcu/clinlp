@@ -1,7 +1,7 @@
 import pytest
 import spacy
 
-import clinlp
+import clinlp  # noqa: F401
 from clinlp.entity import EntityMatcher, Term
 
 

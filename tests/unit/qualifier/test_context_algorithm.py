@@ -1,5 +1,3 @@
-from unittest.mock import patch
-
 import pytest
 import spacy
 from spacy.tokens import Doc, Span
@@ -8,7 +6,6 @@ from spacy.vocab import Vocab
 from clinlp.qualifier import (
     ContextRule,
     ContextRuleDirection,
-    Qualifier,
     QualifierFactory,
 )
 from clinlp.qualifier.context_algorithm import ContextAlgorithm, _MatchedContextPattern
