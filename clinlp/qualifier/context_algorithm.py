@@ -278,13 +278,13 @@ class ContextAlgorithm(QualifierDetector):
 
                 if (
                     match.rule.direction == ContextRuleDirection.PRECEDING
-                    and terminate_match.start > match.end
+                    and terminate_match.start >= match.end
                 ):
                     match.scope = (match.scope[0], terminate_match.start)
 
                 if (
                     match.rule.direction == ContextRuleDirection.FOLLOWING
-                    and terminate_match.end < match.start
+                    and terminate_match.end <= match.start
                 ):
                     match.scope = (terminate_match.end, match.scope[1])
 

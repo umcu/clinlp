@@ -449,6 +449,36 @@ class TestUnitContextAlgorithm:
         assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
         assert "Negation.Negated" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
+    def test_match_qualifiers_termination_directly_preceding(self, nlp):
+        rules = {
+            "qualifiers": [
+                {"name": "Plausibility", "values": ["Plausible", "Hypothetical"]},
+            ],
+            "rules": [
+                {
+                    "patterns": ["mogelijk"],
+                    "qualifier": "Plausibility.Hypothetical",
+                    "direction": "following",
+                },
+                {
+                    "patterns": [","],
+                    "qualifier": "Plausibility.Hypothetical",
+                    "direction": "termination",
+                },
+            ],
+        }
+
+        text = "SYMPTOOM, mogelijk SYMPTOOM"
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert "Plausibility.Hypothetical" not in getattr(
+            doc.ents[0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Plausibility.Hypothetical" not in getattr(
+            doc.ents[1]._, ATTR_QUALIFIERS_STR
+        )
+
     def test_match_qualifiers_termination_following(self, nlp):
         rules = {
             "qualifiers": [
@@ -474,6 +504,36 @@ class TestUnitContextAlgorithm:
 
         assert "Negation.Negated" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
         assert "Negation.Negated" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+
+    def test_match_qualifiers_termination_directly_following(self, nlp):
+        rules = {
+            "qualifiers": [
+                {"name": "Plausibility", "values": ["Plausible", "Hypothetical"]},
+            ],
+            "rules": [
+                {
+                    "patterns": ["mogelijk"],
+                    "qualifier": "Plausibility.Hypothetical",
+                    "direction": "preceding",
+                },
+                {
+                    "patterns": ["op basis van"],
+                    "qualifier": "Plausibility.Hypothetical",
+                    "direction": "termination",
+                },
+            ],
+        }
+
+        text = "SYMPTOOM mogelijk op basis van SYMPTOOM"
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert "Plausibility.Hypothetical" not in getattr(
+            doc.ents[0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Plausibility.Hypothetical" not in getattr(
+            doc.ents[1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_multiple_sentences(self, nlp):
         rules = {
