@@ -86,6 +86,11 @@ for ent in doc.ents:
 * `partus prematurus` `set()`
 * `VI` `{'Plausibility.HYPOTHETICAL'}`
 
+## Citing
+
+If you use `clinlp`, please find the appropriate citation by clicking the Zenodo button below. This should always point you to the current latest release:
+
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.10528055.svg)](https://doi.org/10.5281/zenodo.10528055)
 
 ## Documentation
 
