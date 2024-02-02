@@ -5,6 +5,7 @@ import intervaltree as ivt
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
+import pandas as pd
 
 from clinlp.util import clinlp_autocomponent
 
@@ -213,3 +214,35 @@ class EntityMatcher:
         doc.set_ents(entities=ents)
 
         return doc
+
+
+def create_term(row, col_term):
+    """Creates a Term object with available attributes."""
+    term = Term("")
+    for attr, value in row.items():
+        if attr == col_term:
+            term.phrase = value
+        if value == value:
+            setattr(term, attr, value)
+    return term
+
+def concept_dict_creator(data, col_label, col_term):
+    """Transforms source concept data to a dictionary that the clinlp entity matcher can read.
+    Takes a csv file where each row is a distinct word or sentence (term) that belongs to an entity label (label)."""
+
+    df = pd.read_csv(data)
+    # Makes Terms of rows where an attribute is specified
+    ## Make a list of all attribute columns, assuming the first two columns are entity label and term
+    attr_cols = list(df.columns[2:])
+    ## Find rows where one or more attribute columns are filled and replace the value in the 'term' column with a Term class with these attributes
+    df.loc[df[attr_cols].notna().any(axis=1), col_term] = df[df[attr_cols].notna().any(axis=1)].apply(create_term, col_term=col_term, axis=1)
+    ## Drop the attribute columns
+    df.drop(columns=attr_cols, inplace=True)
+    # Groups names as name_list by their label
+    df = df.groupby(col_label)[col_term].agg(list).reset_index()
+    # Renames the columns for easy access in other methods
+    df.columns = ["label", "term"]
+    # Creates the concept dictionary where the label is the key and the name_list is the value
+    concepts = dict(zip(df["label"], df["term"]))
+
+    return concepts
