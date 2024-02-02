@@ -223,6 +223,12 @@ def create_term(row, col_term):
         if attr == col_term:
             term.phrase = value
         if value == value:
+            if value == "True":
+                value = True
+            elif value == "False":
+                value = False
+            elif isinstance(value, float):
+                value = int(value)
             setattr(term, attr, value)
     return term
 
@@ -238,11 +244,11 @@ def concept_dict_creator(data, col_label, col_term):
     df.loc[df[attr_cols].notna().any(axis=1), col_term] = df[df[attr_cols].notna().any(axis=1)].apply(create_term, col_term=col_term, axis=1)
     ## Drop the attribute columns
     df.drop(columns=attr_cols, inplace=True)
-    # Groups names as name_list by their label
+    # Groups names as term_list by their label
     df = df.groupby(col_label)[col_term].agg(list).reset_index()
     # Renames the columns for easy access in other methods
     df.columns = ["label", "term"]
-    # Creates the concept dictionary where the label is the key and the name_list is the value
-    concepts = dict(zip(df["label"], df["term"]))
+    # Creates the concept dictionary where the label is the key and the term_list is the value
+    concept_dict = dict(zip(df["label"], df["term"]))
 
-    return concepts
+    return concept_dict
