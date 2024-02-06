@@ -264,6 +264,40 @@ concepts = {
 }
 ```
 
+#### Concept dictionary from external source
+
+When matching entities, it is possible to work with external lists of concepts (e.g. from a medical thesaurus such as UMLS) through the `concept_dict_creator` function. This allows you to import a csv-file with a concept & term combination on each line, with columns to set the above described options for a `Term` (e.g. attribute, proximity, fuzzy). 
+
+The columns to set `Term` options are optional. If you want to use them, they should come after the concept & term columns and their names should match the available `Term` attributes.
+
+If the csv-file looks like:
+| **concept** | **term** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** |
+|--|--|--|--|--|--|--|
+| prematuriteit | prematuriteit |
+| prematuriteit | <p3 | | 1 | 1 | 2 | |
+| hypotensie | hypotensie |
+| hypotensie | bd verlaagd | | 1 |
+| veneus_infarct | veneus infarct |
+| veneus_infarct | VI | TEXT |
+
+It will result in the following concept dictionary:
+```python
+{
+    "prematuriteit": [
+        "prematuriteit",
+        Term("<p3", proximity=1, fuzzy=1, fuzzy_min_len=2),
+    ],
+    "hypotensie": [
+        "hypotensie",
+        Term("bd verlaagd", proximity=1)
+    ],
+    "veneus_infarct": [
+        "veneus infarct",
+        Term("VI", attr="TEXT")
+    ]
+}
+```
+
 ### Qualifier detection
 
 After finding entities, it"s often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Affirmed` for `Negation`).   

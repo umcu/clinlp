@@ -1,0 +1,3 @@
+concept,term,attr,proximity,fuzzy,fuzzy_min_len,pseudo
+C1,prematuur,,,,,
+C1,prematuriteit,TEXT,1,1,5,False

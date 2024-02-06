@@ -1,8 +1,9 @@
+import pandas as pd
 import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.entity import EntityMatcher, Term
+from clinlp.entity import EntityMatcher, Term, create_concept_dict, create_term
 
 
 @pytest.fixture
@@ -275,3 +276,37 @@ class TestClinlpNer:
             ("erytrocyten", 2, 3, "anemie"),
             ("transfusie", 3, 4, "anemie"),
         ]
+
+
+class TestCdc:
+    def __init__(self) -> None:
+        self.path = "tests/data/concept_examples.csv"
+
+    def test_create_term(self):
+        df = pd.read_csv(self.path)
+
+        assert create_term(df.iloc[1], "term") == Term(
+            "prematuriteit",
+            attr="TEXT",
+            proximity=1,
+            fuzzy=1,
+            fuzzy_min_len=5,
+            pseudo=False,
+        )
+
+    def test_create_concept_dict(self):
+        concepts = create_concept_dict(self.path)
+
+        assert concepts == {
+            "C1": [
+                "prematuur",
+                Term(
+                    phrase="prematuriteit",
+                    attr="TEXT",
+                    proximity=1,
+                    fuzzy=1,
+                    fuzzy_min_len=5,
+                    pseudo=False,
+                ),
+            ]
+        }

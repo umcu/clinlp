@@ -2,10 +2,10 @@ from dataclasses import dataclass
 from typing import Optional
 
 import intervaltree as ivt
+import pandas as pd
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
-import pandas as pd
 
 from clinlp.util import clinlp_autocomponent
 
@@ -216,39 +216,37 @@ class EntityMatcher:
         return doc
 
 
-def create_term(row, col_term):
+def create_term(row: pd.Series, col_term: str) -> Term:
     """Creates a Term object with available attributes."""
-    term = Term("")
+    possible_attrs = list(Term.__init__.__code__.co_varnames[1:])
+    given_attrs = {}
     for attr, value in row.items():
         if attr == col_term:
-            term.phrase = value
-        if value == value:
-            if value == "True":
-                value = True
-            elif value == "False":
-                value = False
-            elif isinstance(value, float):
-                value = int(value)
-            setattr(term, attr, value)
-    return term
+            given_attrs[possible_attrs[0]] = value
+        elif attr in possible_attrs:
+            if value == value:
+                if value == "True":
+                    value = True
+                elif value == "False":
+                    value = False
+                elif isinstance(value, float):
+                    value = int(value)
+                given_attrs[attr] = value
+    return Term(**given_attrs)
 
-def concept_dict_creator(data, col_label, col_term):
+
+def create_concept_dict(
+    path: str, col_concept: str = "concept", col_term: str = "term"
+) -> dict:
     """Transforms source concept data to a dictionary that the clinlp entity matcher can read.
-    Takes a csv file where each row is a distinct word or sentence (term) that belongs to an entity label (label)."""
+    Takes the path to a csv file where each row is a distinct word or sentence (term) that belongs to a concept.
+    """
 
-    df = pd.read_csv(data)
-    # Makes Terms of rows where an attribute is specified
-    ## Make a list of all attribute columns, assuming the first two columns are entity label and term
-    attr_cols = list(df.columns[2:])
-    ## Find rows where one or more attribute columns are filled and replace the value in the 'term' column with a Term class with these attributes
-    df.loc[df[attr_cols].notna().any(axis=1), col_term] = df[df[attr_cols].notna().any(axis=1)].apply(create_term, col_term=col_term, axis=1)
-    ## Drop the attribute columns
-    df.drop(columns=attr_cols, inplace=True)
-    # Groups names as term_list by their label
-    df = df.groupby(col_label)[col_term].agg(list).reset_index()
-    # Renames the columns for easy access in other methods
-    df.columns = ["label", "term"]
-    # Creates the concept dictionary where the label is the key and the term_list is the value
-    concept_dict = dict(zip(df["label"], df["term"]))
+    df = pd.read_csv(path)
+    cols_config = list(Term.__init__.__code__.co_varnames[2:])
+    df.loc[df[cols_config].notna().any(axis=1), col_term] = df[
+        df[cols_config].notna().any(axis=1)
+    ].apply(create_term, col_term=col_term, axis=1)
+    df = df.groupby(col_concept)[col_term].agg(list).reset_index()
 
-    return concept_dict
+    return dict(zip(df["concept"], df["term"]))
