@@ -224,7 +224,7 @@ def create_term(row: pd.Series, col_term: str) -> Term:
         if attr == col_term:
             given_attrs[possible_attrs[0]] = value
         elif attr in possible_attrs:
-            if value == None:
+            if value == value:
                 if value == "True":
                     value = True
                 elif value == "False":
