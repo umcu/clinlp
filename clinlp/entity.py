@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import Optional
 
 import intervaltree as ivt
+import pandas as pd
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
@@ -50,6 +51,43 @@ class Term:
                     spacy_pattern.append({"OP": "?"})
 
         return spacy_pattern
+
+
+def create_term_helper(row: pd.Series, col_term: str) -> Term:
+    """Creates a Term object with available attributes."""
+    possible_attrs = list(Term.__init__.__code__.co_varnames[1:])
+    given_attrs = {}
+    for attr, value in row.items():
+        if attr == col_term:
+            given_attrs[possible_attrs[0]] = value
+        elif attr in possible_attrs:
+            if value == value:
+                if value == "True":
+                    value = True
+                elif value == "False":
+                    value = False
+                elif isinstance(value, float):
+                    value = int(value)
+                given_attrs[attr] = value
+    return Term(**given_attrs)
+
+
+def create_concept_dict(
+    path: str, col_concept: str = "concept", col_term: str = "term"
+) -> dict:
+    """Transforms source concept data to a dictionary that the clinlp
+    entity matcher can read. Takes the path to a csv file where each
+    row is a distinct word or sentence (term) that belongs to a concept.
+    """
+
+    df = pd.read_csv(path)
+    cols_config = list(Term.__init__.__code__.co_varnames[2:])
+    df.loc[df[cols_config].notna().any(axis=1), col_term] = df[
+        df[cols_config].notna().any(axis=1)
+    ].apply(create_term_helper, col_term=col_term, axis=1)
+    df = df.groupby(col_concept)[col_term].agg(list).reset_index()
+
+    return dict(zip(df["concept"], df["term"]))
 
 
 @Language.factory(

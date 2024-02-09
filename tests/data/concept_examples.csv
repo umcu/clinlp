@@ -1,0 +1,7 @@
+concept,term,attr,proximity,fuzzy,fuzzy_min_len,pseudo
+prematuriteit,prematuriteit,,,,,
+prematuriteit,<p3,TEXT,1,1,2,False
+hypotensie,hypotensie,,,,,
+hypotensie,"bd verlaagd",,1,,,
+veneus_infarct,"veneus infarct",,,,,
+veneus_infarct,VI,TEXT,,,,

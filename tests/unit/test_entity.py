@@ -1,8 +1,9 @@
+import pandas as pd
 import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.entity import EntityMatcher, Term
+from clinlp.entity import EntityMatcher, Term, create_concept_dict, create_term_helper
 
 
 @pytest.fixture
@@ -55,6 +56,71 @@ class TestTerm:
         t = Term(phrase="diabetes", pseudo=True)
 
         assert t.to_spacy_pattern(nlp) == [{"TEXT": "diabetes"}]
+
+
+class TestCdc:
+    def __init__(self) -> None:
+        self.path = "tests/data/concept_examples.csv"
+
+    def test_create_term_helper(self):
+        df = pd.read_csv(self.path)
+
+        assert create_term_helper(df.iloc[1], "term") == Term(
+            phrase="<p3",
+            attr="TEXT",
+            proximity=1,
+            fuzzy=1,
+            fuzzy_min_len=2,
+            pseudo=False,
+        )
+
+        assert create_term_helper(df.iloc[3], "term") == Term(
+            phrase="bd verlaagd",
+            attr=None,
+            proximity=1,
+            fuzzy=None,
+            fuzzy_min_len=None,
+            pseudo=None,
+        )
+
+    def test_create_concept_dict(self):
+        concepts = create_concept_dict(self.path)
+
+        assert concepts == {
+            "hypotensie": [
+                "hypotensie",
+                Term(
+                    phrase="bd verlaagd",
+                    attr=None,
+                    proximity=1,
+                    fuzzy=None,
+                    fuzzy_min_len=None,
+                    pseudo=None,
+                ),
+            ],
+            "prematuriteit": [
+                "prematuriteit",
+                Term(
+                    phrase="<p3",
+                    attr="TEXT",
+                    proximity=1,
+                    fuzzy=1,
+                    fuzzy_min_len=2,
+                    pseudo=False,
+                ),
+            ],
+            "veneus_infarct": [
+                "veneus infarct",
+                Term(
+                    phrase="VI",
+                    attr="TEXT",
+                    proximity=None,
+                    fuzzy=None,
+                    fuzzy_min_len=None,
+                    pseudo=None,
+                ),
+            ],
+        }
 
 
 class TestClinlpNer:
