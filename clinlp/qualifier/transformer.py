@@ -29,8 +29,8 @@ _defaults_experiencer_transformer = {
     "strip_entities": True,
     "placeholder": None,
     "probas_aggregator": statistics.mean,
-    "negation_threshold": 0.5,
-    "affirmed_threshold": 0.5,
+    "patient_threshold": 0.5,
+    "other_threshold": 0.5,
 }
 
 @Language.factory(
