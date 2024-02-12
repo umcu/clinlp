@@ -266,11 +266,11 @@ concepts = {
 
 #### Concept dictionary from external source
 
-When matching entities, it is possible to load external lists of concepts (e.g. from a medical thesaurus such as UMLS) from `csv` through the `concept_dict_creator` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes, for example:
+When matching entities, it is possible to load external lists of concepts (e.g. from a medical thesaurus such as UMLS) from `csv` through the `concept_dict_creator` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
-| **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** |
-|--|--|--|--|--|--|--|
-| prematuriteit | prematuriteit |
+| **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** | **comment** |
+|--|--|--|--|--|--|--|--|
+| prematuriteit | prematuriteit | | | | | | some comment |
 | prematuriteit | <p3 | | 1 | 1 | 2 | |
 | hypotensie | hypotensie |
 | hypotensie | bd verlaagd | | 1 |
