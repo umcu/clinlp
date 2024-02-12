@@ -1,8 +1,9 @@
-from dataclasses import dataclass
 from typing import Optional
 
 import intervaltree as ivt
+import numpy as np
 import pandas as pd
+import pydantic
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
@@ -19,14 +20,20 @@ _defaults_clinlp_ner = {
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 
-@dataclass
-class Term:
+class Term(pydantic.BaseModel):
     phrase: str
     attr: Optional[str] = None
     proximity: Optional[int] = None
     fuzzy: Optional[int] = None
     fuzzy_min_len: Optional[int] = None
     pseudo: Optional[bool] = None
+
+    model_config = {"extra": "ignore"}
+
+    def __init__(self, phrase: str, **kwargs):
+        """This init makes sure Term accepts phrase as a positional argument,
+        which is more readable in large concept lists."""
+        super().__init__(phrase=phrase, **kwargs)
 
     def to_spacy_pattern(self, nlp: Language):
         fields = {
@@ -53,39 +60,26 @@ class Term:
         return spacy_pattern
 
 
-def create_term_helper(row: pd.Series, col_term: str) -> Term:
-    """Creates a Term object with available attributes."""
-    possible_attrs = list(Term.__init__.__code__.co_varnames[1:])
-    given_attrs = {}
-    for attr, value in row.items():
-        if attr == col_term:
-            given_attrs[possible_attrs[0]] = value
-        elif attr in possible_attrs:
-            if value == value:
-                if value == "True":
-                    value = True
-                elif value == "False":
-                    value = False
-                elif isinstance(value, float):
-                    value = int(value)
-                given_attrs[attr] = value
-    return Term(**given_attrs)
-
-
-def create_concept_dict(
-    path: str, col_concept: str = "concept", col_term: str = "term"
-) -> dict:
+def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     """Transforms source concept data to a dictionary that the clinlp
     entity matcher can read. Takes the path to a csv file where each
     row is a distinct word or sentence (term) that belongs to a concept.
     """
 
-    df = pd.read_csv(path)
-    cols_config = list(Term.__init__.__code__.co_varnames[2:])
-    df.loc[df[cols_config].notna().any(axis=1), col_term] = df[
-        df[cols_config].notna().any(axis=1)
-    ].apply(create_term_helper, col_term=col_term, axis=1)
-    df = df.groupby(col_concept)[col_term].agg(list).reset_index()
+    df = pd.read_csv(path).replace([np.nan], [None])
+
+    try:
+        df["term"] = df.apply(lambda x: Term(**x.to_dict()), axis=1)
+    except pydantic.ValidationError as e:
+
+        msg = (
+            "There is a value in your input csv which cannot be"
+            "parsed. Please refer to the above error for more details."
+        )
+
+        raise RuntimeError(msg) from e
+
+    df = df.groupby(concept_col)["term"].apply(list).reset_index()
 
     return dict(zip(df["concept"], df["term"]))
 
@@ -147,7 +141,7 @@ class EntityMatcher:
                         )
                     else:
                         concept_term = Term(
-                            concept_term, **self.term_args
+                            phrase=concept_term, **self.term_args
                         ).to_spacy_pattern(self.nlp)
                         self._matcher.add(key=identifier, patterns=[concept_term])
 

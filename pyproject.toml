@@ -12,6 +12,7 @@ intervaltree = "^3.1.0"
 transformers = {extras = ["torch"], version = "^4.30.2"}
 makefun = "^1.15.1"
 pandas = "^2.2.0"
+pydantic = "^2.6.1"
 
 [tool.poetry.extras]
 transformers = ["transformers"]

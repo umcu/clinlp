@@ -1,4 +1,4 @@
-concept,term,attr,proximity,fuzzy,fuzzy_min_len,pseudo
+concept,phrase,attr,proximity,fuzzy,fuzzy_min_len,pseudo
 prematuriteit,prematuriteit,,,,,
 prematuriteit,<p3,TEXT,1,1,2,False
 hypotensie,hypotensie,,,,,
