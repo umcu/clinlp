@@ -71,7 +71,6 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     try:
         df["term"] = df.apply(lambda x: Term(**x.to_dict()), axis=1)
     except pydantic.ValidationError as e:
-
         msg = (
             "There is a value in your input csv which cannot be"
             "parsed. Please refer to the above error for more details."

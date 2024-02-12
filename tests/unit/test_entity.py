@@ -56,22 +56,25 @@ class TestTerm:
 
         assert t.to_spacy_pattern(nlp) == [{"TEXT": "diabetes"}]
 
-
     def test_term_from_dict(self):
-        t = Term(**{
-            "phrase": "Diabetes",
-            "fuzzy": 1,
-        })
+        t = Term(
+            **{
+                "phrase": "Diabetes",
+                "fuzzy": 1,
+            }
+        )
 
         assert t.phrase == "Diabetes"
         assert t.fuzzy == 1
 
     def test_term_from_dict_with_extra_items(self):
-        t = Term(**{
-            "phrase": "Diabetes",
-            "fuzzy": 1,
-            "comment": "This term refers to diabetes"
-        })
+        t = Term(
+            **{
+                "phrase": "Diabetes",
+                "fuzzy": 1,
+                "comment": "This term refers to diabetes",
+            }
+        )
 
         assert t.phrase == "Diabetes"
         assert t.fuzzy == 1
@@ -80,10 +83,7 @@ class TestTerm:
             _ = t.comment
 
 
-
-
 class TestCreateConceptDict:
-
     def test_create_concept_dict(self):
         concepts = create_concept_dict("tests/data/concept_examples.csv")
 
@@ -103,7 +103,7 @@ class TestCreateConceptDict:
                     proximity=1,
                     fuzzy=1,
                     fuzzy_min_len=2,
-                    pseudo=False
+                    pseudo=False,
                 ),
             ],
             "veneus_infarct": [
