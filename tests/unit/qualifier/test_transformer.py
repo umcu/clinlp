@@ -213,7 +213,7 @@ class TestExperiencerTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Experiencer.Other"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Experiencer.Patient"}
 
     def test_detect_qualifiers_referring_to_other(self, nlp):
         n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
