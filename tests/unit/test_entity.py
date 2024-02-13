@@ -1,9 +1,8 @@
-import pandas as pd
 import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.entity import EntityMatcher, Term, create_concept_dict, create_term_helper
+from clinlp.entity import EntityMatcher, Term, create_concept_dict
 
 
 @pytest.fixture
@@ -57,49 +56,47 @@ class TestTerm:
 
         assert t.to_spacy_pattern(nlp) == [{"TEXT": "diabetes"}]
 
-
-class TestCdc:
-    def __init__(self) -> None:
-        self.path = "tests/data/concept_examples.csv"
-
-    def test_create_term_helper(self):
-        df = pd.read_csv(self.path)
-
-        assert create_term_helper(df.iloc[1], "term") == Term(
-            phrase="<p3",
-            attr="TEXT",
-            proximity=1,
-            fuzzy=1,
-            fuzzy_min_len=2,
-            pseudo=False,
+    def test_term_from_dict(self):
+        t = Term(
+            **{
+                "phrase": "Diabetes",
+                "fuzzy": 1,
+            }
         )
 
-        assert create_term_helper(df.iloc[3], "term") == Term(
-            phrase="bd verlaagd",
-            attr=None,
-            proximity=1,
-            fuzzy=None,
-            fuzzy_min_len=None,
-            pseudo=None,
+        assert t.phrase == "Diabetes"
+        assert t.fuzzy == 1
+
+    def test_term_from_dict_with_extra_items(self):
+        t = Term(
+            **{
+                "phrase": "Diabetes",
+                "fuzzy": 1,
+                "comment": "This term refers to diabetes",
+            }
         )
 
+        assert t.phrase == "Diabetes"
+        assert t.fuzzy == 1
+
+        with pytest.raises(AttributeError):
+            _ = t.comment
+
+
+class TestCreateConceptDict:
     def test_create_concept_dict(self):
-        concepts = create_concept_dict(self.path)
+        concepts = create_concept_dict("tests/data/concept_examples.csv")
 
         assert concepts == {
             "hypotensie": [
-                "hypotensie",
+                Term("hypotensie"),
                 Term(
                     phrase="bd verlaagd",
-                    attr=None,
                     proximity=1,
-                    fuzzy=None,
-                    fuzzy_min_len=None,
-                    pseudo=None,
                 ),
             ],
             "prematuriteit": [
-                "prematuriteit",
+                Term("prematuriteit"),
                 Term(
                     phrase="<p3",
                     attr="TEXT",
@@ -110,14 +107,10 @@ class TestCdc:
                 ),
             ],
             "veneus_infarct": [
-                "veneus infarct",
+                Term("veneus infarct"),
                 Term(
                     phrase="VI",
                     attr="TEXT",
-                    proximity=None,
-                    fuzzy=None,
-                    fuzzy_min_len=None,
-                    pseudo=None,
                 ),
             ],
         }

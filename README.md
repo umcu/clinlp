@@ -266,21 +266,19 @@ concepts = {
 
 #### Concept dictionary from external source
 
-When matching entities, it is possible to work with external lists of concepts (e.g. from a medical thesaurus such as UMLS) through the `concept_dict_creator` function. This allows you to import a csv-file with a concept & term combination on each line, with columns to set the above described options for a `Term` (e.g. attribute, proximity, fuzzy). 
+When matching entities, it is possible to load external lists of concepts (e.g. from a medical thesaurus such as UMLS) from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
-The columns to set `Term` options are optional. If you want to use them, they should come after the concept & term columns and their names should match the available `Term` attributes.
-
-If the csv-file looks like:
-| **concept** | **term** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** |
-|--|--|--|--|--|--|--|
-| prematuriteit | prematuriteit |
+| **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** | **comment** |
+|--|--|--|--|--|--|--|--|
+| prematuriteit | prematuriteit | | | | | | some comment |
 | prematuriteit | <p3 | | 1 | 1 | 2 | |
 | hypotensie | hypotensie |
 | hypotensie | bd verlaagd | | 1 |
 | veneus_infarct | veneus infarct |
 | veneus_infarct | VI | TEXT |
 
-It will result in the following concept dictionary:
+Will result in the following concept dictionary:
+
 ```python
 {
     "prematuriteit": [
