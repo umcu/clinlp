@@ -7,7 +7,9 @@
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
 
-If you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to get in touch (via [email](mailto:analytics@umcutrecht.nl) or by creating an [issue](https://github.com/umcu/clinlp/issues/new)). You can find the [documentation](#documentation), [roadmap](#roadmap), the overarching [principles and goals](#principles-and-goals) and how to [contribute](#contributing) futher down :arrow_down:.
+If you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to get in touch (via [email](mailto:analytics@umcutrecht.nl) or by creating an [issue](https://github.com/umcu/clinlp/issues/new)). `clinlp` is inteded as a community project, and we would love to hear from you. 
+
+This readme contains information on [getting started](#getting-started), how to [cite](#citing) this work, some basic [documentation](#documentation), the [roadmap](#roadmap), the overarching [principles and goals](#principles-and-goals) and how to [contribute](#contributing) :arrow_down:.
 
 ## Getting started
 
