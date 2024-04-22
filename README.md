@@ -7,11 +7,9 @@
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
 
-Read the [principles and goals](#principles-and-goals), futher down :arrow_down:
+If you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to get in touch (via [email](mailto:analytics@umcutrecht.nl) or by creating an [issue](https://github.com/umcu/clinlp/issues/new)). `clinlp` is inteded as a community project, and we would love to hear from you. 
 
-## Contact and contributing
-
-`clinlp` is very much still being shaped, so if you are enthusiastic about using or contributing to `clinlp`, please don't hesitate to get in touch ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new)). We would be very happy to discuss your ideas and needs, whether its from the perspective of an (end) user, engineer or clinician, and formulate a roadmap with next steps together. 
+This readme contains information on [getting started](#getting-started), how to [cite](#citing) this work, some basic [documentation](#documentation), the [roadmap](#roadmap), the overarching [principles and goals](#principles-and-goals) and how to [contribute](#contributing) :arrow_down:.
 
 ## Getting started
 
@@ -340,6 +338,14 @@ We hope to extend `clinlp` with new functionality and more complete documentatio
 * Checking the source code 
 * Getting in touch ([email](mailto:analytics@umcutrecht.nl) | [issue](https://github.com/umcu/clinlp/issues/new))
 
+## Roadmap
+
+We keep track of work being done on this project (now and in the future) using GitHub Projects, on this page: [`clinlp` development roadmap](https://github.com/orgs/umcu/projects/3/views/1). All issues created automatically appear on the roadmap, where they will be triaged and assigned. 
+
+A more high-level overview of the types of NLP tasks that might be implemented in `clinlp`, with those in the current release marked in green, can be found below. This list is non-exhaustive. 
+
+![clinlp-features](media/clinlp-features-v0.6.png)
+
 ## Principles and goals
 
 Functional:
@@ -367,3 +373,12 @@ Overarching goals:
 * Enable easier (re)use/valorization of efforts
 * Help mature the field of Dutch Clinical NLP
 * Help develop the Dutch Clinical NLP community
+
+## Contributing
+
+`clinlp` is intented as a community project, and as such your contribution is very welcome. We hope to set up some more extensive contributing guidelines in the near future. For now, here is some basic information for starters: 
+
+* PRs are welcome, but if you are planning extensive changes, please do get in touch beforehand. This holds both for your own ideas, and for items already on our roadmap. 
+* Keep in mind that `clinlp` consists of **generic** components that process **clinical** text written in **Dutch**. If your contribution does not meet those three criteria, a separate release might be a better option. 
+* We aim for production ready code, that is well tested, scalable, maintainable, SOLID, etc., but we can help with refactoring code to reach that point. 
+* We try to use [issues](https://github.com/umcu/clinlp/issues/new) for communication as much as possible, but you can reach the maintainers by [e-mail](mailto:analytics@umcutrecht.nl) if that doesn't work.
