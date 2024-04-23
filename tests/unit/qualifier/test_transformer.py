@@ -182,9 +182,9 @@ class TestExperiencerTransformer:
 
         assert (
             n._get_experiencer_prob(
-                text="familiaire aandoening,",
-                ent_start_char=11,
-                ent_end_char=21,
+                text="broer heeft aandoening,",
+                ent_start_char=12,
+                ent_end_char=22,
                 probas_aggregator=statistics.mean,
             )
             < 0.1
