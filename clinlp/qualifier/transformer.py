@@ -14,7 +14,10 @@ from clinlp.qualifier.qualifier import (
 from clinlp.util import clinlp_autocomponent
 
 TRANSFORMER_NEGATION_REPO = "UMCU/MedRoBERTa.nl_NegationDetection"
+TRANSFORMER_NEGATION_REVISION = "83068ba132b6ce38e9f668c1e3ab636f79b774d3"
+
 TRANSFORMER_EXPERIENCER_REPO = "UMCU/MedRoBERTa.nl_Experiencer"
+TRANSFORMER_EXPERIENCER_REVISION = "d9318c4b2b0ab0dfe50afedca58319b2369f1a71"
 
 _defaults_negation_transformer = {
     "token_window": 32,
@@ -65,8 +68,8 @@ class NegationTransformer(QualifierDetector):
         self.negation_threshold = negation_threshold
         self.affirmed_threshold = affirmed_threshold
 
-        self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_NEGATION_REPO)
-        self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_NEGATION_REPO)
+        self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_NEGATION_REPO, revision=TRANSFORMER_NEGATION_REVISION)
+        self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_NEGATION_REPO, revision=TRANSFORMER_NEGATION_REVISION)
 
     @property
     def qualifier_factories(self) -> dict[str, QualifierFactory]:
@@ -194,8 +197,8 @@ class ExperiencerTransformer(QualifierDetector):
         self.patient_threshold = patient_threshold
         self.other_threshold = other_threshold
 
-        self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_EXPERIENCER_REPO)
-        self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_EXPERIENCER_REPO)
+        self.tokenizer = AutoTokenizer.from_pretrained(TRANSFORMER_EXPERIENCER_REPO, revision=TRANSFORMER_EXPERIENCER_REVISION)
+        self.model = RobertaForTokenClassification.from_pretrained(TRANSFORMER_EXPERIENCER_REPO, revision=TRANSFORMER_EXPERIENCER_REVISION)
 
     @property
     def qualifier_factories(self) -> dict[str, QualifierFactory]:
@@ -288,4 +291,3 @@ class ExperiencerTransformer(QualifierDetector):
                     ent,
                     self.qualifier_factories["Experiencer"].create("Unknown", prob=prob),
                 )
-
