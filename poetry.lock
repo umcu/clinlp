@@ -1044,6 +1044,7 @@ files = [
 numpy = [
     {version = ">=1.22.4", markers = "python_version < \"3.11\""},
     {version = ">=1.23.2", markers = "python_version == \"3.11\""},
+    {version = ">=1.26.0", markers = "python_version >= \"3.12\""},
 ]
 python-dateutil = ">=2.8.2"
 pytz = ">=2020.1"
@@ -2379,5 +2380,5 @@ transformers = ["transformers"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = ">=3.10,<3.12"
-content-hash = "3f524655c2934f53fe9c9af8ed5a2e226a8975f0c89b47242dc6f6424991bdfb"
+python-versions = ">=3.10,<3.13"
+content-hash = "d753edb5085e06210ecfc6391c89579cdfea14ccbea1e919af29c11f88eb7a1c"
