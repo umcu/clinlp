@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.6.5 (2024-02-13)
 
 ### Added 
-* A transformer module for the entity classification of Experiencer (Patient/Other)
+* A component for transformer-based detection of Experiencer qualifiers (Patient/Other) (`clinlp_experiencer_transformer`)
 
 ## 0.6.4 (2024-02-13)
 

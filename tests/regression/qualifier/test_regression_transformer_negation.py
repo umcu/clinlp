@@ -23,6 +23,7 @@ def nlp():
 
     return nlp
 
+
 class TestRegressionTransformer:
     def test_qualifier_cases(self, nlp):
         with open("tests/data/qualifier_cases.json", "rb") as file:
