@@ -85,26 +85,39 @@ class TestQualifierTransformer:
             6,
         )
 
+    def test_prepare_ent(self, nlp, text):
+        doc = nlp(text)
+        QualifierTransformer.__abstractmethods__ = set()
+        qt = QualifierTransformer(token_window=3, placeholder="X")
+
+        text, ent_start_char, ent_end_char = qt._prepare_ent(doc.ents[0])
+
+        assert text == "patient had geen X, ondanks dat"
+        assert ent_start_char == 17
+        assert ent_end_char == 18
+
 
 class TestNegationTransformer:
-    def test_get_negation_prob(self, nlp):
+    def test_predict(self, nlp):
         n = NegationTransformer(nlp=nlp)
 
         assert (
-            n._get_negation_prob(
+            n._predict(
                 text="geen hoesten,",
                 ent_start_char=5,
                 ent_end_char=11,
-                probas_aggregator=statistics.mean,
+                prob_indices=[0, 2],
+                prob_aggregator=statistics.mean,
             )
             > 0.9
         )
         assert (
-            n._get_negation_prob(
+            n._predict(
                 text="wel hoesten,",
                 ent_start_char=4,
                 ent_end_char=10,
-                probas_aggregator=statistics.mean,
+                prob_indices=[0, 2],
+                prob_aggregator=statistics.mean,
             )
             < 0.1
         )
@@ -135,26 +148,28 @@ class TestNegationTransformer:
 
 
 class TestExperiencerTransformer:
-    def test_get_patient_prob(self, nlp):
+    def test_predict(self, nlp):
         n = ExperiencerTransformer(nlp=nlp)
 
         assert (
-            n._get_patient_prob(
+            n._predict(
                 text="broer heeft aandoening,",
                 ent_start_char=12,
                 ent_end_char=22,
-                probas_aggregator=statistics.mean,
+                prob_indices=[1, 3],
+                prob_aggregator=statistics.mean,
             )
-            < 0.1
+            > 0.9
         )
         assert (
-            n._get_patient_prob(
+            n._predict(
                 text="patient heeft aandoening,",
                 ent_start_char=14,
                 ent_end_char=24,
-                probas_aggregator=statistics.mean,
+                prob_indices=[1, 3],
+                prob_aggregator=statistics.mean,
             )
-            > 0.9
+            < 0.1
         )
 
     def test_detect_qualifiers_1(self, nlp):
