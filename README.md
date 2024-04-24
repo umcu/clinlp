@@ -318,9 +318,9 @@ A custom set of rules, including different types of qualifiers, can easily be de
 cm = nlp.add_pipe("clinlp_context_algorithm", config={"rules": "/path/to/my_own_ruleset.json"})
 ```
 
-#### Transformer based negation detection
+#### Transformer based detection
 
-`clinlp` also includes a wrapper around the transformer based negation detector, as described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/MedRoBERTa.nl_NegationDetection). It is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
+`clinlp` also includes a wrapper around some trained transformer models for detector qualifiers, including the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformers can be found on [huggingface](https://huggingface.co/UMCU/). The negation detector for instnace is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
 
 First, install the additional dependencies:
 
@@ -328,10 +328,11 @@ First, install the additional dependencies:
 pip install "clinlp[transformers]"
 ```
 
-Then add it using:
+Currently, the following components are available:
 
 ```python
-tn = nlp.add_pipe("clinlp_negation_transformer")
+_ = nlp.add_pipe("clinlp_negation_transformer")
+_ = nlp.add_pipe("clinlp_experiencer_transformer")
 ```
 
 Some configuration options, like the number of tokens to consider, can be specified in the `config` argument. 
