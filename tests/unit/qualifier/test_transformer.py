@@ -4,7 +4,11 @@ import pytest
 import spacy
 
 import clinlp  # noqa
-from clinlp.qualifier import NegationTransformer, ExperiencerTransformer
+from clinlp.qualifier import (
+    ExperiencerTransformer,
+    NegationTransformer,
+    QualifierTransformer,
+)
 from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
@@ -22,60 +26,67 @@ def text():
     return "De patient had geen SYMPTOOM, ondanks dat zij dit eerder wel had."
 
 
-class TestNegationTransformer:
-    def test_get_ent_window(self, nlp, text):
+class TestQualifierTransformer:
+    def test_get_ent_window(self, text, nlp):
         doc = nlp(text)
         span = doc.ents[0]
-        n = NegationTransformer(nlp=nlp)
 
-        assert n._get_ent_window(span, token_window=1) == ("geen SYMPTOOM,", 5, 13)
-        assert n._get_ent_window(span, token_window=2) == (
+        assert QualifierTransformer._get_ent_window(span, token_window=1) == (
+            "geen SYMPTOOM,",
+            5,
+            13,
+        )
+        assert QualifierTransformer._get_ent_window(span, token_window=2) == (
             "had geen SYMPTOOM, ondanks",
             9,
             17,
         )
-        assert n._get_ent_window(span, token_window=32) == (
+        assert QualifierTransformer._get_ent_window(span, token_window=32) == (
             "De patient had geen SYMPTOOM, ondanks dat zij dit eerder wel had.",
             20,
             28,
         )
 
-    def test_trim_ent_boundaries(self, nlp):
-        n = NegationTransformer(nlp=nlp)
-
-        assert n._trim_ent_boundaries("geen SYMPTOOM,", 5, 13) == (
+    def test_trim_ent_boundaries(self):
+        assert QualifierTransformer._trim_ent_boundaries("geen SYMPTOOM,", 5, 13) == (
             "geen SYMPTOOM,",
             5,
             13,
         )
-        assert n._trim_ent_boundaries("geen SYMPTOOM,", 4, 13) == (
+        assert QualifierTransformer._trim_ent_boundaries("geen SYMPTOOM,", 4, 13) == (
             "geen SYMPTOOM,",
             5,
             13,
         )
-        assert n._trim_ent_boundaries("had geen SYMPTOOM, ondanks", 8, 17) == (
+        assert QualifierTransformer._trim_ent_boundaries(
+            "had geen SYMPTOOM, ondanks", 8, 17
+        ) == (
             "had geen SYMPTOOM, ondanks",
             9,
             17,
         )
-        assert n._trim_ent_boundaries("had geen SYMPTOOM, ondanks", 8, 19) == (
+        assert QualifierTransformer._trim_ent_boundaries(
+            "had geen SYMPTOOM, ondanks", 8, 19
+        ) == (
             "had geen SYMPTOOM, ondanks",
             9,
             18,
         )
 
-    def test_fill_ent_placeholder(self, nlp):
-        n = NegationTransformer(nlp=nlp)
-
-        assert n._fill_ent_placeholder(
+    def test_fill_ent_placeholder(self):
+        assert QualifierTransformer._fill_ent_placeholder(
             "geen SYMPTOOM,", 5, 13, placeholder="SYMPTOOM"
         ) == ("geen SYMPTOOM,", 5, 13)
-        assert n._fill_ent_placeholder("geen SYMPTOOM,", 5, 13, placeholder="X") == (
+        assert QualifierTransformer._fill_ent_placeholder(
+            "geen SYMPTOOM,", 5, 13, placeholder="X"
+        ) == (
             "geen X,",
             5,
             6,
         )
 
+
+class TestNegationTransformer:
     def test_get_negation_prob(self, nlp):
         n = NegationTransformer(nlp=nlp)
 
@@ -124,64 +135,11 @@ class TestNegationTransformer:
 
 
 class TestExperiencerTransformer:
-    def test_get_ent_window(self, nlp, text):
-        doc = nlp(text)
-        span = doc.ents[0]
-        n = ExperiencerTransformer(nlp=nlp)
-
-        assert n._get_ent_window(span, token_window=1) == ("geen SYMPTOOM,", 5, 13)
-        assert n._get_ent_window(span, token_window=2) == (
-            "had geen SYMPTOOM, ondanks",
-            9,
-            17,
-        )
-        assert n._get_ent_window(span, token_window=32) == (
-            "De patient had geen SYMPTOOM, ondanks dat zij dit eerder wel had.",
-            20,
-            28,
-        )
-
-    def test_trim_ent_boundaries(self, nlp):
-        n = ExperiencerTransformer(nlp=nlp)
-
-        assert n._trim_ent_boundaries("geen SYMPTOOM,", 5, 13) == (
-            "geen SYMPTOOM,",
-            5,
-            13,
-        )
-        assert n._trim_ent_boundaries("geen SYMPTOOM,", 4, 13) == (
-            "geen SYMPTOOM,",
-            5,
-            13,
-        )
-        assert n._trim_ent_boundaries("had geen SYMPTOOM, ondanks", 8, 17) == (
-            "had geen SYMPTOOM, ondanks",
-            9,
-            17,
-        )
-        assert n._trim_ent_boundaries("had geen SYMPTOOM, ondanks", 8, 19) == (
-            "had geen SYMPTOOM, ondanks",
-            9,
-            18,
-        )
-
-    def test_fill_ent_placeholder(self, nlp):
-        n = ExperiencerTransformer(nlp=nlp)
-
-        assert n._fill_ent_placeholder(
-            "geen SYMPTOOM,", 5, 13, placeholder="SYMPTOOM"
-        ) == ("geen SYMPTOOM,", 5, 13)
-        assert n._fill_ent_placeholder("geen SYMPTOOM,", 5, 13, placeholder="X") == (
-            "geen X,",
-            5,
-            6,
-        )
-
-    def test_get_negation_prob(self, nlp):
+    def test_get_patient_prob(self, nlp):
         n = ExperiencerTransformer(nlp=nlp)
 
         assert (
-            n._get_experiencer_prob(
+            n._get_patient_prob(
                 text="broer heeft aandoening,",
                 ent_start_char=12,
                 ent_end_char=22,
@@ -190,7 +148,7 @@ class TestExperiencerTransformer:
             < 0.1
         )
         assert (
-            n._get_experiencer_prob(
+            n._get_patient_prob(
                 text="patient heeft aandoening,",
                 ent_start_char=14,
                 ent_end_char=24,

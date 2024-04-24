@@ -11,4 +11,8 @@ from .qualifier import (
 )
 
 if importlib.util.find_spec("transformers") is not None:
-    from .transformer import NegationTransformer, ExperiencerTransformer
+    from .transformer import (
+        ExperiencerTransformer,
+        NegationTransformer,
+        QualifierTransformer,
+    )

@@ -18,10 +18,12 @@ def nlp():
 
     # recognizer
     _ = nlp.add_pipe(
-        "clinlp_experiencer_transformer", config={"token_window": 32, "placeholder": "X"}
+        "clinlp_experiencer_transformer",
+        config={"token_window": 32, "placeholder": "X"},
     )
 
     return nlp
+
 
 class TestRegressionTransformer:
     def test_qualifier_cases(self, nlp):
