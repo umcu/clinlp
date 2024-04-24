@@ -10,11 +10,11 @@ class TestNormalizerIntegration:
 
         ruler = nlp.add_pipe("entity_ruler", config={"phrase_matcher_attr": "NORM"})
 
-        terms = {"symptomen": ["caries"]}
+        concepts = {"symptomen": ["caries"]}
 
-        for term_description, terms in terms.items():
+        for concept, terms in concepts.items():
             ruler.add_patterns(
-                [{"label": term_description, "pattern": term} for term in terms]
+                [{"label": concept, "pattern": term} for term in terms]
             )
 
         doc = nlp("patient heeft veel last van cariës")

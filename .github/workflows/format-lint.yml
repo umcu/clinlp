@@ -31,11 +31,5 @@ jobs:
     - name: Install dependencies
       run: poetry install --only=dev
 
-    - name: isort
-      run: isort . -c
-
-    - name: flake8
-      run: flake8 .
-
-    - name: black
-      run: black . --check
+    - name: ruff
+      run: ruff check

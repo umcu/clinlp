@@ -10,7 +10,7 @@ ATTR_QUALIFIERS_DICT = f"{ATTR_QUALIFIERS}_dict"
 
 
 def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
-    qualifiers = getattr(getattr(ent, "_"), ATTR_QUALIFIERS)
+    qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
     if qualifiers is None:
         return None
@@ -19,7 +19,7 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
 
 def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
-    qualifiers = getattr(getattr(ent, "_"), ATTR_QUALIFIERS)
+    qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
     if qualifiers is None:
         return None
@@ -33,11 +33,11 @@ Span.set_extension(name=ATTR_QUALIFIERS_DICT, getter=qualifiers_to_dict)
 
 
 def get_qualifiers(entity: Span) -> set["Qualifier"]:
-    return getattr(getattr(entity, "_"), ATTR_QUALIFIERS)
+    return getattr(entity._, ATTR_QUALIFIERS)
 
 
 def set_qualifiers(entity: Span, qualifiers: set["Qualifier"]) -> None:
-    setattr(getattr(entity, "_"), ATTR_QUALIFIERS, qualifiers)
+    setattr(entity._, ATTR_QUALIFIERS, qualifiers)
 
 
 @dataclass(frozen=True)
