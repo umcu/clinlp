@@ -443,7 +443,7 @@ class Clinlp(Language):
                     f"{clinlp_version} installed, potentially leading to unexpected "
                     f"results.",
                     VersionMismatchWarning,
-                    stacklevel=2
+                    stacklevel=2,
                 )
         else:
             meta["clinlp_version"] = clinlp_version

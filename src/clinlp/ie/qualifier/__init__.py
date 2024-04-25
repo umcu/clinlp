@@ -17,7 +17,17 @@ if importlib.util.find_spec("transformers") is not None:
         QualifierTransformer,
     )
 
-__all__ = ['ContextAlgorithm', 'ContextRule', 'ContextRuleDirection', 'ATTR_QUALIFIERS',
-           'Qualifier', 'QualifierDetector', 'QualifierFactory', 'get_qualifiers',
-           'set_qualifiers', 'ExperiencerTransformer', 'NegationTransformer',
-           'QualifierTransformer']
+__all__ = [
+    "ContextAlgorithm",
+    "ContextRule",
+    "ContextRuleDirection",
+    "ATTR_QUALIFIERS",
+    "Qualifier",
+    "QualifierDetector",
+    "QualifierFactory",
+    "get_qualifiers",
+    "set_qualifiers",
+    "ExperiencerTransformer",
+    "NegationTransformer",
+    "QualifierTransformer",
+]

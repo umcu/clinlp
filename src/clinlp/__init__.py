@@ -12,5 +12,12 @@ from .language import Clinlp
 from .normalizer import Normalizer
 from .sentencizer import Sentencizer
 
-__all__ = ['EntityMatcher', 'ContextAlgorithm', 'ExperiencerTransformer',
-           'NegationTransformer', 'Clinlp', 'Normalizer', 'Sentencizer']
+__all__ = [
+    "EntityMatcher",
+    "ContextAlgorithm",
+    "ExperiencerTransformer",
+    "NegationTransformer",
+    "Clinlp",
+    "Normalizer",
+    "Sentencizer",
+]
