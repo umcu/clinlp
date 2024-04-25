@@ -14,9 +14,12 @@ makefun = "^1.15.1"
 pandas = "^2.2.0"
 pydantic = "^2.6.1"
 numpy = "^1.26.4"
+nervaluate = "^0.1.8"
+scikit-learn = "^1.4.2"
 
 [tool.poetry.extras]
 transformers = ["transformers"]
+metrics = ["nervaluate", "scikit-learn"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"
