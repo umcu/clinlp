@@ -291,9 +291,9 @@ class Dataset:
         }
 
         warnings.warn(
-            UserWarning,
             f"Inferred the following qualifier defaults from the majority "
             f"classes: {default_qualifiers}. ",
+            UserWarning,
             stacklevel=2,
         )
 
