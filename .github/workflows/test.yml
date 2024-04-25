@@ -35,7 +35,7 @@ jobs:
     - name: Install package with extras
       run: |
         poetry install --with dev
-        pip install ".[transformers]"  # fails when poetry installs this
+        pip install ".[transformers, metrics]"  # fails when poetry installs this
 
     - name: Test with pytest
       run: |
