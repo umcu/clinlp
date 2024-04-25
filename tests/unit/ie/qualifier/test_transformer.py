@@ -4,12 +4,12 @@ import pytest
 import spacy
 
 import clinlp  # noqa
-from clinlp.qualifier import (
+from clinlp.ie.qualifier import (
     ExperiencerTransformer,
     NegationTransformer,
     QualifierTransformer,
 )
-from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
+from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture

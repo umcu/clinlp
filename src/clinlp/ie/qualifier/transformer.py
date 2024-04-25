@@ -6,7 +6,7 @@ from spacy import Language
 from spacy.tokens import Doc, Span
 from transformers import AutoTokenizer, RobertaForTokenClassification
 
-from clinlp.qualifier.qualifier import (
+from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     QualifierDetector,
     QualifierFactory,

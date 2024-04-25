@@ -5,18 +5,15 @@ import spacy
 from spacy.tokens import Span
 
 import clinlp  # noqa
-from clinlp.qualifier import (
+from clinlp.ie.qualifier import (
+    ATTR_QUALIFIERS,
     Qualifier,
     QualifierDetector,
     QualifierFactory,
     get_qualifiers,
     set_qualifiers,
 )
-from clinlp.qualifier.qualifier import (
-    ATTR_QUALIFIERS,
-    ATTR_QUALIFIERS_DICT,
-    ATTR_QUALIFIERS_STR,
-)
+from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_DICT, ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture
@@ -141,11 +138,11 @@ class TestUnitQualifierFactory:
 
 
 class TestUnitQualifierDetector:
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_create_qualifier_detector(self):
         _ = QualifierDetector()
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_no_init(self, entity, mock_factory):
         qd = QualifierDetector()
         qualifier = mock_factory.create("test1")
@@ -153,14 +150,14 @@ class TestUnitQualifierDetector:
         with pytest.raises(RuntimeError):
             qd.add_qualifier_to_ent(entity, qualifier)
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_default(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
         qualifier = mock_factory.create("test1")
 
         with patch(
-            "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -171,14 +168,14 @@ class TestUnitQualifierDetector:
         assert qualifier in get_qualifiers(entity)
         assert mock_factory.create("test2") not in get_qualifiers(entity)
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_non_default(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
         qualifier = mock_factory.create("test2")
 
         with patch(
-            "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -189,7 +186,7 @@ class TestUnitQualifierDetector:
         assert mock_factory.create("test1") not in get_qualifiers(entity)
         assert qualifier in get_qualifiers(entity)
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_overwrite_nondefault(self, entity, mock_factory):
         qd = QualifierDetector()
         factories = {"test": mock_factory}
@@ -197,7 +194,7 @@ class TestUnitQualifierDetector:
         qualifier_2 = mock_factory.create("test2")
 
         with patch(
-            "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -209,7 +206,7 @@ class TestUnitQualifierDetector:
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 not in get_qualifiers(entity)
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_add_qualifier_multiple(self, entity, mock_factory, mock_factory_2):
         qd = QualifierDetector()
         qualifier_1 = mock_factory.create("test2")
@@ -218,7 +215,7 @@ class TestUnitQualifierDetector:
         factories = {"test1": mock_factory, "test2": mock_factory_2}
 
         with patch(
-            "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -230,14 +227,14 @@ class TestUnitQualifierDetector:
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 in get_qualifiers(entity)
 
-    @patch("clinlp.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
+    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
     def test_initialize_qualifiers(self, entity, mock_factory, mock_factory_2):
         qd = QualifierDetector()
 
         factories = {"test1": mock_factory, "test2": mock_factory_2}
 
         with patch(
-            "clinlp.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)

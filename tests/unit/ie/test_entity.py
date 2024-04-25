@@ -2,7 +2,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.entity import EntityMatcher, Term, create_concept_dict
+from clinlp.ie import EntityMatcher, Term, create_concept_dict
 
 
 @pytest.fixture

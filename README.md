@@ -27,7 +27,7 @@ pip install clinlp
 ### Example
 ```python
 import spacy
-from clinlp import Term
+from clinlp.ie import Term
 
 nlp = spacy.blank("clinlp")
 
@@ -207,7 +207,7 @@ entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1, "fuzz
 The settings above are described at the matcher level, but can all be overridden at the term level by adding a `Term` to a concept, rather than a literal phrase:
 
 ```python
-from clinlp import Term
+from clinlp.ie import Term
 
 concepts = {
     "sepsis": [
