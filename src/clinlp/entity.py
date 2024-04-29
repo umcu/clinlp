@@ -18,8 +18,17 @@ _defaults_clinlp_ner = {
     "fuzzy": 0,
     "fuzzy_min_len": 0,
     "pseudo": False,
+    "fuzzy_no_interpunction": False
 }
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
+
+def _custom_str_compare(Token: str, Pattern: str, max_edit :int)->bool:
+    '''
+        Temporary solution. Too slow for practical usage?
+    '''
+    regex_pattern = f"(?:{Pattern})"+"{"+f"i<={max_edit}\w,"+f"d<={max_edit}\w,"+f"s<={max_edit}\w"+"}"
+    res = False if regex.match(regex_pattern, Token) is None else True
+    return res
 
 
 class Term(pydantic.BaseModel):
@@ -101,6 +110,7 @@ class EntityMatcher:
         fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"],
         fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"],
         pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"],
+        fuzzy_no_interpunction: Optional[bool] = _defaults_clinlp_ner["overlap"],
     ):
         self.nlp = nlp
         self.attr = attr
@@ -111,9 +121,13 @@ class EntityMatcher:
             "fuzzy": fuzzy,
             "fuzzy_min_len": fuzzy_min_len,
             "pseudo": pseudo,
+            "fuzzy_no_interpunction": fuzzy_no_interpunction,
         }
 
-        self._matcher = Matcher(self.nlp.vocab)
+        if fuzzy_no_interpunction:
+            self._matcher = Matcher(self.nlp.vocab, fuzzy_compare=_custom_str_compare)
+        else:
+            self._matcher = Matcher(self.nlp.vocab)
         self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=self.attr)
 
         self._terms = {}
