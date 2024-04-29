@@ -1,5 +1,7 @@
 from typing import Optional
 
+from collections import defaultdict
+
 import intervaltree as ivt
 import numpy as np
 import pandas as pd
@@ -231,16 +233,21 @@ class EntityMatcher:
 
         ents = []
 
+        spanGroups = defaultdict(list)
+        
         for match_id, start, end in pos_matches:
             if not any(
                 self._concepts[match_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
-                ents.append(
-                    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
-                )
+                #ents.append(
+                #    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
+                #)
+                spanGroups[self._concepts[match_id]].append(Span(doc=doc, start=start, end=end))
 
-        ents = self._resolve_ents_overlap(ents)
-        doc.set_ents(entities=ents)
+        #ents = self._resolve_ents_overlap(ents)
+        #doc.set_ents(entities=ents)
+        for groupName, groupSpans in spanGroups.items():
+            doc.spans[groupName] = groupSpans
 
         return doc
