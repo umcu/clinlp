@@ -340,7 +340,13 @@ Some configuration options, like the number of tokens to consider, can be specif
 
 ### Metrics and statistics
 
-`clinlp` can compute some information extraction related metrics and statistics for annotated datasets. This is done by creating one or more `InfoExtractionDataset`:
+`clinlp` can compute some information extraction related metrics and statistics for annotated datasets. This is done by creating one or more `InfoExtractionDataset`. First install the optional dependencies:
+
+```bash
+pip install clinlp[metrics]
+```
+
+Then:
 
 ```python
 from clinlp.metrics import InfoExtractionDataset
