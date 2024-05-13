@@ -181,7 +181,7 @@ class Document:
 
 
 @dataclass
-class Dataset:
+class InfoExtractionDataset:
     """Any number of Documents."""
 
     docs: list[Document]
@@ -222,7 +222,7 @@ class Dataset:
     @staticmethod
     def from_clinlp_docs(
         nlp_docs: Iterable[spacy.language.Doc], ids: Optional[Iterable[str]] = None
-    ) -> "Dataset":
+    ) -> "InfoExtractionDataset":
         """
         Creates a new dataset from clinlp output, by converting the spaCy Docs.
 
@@ -272,7 +272,7 @@ class Dataset:
                 )
             )
 
-        return Dataset(docs=docs)
+        return InfoExtractionDataset(docs=docs)
 
     def infer_default_qualifiers(self) -> dict:
         """
@@ -311,7 +311,7 @@ class Dataset:
         data: dict,
         strip_spans: bool = True,
         default_qualifiers: Optional[dict[str, str]] = None,
-    ) -> "Dataset":
+    ) -> "InfoExtractionDataset":
         """
         Creates a new dataset from medcattrainer output, by converting downloaded json.
 
@@ -379,7 +379,7 @@ class Dataset:
                 )
             )
 
-        return Dataset(docs)
+        return InfoExtractionDataset(docs)
 
     def to_nervaluate(
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
@@ -542,7 +542,7 @@ class InfoExtractionMetrics:
         "f1": f1_score,
     }
 
-    def __init__(self, true: Dataset, pred: Dataset):
+    def __init__(self, true: InfoExtractionDataset, pred: InfoExtractionDataset):
         """
         Initialize metrics.
 

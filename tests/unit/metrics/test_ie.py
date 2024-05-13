@@ -4,7 +4,12 @@ import pickle
 import pytest
 
 import clinlp  # noqa: F401
-from clinlp.metrics.ie import Annotation, Dataset, Document, InfoExtractionMetrics
+from clinlp.metrics.ie import (
+    Annotation,
+    Document,
+    InfoExtractionDataset,
+    InfoExtractionMetrics,
+)
 
 
 @pytest.fixture
@@ -15,7 +20,7 @@ def mctrainer_data():
 
 @pytest.fixture
 def mctrainer_dataset(mctrainer_data):
-    return Dataset.from_medcattrainer(data=mctrainer_data)
+    return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
 
 @pytest.fixture
@@ -28,7 +33,7 @@ def clinlp_docs():
 def clinlp_dataset(clinlp_docs):
     ids = list(f"doc_{x}" for x in range(0, 15))
 
-    return Dataset.from_clinlp_docs(nlp_docs=clinlp_docs, ids=ids)
+    return InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs, ids=ids)
 
 
 class TestAnnotation:
@@ -141,7 +146,7 @@ class TestDocument:
 
 class TestDataset:
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
-        dataset = Dataset.from_medcattrainer(data=mctrainer_data)
+        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         assert len(dataset.docs) == 14
         assert dataset.docs[0].text == "patient had geen anemie"
@@ -154,7 +159,7 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
-        dataset = Dataset.from_medcattrainer(data=mctrainer_data)
+        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         assert dataset.docs[0].annotations[0].text == "anemie"
         assert dataset.docs[0].annotations[0].start == 17
@@ -167,7 +172,7 @@ class TestDataset:
         assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_medcatrainer_qualifiers(self, mctrainer_data):
-        dataset = Dataset.from_medcattrainer(data=mctrainer_data)
+        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         assert dataset.docs[0].annotations[0].qualifiers == [
             {"name": "Temporality", "value": "Current", "is_default": True},
@@ -177,7 +182,7 @@ class TestDataset:
         ]
 
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
-        dataset = Dataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         assert len(dataset.docs) == 14
         assert dataset.docs[0].text == "patient had geen anemie"
@@ -190,7 +195,7 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_clinlp_annotations(self, clinlp_docs):
-        dataset = Dataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         assert dataset.docs[0].annotations[0].text == "anemie"
         assert dataset.docs[0].annotations[0].start == 17
@@ -202,7 +207,7 @@ class TestDataset:
         assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_clinlp_qualifiers(self, clinlp_docs):
-        dataset = Dataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         assert sorted(
             dataset.docs[0].annotations[0].qualifiers, key=lambda q: q["name"]
@@ -214,7 +219,7 @@ class TestDataset:
         ]
 
     def test_dataset_nervaluate(self):
-        dataset = Dataset(
+        dataset = InfoExtractionDataset(
             docs=[
                 Document(
                     identifier="1",
