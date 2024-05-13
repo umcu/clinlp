@@ -13,7 +13,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.qualifier.qualifier import (
+from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
     QualifierDetector,

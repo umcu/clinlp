@@ -1,7 +1,5 @@
 lint:
-	python -m black .
-	python -m isort .
-	python -m flake8 .
+	python -m ruff check .
 
 clean:
 	rm -rf .coverage

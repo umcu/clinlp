@@ -3,9 +3,14 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.qualifier import ContextRule, ContextRuleDirection, QualifierFactory
-from clinlp.qualifier.context_algorithm import ContextAlgorithm, _MatchedContextPattern
-from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
+from clinlp.ie.qualifier import (
+    ContextAlgorithm,
+    ContextRule,
+    ContextRuleDirection,
+    QualifierFactory,
+)
+from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
+from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture
