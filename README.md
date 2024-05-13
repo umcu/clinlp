@@ -342,7 +342,7 @@ Some configuration options, like the number of tokens to consider, can be specif
 
 `clinlp` can compute some information extraction related metrics and statistics for annotated datasets. This is done by creating one or more `InfoExtractionDataset`:
 
-```
+```python
 from clinlp.metrics import InfoExtractionDataset
 
 # medcattrainer
