@@ -110,7 +110,8 @@ Currently, `clinlp` offers the following components, tailored to Dutch Clinical 
 4. [Entity matcher](#entity-matcher)
 5. [Qualifier detection (negation, historical, etc.)](#qualifier-detection)
     - [Context Algorithm](#context-algorithm)
-    - [Transformer based negation detection](#transformer-based-negation-detection)
+    - [Transformer based detection](#transformer-based-detection)
+6. [Metrics and statistics](#metrics-and-statistics)
 
 ### Tokenizer
 
