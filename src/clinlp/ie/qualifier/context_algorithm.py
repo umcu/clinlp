@@ -343,7 +343,7 @@ class ContextAlgorithm(QualifierDetector):
             grouped_patterns[mcp.rule.qualifier.name].append(mcp)
 
         for mcp_group in grouped_patterns.values():
-            if len(mcp_group) <= 1:
+            if len(mcp_group) == 1:
                 result_patterns += mcp_group
             else:
                 result_patterns.append(
@@ -351,7 +351,7 @@ class ContextAlgorithm(QualifierDetector):
                         mcp_group,
                         key=lambda mcp: (
                             interval_dist(entity.start, entity.end, mcp.start, mcp.end),
-                            mcp.rule.qualifier.priority,
+                            -mcp.rule.qualifier.priority,
                         ),
                     )
                 )

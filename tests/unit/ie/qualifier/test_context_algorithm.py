@@ -315,14 +315,14 @@ class TestUnitContextAlgorithm:
         )
 
         rule1 = ContextRule(
-            pattern="geen",
-            qualifier=qualifier_factory.create("Uncertain"),
-            direction=ContextRuleDirection.PRECEDING,
-        )
-        rule2 = ContextRule(
             pattern="uitgesloten",
             qualifier=qualifier_factory.create("Absent"),
             direction=ContextRuleDirection.FOLLOWING,
+        )
+        rule2 = ContextRule(
+            pattern="mogelijk",
+            qualifier=qualifier_factory.create("Uncertain"),
+            direction=ContextRuleDirection.PRECEDING,
         )
 
         pattern1 = _MatchedContextPattern(rule=rule1, start=0, end=1)
@@ -733,7 +733,7 @@ class TestUnitContextAlgorithm:
                     "name": "Presence",
                     "values": ["Absent", "Uncertain", "Present"],
                     "default": "Present",
-                    "priorities": {"Absent": 0, "Uncertain": 1, "Present": 2},
+                    "priorities": {"Absent": 2, "Uncertain": 1, "Present": 0},
                 },
             ],
             "rules": [
