@@ -19,7 +19,7 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
     QualifierFactory,
 )
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent, interval_dist
 
 
 class ContextRuleDirection(Enum):
@@ -330,6 +330,34 @@ class ContextAlgorithm(QualifierDetector):
 
         return match_scopes
 
+    def _resolve_qualifier_conflicts(
+        self, entity: Span, matched_context_patterns: list[_MatchedContextPattern]
+    ) -> list[_MatchedContextPattern]:
+        if len(matched_context_patterns) <= 1:
+            return matched_context_patterns
+
+        grouped_patterns = defaultdict(list)
+        result_patterns = []
+
+        for mcp in matched_context_patterns:
+            grouped_patterns[mcp.rule.qualifier.name].append(mcp)
+
+        for mcp_group in grouped_patterns.values():
+            if len(mcp_group) <= 1:
+                result_patterns += mcp_group
+            else:
+                result_patterns.append(
+                    min(
+                        mcp_group,
+                        key=lambda mcp: (
+                            interval_dist(entity.start, entity.end, mcp.start, mcp.end),
+                            mcp.rule.qualifier.priority,
+                        ),
+                    )
+                )
+
+        return result_patterns
+
     def _detect_qualifiers(self, doc: Doc):
         """
         Apply the Context Algorithm to a doc.
@@ -369,13 +397,18 @@ class ContextAlgorithm(QualifierDetector):
             match_scopes = self._compute_match_scopes(matched_patterns)
 
             for ent in sentence.ents:
+                candidates = []
+
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
                     if (ent.start + 1 > match_interval.data.end) or (
                         ent.end < match_interval.data.start + 1
                     ):
-                        self.add_qualifier_to_ent(
-                            ent, match_interval.data.rule.qualifier
-                        )
+                        candidates.append(match_interval.data)
+
+                candidates = self._resolve_qualifier_conflicts(ent, candidates)
+
+                for candidate in candidates:
+                    self.add_qualifier_to_ent(ent, candidate.rule.qualifier)
 
     def __len__(self) -> int:
         return len(self.rules)

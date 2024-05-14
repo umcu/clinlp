@@ -304,6 +304,32 @@ class TestUnitContextAlgorithm:
         for sent in sents:
             assert "SYMPTOOM" in str(sent)
 
+    def test_resolve_qualifier_conflicts(self, nlp, ca):
+        doc = nlp("mogelijk SYMPTOOM uitgesloten")
+        ent = doc.ents[0]
+
+        qualifier_factory = QualifierFactory(
+            name="Presence",
+            values=["Absent", "Uncertain", "Present"],
+            default="Present",
+        )
+
+        rule1 = ContextRule(
+            pattern="geen",
+            qualifier=qualifier_factory.create("Uncertain"),
+            direction=ContextRuleDirection.PRECEDING,
+        )
+        rule2 = ContextRule(
+            pattern="uitgesloten",
+            qualifier=qualifier_factory.create("Absent"),
+            direction=ContextRuleDirection.FOLLOWING,
+        )
+
+        pattern1 = _MatchedContextPattern(rule=rule1, start=0, end=1)
+        pattern2 = _MatchedContextPattern(rule=rule2, start=2, end=3)
+
+        assert ca._resolve_qualifier_conflicts(ent, [pattern1, pattern2]) == [pattern2]
+
     def test_match_qualifiers_no_ents(self, nlp, ca):
         text = "tekst zonder entities"
         old_doc = nlp(text)
@@ -668,6 +694,69 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+
+    def test_multiple_matches_of_same_qualifier(self, nlp):
+        rules = {
+            "qualifiers": [
+                {
+                    "name": "Presence",
+                    "values": ["Absent", "Uncertain", "Present"],
+                    "default": "Present",
+                },
+            ],
+            "rules": [
+                {
+                    "qualifier": "Presence.Absent",
+                    "direction": "following",
+                    "patterns": ["uitgesloten"],
+                },
+                {
+                    "qualifier": "Presence.Uncertain",
+                    "direction": "preceding",
+                    "patterns": ["mogelijk"],
+                },
+            ],
+        }
+
+        text = "mogelijk SYMPTOOM is uitgesloten"
+
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert "Presence.Absent" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Presence.Uncertain" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+
+    def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp):
+        rules = {
+            "qualifiers": [
+                {
+                    "name": "Presence",
+                    "values": ["Absent", "Uncertain", "Present"],
+                    "default": "Present",
+                    "priorities": {"Absent": 0, "Uncertain": 1, "Present": 2},
+                },
+            ],
+            "rules": [
+                {
+                    "qualifier": "Presence.Uncertain",
+                    "direction": "preceding",
+                    "patterns": ["mogelijk"],
+                },
+                {
+                    "qualifier": "Presence.Absent",
+                    "direction": "following",
+                    "patterns": ["uitgesloten"],
+                },
+            ],
+        }
+
+        text = "mogelijk SYMPTOOM uitgesloten"
+
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert "Presence.Absent" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Presence.Uncertain" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
 
     def test_load_default_rules(self, nlp):
         ca = ContextAlgorithm(nlp=nlp)
