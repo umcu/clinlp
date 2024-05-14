@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 * Integrated the clin_nlp_metrics package here
 * Support for non-binary qualifier in the Context Algorithm (e.g. 'Change', with values Decreasing, Stable and Increasing)
+* Support for bidirectional qualifier patterns
 
 ### Changed
 * Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`).

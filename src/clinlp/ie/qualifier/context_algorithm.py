@@ -29,8 +29,9 @@ class ContextRuleDirection(Enum):
 
     PRECEDING = 1
     FOLLOWING = 2
-    PSEUDO = 3
-    TERMINATION = 4
+    BIDIRECTIONAL = 3
+    PSEUDO = 4
+    TERMINATION = 5
 
 
 @dataclass
@@ -78,11 +79,17 @@ class _MatchedContextPattern:
         if max_scope < 1:
             raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
 
+        scoped_start = max(self.start - max_scope, sentence.start)
+        scoped_end = min(self.end + max_scope, sentence.end)
+
         if self.rule.direction == ContextRuleDirection.PRECEDING:
-            self.scope = (self.start, min(self.end + max_scope, sentence.end))
+            self.scope = (self.start, scoped_end)
 
         elif self.rule.direction == ContextRuleDirection.FOLLOWING:
-            self.scope = (max(self.start - max_scope, sentence.start), self.end)
+            self.scope = (scoped_start, self.end)
+
+        elif self.rule.direction == ContextRuleDirection.BIDIRECTIONAL:
+            self.scope = (scoped_start, scoped_end)
 
 
 _defaults_context_algorithm = {
@@ -275,13 +282,13 @@ class ContextAlgorithm(QualifierDetector):
                 match = interval.data
 
                 if (
-                    match.rule.direction == ContextRuleDirection.PRECEDING
+                    match.rule.direction != ContextRuleDirection.FOLLOWING
                     and terminate_match.start >= match.end
                 ):
                     match.scope = (match.scope[0], terminate_match.start)
 
                 if (
-                    match.rule.direction == ContextRuleDirection.FOLLOWING
+                    match.rule.direction != ContextRuleDirection.PRECEDING
                     and terminate_match.end <= match.start
                 ):
                     match.scope = (terminate_match.end, match.scope[1])
@@ -303,13 +310,14 @@ class ContextAlgorithm(QualifierDetector):
         ).values():
             preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
             following = qualifier_matches[ContextRuleDirection.FOLLOWING]
+            bidirectional = qualifier_matches[ContextRuleDirection.BIDIRECTIONAL]
             pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
             termination = qualifier_matches[ContextRuleDirection.TERMINATION]
 
             qualifier_matches = ivt.IntervalTree()
 
             # Following, preceding
-            for match in preceding + following:
+            for match in preceding + following + bidirectional:
                 qualifier_matches[match.start : match.end] = match
 
             # Pseudo
