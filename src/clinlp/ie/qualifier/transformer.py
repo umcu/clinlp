@@ -211,7 +211,7 @@ class ExperiencerTransformer(QualifierTransformer):
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         return {
             "Experiencer": QualifierClass(
-                "Experiencer", ["Patient", "Other"], default="Patient"
+                "Experiencer", ["Patient", "Family"], default="Patient"
             )
         }
 
@@ -230,5 +230,5 @@ class ExperiencerTransformer(QualifierTransformer):
             if prob > self.other_threshold:
                 self.add_qualifier_to_ent(
                     ent,
-                    self.qualifier_classes["Experiencer"].create("Other", prob=prob),
+                    self.qualifier_classes["Experiencer"].create("Family", prob=prob),
                 )
