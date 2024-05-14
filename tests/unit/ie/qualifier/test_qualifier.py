@@ -42,10 +42,17 @@ class TestUnitQualifier:
         assert Qualifier("Negation", "Affirmed", is_default=False)
         assert Qualifier("Negation", "Negated", is_default=True)
         assert Qualifier("Negation", "Negated", is_default=True, prob=1)
+        assert Qualifier("Negation", "Negated", is_default=True, priority=1, prob=1)
 
     def test_qualifier_str(self):
         assert (
             str(Qualifier("Negation", "Negated", is_default=True)) == "Negation.Negated"
+        )
+
+    def test_qualifier_priority(self):
+        assert (
+            Qualifier("Negation", "Negated", is_default=False, priority=10).priority
+            == 10
         )
 
     def test_qualifier_dict(self):
@@ -129,6 +136,27 @@ class TestUnitQualifierFactory:
         assert factory.create(value="Affirmed") == Qualifier(
             "Negation", "Affirmed", is_default=False
         )
+
+    def test_use_factory_priority_default(self):
+        factory = QualifierFactory(
+            "Presence", ["Absent", "Uncertain", "Present"], default="Present"
+        )
+
+        assert factory.create("Absent").priority == 0
+        assert factory.create("Uncertain").priority == 1
+        assert factory.create("Present").priority == 2
+
+    def test_use_factory_priority_nondefault(self):
+        factory = QualifierFactory(
+            "Presence",
+            ["Absent", "Uncertain", "Present"],
+            default="Present",
+            priorities={"Absent": 1, "Uncertain": 100, "Present": 0},
+        )
+
+        assert factory.create("Absent").priority == 1
+        assert factory.create("Uncertain").priority == 100
+        assert factory.create("Present").priority == 0
 
     def test_use_factory_unhappy(self):
         factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
