@@ -31,7 +31,8 @@ _defaults_qualifier_transformer = {
 }
 
 _defaults_negation_transformer = {
-    "negation_threshold": 0.5,
+    "absence_threshold": 0.1,
+    "presence_threshold": 0.9,
 }
 _defaults_experiencer_transformer = {
     "token_window": 64,
@@ -132,13 +133,15 @@ class NegationTransformer(QualifierTransformer):
     def __init__(
         self,
         nlp: Language,
-        negation_threshold: float = _defaults_negation_transformer[
-            "negation_threshold"
+        absence_threshold: float = _defaults_negation_transformer["absence_threshold"],
+        presence_threshold: float = _defaults_negation_transformer[
+            "presence_threshold"
         ],
         **kwargs,
     ) -> None:
         self.nlp = nlp
-        self.negation_threshold = negation_threshold
+        self.absence_threshold = absence_threshold
+        self.presence_threshold = presence_threshold
 
         self.tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
         self.model = RobertaForTokenClassification.from_pretrained(
@@ -150,8 +153,8 @@ class NegationTransformer(QualifierTransformer):
     @property
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         return {
-            "Negation": QualifierFactory(
-                "Negation", ["Affirmed", "Negated"], default="Affirmed"
+            "Presence": QualifierClass(
+                "Presence", ["Absent", "Uncertain", "Present"], default="Present"
             )
         }
 
@@ -159,7 +162,7 @@ class NegationTransformer(QualifierTransformer):
         for ent in doc.ents:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
-            prob = self._predict(
+            prob = 1 - self._predict(
                 text,
                 ent_start_char,
                 ent_end_char,
@@ -167,11 +170,17 @@ class NegationTransformer(QualifierTransformer):
                 prob_aggregator=self.prob_aggregator,
             )
 
-            if prob > self.negation_threshold:
-                self.add_qualifier_to_ent(
-                    ent,
-                    self.qualifier_factories["Negation"].create("Negated", prob=prob),
-                )
+            if prob <= self.absence_threshold:
+                qualifier_value = "Absent"
+            elif prob >= self.presence_threshold:
+                qualifier_value = "Present"
+            else:
+                qualifier_value = "Uncertain"
+
+            self.add_qualifier_to_ent(
+                ent,
+                self.qualifier_classes["Presence"].create(qualifier_value, prob=prob),
+            )
 
 
 @Language.factory(
