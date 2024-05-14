@@ -304,7 +304,7 @@ class TestUnitContextAlgorithm:
         for sent in sents:
             assert "SYMPTOOM" in str(sent)
 
-    def test_resolve_qualifier_conflicts(self, nlp, ca):
+    def test_resolve_matched_pattern_conflicts(self, nlp, ca):
         doc = nlp("mogelijk SYMPTOOM uitgesloten")
         ent = doc.ents[0]
 
@@ -328,7 +328,9 @@ class TestUnitContextAlgorithm:
         pattern1 = _MatchedContextPattern(rule=rule1, start=0, end=1)
         pattern2 = _MatchedContextPattern(rule=rule2, start=2, end=3)
 
-        assert ca._resolve_qualifier_conflicts(ent, [pattern1, pattern2]) == [pattern2]
+        assert ca._resolve_matched_pattern_conflicts(ent, [pattern1, pattern2]) == [
+            pattern2
+        ]
 
     def test_match_qualifiers_no_ents(self, nlp, ca):
         text = "tekst zonder entities"
