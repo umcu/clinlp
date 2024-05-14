@@ -4,8 +4,8 @@ from .context_algorithm import ContextAlgorithm, ContextRule, ContextRuleDirecti
 from .qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
     get_qualifiers,
     set_qualifiers,
 )
@@ -24,7 +24,7 @@ __all__ = [
     "ATTR_QUALIFIERS",
     "Qualifier",
     "QualifierDetector",
-    "QualifierFactory",
+    "QualifierClass",
     "get_qualifiers",
     "set_qualifiers",
     "ExperiencerTransformer",

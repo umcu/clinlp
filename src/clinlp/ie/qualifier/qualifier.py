@@ -60,7 +60,7 @@ class Qualifier:
         return f"{self.name}.{self.value}"
 
 
-class QualifierFactory:
+class QualifierClass:
     def __init__(
         self,
         name: str,
@@ -106,7 +106,7 @@ class QualifierDetector(ABC):
 
     @property
     @abstractmethod
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
         pass
 
     @abstractmethod
@@ -139,8 +139,8 @@ class QualifierDetector(ABC):
         if get_qualifiers(entity) is None:
             set_qualifiers(entity, set())
 
-        for _, factory in self.qualifier_factories.items():
-            self.add_qualifier_to_ent(entity, factory.create())
+        for _, qualifier_class in self.qualifier_classes.items():
+            self.add_qualifier_to_ent(entity, qualifier_class.create())
 
     def __call__(self, doc: Doc) -> Doc:
         if len(doc.ents) == 0:

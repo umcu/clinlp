@@ -8,8 +8,8 @@ import clinlp  # noqa
 from clinlp.ie.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
     get_qualifiers,
     set_qualifiers,
 )
@@ -29,12 +29,12 @@ def entity():
 
 @pytest.fixture
 def mock_factory():
-    return QualifierFactory("test", ["test1", "test2"])
+    return QualifierClass("test", ["test1", "test2"])
 
 
 @pytest.fixture
 def mock_factory_2():
-    return QualifierFactory("test2", ["abc", "def"])
+    return QualifierClass("test2", ["abc", "def"])
 
 
 class TestUnitQualifier:
@@ -115,10 +115,10 @@ class TestUnitQualifier:
 
 class TestUnitQualifierFactory:
     def test_create_factory(self):
-        assert QualifierFactory("Negation", ["Affirmed", "Negated"])
+        assert QualifierClass("Negation", ["Affirmed", "Negated"])
 
     def test_use_factory(self):
-        factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
+        factory = QualifierClass("Negation", ["Affirmed", "Negated"])
 
         assert factory.create(value="Affirmed").is_default
         assert not factory.create(value="Negated").is_default
@@ -127,9 +127,7 @@ class TestUnitQualifierFactory:
         )
 
     def test_use_factory_nondefault(self):
-        factory = QualifierFactory(
-            "Negation", ["Affirmed", "Negated"], default="Negated"
-        )
+        factory = QualifierClass("Negation", ["Affirmed", "Negated"], default="Negated")
 
         assert not factory.create(value="Affirmed").is_default
         assert factory.create(value="Negated").is_default
@@ -138,7 +136,7 @@ class TestUnitQualifierFactory:
         )
 
     def test_use_factory_priority_default(self):
-        factory = QualifierFactory(
+        factory = QualifierClass(
             "Presence", ["Absent", "Uncertain", "Present"], default="Present"
         )
 
@@ -147,7 +145,7 @@ class TestUnitQualifierFactory:
         assert factory.create("Present").priority == 2
 
     def test_use_factory_priority_nondefault(self):
-        factory = QualifierFactory(
+        factory = QualifierClass(
             "Presence",
             ["Absent", "Uncertain", "Present"],
             default="Present",
@@ -159,7 +157,7 @@ class TestUnitQualifierFactory:
         assert factory.create("Present").priority == 0
 
     def test_use_factory_unhappy(self):
-        factory = QualifierFactory("Negation", ["Affirmed", "Negated"])
+        factory = QualifierClass("Negation", ["Affirmed", "Negated"])
 
         with pytest.raises(ValueError):
             _ = factory.create(value="Unknown")
@@ -185,7 +183,7 @@ class TestUnitQualifierDetector:
         qualifier = mock_factory.create("test1")
 
         with patch(
-            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -203,7 +201,7 @@ class TestUnitQualifierDetector:
         qualifier = mock_factory.create("test2")
 
         with patch(
-            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -222,7 +220,7 @@ class TestUnitQualifierDetector:
         qualifier_2 = mock_factory.create("test2")
 
         with patch(
-            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -243,7 +241,7 @@ class TestUnitQualifierDetector:
         factories = {"test1": mock_factory, "test2": mock_factory_2}
 
         with patch(
-            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)
@@ -262,7 +260,7 @@ class TestUnitQualifierDetector:
         factories = {"test1": mock_factory, "test2": mock_factory_2}
 
         with patch(
-            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_factories",
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
             factories,
         ):
             qd._initialize_ent_qualifiers(entity)

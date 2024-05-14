@@ -16,8 +16,8 @@ from spacy.tokens import Doc, Span
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
 )
 from clinlp.util import clinlp_autocomponent, interval_dist
 
@@ -129,7 +129,7 @@ class ContextAlgorithm(QualifierDetector):
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
 
         self.rules = {}
-        self._qualifier_factories = {}
+        self._qualifier_classes = {}
 
         if load_rules:
             if rules is None:
@@ -142,8 +142,8 @@ class ContextAlgorithm(QualifierDetector):
             self.add_rules(rules)
 
     @property
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
-        return self._qualifier_factories
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
+        return self._qualifier_classes
 
     def add_rule(self, rule: ContextRule) -> None:
         """
@@ -173,7 +173,7 @@ class ContextAlgorithm(QualifierDetector):
 
     @staticmethod
     def _parse_qualifier(
-        qualifier: str, qualifier_factories: dict[str, QualifierFactory]
+        qualifier: str, qualifier_classes: dict[str, QualifierClass]
     ) -> Qualifier:
         """
         Parse a Qualifier from string.
@@ -194,7 +194,7 @@ class ContextAlgorithm(QualifierDetector):
 
         qualifier_class, qualifier = qualifier.split(".")
 
-        return qualifier_factories[qualifier_class].create(value=qualifier)
+        return qualifier_classes[qualifier_class].create(value=qualifier)
 
     @staticmethod
     def _parse_direction(direction: str) -> ContextRuleDirection:
@@ -214,14 +214,12 @@ class ContextAlgorithm(QualifierDetector):
                 rules = json.load(file)
 
         for qualifier in rules["qualifiers"]:
-            self._qualifier_factories[qualifier["name"]] = QualifierFactory(**qualifier)
+            self._qualifier_classes[qualifier["name"]] = QualifierClass(**qualifier)
 
         qualifier_rules = []
 
         for rule in rules["rules"]:
-            qualifier = self._parse_qualifier(
-                rule["qualifier"], self.qualifier_factories
-            )
+            qualifier = self._parse_qualifier(rule["qualifier"], self.qualifier_classes)
             direction = self._parse_direction(rule["direction"])
             max_scope = rule.get("max_scope", None)
 

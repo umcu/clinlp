@@ -7,7 +7,7 @@ from clinlp.ie.qualifier import (
     ContextAlgorithm,
     ContextRule,
     ContextRuleDirection,
-    QualifierFactory,
+    QualifierClass,
 )
 from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
@@ -25,7 +25,7 @@ def nlp():
 
 @pytest.fixture
 def mock_factory():
-    return QualifierFactory("Mock", ["Mock_1", "Mock_2"])
+    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
 @pytest.fixture
@@ -49,7 +49,7 @@ class TestUnitQualifierRuleDirection:
 class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
-        qualifier = QualifierFactory("Negation", ["Affirmed", "Negated"]).create(
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
@@ -62,7 +62,7 @@ class TestUnitQualifierRule:
 
     def test_create_qualifier_rule_2(self):
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierFactory("Negation", ["Affirmed", "Negated"]).create(
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
@@ -308,7 +308,7 @@ class TestUnitContextAlgorithm:
         doc = nlp("mogelijk SYMPTOOM uitgesloten")
         ent = doc.ents[0]
 
-        qualifier_factory = QualifierFactory(
+        qualifier_factory = QualifierClass(
             name="Presence",
             values=["Absent", "Uncertain", "Present"],
             default="Present",

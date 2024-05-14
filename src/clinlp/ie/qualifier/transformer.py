@@ -8,8 +8,8 @@ from transformers import AutoTokenizer, RobertaForTokenClassification
 
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
 )
 from clinlp.util import clinlp_autocomponent
 
@@ -148,7 +148,7 @@ class NegationTransformer(QualifierTransformer):
         super().__init__(**kwargs)
 
     @property
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
         return {
             "Negation": QualifierFactory(
                 "Negation", ["Affirmed", "Negated"], default="Affirmed"
@@ -199,9 +199,9 @@ class ExperiencerTransformer(QualifierTransformer):
         super().__init__(**kwargs)
 
     @property
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
         return {
-            "Experiencer": QualifierFactory(
+            "Experiencer": QualifierClass(
                 "Experiencer", ["Patient", "Other"], default="Patient"
             )
         }
@@ -221,5 +221,5 @@ class ExperiencerTransformer(QualifierTransformer):
             if prob > self.other_threshold:
                 self.add_qualifier_to_ent(
                     ent,
-                    self.qualifier_factories["Experiencer"].create("Other", prob=prob),
+                    self.qualifier_classes["Experiencer"].create("Other", prob=prob),
                 )
