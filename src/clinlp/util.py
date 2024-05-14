@@ -68,3 +68,10 @@ def clinlp_autocomponent(cls):
         return cls(**cls_kwargs)
 
     return make_component
+
+
+def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
+    if (end_a < start_a) or (end_b < start_b):
+        raise ValueError("Input malformed interval.")
+
+    return max(0, start_a - end_b, start_b - end_a)
