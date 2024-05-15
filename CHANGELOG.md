@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`).
+* Updated the framework for qualifiers, to now have three qualifier classes: Presence, Temporality and Experiencer. For more details, see docs directory. 
 
 ## 0.6.6 (2024-04-24)
 
