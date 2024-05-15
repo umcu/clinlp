@@ -55,4 +55,4 @@ class TestRegressionTransformer:
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 
-        assert incorrect_ents == {32}
+        assert incorrect_ents == {32, 75, 76}

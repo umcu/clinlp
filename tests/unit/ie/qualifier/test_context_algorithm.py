@@ -283,7 +283,9 @@ class TestUnitContextAlgorithm:
     def test_parse_direction(self, ca):
         assert ca._parse_direction("preceding") == ContextRuleDirection.PRECEDING
         assert ca._parse_direction("following") == ContextRuleDirection.FOLLOWING
-        assert ca._parse_direction("bidirectional") == ContextRuleDirection.BIDIRECTIONAL
+        assert (
+            ca._parse_direction("bidirectional") == ContextRuleDirection.BIDIRECTIONAL
+        )
         assert ca._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
         assert ca._parse_direction("termination") == ContextRuleDirection.TERMINATION
 
