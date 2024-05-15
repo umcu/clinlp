@@ -1,6 +1,6 @@
 {
   "name": "default_qualifiers",
-  "description": "A set of context rules intially based on the psynlp package, somewhat tailored on a per use case basis.",
+  "description": "The default set of context rules included in clinlp. Intially based on the psynlp package, further improved since.",
   "qualifiers": [
     {
       "name": "Presence",
