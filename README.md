@@ -303,7 +303,7 @@ Will result in the following concept dictionary:
 
 ### Qualifier detection
 
-After finding entities, it's often useful to qualify these entities, e.g.: are they present or absent, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Present` for `Presence`).   
+After finding entities, it's often useful to qualify these entities, e.g.: are they present or absent, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Present` for `Presence`). Some clarifications on the framework we use for qualifiers is available under [docs/qualifiers.docx](docs/qualifiers.docx) (will be incorporated in an improved documentation page soon).
 
 #### Context Algorithm
 
