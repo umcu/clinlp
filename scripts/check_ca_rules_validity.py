@@ -1,3 +1,8 @@
+"""
+Checks a file with rules for the context algorithm for some common errors
+and inconsistenties, and shows them in the terminal (if any).
+"""
+
 import json
 from collections import Counter, defaultdict
 

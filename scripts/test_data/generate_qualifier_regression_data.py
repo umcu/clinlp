@@ -1,3 +1,10 @@
+"""
+Converts interesting sentences (to be input) into a format that
+is useful for regression tests. It pre-codes the qualifiers based
+on the context algorithm as a convenience, but check these manually
+before adding them.
+"""
+
 import itertools
 from pprint import pprint
 
