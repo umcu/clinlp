@@ -118,7 +118,7 @@ class QualifierDetector(ABC):
                 "Cannot add qualifier to entity with non-initialized qualifiers."
             )
 
-        qualifiers = [q for q in qualifiers if q.name != new_qualifier.name]
+        qualifiers = {q for q in qualifiers if q.name != new_qualifier.name}
         qualifiers.add(new_qualifier)
 
         set_qualifiers(entity, qualifiers)
