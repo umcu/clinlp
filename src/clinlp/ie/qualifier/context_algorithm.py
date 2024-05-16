@@ -16,8 +16,8 @@ from spacy.tokens import Doc, Span
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
 )
 from clinlp.util import clinlp_autocomponent, interval_dist
 
@@ -29,8 +29,9 @@ class ContextRuleDirection(Enum):
 
     PRECEDING = 1
     FOLLOWING = 2
-    PSEUDO = 3
-    TERMINATION = 4
+    BIDIRECTIONAL = 3
+    PSEUDO = 4
+    TERMINATION = 5
 
 
 @dataclass
@@ -78,11 +79,17 @@ class _MatchedContextPattern:
         if max_scope < 1:
             raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
 
+        scoped_start = max(self.start - max_scope, sentence.start)
+        scoped_end = min(self.end + max_scope, sentence.end)
+
         if self.rule.direction == ContextRuleDirection.PRECEDING:
-            self.scope = (self.start, min(self.end + max_scope, sentence.end))
+            self.scope = (self.start, scoped_end)
 
         elif self.rule.direction == ContextRuleDirection.FOLLOWING:
-            self.scope = (max(self.start - max_scope, sentence.start), self.end)
+            self.scope = (scoped_start, self.end)
+
+        elif self.rule.direction == ContextRuleDirection.BIDIRECTIONAL:
+            self.scope = (scoped_start, scoped_end)
 
 
 _defaults_context_algorithm = {
@@ -129,7 +136,7 @@ class ContextAlgorithm(QualifierDetector):
         self._phrase_matcher = PhraseMatcher(self._nlp.vocab, attr=phrase_matcher_attr)
 
         self.rules = {}
-        self._qualifier_factories = {}
+        self._qualifier_classes = {}
 
         if load_rules:
             if rules is None:
@@ -142,8 +149,8 @@ class ContextAlgorithm(QualifierDetector):
             self.add_rules(rules)
 
     @property
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
-        return self._qualifier_factories
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
+        return self._qualifier_classes
 
     def add_rule(self, rule: ContextRule) -> None:
         """
@@ -173,7 +180,7 @@ class ContextAlgorithm(QualifierDetector):
 
     @staticmethod
     def _parse_qualifier(
-        qualifier: str, qualifier_factories: dict[str, QualifierFactory]
+        qualifier: str, qualifier_classes: dict[str, QualifierClass]
     ) -> Qualifier:
         """
         Parse a Qualifier from string.
@@ -194,7 +201,7 @@ class ContextAlgorithm(QualifierDetector):
 
         qualifier_class, qualifier = qualifier.split(".")
 
-        return qualifier_factories[qualifier_class].create(value=qualifier)
+        return qualifier_classes[qualifier_class].create(value=qualifier)
 
     @staticmethod
     def _parse_direction(direction: str) -> ContextRuleDirection:
@@ -214,14 +221,12 @@ class ContextAlgorithm(QualifierDetector):
                 rules = json.load(file)
 
         for qualifier in rules["qualifiers"]:
-            self._qualifier_factories[qualifier["name"]] = QualifierFactory(**qualifier)
+            self._qualifier_classes[qualifier["name"]] = QualifierClass(**qualifier)
 
         qualifier_rules = []
 
         for rule in rules["rules"]:
-            qualifier = self._parse_qualifier(
-                rule["qualifier"], self.qualifier_factories
-            )
+            qualifier = self._parse_qualifier(rule["qualifier"], self.qualifier_classes)
             direction = self._parse_direction(rule["direction"])
             max_scope = rule.get("max_scope", None)
 
@@ -277,13 +282,13 @@ class ContextAlgorithm(QualifierDetector):
                 match = interval.data
 
                 if (
-                    match.rule.direction == ContextRuleDirection.PRECEDING
+                    match.rule.direction != ContextRuleDirection.FOLLOWING
                     and terminate_match.start >= match.end
                 ):
                     match.scope = (match.scope[0], terminate_match.start)
 
                 if (
-                    match.rule.direction == ContextRuleDirection.FOLLOWING
+                    match.rule.direction != ContextRuleDirection.PRECEDING
                     and terminate_match.end <= match.start
                 ):
                     match.scope = (terminate_match.end, match.scope[1])
@@ -305,13 +310,14 @@ class ContextAlgorithm(QualifierDetector):
         ).values():
             preceding = qualifier_matches[ContextRuleDirection.PRECEDING]
             following = qualifier_matches[ContextRuleDirection.FOLLOWING]
+            bidirectional = qualifier_matches[ContextRuleDirection.BIDIRECTIONAL]
             pseudo = qualifier_matches[ContextRuleDirection.PSEUDO]
             termination = qualifier_matches[ContextRuleDirection.TERMINATION]
 
             qualifier_matches = ivt.IntervalTree()
 
             # Following, preceding
-            for match in preceding + following:
+            for match in preceding + following + bidirectional:
                 qualifier_matches[match.start : match.end] = match
 
             # Pseudo

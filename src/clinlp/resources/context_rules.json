@@ -1,101 +1,747 @@
 {
   "name": "default_qualifiers",
-  "description": "A set of context rules intially based on the psynlp package, somewhat tailored on a per use case basis.",
+  "description": "The default set of context rules included in clinlp. Intially based on the psynlp package, further improved since.",
   "qualifiers": [
     {
-      "name": "Experiencer",
+      "name": "Presence",
       "values": [
-        "Patient",
-        "Other"
+        "Absent",
+        "Uncertain",
+        "Present"
       ],
-      "default": "Patient"
-    },
-    {
-      "name": "Negation",
-      "values": [
-        "Affirmed",
-        "Negated"
-      ],
-      "default": "Affirmed"
-    },
-    {
-      "name": "Plausibility",
-      "values": [
-        "Plausible",
-        "Hypothetical"
-      ],
-      "default": "Plausible"
+      "priorities": {
+        "Present": 0,
+        "Uncertain": 1,
+        "Absent": 2
+      },
+      "default": "Present"
     },
     {
       "name": "Temporality",
       "values": [
+        "Historical",
         "Current",
-        "Historical"
+        "Future"
       ],
+      "priorities": {
+        "Current": 0,
+        "Future": 1,
+        "Historical": 2
+      },
       "default": "Current"
+    },
+    {
+      "name": "Experiencer",
+      "values": [
+        "Patient",
+        "Family",
+        "Other"
+      ],
+      "priorities": {
+        "Patient": 0,
+        "Other": 1,
+        "Family": 2
+      },
+      "default": "Patient"
     }
   ],
   "rules": [
     {
-      "qualifier": "Experiencer.Other",
+      "qualifier": "Presence.Absent",
+      "direction": "preceding",
+      "max_scope": 5,
+      "patterns": [
+        "afwezigheid van",
+        "geen",
+        "geen bevinding van",
+        "geen bevindingen die duiden op",
+        "geen bevindingen van",
+        "geen bewijs dat",
+        "geen bewijs dat suggereert",
+        "geen bewijs voor",
+        "geen klachten van",
+        "geen mammografisch bewijs van",
+        "geen nieuw",
+        "geen nieuwe",
+        "geen radiografisch bewijs van",
+        "geen suggestie van",
+        "geen teken van",
+        "geen tekenenen van",
+        "had geen",
+        "had niet",
+        "had nooit",
+        "klaagt niet over",
+        "negatief voor",
+        "niet bekend met",
+        "niet geduid",
+        "niet geduid als",
+        "niet gezien",
+        "noch",
+        "nooit last gehad",
+        "nooit last gehad van",
+        "ontwikkelde nooit",
+        "ontwikkelt geen",
+        "ontwikkelt niet",
+        "ontwikkelt nooit",
+        "patient is niet",
+        "patient ontkent",
+        "patient was niet",
+        "sloot haar uit tegen",
+        "sloot haar uit voor",
+        "sloot hem uit tegen",
+        "sloot hem uit voor",
+        "sluit uit",
+        "sluiten haar uit tegen",
+        "sluiten haar uit voor",
+        "sluiten hem uit tegen",
+        "sluiten hem uit voor",
+        "tonen geen",
+        "tonen niet",
+        "tonen niet aan",
+        "toonde geen",
+        "uitgesloten tegen",
+        "uitgesloten voor",
+        "vertoont geen",
+        "vertoont niet",
+        "voelde geen",
+        "voelde niet",
+        "voldoende haar uit te sluiten tegen",
+        "voldoende haar uit te sluiten voor",
+        "voldoende hem uit te sluiten tegen",
+        "voldoende hem uit te sluiten voor",
+        "vrij van",
+        "was geen",
+        "was niet",
+        "weigert",
+        "zonder",
+        "zonder indicatie van",
+        "zonder teken van",
+        "zonder tekenen van"
+      ]
+    },
+    {
+      "qualifier": "Presence.Absent",
+      "direction": "following",
+      "max_scope": 5,
+      "patterns": [
+        "-",
+        "afwezig",
+        "gestaakt",
+        "geweigerd",
+        "is afwezig",
+        "is ontkend",
+        "is uitgesloten",
+        "is verdwenen",
+        "is weer weg",
+        "is weg",
+        "kan worden uitgesloten",
+        "niet aan de orde",
+        "niet geconstateerd",
+        "niet meer aanwezig",
+        "nooit gehad",
+        "opgelost",
+        "speelt niet",
+        "uitgesloten",
+        "was uitgesloten",
+        "weg",
+        "werd ontkend",
+        "werd uitgesloten",
+        "werden ontkend",
+        "werden uitgesloten",
+        "worden ontkend",
+        "wordt ontkend",
+        "zijn afwezig",
+        "zijn ontkend",
+        "zijn uitgesloten",
+        "zijn verdwenen",
+        "zijn weg"
+      ]
+    },
+    {
+      "qualifier": "Presence.Absent",
+      "direction": "bidirectional",
+      "max_scope": 5,
+      "patterns": [
+        "evenmin",
+        "geen aanwijzing voor",
+        "geen aanwijzingen voor",
+        "geen bewijs",
+        "geen last van",
+        "geen sprake van",
+        "is geen",
+        "is niet",
+        "negatief",
+        "niet",
+        "niet aanwezig",
+        "niet meer",
+        "nooit",
+        "nooit ontwikkeld",
+        "ontkend",
+        "ontkennend",
+        "ontkent",
+        "verdween",
+        "verdwenen",
+        "waren niet",
+        "zijn geen",
+        "zijn niet"
+      ]
+    },
+    {
+      "qualifier": "Presence.Absent",
+      "direction": "pseudo",
+      "patterns": [
+        "geen afname",
+        "geen antwoord",
+        "geen oorzaak van",
+        "geen toename",
+        "geen verandering",
+        "geen verbetering",
+        "geen verklaring",
+        "geen zekere verandering",
+        "gram negatief",
+        "kan niet",
+        "kon niet",
+        "leek niet",
+        "leken niet",
+        "lijkt niet",
+        "niet aan te tonen",
+        "niet alleen",
+        "niet bekend",
+        "niet besproken",
+        "niet duidelijk",
+        "niet geindiceerd",
+        "niet gevraagd",
+        "niet goed",
+        "niet kunnen aantonen",
+        "niet mogelijk",
+        "niet mogelijk om",
+        "niet uit te sluiten",
+        "niet uitgesloten",
+        "niet uitgevraagd",
+        "niet vast te stellen",
+        "niet waarschijnlijk",
+        "niet zeker of",
+        "wel of niet",
+        "zonder effect op",
+        "zonder moeite",
+        "zonder moelijkheid",
+        "zonder verdere"
+      ]
+    },
+    {
+      "qualifier": "Presence.Absent",
+      "direction": "termination",
+      "patterns": [
+        ",",
+        "aangezien er",
+        "afgezien van",
+        "alhoewel",
+        "andere mogelijkheden tot",
+        "andere redenen tot",
+        "andere redenen voor",
+        "behalve",
+        "behoudens",
+        "bron van",
+        "bron voor",
+        "bronnen van",
+        "bronnen voor",
+        "buiten",
+        "daarentegen",
+        "dat",
+        "desalniettemin",
+        "die",
+        "doch",
+        "etiologie van",
+        "etiologie voor",
+        "hetgeen",
+        "hoewel",
+        "losstaand van",
+        "maar",
+        "naast",
+        "niettemin",
+        "nochtans",
+        "nog",
+        "ofschoon",
+        "ondergeschikt",
+        "reden tot",
+        "reden van",
+        "reden voor",
+        "redenen tot",
+        "redenen voor",
+        "renenen van",
+        "soms",
+        "toch",
+        "trigger voor",
+        "uitgezonderd",
+        "voelt zich",
+        "wel",
+        "welke",
+        [
+          {
+            "LOWER": "als",
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "de",
+                "een"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "bron",
+                "bronnen",
+                "reden",
+                "redenen",
+                "oorzaak",
+                "oorzaken",
+                "oorsprong",
+                "etiologie"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "van",
+                "voor",
+                "tot"
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Presence.Uncertain",
+      "direction": "preceding",
+      "max_scope": 5,
+      "patterns": [
+        "beoordelen van",
+        "differentiaal diagnostisch",
+        "evalueren voor",
+        "gecontroleerd op",
+        "geen weet van",
+        "gescreend op",
+        "kan haar uitsluiten tegen",
+        "kan haar uitsluiten voor",
+        "kan hem uitsluiten tegen",
+        "kan hem uitsluiten voor",
+        "kan uitsluiten tegen",
+        "kan uitsluiten voor",
+        "leek niet",
+        "leken niet",
+        "lijkt niet",
+        "niet zeker of",
+        "observeren van",
+        "rekening houden met",
+        "ter diagnostiek van",
+        "test voor",
+        "vermoeden van",
+        "weet niet van",
+        "wordt gedacht aan"
+      ]
+    },
+    {
+      "qualifier": "Presence.Uncertain",
+      "direction": "following",
+      "max_scope": 5,
+      "patterns": [
+        "?",
+        "dient te worden uitgesloten",
+        "geen antwoord",
+        "kan niet worden uitgesloten",
+        "kon niet worden uitgesloten",
+        "lijkt onwaarschijnlijk",
+        "moet worden uitgesloten",
+        "niet bekend",
+        "niet besproken",
+        "niet gevraagd",
+        "niet uitgevraagd",
+        "zal worden uitgesloten",
+        "zou kunnen worden uitgesloten",
+        "zouden moeten worden uitgesloten",
+        "zullen worden uitgesloten"
+      ]
+    },
+    {
+      "qualifier": "Presence.Uncertain",
+      "direction": "bidirectional",
+      "max_scope": 5,
+      "patterns": [
+        "ambivalent",
+        "dd",
+        "diagnostiek",
+        "eventueel",
+        "eventuele",
+        "evt",
+        "hypothese",
+        "hypothesen",
+        "hypotheses",
+        "inschatten",
+        "laag ingeschat",
+        "mgl",
+        "minder waarschijnlijk",
+        "mogelijk",
+        "mogelijke",
+        "niet aan te tonen",
+        "niet duidelijk",
+        "niet kunnen aantonen",
+        "niet uit te sluiten",
+        "niet uitgesloten",
+        "niet vast te stellen",
+        "niet waarschijnlijk",
+        "onduidelijk",
+        "onwaarschijnlijk",
+        "screen",
+        "screening",
+        "second opinion",
+        "ter uitsluiting",
+        "twijfel",
+        "uit te sluiten",
+        "uitsluiten",
+        "verdenking",
+        "vermoedde",
+        "vermoedden",
+        "vermoeden",
+        "vermoedt",
+        "voorlopige diagnose",
+        "waarschijnlijk",
+        "wel of niet",
+        "werkdiagnose"
+      ]
+    },
+    {
+      "qualifier": "Presence.Uncertain",
+      "direction": "pseudo",
+      "patterns": [
+        "dd bij",
+        "onwaarschijnlijk bij",
+        "waarschijnlijk bij",
+        "werkdiagnose voor",
+        [
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          },
+          {
+            "NORM": "dd"
+          }
+        ],
+        [
+          {
+            "NORM": "dd"
+          },
+          {
+            "TEXT": {
+              "REGEX": "^\\d+$"
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Presence.Uncertain",
+      "direction": "termination",
+      "patterns": [
+        ",",
+        "aangezien er",
+        "afgezien van",
+        "alhoewel",
+        "andere mogelijkheden tot",
+        "andere redenen tot",
+        "andere redenen voor",
+        "behalve",
+        "behoudens",
+        "bron van",
+        "bron voor",
+        "bronnen van",
+        "bronnen voor",
+        "buiten",
+        "daarentegen",
+        "dat",
+        "desalniettemin",
+        "die",
+        "doch",
+        "etiologie van",
+        "etiologie voor",
+        "hetgeen",
+        "hoewel",
+        "losstaand van",
+        "maar",
+        "naast",
+        "niettemin",
+        "nochtans",
+        "nog",
+        "ofschoon",
+        "ondergeschikt",
+        "reden tot",
+        "reden van",
+        "reden voor",
+        "redenen tot",
+        "redenen voor",
+        "renenen van",
+        "soms",
+        "toch",
+        "trigger voor",
+        "uitgezonderd",
+        "voelt zich",
+        "wel",
+        "welke",
+        [
+          {
+            "LOWER": "als",
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "de",
+                "een"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "bron",
+                "bronnen",
+                "reden",
+                "redenen",
+                "oorzaak",
+                "oorzaken",
+                "oorsprong",
+                "etiologie"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "van",
+                "voor",
+                "tot"
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Temporality.Historical",
       "direction": "preceding",
       "patterns": [
-        "familieanamnese",
-        "familie-anamnese",
-        "familie anamnese",
-        "familiair",
-        "familiaire",
-        "familieleden",
-        "familiegeschiedenis",
-        "moederszijde",
-        "vaderszijde",
+        "al bekende",
+        "eerder al",
+        "eerdere",
+        "ex-",
+        "status na"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Historical",
+      "direction": "following",
+      "patterns": [
+        "gehad",
+        "geweest",
+        "heeft gehad",
+        "heeft meegemaakt",
+        "heeft plaatsgehad",
+        "heeft plaatsgevonden",
+        "is gebeurd",
+        "is geweest",
+        "meegemaakt",
+        "opgelost"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Historical",
+      "direction": "bidirectional",
+      "patterns": [
+        "als baby",
+        "als kind",
+        "als puber",
+        "als tiener",
+        "bij eerste presentatie",
+        "destijds",
+        "doorgemaakt",
+        "doorgemaakte",
+        "gedocumenteerd",
+        "gedocumenteerde",
+        "geschiedenis",
+        "geschiedenis van",
+        "herinnering",
+        "herinneringen",
+        "in de geschiedenis",
+        "in de kindertijd",
+        "in de psychiatrische voorgeschiedenis",
+        "in de vg",
+        "in de voorgeschiedenis",
+        "in het verleden",
+        "in jeugd",
+        "jaar",
+        "jaren",
+        "maand",
+        "maanden",
+        "niet actueel",
+        "op jong volgwassen leeftijd",
+        "op jonge leeftijd",
+        "op jongvolwassen leeftijd",
+        "subacute",
+        "subacuut",
+        "toen",
+        "verleden van",
+        "vg",
+        "voorgeschiedenis",
+        "vorig",
+        "vorige",
+        "vroeger",
+        "werd",
         [
           {
             "LOWER": {
               "IN": [
-                "vader",
-                "vdr",
-                "moeder",
-                "mdr",
-                "broer",
-                "broertje",
-                "zus",
-                "zusje",
-                "oom",
-                "tante",
-                "neef",
-                "neefje",
-                "nicht",
-                "nichtje",
-                "opa",
-                "oma",
-                "grootvader",
-                "grootmoeder",
-                "buurman",
-                "buurvrouw",
-                "zoon",
-                "zoontje",
-                "dochter",
-                "dochtertje",
-                "huisgenoot",
-                "huisgenote",
-                "familie",
-                "broers",
-                "broertjes",
-                "zussen",
-                "zusjes",
-                "ooms",
-                "tantes",
-                "neven",
-                "neefjes",
-                "nichten",
-                "nichtjes",
-                "zoons",
-                "zoontjes",
-                "dochters",
-                "dochtertjes",
-                "huisgenoten",
-                "huisgenotes"
+                "in",
+                "rond"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          },
+          {
+            "TEXT": ":"
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          },
+          {
+            "LOWER": "geleden"
+          }
+        ],
+        [
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": "in"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "november",
+                "december"
+              ]
+            }
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Temporality.Historical",
+      "direction": "pseudo",
+      "patterns": [
+        "blanco psychiatrische vg",
+        "blanco psychiatrische voorgeschiedenis",
+        "blanco vg",
+        "blanco voorgeschiedenis",
+        "vg blanco",
+        "voorgeschiedenis blanco",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "een",
+                "twee",
+                "drie",
+                "vier",
+                "vijf",
+                "zes",
+                "zeven",
+                "acht",
+                "negen",
+                "tien"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "TEXT": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
               ]
             }
           }
@@ -104,33 +750,291 @@
           {
             "LOWER": {
               "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "oktober",
+                "november",
+                "december"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            },
+            "OP": "?"
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Temporality.Historical",
+      "direction": "termination",
+      "patterns": [
+        ",",
+        "actueel",
+        "afgenomen",
+        "afname",
+        "nu",
+        "primair",
+        "sinds",
+        "toegenomen",
+        "toename",
+        "vanaf"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Future",
+      "direction": "preceding",
+      "patterns": [
+        "als",
+        "als de patient",
+        "als er",
+        "als hij",
+        "als zij",
+        "cave",
+        "indien",
+        "indien er",
+        "kans op",
+        "risico op",
+        "ter afwending van",
+        "verwachte",
+        "wanneer",
+        "zorgen voor"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Future",
+      "direction": "following",
+      "patterns": [
+        "kan ontwikkelen"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Future",
+      "direction": "bidirectional",
+      "patterns": [
+        "allergie",
+        "indien nodig",
+        "preventief",
+        "profylactisch",
+        "te verwachten"
+      ]
+    },
+    {
+      "qualifier": "Temporality.Future",
+      "direction": "pseudo",
+      "patterns": [
+        "als baby",
+        "als kind",
+        "als puber",
+        "als tiener",
+        "geduid als",
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6",
+                "7",
+                "8",
+                "9",
+                "10",
+                "een",
+                "twee",
+                "drie",
+                "vier",
+                "vijf",
+                "zes",
+                "zeven",
+                "acht",
+                "negen",
+                "tien"
+              ]
+            },
+            "OP": "?"
+          },
+          {
+            "TEXT": {
+              "IN": [
+                "jaar",
+                "jaren",
+                "maand",
+                "maanden"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "sinds",
+                "vanaf"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "januari",
+                "februari",
+                "maart",
+                "april",
+                "mei",
+                "juni",
+                "juli",
+                "augustus",
+                "september",
+                "oktober",
+                "november",
+                "december"
+              ]
+            }
+          },
+          {
+            "TEXT": {
+              "REGEX": "^(19|20)\\d{2}$"
+            },
+            "OP": "?"
+          }
+        ]
+      ]
+    },
+    {
+      "qualifier": "Temporality.Future",
+      "direction": "termination",
+      "patterns": [
+        ",",
+        "actueel",
+        "afgenomen",
+        "afname",
+        "nu",
+        "primair",
+        "sinds",
+        "toegenomen",
+        "toename",
+        "vanaf"
+      ]
+    },
+    {
+      "qualifier": "Experiencer.Family",
+      "direction": "preceding",
+      "patterns": [
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "broer",
+                "broers",
+                "broertje",
+                "broertjes",
+                "dochter",
+                "dochters",
+                "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "mdr",
+                "moeder",
+                "neef",
+                "neefje",
+                "neefjes",
+                "neven",
+                "nicht",
+                "nichten",
+                "nichtje",
+                "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
                 "vader",
                 "vdr",
-                "moeder",
-                "mdr",
-                "broer",
-                "broertje",
+                "zoon",
+                "zoons",
+                "zoontje",
+                "zoontjes",
                 "zus",
                 "zusje",
-                "oom",
-                "tante",
+                "zusjes",
+                "zussen"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "broer",
+                "broertje",
+                "dochter",
+                "dochtertje",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "mdr",
+                "moeder",
                 "neef",
                 "neefje",
                 "nicht",
                 "nichtje",
-                "opa",
                 "oma",
-                "grootvader",
-                "grootmoeder",
-                "buurman",
-                "buurvrouw",
+                "oom",
+                "opa",
+                "tante",
+                "vader",
+                "vdr",
                 "zoon",
                 "zoontje",
-                "dochter",
-                "dochtertje",
-                "huisgenoot",
-                "huisgenote",
-                "familie"
+                "zus",
+                "zusje"
               ]
             }
           },
@@ -149,20 +1053,18 @@
               "IN": [
                 "broers",
                 "broertjes",
-                "zussen",
-                "zusjes",
-                "ooms",
-                "tantes",
-                "neven",
-                "neefjes",
-                "nichten",
-                "nichtjes",
-                "zoons",
-                "zoontjes",
                 "dochters",
                 "dochtertjes",
-                "huisgenoten",
-                "huisgenotes"
+                "neefjes",
+                "neven",
+                "nichten",
+                "nichtjes",
+                "ooms",
+                "tantes",
+                "zoons",
+                "zoontjes",
+                "zusjes",
+                "zussen"
               ]
             }
           },
@@ -174,33 +1076,29 @@
           {
             "LOWER": {
               "IN": [
-                "vader",
-                "vdr",
-                "moeder",
-                "mdr",
                 "broer",
                 "broertje",
-                "zus",
-                "zusje",
-                "oom",
-                "tante",
+                "dochter",
+                "dochtertje",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "mdr",
+                "moeder",
                 "neef",
                 "neefje",
                 "nicht",
                 "nichtje",
-                "opa",
                 "oma",
-                "grootvader",
-                "grootmoeder",
-                "buurman",
-                "buurvrouw",
+                "oom",
+                "opa",
+                "tante",
+                "vader",
+                "vdr",
                 "zoon",
                 "zoontje",
-                "dochter",
-                "dochtertje",
-                "huisgenoot",
-                "huisgenote",
-                "familie"
+                "zus",
+                "zusje"
               ]
             }
           },
@@ -214,11 +1112,9 @@
       ]
     },
     {
-      "qualifier": "Experiencer.Other",
+      "qualifier": "Experiencer.Family",
       "direction": "following",
       "patterns": [
-        "in de familie",
-        "in familie",
         [
           {
             "LOWER": "bij"
@@ -226,49 +1122,43 @@
           {
             "LOWER": {
               "IN": [
-                "vader",
-                "vdr",
-                "moeder",
-                "mdr",
                 "broer",
+                "broers",
                 "broertje",
-                "zus",
-                "zusje",
-                "oom",
-                "tante",
+                "broertjes",
+                "dochter",
+                "dochters",
+                "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "mdr",
+                "moeder",
                 "neef",
                 "neefje",
-                "nicht",
-                "nichtje",
-                "opa",
-                "oma",
-                "grootvader",
-                "grootmoeder",
-                "buurman",
-                "buurvrouw",
-                "zoon",
-                "zoontje",
-                "dochter",
-                "dochtertje",
-                "huisgenoot",
-                "huisgenote",
-                "familie",
-                "broers",
-                "broertjes",
-                "zussen",
-                "zusjes",
-                "ooms",
-                "tantes",
-                "neven",
                 "neefjes",
+                "neven",
+                "nicht",
                 "nichten",
+                "nichtje",
                 "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
+                "vader",
+                "vdr",
+                "zoon",
                 "zoons",
+                "zoontje",
                 "zoontjes",
-                "dochters",
-                "dochtertjes",
-                "huisgenoten",
-                "huisgenotes"
+                "zus",
+                "zusje",
+                "zusjes",
+                "zussen"
               ]
             }
           }
@@ -276,13 +1166,26 @@
       ]
     },
     {
-      "qualifier": "Experiencer.Other",
+      "qualifier": "Experiencer.Family",
+      "direction": "bidirectional",
+      "patterns": [
+        "familiair",
+        "familiaire",
+        "familie anamnese",
+        "familie-anamnese",
+        "familieanamnese",
+        "familiegeschiedenis",
+        "familieleden",
+        "in de familie",
+        "in familie",
+        "moederszijde",
+        "vaderszijde"
+      ]
+    },
+    {
+      "qualifier": "Experiencer.Family",
       "direction": "pseudo",
       "patterns": [
-        "door familie",
-        "familie",
-        "met familie",
-        "naar familie",
         [
           {
             "LOWER": {
@@ -301,49 +1204,49 @@
           {
             "LOWER": {
               "IN": [
-                "vader",
-                "vdr",
-                "moeder",
-                "mdr",
                 "broer",
+                "broers",
                 "broertje",
-                "zus",
-                "zusje",
-                "oom",
-                "tante",
-                "neef",
-                "neefje",
-                "nicht",
-                "nichtje",
-                "opa",
-                "oma",
-                "grootvader",
-                "grootmoeder",
+                "broertjes",
                 "buurman",
                 "buurvrouw",
-                "zoon",
-                "zoontje",
                 "dochter",
+                "dochters",
                 "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
                 "huisgenoot",
                 "huisgenote",
-                "familie",
-                "broers",
-                "broertjes",
-                "zussen",
-                "zusjes",
-                "ooms",
-                "tantes",
-                "neven",
-                "neefjes",
-                "nichten",
-                "nichtjes",
-                "zoons",
-                "zoontjes",
-                "dochters",
-                "dochtertjes",
                 "huisgenoten",
-                "huisgenotes"
+                "huisgenotes",
+                "mdr",
+                "moeder",
+                "neef",
+                "neefje",
+                "neefjes",
+                "neven",
+                "nicht",
+                "nichten",
+                "nichtje",
+                "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
+                "vader",
+                "vdr",
+                "zoon",
+                "zoons",
+                "zoontje",
+                "zoontjes",
+                "zus",
+                "zusje",
+                "zusjes",
+                "zussen"
               ]
             }
           }
@@ -484,9 +1387,10 @@
       ]
     },
     {
-      "qualifier": "Experiencer.Other",
+      "qualifier": "Experiencer.Family",
       "direction": "termination",
       "patterns": [
+        ",",
         "beslist",
         "besloot",
         "daarnaast",
@@ -496,710 +1400,342 @@
         "klaagt",
         "niet",
         "nu",
+        "patient",
         "patient haar",
         "patient zijn",
-        "patient",
+        "pt",
         "pt haar",
         "pt zijn",
-        "pt",
         "rapporteerde",
         "vandaag",
         "welke",
         "zelf",
-        "zijzelf",
-        ","
+        "zijzelf"
       ]
     },
     {
-      "qualifier": "Negation.Negated",
+      "qualifier": "Experiencer.Other",
       "direction": "preceding",
-      "max_scope": 5,
       "patterns": [
-        "afwezigheid van",
-        "deed geen",
-        "deed niet",
-        "geen aanwijzing voor",
-        "geen aanwijzingen voor",
-        "geen abnormale",
-        "geen bewijs voor",
-        "geen klachten van",
-        "geen klachten van",
-        "geen oorzaak van ",
-        "geen reden tot",
-        "geen reden voor",
-        "geen sprake van",
-        "geen suggestie van",
-        "geen teken van",
-        "geen tekenen van",
-        "geen",
-        "is geen",
-        "is niet",
-        "konden geen",
-        "konden niet",
-        "kunnen geen",
-        "kunnen niet",
-        "negatief voor",
-        "niet waarschijnlijk",
-        "niet",
-        "nooit last gehad van",
-        "nooit",
-        "ontkend",
-        "ontkennend",
-        "ontkent",
-        "ontwikkelde geen",
-        "ontwikkelde nooit",
-        "ontwikkelt geen",
-        "patient is niet",
-        "patient was niet",
-        "sluit uit",
-        "subklinisch",
-        "subklinische",
-        "toonde geen",
-        "toonde geen",
-        "uitgesloten",
-        "versus",
-        "vrij van",
-        "waren geen",
-        "waren niet",
-        "was geen",
-        "was niet",
-        "zijn geen",
-        "zijn niet",
-        "zonder indicatie van ",
-        "zonder teken van",
-        "zonder tekenen van",
-        "zonder"
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "buurman",
+                "buurvrouw",
+                "huisgenoot",
+                "huisgenote",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "buurman",
+                "buurvrouw",
+                "huisgenoot",
+                "huisgenote"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "zijn",
+                "haar"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          },
+          {
+            "LOWER": "hun"
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "buurman",
+                "buurvrouw",
+                "huisgenoot",
+                "huisgenote"
+              ]
+            }
+          },
+          {
+            "LOWER": "'"
+          },
+          {
+            "LOWER": "s"
+          }
+        ]
       ]
     },
     {
-      "qualifier": "Negation.Negated",
+      "qualifier": "Experiencer.Other",
       "direction": "following",
-      "max_scope": 5,
       "patterns": [
-        "afwezig",
-        "gestaakt",
-        "is uitgesloten",
-        "is verdwenen",
-        "is weg",
-        "kan worden uitgesloten",
-        "niet aan de orde",
-        "niet aanwezig",
-        "niet gezien",
-        "niet meer",
-        "opgelost",
-        "speelt niet",
-        "in complete remissie",
-        "in totale remissie",
-        "waren niet",
-        "was niet",
-        "werd uitgesloten",
-        "werden ontkend",
-        "werden uitgesloten",
-        "worden ontkend",
-        "zijn afwezig",
-        "zijn ontkend",
-        "zijn uitgesloten",
-        "zijn verdwenen",
-        "zijn weg"
+        [
+          {
+            "LOWER": "bij"
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "buurman",
+                "buurvrouw",
+                "huisgenoot",
+                "huisgenote",
+                "huisgenoten",
+                "huisgenotes"
+              ]
+            }
+          }
+        ]
       ]
     },
     {
-      "qualifier": "Negation.Negated",
+      "qualifier": "Experiencer.Other",
       "direction": "pseudo",
       "patterns": [
-        "geen afname",
-        "geen oorzaak van",
-        "geen toename",
-        "geen verandering",
-        "geen verbetering",
-        "geen verklaring",
-        "geen zekere verandering",
-        "gram negatief",
-        "kan niet",
-        "niet alleen",
-        "niet besproken",
-        "niet duidelijk",
-        "niet gevraagd",
-        "niet geindiceerd",
-        "niet mogelijk om ",
-        "niet uit te sluiten",
-        "niet uitgesloten",
-        "niet uitgevraagd",
-        "niet zeker of",
-        "wel of niet",
-        "zonder effect op",
-        "zonder moeite",
-        "zonder moelijkheid",
-        "zonder verdere",
-        "niet goed"
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "door",
+                "met",
+                "naar",
+                "volgens",
+                "vertelt",
+                "vertelde",
+                "vertellen",
+                "vertelden"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "broer",
+                "broers",
+                "broertje",
+                "broertjes",
+                "buurman",
+                "buurvrouw",
+                "dochter",
+                "dochters",
+                "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "huisgenoot",
+                "huisgenote",
+                "huisgenoten",
+                "huisgenotes",
+                "mdr",
+                "moeder",
+                "neef",
+                "neefje",
+                "neefjes",
+                "neven",
+                "nicht",
+                "nichten",
+                "nichtje",
+                "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
+                "vader",
+                "vdr",
+                "zoon",
+                "zoons",
+                "zoontje",
+                "zoontjes",
+                "zus",
+                "zusje",
+                "zusjes",
+                "zussen"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "broer",
+                "broers",
+                "broertje",
+                "broertjes",
+                "buurman",
+                "buurvrouw",
+                "dochter",
+                "dochters",
+                "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "huisgenoot",
+                "huisgenote",
+                "huisgenoten",
+                "huisgenotes",
+                "mdr",
+                "moeder",
+                "neef",
+                "neefje",
+                "neefjes",
+                "neven",
+                "nicht",
+                "nichten",
+                "nichtje",
+                "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
+                "vader",
+                "vdr",
+                "zoon",
+                "zoons",
+                "zoontje",
+                "zoontjes",
+                "zus",
+                "zusje",
+                "zusjes",
+                "zussen"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "belde",
+                "belden",
+                "zei",
+                "zeiden",
+                "vond",
+                "vonden",
+                "vertelt",
+                "vertelde",
+                "vertellen",
+                "vertelden"
+              ]
+            }
+          }
+        ],
+        [
+          {
+            "LOWER": {
+              "IN": [
+                "broer",
+                "broers",
+                "broertje",
+                "broertjes",
+                "buurman",
+                "buurvrouw",
+                "dochter",
+                "dochters",
+                "dochtertje",
+                "dochtertjes",
+                "familie",
+                "grootmoeder",
+                "grootvader",
+                "huisgenoot",
+                "huisgenote",
+                "huisgenoten",
+                "huisgenotes",
+                "mdr",
+                "moeder",
+                "neef",
+                "neefje",
+                "neefjes",
+                "neven",
+                "nicht",
+                "nichten",
+                "nichtje",
+                "nichtjes",
+                "oma",
+                "oom",
+                "ooms",
+                "opa",
+                "tante",
+                "tantes",
+                "vader",
+                "vdr",
+                "zoon",
+                "zoons",
+                "zoontje",
+                "zoontjes",
+                "zus",
+                "zusje",
+                "zusjes",
+                "zussen"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "gaf",
+                "gaven"
+              ]
+            }
+          },
+          {
+            "LOWER": {
+              "IN": [
+                "aan"
+              ]
+            }
+          }
+        ]
       ]
     },
     {
-      "qualifier": "Negation.Negated",
+      "qualifier": "Experiencer.Other",
       "direction": "termination",
       "patterns": [
-        "aangezien er",
-        "afgezien van",
-        "alhoewel",
-        "andere mogelijkheden tot",
-        "andere redenen tot",
-        "andere redenen voor",
-        "behalve",
-        "behoudens",
-        "bron van",
-        "bron voor",
-        "bronnen van",
-        "bronnen voor",
-        "buiten",
-        "daarentegen",
-        "dat",
-        "desalniettemin",
-        "die",
-        "doch",
-        "etiologie van",
-        "etiologie voor",
-        "hetgeen",
-        "hoewel",
-        "losstaand van",
-        "maar",
-        "naast",
-        "niettemin",
-        "nochtans",
-        "nog",
-        "ofschoon",
-        "ondergeschikt",
-        "reden tot",
-        "reden van",
-        "reden voor",
-        "redenen tot",
-        "redenen voor",
-        "renenen van",
-        "soms",
-        "toch",
-        "trigger voor",
-        "uitgezonderd",
-        "voelt zich",
-        "wel",
-        "welke",
         ",",
-        [
-          {
-            "LOWER": "als",
-            "OP": "?"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "de",
-                "een"
-              ]
-            },
-            "OP": "?"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "bron",
-                "bronnen",
-                "reden",
-                "redenen",
-                "oorzaak",
-                "oorzaken",
-                "oorsprong",
-                "etiologie"
-              ]
-            }
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "van",
-                "voor",
-                "tot"
-              ]
-            }
-          }
-        ]
-      ]
-    },
-    {
-      "qualifier": "Plausibility.Hypothetical",
-      "direction": "preceding",
-      "patterns": [
-        "als er",
-        "als",
-        "ambivalent",
-        "beoordelen van",
-        "cave",
-        "dd",
-        "diagnostiek",
-        "differentiaal diagnostisch",
-        "eventueel",
-        "eventuele",
-        "evt",
-        "hypothese",
-        "hypothesen",
-        "hypotheses",
-        "indien er",
-        "indien",
-        "kan indiceren",
-        "kan worden",
-        "kan zijn",
-        "kan",
-        "kans op",
-        "mgl",
-        "mogelijk gerelateerd aan",
-        "mogelijk",
-        "mogelijke",
-        "neiging tot",
-        "niet besproken",
-        "niet duidelijk",
-        "observeren van",
-        "onduidelijk",
-        "onwaarschijnlijk",
-        "rekening houden met",
-        "risico op",
-        "screen",
-        "screening",
-        "te verwachten",
-        "twijfel",
-        "uitsluiten",
-        "verdenking",
-        "vermoedde",
-        "vermoedden",
-        "vermoeden van",
-        "vermoeden",
-        "vermoedt",
-        "verwachte",
-        "voorlopige diagnose",
-        "waarschijnlijk",
-        "wanneer",
-        "wel of niet",
-        "wordt gedacht aan",
-        "zorgen voor",
-        "zou",
-        "werkdiagnose",
-        "dan"
-      ]
-    },
-    {
-      "qualifier": "Plausibility.Hypothetical",
-      "direction": "following",
-      "patterns": [
-        "?",
-        "ambivalent",
-        "kan niet worden uitgesloten",
-        "kan worden",
-        "kan zijn",
-        "kon niet worden uitgesloten",
-        "niet besproken",
-        "niet duidelijk",
-        "niet uitgevraagd",
-        "niet uit te sluiten",
-        "niet waarschijnlijk",
-        "screen",
-        "screening",
-        "onduidelijk",
-        "onwaarschijnijk",
-        "vermoedde",
-        "vermoedden",
-        "waarschijnlijk",
-        "zou worden",
-        "zou zijn"
-      ]
-    },
-    {
-      "qualifier": "Plausibility.Hypothetical",
-      "direction": "pseudo",
-      "patterns": [
-        "als baby",
-        "als kind",
-        "als puber",
-        "als tiener",
-        "dd bij",
-        "geduid als",
-        "kan passen bij",
-        "niet mogelijk",
-        "werkdiagnose voor",
-        "waarschijnlijk bij",
-        "onwaarschijnlijk bij",
-        [
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            }
-          },
-          {
-            "NORM": "dd"
-          }
-        ],
-        [
-          {
-            "NORM": "dd"
-          },
-          {
-            "TEXT": {
-              "REGEX": "^\\d+$"
-            }
-          }
-        ]
-      ]
-    },
-    {
-      "qualifier": "Plausibility.Hypothetical",
-      "direction": "termination",
-      "patterns": [
-        "aanwezig",
-        "ter preventie",
-        "zeker",
-        "zonder twijfel",
-        ","
-      ]
-    },
-    {
-      "qualifier": "Temporality.Historical",
-      "direction": "preceding",
-      "patterns": [
-        "al bekende",
-        "als baby",
-        "als kind",
-        "als puber",
-        "als tiener",
-        "bij eerste presentatie",
-        "destijds",
-        "eerdere",
-        "ex-",
-        "gedocumenteerd",
-        "gedocumenteerde",
-        "geschiedenis van",
-        "geschiedenis",
-        "herinnering",
-        "herinneringen",
-        "in de kindertijd",
-        "in de vg",
-        "in de voorgeschiedenis",
-        "in het verleden",
-        "in voorgeschiedenis",
-        "jaar",
-        "jaren",
-        "maand",
-        "maanden",
-        "niet actueel",
-        "op jong volwassen leeftijd",
-        "op jonge leeftijd",
-        "subacute",
-        "subacuut",
-        "toen",
-        "verleden van",
-        "vg",
-        "voorgeschiedenis",
-        "vroeger",
-        "werd",
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "in",
-                "rond"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            }
-          }
-        ],
-        [
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            }
-          },
-          {
-            "TEXT": ":"
-          }
-        ],
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "jaar",
-                "jaren",
-                "maand",
-                "maanden"
-              ]
-            }
-          },
-          {
-            "LOWER": "geleden"
-          }
-        ],
-        [
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            }
-          }
-        ],
-        [
-          {
-            "LOWER": "in"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "januari",
-                "februari",
-                "maart",
-                "april",
-                "mei",
-                "juni",
-                "juli",
-                "augustus",
-                "september",
-                "november",
-                "december"
-              ]
-            }
-          }
-        ]
-      ]
-    },
-    {
-      "qualifier": "Temporality.Historical",
-      "direction": "following",
-      "patterns": [
-        "als baby",
-        "als kind",
-        "als puber",
-        "als tiener",
-        "geweest",
-        "heeft gehad",
-        "heeft meegemaakt",
-        "heeft plaatsgehad",
-        "heeft plaatsgevonden",
-        "in de geschiedenis",
-        "in de kindertijd",
-        "in de psychiatrische voorgeschiedenis",
-        "in de vg",
-        "in de vg",
-        "in de voorgeschiedenis",
-        "in de voorgeschiedenis",
-        "in het verleden",
-        "in jeugd",
-        "in remissie",
-        "in voorgeschiedenis",
-        "in voorgeschiedenis",
-        "is gebeurd",
-        "is geweest",
-        "meegemaakt",
-        "nu in remissie",
-        "op jong volwassen leeftijd",
-        "op jonge leeftijd",
-        "opgelost",
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "in",
-                "rond"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            }
-          }
-        ],
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "jaar",
-                "jaren",
-                "maand",
-                "maanden"
-              ]
-            }
-          },
-          {
-            "LOWER": "geleden"
-          }
-        ],
-        [
-          {
-            "LOWER": "in"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "januari",
-                "februari",
-                "maart",
-                "april",
-                "mei",
-                "juni",
-                "juli",
-                "augustus",
-                "september",
-                "november",
-                "december"
-              ]
-            }
-          }
-        ],
-        [
-          {
-            "LOWER": "in"
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "januari",
-                "februari",
-                "maart",
-                "april",
-                "mei",
-                "juni",
-                "juli",
-                "augustus",
-                "september",
-                "november",
-                "december"
-              ]
-            }
-          }
-        ]
-      ]
-    },
-    {
-      "qualifier": "Temporality.Historical",
-      "direction": "pseudo",
-      "patterns": [
-        "blanco psychiatrische vg",
-        "blanco psychiatrische voorgeschiedenis",
-        "blanco vg",
-        "blanco voorgeschiedenis",
-        "lijkt meer",
-        "lijkt minder",
-        "lijkt niet meer",
-        "lijkt niet minder",
-        "vg blanco",
-        "voorgeschiedenis blanco",
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "sinds",
-                "vanaf"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            }
-          }
-        ],
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "sinds",
-                "vanaf"
-              ]
-            }
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "1",
-                "2",
-                "3",
-                "4",
-                "5",
-                "6",
-                "7",
-                "8",
-                "9",
-                "10",
-                "een",
-                "twee",
-                "drie",
-                "vier",
-                "vijf",
-                "zes",
-                "zeven",
-                "acht",
-                "negen",
-                "tien"
-              ]
-            },
-            "OP": "?"
-          },
-          {
-            "TEXT": {
-              "IN": [
-                "jaar",
-                "jaren",
-                "maand",
-                "maanden"
-              ]
-            }
-          }
-        ],
-        [
-          {
-            "LOWER": {
-              "IN": [
-                "sinds",
-                "vanaf"
-              ]
-            }
-          },
-          {
-            "LOWER": {
-              "IN": [
-                "januari",
-                "februari",
-                "maart",
-                "april",
-                "mei",
-                "juni",
-                "juli",
-                "augustus",
-                "september",
-                "oktober",
-                "november",
-                "december"
-              ]
-            }
-          },
-          {
-            "TEXT": {
-              "REGEX": "^(19|20)\\d{2}$"
-            },
-            "OP": "?"
-          }
-        ]
-      ]
-    },
-    {
-      "qualifier": "Temporality.Historical",
-      "direction": "termination",
-      "patterns": [
-        "actueel",
-        "afgenomen",
-        "afname",
+        "beslist",
+        "besloot",
+        "daarnaast",
+        "geen",
+        "hijzelf",
+        "huidig",
+        "klaagt",
+        "niet",
         "nu",
-        "primair",
-        "sinds",
-        "toegenomen",
-        "toename",
-        "vanaf",
-        ","
+        "patient",
+        "patient haar",
+        "patient zijn",
+        "pt",
+        "pt haar",
+        "pt zijn",
+        "rapporteerde",
+        "vandaag",
+        "welke",
+        "zelf",
+        "zijzelf"
       ]
     }
   ]

@@ -128,7 +128,7 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Negated"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Presence.Absent"}
 
     def test_detect_qualifiers_small_window(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
@@ -136,7 +136,7 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Affirmed"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Presence.Present"}
 
     def test_detect_qualifiers_without_negation(self, nlp):
         n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
@@ -144,7 +144,7 @@ class TestNegationTransformer:
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Negation.Affirmed"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Presence.Present"}
 
 
 class TestExperiencerTransformer:
@@ -188,10 +188,10 @@ class TestExperiencerTransformer:
         assert len(doc.ents) == 1
         assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Experiencer.Patient"}
 
-    def test_detect_qualifiers_referring_to_other(self, nlp):
+    def test_detect_qualifiers_referring_to_family(self, nlp):
         n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De broer van de patient had last van SYMPTOOM.")
         n(doc)
 
         assert len(doc.ents) == 1
-        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Experiencer.Other"}
+        assert getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR) == {"Experiencer.Family"}

@@ -7,7 +7,7 @@ from clinlp.ie.qualifier import (
     ContextAlgorithm,
     ContextRule,
     ContextRuleDirection,
-    QualifierFactory,
+    QualifierClass,
 )
 from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
@@ -25,7 +25,7 @@ def nlp():
 
 @pytest.fixture
 def mock_factory():
-    return QualifierFactory("Mock", ["Mock_1", "Mock_2"])
+    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
 @pytest.fixture
@@ -42,6 +42,7 @@ class TestUnitQualifierRuleDirection:
     def test_qualifier_rule_direction_create(self):
         assert ContextRuleDirection.PRECEDING
         assert ContextRuleDirection.FOLLOWING
+        assert ContextRuleDirection.BIDIRECTIONAL
         assert ContextRuleDirection.PSEUDO
         assert ContextRuleDirection.TERMINATION
 
@@ -49,7 +50,7 @@ class TestUnitQualifierRuleDirection:
 class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         pattern = "test"
-        qualifier = QualifierFactory("Negation", ["Affirmed", "Negated"]).create(
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
@@ -62,7 +63,7 @@ class TestUnitQualifierRule:
 
     def test_create_qualifier_rule_2(self):
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierFactory("Negation", ["Affirmed", "Negated"]).create(
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
@@ -144,6 +145,24 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
+    def test_matched_qualifier_pattern_initial_scope_bidirectional(
+        self, mock_factory, mock_doc
+    ):
+        rule = ContextRule(
+            pattern="_",
+            qualifier=mock_factory.create("Mock_1"),
+            direction=ContextRuleDirection.BIDIRECTIONAL,
+        )
+        start = 1
+        end = 2
+        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+        sentence = Span(mock_doc, start=0, end=4)
+
+        mqp.initialize_scope(sentence=sentence)
+
+        assert mqp.scope is not None
+        assert mqp.scope == (0, 4)
+
     def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
         self, mock_factory, mock_doc
     ):
@@ -181,6 +200,25 @@ class TestUnitMatchedQualifierPattern:
 
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
+
+    def test_matched_qualifier_pattern_initial_scope_bidirectional_with_max_scope(
+        self, mock_factory, mock_doc
+    ):
+        rule = ContextRule(
+            pattern="_",
+            qualifier=mock_factory.create("Mock_1"),
+            direction=ContextRuleDirection.BIDIRECTIONAL,
+            max_scope=1,
+        )
+        start = 2
+        end = 3
+        mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
+        sentence = Span(mock_doc, start=0, end=4)
+
+        mqp.initialize_scope(sentence=sentence)
+
+        assert mqp.scope is not None
+        assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_invalid_scope(
         self, mock_factory, mock_doc
@@ -245,6 +283,9 @@ class TestUnitContextAlgorithm:
     def test_parse_direction(self, ca):
         assert ca._parse_direction("preceding") == ContextRuleDirection.PRECEDING
         assert ca._parse_direction("following") == ContextRuleDirection.FOLLOWING
+        assert (
+            ca._parse_direction("bidirectional") == ContextRuleDirection.BIDIRECTIONAL
+        )
         assert ca._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
         assert ca._parse_direction("termination") == ContextRuleDirection.TERMINATION
 
@@ -252,7 +293,7 @@ class TestUnitContextAlgorithm:
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
-                {"name": "Temporality", "values": ["Current", "Historical"]},
+                {"name": "Temporality", "values": ["Current", "Historical", "Future"]},
             ],
             "rules": [
                 {
@@ -266,12 +307,17 @@ class TestUnitContextAlgorithm:
                     "qualifier": "Temporality.Historical",
                     "direction": "following",
                 },
+                {
+                    "patterns": ["preventief"],
+                    "qualifier": "Temporality.Future",
+                    "direction": "bidirectional",
+                },
             ],
         }
 
         rules = ca._parse_rules(rules=rules)
 
-        assert len(rules) == 2
+        assert len(rules) == 3
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.Negated"
         assert str(rules[0].direction) == "ContextRuleDirection.PRECEDING"
@@ -280,6 +326,10 @@ class TestUnitContextAlgorithm:
         assert str(rules[1].qualifier) == "Temporality.Historical"
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
+        assert rules[2].pattern == "preventief"
+        assert str(rules[2].qualifier) == "Temporality.Future"
+        assert str(rules[2].direction) == "ContextRuleDirection.BIDIRECTIONAL"
+        assert rules[2].max_scope is None
 
     def test_load_rules_json(self, ca):
         rules = ca._parse_rules(rules="tests/data/qualifier_rules_simple.json")
@@ -308,7 +358,7 @@ class TestUnitContextAlgorithm:
         doc = nlp("mogelijk SYMPTOOM uitgesloten")
         ent = doc.ents[0]
 
-        qualifier_factory = QualifierFactory(
+        qualifier_factory = QualifierClass(
             name="Presence",
             values=["Absent", "Uncertain", "Present"],
             default="Present",
@@ -430,6 +480,28 @@ class TestUnitContextAlgorithm:
 
         assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
         assert "Negation.Negated" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+
+    def test_match_qualifiers_bidirectional_multiple_ents(self, nlp):
+        rules = {
+            "qualifiers": [
+                {"name": "Temporality", "values": ["Historical", "Current"]},
+            ],
+            "rules": [
+                {
+                    "patterns": ["als tiener"],
+                    "qualifier": "Temporality.Historical",
+                    "direction": "bidirectional",
+                },
+            ],
+        }
+
+        text = "SYMPTOOM als tiener SYMPTOOM"
+        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        doc = ca(nlp(text))
+
+        assert len(doc.ents) == 2
+        assert "Temporality.Historical" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Temporality.Historical" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
 
     def test_match_qualifiers_pseudo(self, nlp):
         rules = {

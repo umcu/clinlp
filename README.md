@@ -85,10 +85,10 @@ for ent in doc.ents:
 * `Preterme` `set()`
 * `<p3` `set()`
 * `bd enigszins verlaagd` `set()`
-* `hypotensie` `{'Experiencer.OTHER'}`
-* `veneus infarkt` `{'Negation.NEGATED'}`
+* `hypotensie` `{'Experiencer.Family'}`
+* `veneus infarkt` `{'Presence.Absent'}`
 * `partus prematurus` `set()`
-* `VI` `{'Plausibility.HYPOTHETICAL'}`
+* `VI` `{'Temporality.Future'}`
 
 ## Citing
 
@@ -303,11 +303,11 @@ Will result in the following concept dictionary:
 
 ### Qualifier detection
 
-After finding entities, it"s often useful to qualify these entities, e.g.: are they negated or affirmed, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Affirmed` for `Negation`).   
+After finding entities, it's often useful to qualify these entities, e.g.: are they present or absent, historical or current? `clinlp` currently implements two options: the rule-based Context Algorithm, and a transformer-based negation detector. In both cases, the result can be found in the `entity._.qualifiers`, `entity._.qualifiers_dict` and `entity._.qualifiers_str` attributes (including all defaults, e.g. `Present` for `Presence`). Some clarifications on the framework we use for qualifiers is available under [docs/qualifiers.docx](docs/qualifiers.docx) (will be incorporated in an improved documentation page soon).
 
 #### Context Algorithm
 
-The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for negation, temporality, plausibility and experiencer, is loaded by default:
+The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for presence, temporality, and experiencer, is loaded by default:
 
 ```python
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
@@ -321,7 +321,7 @@ cm = nlp.add_pipe("clinlp_context_algorithm", config={"rules": "/path/to/my_own_
 
 #### Transformer based detection
 
-`clinlp` also includes a wrapper around some trained transformer models for detector qualifiers, including the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformers can be found on [huggingface](https://huggingface.co/UMCU/). The negation detector for instnace is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
+`clinlp` also includes a wrapper around some trained transformer models for detector qualifiers, including the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformers can be found on [huggingface](https://huggingface.co/UMCU/). The negation detector for instance is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
 
 First, install the additional dependencies:
 
@@ -430,10 +430,9 @@ Resulting in:
                   'C0751954_veneus_infarct': 5,
                   'C0025289_meningitis': 5,
                   'C0023529_periventriculaire_leucomalacie': 2},
- 'qualifier_counts': {'Negation': {'Affirmed': 450, 'Negated': 50},
-                      'Plausibility': {'Plausible': 452, 'Hypothetical': 48},
-                      'Temporality': {'Current': 482, 'Historical': 18},
-                      'Experiencer': {'Patient': 489, 'Other': 11}}}
+ 'qualifier_counts': {'Presence': {'Present': 436, 'Uncertain': 34, 'Absent': 30},
+                      'Temporality': {'Current': 473, 'Historical': 18, 'Future': 9},
+                      'Experiencer': {'Patient': 489, 'Family': 9, 'Other': 2}}}
 ```
 
 #### Comparison statistics
@@ -513,7 +512,7 @@ Resulting in:
                                             'start': 1849,
                                             'end': 1855,
                                             'label': 'C0002871_anemie'},
-                             'true_qualifier': 'Other',
+                             'true_qualifier': 'Family',
                              'pred_qualifier': 'Patient'}, ...]},
  'Temporality': {'metrics': {'n': 460,
                              'precision': 0.0,
@@ -535,8 +534,8 @@ Resulting in:
                                              'start': 1668,
                                              'end': 1683,
                                              'label': 'C0015934_intrauterine_groeivertraging'},
-                              'true_qualifier': 'Plausible',
-                              'pred_qualifier': 'Hypothetical'}, ...]},
+                              'true_qualifier': 'Current',
+                              'pred_qualifier': 'Future'}, ...]},
  'Negation': {'metrics': {'n': 460,
                           'precision': 0.7692307692307693,
                           'recall': 0.6122448979591837,
@@ -546,8 +545,8 @@ Resulting in:
                                          'start': 4095,
                                          'end': 4111,
                                          'label': 'C0020433_hyperbilirubinemie'},
-                          'true_qualifier': 'Affirmed',
-                          'pred_qualifier': 'Negated'}, ...]}}
+                          'true_qualifier': 'Present',
+                          'pred_qualifier': 'Absent'}, ...]}}
 ```
 
 ### Where to go from here
