@@ -9,6 +9,11 @@
         "Uncertain",
         "Present"
       ],
+      "priorities": {
+        "Present": 0,
+        "Uncertain": 1,
+        "Absent": 2
+      },
       "default": "Present"
     },
     {
@@ -18,6 +23,11 @@
         "Current",
         "Future"
       ],
+      "priorities": {
+        "Current": 0,
+        "Future": 1,
+        "Historical": 2
+      },
       "default": "Current"
     },
     {
@@ -27,6 +37,11 @@
         "Family",
         "Other"
       ],
+      "priorities": {
+        "Patient": 0,
+        "Other": 1,
+        "Family": 2
+      },
       "default": "Patient"
     }
   ],
