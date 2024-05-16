@@ -109,10 +109,6 @@ class QualifierDetector(ABC):
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         pass
 
-    @abstractmethod
-    def _detect_qualifiers(self, doc: Doc) -> None:
-        pass
-
     @staticmethod
     def add_qualifier_to_ent(entity: Span, new_qualifier: Qualifier) -> None:
         qualifiers = get_qualifiers(entity)
@@ -122,16 +118,8 @@ class QualifierDetector(ABC):
                 "Cannot add qualifier to entity with non-initialized qualifiers."
             )
 
-        try:
-            old_qualifier = next(
-                iter(q for q in qualifiers if q.name == new_qualifier.name)
-            )
-
-            qualifiers.remove(old_qualifier)
-            qualifiers.add(new_qualifier)
-
-        except StopIteration:
-            qualifiers.add(new_qualifier)
+        qualifiers = [q for q in qualifiers if q.name != new_qualifier.name]
+        qualifiers.add(new_qualifier)
 
         set_qualifiers(entity, qualifiers)
 
@@ -141,6 +129,10 @@ class QualifierDetector(ABC):
 
         for _, qualifier_class in self.qualifier_classes.items():
             self.add_qualifier_to_ent(entity, qualifier_class.create())
+
+    @abstractmethod
+    def _detect_qualifiers(self, doc: Doc) -> None:
+        pass
 
     def __call__(self, doc: Doc) -> Doc:
         if len(doc.ents) == 0:
