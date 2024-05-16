@@ -338,6 +338,10 @@ _ = nlp.add_pipe("clinlp_experiencer_transformer")
 
 Some configuration options, like the number of tokens to consider, can be specified in the `config` argument. 
 
+#### Using multiple qualifier detectors together
+
+Multiple qualifier detectors (e.g. `clinlp_context_algorithm` and `clinlp_negation_transformer`) can be used together. However, if there is a qualifier class (e.g. Presence) they both detect, the the component that is added last will erase any qualifiers set by previous detectors, regardless of defaults. It's therefore most efficient to configure different detectors to not detect the same qualifiers, although no errors occur. If the qualifier detectors detect different qualifier classes (e.g. one detects Presence, and the other Experiencer), there is no issue and both qualifier classes will be correctly added to the entities.
+
 ### Metrics and statistics
 
 `clinlp` can compute some information extraction related metrics and statistics for annotated datasets. This is done by creating one or more `InfoExtractionDataset`. First install the optional dependencies:
