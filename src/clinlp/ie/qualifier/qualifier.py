@@ -45,6 +45,7 @@ class Qualifier:
     name: str = field(compare=True)
     value: str = field(compare=True)
     is_default: bool = field(compare=True)
+    priority: int = field(default=0, compare=False)
     prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self) -> dict:
@@ -60,17 +61,23 @@ class Qualifier:
 
 
 class QualifierFactory:
-    def __init__(self, name: str, values: list[str], default: Optional[str] = None):
+    def __init__(
+        self,
+        name: str,
+        values: list[str],
+        default: Optional[str] = None,
+        priorities: Optional[dict] = None,
+    ):
         self.name = name
+        self.values = values
         self.default = default or values[0]
+        self.priorities = priorities or {value: n for n, value in enumerate(values)}
 
         if len(set(values)) != len(values):
             raise ValueError(f"Please do not provide any duplicate values ({values})")
 
         if self.default not in values:
             raise ValueError(f"Default {default} not in provided value {values}")
-
-        self.values = values
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         if value is None:
@@ -83,8 +90,15 @@ class QualifierFactory:
             )
 
         is_default = value == self.default
+        priority = self.priorities[value]
 
-        return Qualifier(name=self.name, value=value, is_default=is_default, **kwargs)
+        return Qualifier(
+            name=self.name,
+            value=value,
+            is_default=is_default,
+            priority=priority,
+            **kwargs,
+        )
 
 
 class QualifierDetector(ABC):

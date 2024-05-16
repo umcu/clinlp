@@ -19,7 +19,7 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
     QualifierFactory,
 )
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_autocomponent, interval_dist
 
 
 class ContextRuleDirection(Enum):
@@ -330,6 +330,34 @@ class ContextAlgorithm(QualifierDetector):
 
         return match_scopes
 
+    def _resolve_matched_pattern_conflicts(
+        self, entity: Span, matched_patterns: list[_MatchedContextPattern]
+    ) -> list[_MatchedContextPattern]:
+        if len(matched_patterns) <= 1:
+            return matched_patterns
+
+        grouped_patterns = defaultdict(list)
+        result_patterns = []
+
+        for mp in matched_patterns:
+            grouped_patterns[mp.rule.qualifier.name].append(mp)
+
+        for mp_group in grouped_patterns.values():
+            if len(mp_group) == 1:
+                result_patterns += mp_group
+            else:
+                result_patterns.append(
+                    min(
+                        mp_group,
+                        key=lambda mp: (
+                            interval_dist(entity.start, entity.end, mp.start, mp.end),
+                            -mp.rule.qualifier.priority,
+                        ),
+                    )
+                )
+
+        return result_patterns
+
     def _detect_qualifiers(self, doc: Doc):
         """
         Apply the Context Algorithm to a doc.
@@ -356,26 +384,33 @@ class ContextAlgorithm(QualifierDetector):
                 # when applying the matcher to a sentence
                 offset = sentence.start if isinstance(rule.pattern, list) else 0
 
-                pattern = _MatchedContextPattern(
+                matched_pattern = _MatchedContextPattern(
                     rule=self._get_rule_from_match_id(match_id),
                     start=start,
                     end=end,
                     offset=offset,
                 )
 
-                pattern.initialize_scope(sentence)
-                matched_patterns.append(pattern)
+                matched_pattern.initialize_scope(sentence)
+                matched_patterns.append(matched_pattern)
 
             match_scopes = self._compute_match_scopes(matched_patterns)
 
             for ent in sentence.ents:
+                matched_patterns = []
+
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
                     if (ent.start + 1 > match_interval.data.end) or (
                         ent.end < match_interval.data.start + 1
                     ):
-                        self.add_qualifier_to_ent(
-                            ent, match_interval.data.rule.qualifier
-                        )
+                        matched_patterns.append(match_interval.data)
+
+                matched_patterns = self._resolve_matched_pattern_conflicts(
+                    ent, matched_patterns
+                )
+
+                for matched_pattern in matched_patterns:
+                    self.add_qualifier_to_ent(ent, matched_pattern.rule.qualifier)
 
     def __len__(self) -> int:
         return len(self.rules)
