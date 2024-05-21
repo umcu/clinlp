@@ -45,6 +45,7 @@ class Qualifier:
     name: str = field(compare=True)
     value: str = field(compare=True)
     is_default: bool = field(compare=True)
+    priority: int = field(default=0, compare=False)
     prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self) -> dict:
@@ -59,18 +60,24 @@ class Qualifier:
         return f"{self.name}.{self.value}"
 
 
-class QualifierFactory:
-    def __init__(self, name: str, values: list[str], default: Optional[str] = None):
+class QualifierClass:
+    def __init__(
+        self,
+        name: str,
+        values: list[str],
+        default: Optional[str] = None,
+        priorities: Optional[dict] = None,
+    ):
         self.name = name
+        self.values = values
         self.default = default or values[0]
+        self.priorities = priorities or {value: n for n, value in enumerate(values)}
 
         if len(set(values)) != len(values):
             raise ValueError(f"Please do not provide any duplicate values ({values})")
 
         if self.default not in values:
             raise ValueError(f"Default {default} not in provided value {values}")
-
-        self.values = values
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         if value is None:
@@ -83,8 +90,15 @@ class QualifierFactory:
             )
 
         is_default = value == self.default
+        priority = self.priorities[value]
 
-        return Qualifier(name=self.name, value=value, is_default=is_default, **kwargs)
+        return Qualifier(
+            name=self.name,
+            value=value,
+            is_default=is_default,
+            priority=priority,
+            **kwargs,
+        )
 
 
 class QualifierDetector(ABC):
@@ -92,11 +106,7 @@ class QualifierDetector(ABC):
 
     @property
     @abstractmethod
-    def qualifier_factories(self) -> dict[str, QualifierFactory]:
-        pass
-
-    @abstractmethod
-    def _detect_qualifiers(self, doc: Doc) -> None:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:
         pass
 
     @staticmethod
@@ -108,16 +118,8 @@ class QualifierDetector(ABC):
                 "Cannot add qualifier to entity with non-initialized qualifiers."
             )
 
-        try:
-            old_qualifier = next(
-                iter(q for q in qualifiers if q.name == new_qualifier.name)
-            )
-
-            qualifiers.remove(old_qualifier)
-            qualifiers.add(new_qualifier)
-
-        except StopIteration:
-            qualifiers.add(new_qualifier)
+        qualifiers = {q for q in qualifiers if q.name != new_qualifier.name}
+        qualifiers.add(new_qualifier)
 
         set_qualifiers(entity, qualifiers)
 
@@ -125,8 +127,12 @@ class QualifierDetector(ABC):
         if get_qualifiers(entity) is None:
             set_qualifiers(entity, set())
 
-        for _, factory in self.qualifier_factories.items():
-            self.add_qualifier_to_ent(entity, factory.create())
+        for _, qualifier_class in self.qualifier_classes.items():
+            self.add_qualifier_to_ent(entity, qualifier_class.create())
+
+    @abstractmethod
+    def _detect_qualifiers(self, doc: Doc) -> None:
+        pass
 
     def __call__(self, doc: Doc) -> Doc:
         if len(doc.ents) == 0:

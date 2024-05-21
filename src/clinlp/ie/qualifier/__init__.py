@@ -4,8 +4,8 @@ from .context_algorithm import ContextAlgorithm, ContextRule, ContextRuleDirecti
 from .qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
+    QualifierClass,
     QualifierDetector,
-    QualifierFactory,
     get_qualifiers,
     set_qualifiers,
 )
@@ -17,7 +17,17 @@ if importlib.util.find_spec("transformers") is not None:
         QualifierTransformer,
     )
 
-__all__ = ['ContextAlgorithm', 'ContextRule', 'ContextRuleDirection', 'ATTR_QUALIFIERS',
-           'Qualifier', 'QualifierDetector', 'QualifierFactory', 'get_qualifiers',
-           'set_qualifiers', 'ExperiencerTransformer', 'NegationTransformer',
-           'QualifierTransformer']
+__all__ = [
+    "ContextAlgorithm",
+    "ContextRule",
+    "ContextRuleDirection",
+    "ATTR_QUALIFIERS",
+    "Qualifier",
+    "QualifierClass",
+    "QualifierDetector",
+    "get_qualifiers",
+    "set_qualifiers",
+    "ExperiencerTransformer",
+    "NegationTransformer",
+    "QualifierTransformer",
+]

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "clinlp"
-version = "0.6.6"
+version = "0.7.0"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 authors = ["UMCU DIT Analytics <analytics@umcutrecht.nl>"]
 readme = "README.md"
@@ -14,9 +14,12 @@ makefun = "^1.15.1"
 pandas = "^2.2.0"
 pydantic = "^2.6.1"
 numpy = "^1.26.4"
+nervaluate = "^0.1.8"
+scikit-learn = "^1.4.2"
 
 [tool.poetry.extras]
 transformers = ["transformers"]
+metrics = ["nervaluate", "scikit-learn"]
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.1.1"

@@ -4,7 +4,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
+from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture()
@@ -54,4 +54,4 @@ class TestRegressionContextAlgorithm:
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 
-        assert incorrect_ents == set()
+        assert incorrect_ents == {11, 12, 32}

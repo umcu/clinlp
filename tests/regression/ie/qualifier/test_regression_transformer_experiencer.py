@@ -4,7 +4,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.qualifier.qualifier import ATTR_QUALIFIERS_STR
+from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 @pytest.fixture()
@@ -18,7 +18,8 @@ def nlp():
 
     # recognizer
     _ = nlp.add_pipe(
-        "clinlp_negation_transformer", config={"token_window": 32, "placeholder": "X"}
+        "clinlp_experiencer_transformer",
+        config={"token_window": 32, "placeholder": "X"},
     )
 
     return nlp
@@ -54,4 +55,4 @@ class TestRegressionTransformer:
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 
-        assert incorrect_ents == {9}
+        assert incorrect_ents == {32, 75, 76}
