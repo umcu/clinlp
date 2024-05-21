@@ -5,6 +5,17 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+:exclamation: = Breaking change
+
+## (unreleased)
+
+### Changed
+* :exclamation: Renamed the `clinlp_entity_matcher` to `clinlp_rule_based_entity_matcher`
+* :exclamation: `clinlp` now stores entities in `doc.spans['ents']` rather than `doc.ents`, allowing for overlap
+
+### Fixed
+* The `clinlp_rule_based_entity_matcher` no longer overwrites entities detected by other components (but appends them)
+
 ## 0.7.0 (2024-05-16)
 
 ### Added
@@ -13,8 +24,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Support for bidirectional qualifier patterns
 
 ### Changed
-* Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`).
-* Updated the framework for qualifiers, to now have three qualifier classes: Presence, Temporality and Experiencer. For more details, see docs. 
+* :exclamation: Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`).
+* :exclamation: Updated the framework for qualifiers, to now have three qualifier classes: Presence, Temporality and Experiencer. For more details, see docs. 
 
 ## 0.6.6 (2024-04-24)
 
