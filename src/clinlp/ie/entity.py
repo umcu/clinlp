@@ -1,7 +1,5 @@
 from typing import Optional
 
-from collections import defaultdict
-
 import intervaltree as ivt
 import numpy as np
 import pandas as pd
