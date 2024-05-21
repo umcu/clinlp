@@ -6,6 +6,7 @@ from spacy import Language
 from spacy.tokens import Doc, Span
 from transformers import AutoTokenizer, RobertaForTokenClassification
 
+from clinlp.ie import ENTS_KEYWORD
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     QualifierClass,
@@ -124,7 +125,7 @@ class QualifierTransformer(QualifierDetector):
 
 @Language.factory(
     name="clinlp_negation_transformer",
-    requires=["doc.ents"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
@@ -159,7 +160,7 @@ class NegationTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc):
-        for ent in doc.ents:
+        for ent in doc.spans[ENTS_KEYWORD]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
             prob = 1 - self._predict(
@@ -185,7 +186,7 @@ class NegationTransformer(QualifierTransformer):
 
 @Language.factory(
     name="clinlp_experiencer_transformer",
-    requires=["doc.ents"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_experiencer_transformer,
 )
@@ -216,7 +217,7 @@ class ExperiencerTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc):
-        for ent in doc.ents:
+        for ent in doc.spans[ENTS_KEYWORD]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
             prob = self._predict(

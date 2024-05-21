@@ -3,6 +3,7 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
+from clinlp.ie import ENTS_KEYWORD
 from clinlp.ie.qualifier import (
     ContextAlgorithm,
     ContextRule,
@@ -17,8 +18,8 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 def nlp():
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("entity_ruler")
-    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
+    rbem = nlp.add_pipe("clinlp_rule_based_entity_matcher")
+    rbem.load_concepts({"symptoom": ["SYMPTOOM"]})
 
     return nlp
 
@@ -344,19 +345,20 @@ class TestUnitContextAlgorithm:
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
 
-    def test_get_sentences_having_entity(self, nlp, ca):
+    def test_get_sentences_with_entities(self, nlp, ca):
         text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
         doc = nlp(text)
 
-        sents = list(ca._get_sentences_having_entity(doc))
+        sents = ca._get_sentences_with_entities(doc)
 
         assert len(sents) == 2
-        for sent in sents:
+        for sent, ents in sents.items():
             assert "SYMPTOOM" in str(sent)
+            assert len(ents) == 1
 
     def test_resolve_matched_pattern_conflicts(self, nlp, ca):
         doc = nlp("mogelijk SYMPTOOM uitgesloten")
-        ent = doc.ents[0]
+        ent = doc.spans[ENTS_KEYWORD][0]
 
         qualifier_factory = QualifierClass(
             name="Presence",
@@ -415,7 +417,9 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_preceding_with_default(self, nlp):
         rules = {
@@ -436,8 +440,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Temporality.Current" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Temporality.Current" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
         rules = {
@@ -457,8 +465,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_following_multiple_ents(self, nlp):
         rules = {
@@ -478,8 +490,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_bidirectional_multiple_ents(self, nlp):
         rules = {
@@ -499,9 +515,13 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert len(doc.ents) == 2
-        assert "Temporality.Historical" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Temporality.Historical" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert len(doc.spans[ENTS_KEYWORD]) == 2
+        assert "Temporality.Historical" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Temporality.Historical" in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_pseudo(self, nlp):
         rules = {
@@ -526,7 +546,9 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_termination_preceding(self, nlp):
         rules = {
@@ -551,8 +573,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_termination_directly_preceding(self, nlp):
         rules = {
@@ -578,10 +604,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.ents[0]._, ATTR_QUALIFIERS_STR
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.ents[1]._, ATTR_QUALIFIERS_STR
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_termination_following(self, nlp):
@@ -607,8 +633,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifiers_termination_directly_following(self, nlp):
         rules = {
@@ -634,10 +664,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.ents[0]._, ATTR_QUALIFIERS_STR
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.ents[1]._, ATTR_QUALIFIERS_STR
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_multiple_sentences(self, nlp):
@@ -658,8 +688,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifier_multiple_qualifiers(self, nlp):
         rules = {
@@ -685,8 +719,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Temporality.Historical" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Temporality.Historical" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
         rules = {
@@ -717,10 +755,18 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Negation.Negated" not in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
-        assert "Temporality.Historical" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Temporality.Historical" in getattr(doc.ents[1]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Temporality.Historical" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Temporality.Historical" in getattr(
+            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_match_qualifier_multiple_patterns(self, nlp):
         rules = {
@@ -741,13 +787,15 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_overlap_rule_and_ent(self):
         nlp = spacy.blank("clinlp")
         nlp.add_pipe("clinlp_sentencizer")
-        ruler = nlp.add_pipe("entity_ruler")
-        ruler.add_patterns([{"label": "symptoom", "pattern": "geen eetlust"}])
+        ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
+        ruler.load_concepts({"symptoom": ["geen eetlust"]})
 
         rules = {
             "qualifiers": [
@@ -767,7 +815,9 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Negation.Negated" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Negation.Negated" not in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_multiple_matches_of_same_qualifier(self, nlp):
         rules = {
@@ -797,8 +847,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Presence.Absent" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Presence.Uncertain" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Presence.Absent" not in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Presence.Uncertain" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp):
         rules = {
@@ -829,8 +883,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert "Presence.Absent" in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
-        assert "Presence.Uncertain" not in getattr(doc.ents[0]._, ATTR_QUALIFIERS_STR)
+        assert "Presence.Absent" in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
+        assert "Presence.Uncertain" not in getattr(
+            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+        )
 
     def test_load_default_rules(self, nlp):
         ca = ContextAlgorithm(nlp=nlp)

@@ -9,6 +9,8 @@ import nervaluate
 import spacy
 from sklearn.metrics import f1_score, precision_score, recall_score
 
+from clinlp.ie import ENTS_KEYWORD
+
 
 @dataclass
 class Annotation:
@@ -244,7 +246,7 @@ class InfoExtractionDataset:
         for doc, identifier in zip(nlp_docs, ids):
             annotations = []
 
-            for ent in doc.ents:
+            for ent in doc.spans[ENTS_KEYWORD]:
                 qualifiers = []
 
                 for qualifier in ent._.qualifiers_dict:

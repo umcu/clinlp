@@ -2,7 +2,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import RuleBasedEntityMatcher, Term, create_concept_dict
+from clinlp.ie import ENTS_KEYWORD, RuleBasedEntityMatcher, Term, create_concept_dict
 
 
 @pytest.fixture
@@ -11,7 +11,9 @@ def nlp():
 
 
 def ents(doc):
-    return [(str(ent), ent.start, ent.end, ent.label_) for ent in doc.ents]
+    return [
+        (str(ent), ent.start, ent.end, ent.label_) for ent in doc.spans[ENTS_KEYWORD]
+    ]
 
 
 class TestTerm:
@@ -317,7 +319,7 @@ class TestClinlpNer:
         ]
 
     def test_match_overlap(self, nlp):
-        ner = RuleBasedEntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
 
         ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
 

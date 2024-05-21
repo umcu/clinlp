@@ -10,7 +10,10 @@ from spacy.tokens import Span
 
 from clinlp.util import clinlp_autocomponent
 
+ENTS_KEYWORD = "ents"
+
 _defaults_clinlp_ner = {
+    "resolve_overlap": False,
     "attr": "TEXT",
     "proximity": 0,
     "fuzzy": 0,
@@ -104,6 +107,7 @@ class RuleBasedEntityMatcher:
     def __init__(
         self,
         nlp: Language,
+        resolve_overlap: bool = _defaults_clinlp_ner["resolve_overlap"],
         attr: Optional[str] = _defaults_clinlp_ner["attr"],
         proximity: Optional[int] = _defaults_clinlp_ner["proximity"],
         fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"],
@@ -111,6 +115,7 @@ class RuleBasedEntityMatcher:
         pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"],
     ):
         self.nlp = nlp
+        self.resolve_overlap = resolve_overlap
         self.attr = attr
 
         self.term_args = {
@@ -200,7 +205,7 @@ class RuleBasedEntityMatcher:
     @staticmethod
     def _resolve_ents_overlap(ents: list[Span]) -> list[Span]:
         """
-        Resolves overlap between spans. Current logic: take the longest.
+        Resolves overlap between spans, by taking the longest.
 
         Args:
             ents: The input Spans, with possible overlap.
@@ -239,23 +244,20 @@ class RuleBasedEntityMatcher:
             else:
                 pos_matches.append((rule_id, start, end))
 
-        ents = []
+        ents = doc.spans.get(ENTS_KEYWORD, [])
 
-        spanGroups = defaultdict(list)
-        
         for match_id, start, end in pos_matches:
             if not any(
                 self._concepts[match_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
-                #ents.append(
-                #    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
-                #)
-                spanGroups[self._concepts[match_id]].append(Span(doc=doc, start=start, end=end))
+                ents.append(
+                    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
+                )
 
-        #ents = self._resolve_ents_overlap(ents)
-        #doc.set_ents(entities=ents)
-        for groupName, groupSpans in spanGroups.items():
-            doc.spans[groupName] = groupSpans
+        if self.resolve_overlap:
+            ents = self._resolve_ents_overlap(ents)
+
+        doc.spans[ENTS_KEYWORD] = ents
 
         return doc
