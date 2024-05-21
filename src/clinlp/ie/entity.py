@@ -85,14 +85,24 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     return dict(zip(df["concept"], df["term"]))
 
 
+@Language.factory(name="clinlp_entity_matcher")
+@clinlp_autocomponent
+class DeprecatedEntityMatcher:
+    def __init__(self):
+        raise RuntimeError(
+            "The clinlp_entity_matcher has been renamed"
+            "clinlp_rule_based_entity_matcher."
+        )
+
+
 @Language.factory(
-    name="clinlp_entity_matcher",
-    requires=["doc.sents", "doc.ents"],
-    assigns=["doc.ents"],
+    name="clinlp_rule_based_entity_matcher",
+    requires=["doc.sents"],
+    assigns=["doc.spans"],
     default_config=_defaults_clinlp_ner,
 )
 @clinlp_autocomponent
-class EntityMatcher:
+class RuleBasedEntityMatcher:
     def __init__(
         self,
         nlp: Language,

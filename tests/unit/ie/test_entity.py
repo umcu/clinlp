@@ -2,7 +2,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import EntityMatcher, Term, create_concept_dict
+from clinlp.ie import RuleBasedEntityMatcher, Term, create_concept_dict
 
 
 @pytest.fixture
@@ -118,18 +118,18 @@ class TestCreateConceptDict:
 
 class TestClinlpNer:
     def test_create_clinlpner(self, nlp):
-        assert EntityMatcher(nlp=nlp)
+        assert RuleBasedEntityMatcher(nlp=nlp)
 
     def test_use_phrase_matcher(self, nlp):
-        assert EntityMatcher(nlp=nlp)._use_phrase_matcher
-        assert EntityMatcher(nlp=nlp, attr="NORM")._use_phrase_matcher
-        assert not EntityMatcher(nlp=nlp, proximity=1)._use_phrase_matcher
-        assert not EntityMatcher(nlp=nlp, fuzzy=1)._use_phrase_matcher
-        assert not EntityMatcher(nlp=nlp, fuzzy_min_len=1)._use_phrase_matcher
-        assert EntityMatcher(nlp=nlp, pseudo=1)._use_phrase_matcher
+        assert RuleBasedEntityMatcher(nlp=nlp)._use_phrase_matcher
+        assert RuleBasedEntityMatcher(nlp=nlp, attr="NORM")._use_phrase_matcher
+        assert not RuleBasedEntityMatcher(nlp=nlp, proximity=1)._use_phrase_matcher
+        assert not RuleBasedEntityMatcher(nlp=nlp, fuzzy=1)._use_phrase_matcher
+        assert not RuleBasedEntityMatcher(nlp=nlp, fuzzy_min_len=1)._use_phrase_matcher
+        assert RuleBasedEntityMatcher(nlp=nlp, pseudo=1)._use_phrase_matcher
 
     def test_load_concepts(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
 
         concepts = {
             "concept_1": [
@@ -146,7 +146,7 @@ class TestClinlpNer:
         assert len(ner._terms) == 6
 
     def test_load_concepts_nondefault(self, nlp):
-        ner = EntityMatcher(nlp=nlp, attr="NORM", fuzzy=1, fuzzy_min_len=10)
+        ner = RuleBasedEntityMatcher(nlp=nlp, attr="NORM", fuzzy=1, fuzzy_min_len=10)
 
         concepts = {
             "concept_1": [
@@ -163,7 +163,7 @@ class TestClinlpNer:
         assert len(ner._terms) == 6
 
     def test_match_overwrite(self, nlp):
-        ner = EntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
+        ner = RuleBasedEntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
 
         concepts = {
             "delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]
@@ -182,7 +182,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("DOS"))) == [("DOS", 0, 1, "delier")]
 
     def test_match(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts({"delier": ["delier", "delirant"]})
 
         assert ents(ner(nlp("dhr was delirant"))) == [("delirant", 2, 3, "delier")]
@@ -190,7 +190,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("dhr was delirantt"))) == []
 
     def test_match_attr(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts(
             {
                 "delier": [
@@ -205,7 +205,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("dhr was delirantt"))) == []
 
     def test_match_proximity(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts(
             {"delier": [Term("delier"), Term("kluts kwijt", proximity=1)]}
         )
@@ -219,7 +219,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("dhr was kluts gister en vandaag kwijt"))) == []
 
     def test_match_fuzzy(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts({"delier": [Term("delier"), Term("delirant", fuzzy=1)]})
 
         assert ents(ner(nlp("dhr was delirant"))) == [("delirant", 2, 3, "delier")]
@@ -227,7 +227,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("dhr was delirantt"))) == [("delirantt", 2, 3, "delier")]
 
     def test_match_fuzzy_min_len(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts(
             {
                 "bloeding": [
@@ -249,7 +249,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("bloeding graadd ii"))) == []
 
     def test_match_pseudo(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts(
             {"delier": ["onrustige", Term("onrustige benen", pseudo=True)]}
         )
@@ -258,7 +258,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("onrustige benen"))) == []
 
     def test_match_pseudo_different_concepts(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
         ner.load_concepts(
             {
                 "delier": ["onrustige"],
@@ -270,7 +270,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("onrustige benen"))) == [("onrustige", 0, 1, "delier")]
 
     def test_ner_level_term_settings(self, nlp):
-        ner = EntityMatcher(
+        ner = RuleBasedEntityMatcher(
             nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5
         )
 
@@ -289,7 +289,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("onrustigg"))) == []
 
     def test_match_mixed_patterns(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
 
         ner.load_concepts(
             {"delier": ["delier", Term("delirant"), [{"TEXT": "delirium"}]]}
@@ -300,7 +300,7 @@ class TestClinlpNer:
         assert ents(ner(nlp("delirium"))) == [("delirium", 0, 1, "delier")]
 
     def test_match_mixed_concepts(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
 
         ner.load_concepts(
             {
@@ -317,7 +317,7 @@ class TestClinlpNer:
         ]
 
     def test_match_overlap(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
 
         ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
 
@@ -326,7 +326,7 @@ class TestClinlpNer:
         ]
 
     def test_match_overlap_adjacent(self, nlp):
-        ner = EntityMatcher(nlp=nlp)
+        ner = RuleBasedEntityMatcher(nlp=nlp)
 
         ner.load_concepts({"anemie": ["erytrocyten", "transfusie"]})
 

@@ -1,3 +1,3 @@
-from .entity import EntityMatcher, Term, create_concept_dict
+from .entity import RuleBasedEntityMatcher, Term, create_concept_dict
 
-__all__ = ["EntityMatcher", "Term", "create_concept_dict"]
+__all__ = ["RuleBasedEntityMatcher", "Term", "create_concept_dict"]
