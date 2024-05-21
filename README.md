@@ -50,7 +50,7 @@ concepts = {
     ]
 }
 
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
 entity_matcher.load_concepts(concepts)
 
 # Qualifiers
@@ -78,7 +78,7 @@ displacy.render(doc, style="ent")
 With relevant qualifiers (defaults omitted for readability):
 
 ```python
-for ent in doc.ents:
+for ent in doc.spans["ents"]:
   print(ent, ent._.qualifiers_str)
 ```
 
@@ -148,7 +148,7 @@ It is designed to detect sentence boundaries in clinical text, whenever a charac
 
 ### Entity matcher
 
-`clinlp` includes a `clinlp_entity_matcher` component that can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and matching pseudo/negative terms. 
+`clinlp` includes a `clinlp_rule_based_entity_matcher` component that can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and matching pseudo/negative terms. 
 
 The most basic example would be the following, with further options described below:
 
@@ -166,18 +166,18 @@ concepts = {
     ]
 }
 
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher")
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
 entity_matcher.load_concepts(concepts)
 
 ```
-> :bulb: The `clinlp_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
+> :bulb: The `clinlp_rule_based_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `EntityRuler` can also be used directly with `clinlp` for those who prefer it.
 
 #### Attribute
 
 Specify the token attribute the entity matcher should use as follows (by default `TEXT`):
 
 ```python
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM"})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM"})
 ```
 
 Any [Token attribute](https://spacy.io/api/token#attributes) can be used, but in the above example the `clinlp_normalizer` should be added before the entity matcher, or the `NORM` attribute is simply the literal text. `clinlp` does not include Part of Speech tags and dependency trees, at least not until a reliable model for Dutch clinical text is created, though it's always possible to add a relevant component from a trained (general) Dutch model if needed.
@@ -187,7 +187,7 @@ Any [Token attribute](https://spacy.io/api/token#attributes) can be used, but in
 The proxmity setting defines how many tokens can optionally be skipped between the tokens of a pattern. With `proxmity` set to `1`, the pattern `slaapt slecht` will also match `slaapt vaak slecht`, but not `slaapt al weken slecht`. 
 
 ```python
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"proximity": 1})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"proximity": 1})
 ```
 
 #### Fuzzy matching
@@ -195,13 +195,13 @@ entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"proximity": 1})
 Fuzzy matching enables finding misspelled variants of terms. For instance, with `fuzzy` set to `1`, the pattern `diabetes` will also match `diabets`, `ddiabetes`, or `diabetis`, but not `diabetse` or `ddiabetess`. The threshold is based on Levenshtein distance with insertions, deletions and replacements (but not swaps).  
 
 ```python
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"fuzzy": 1})
 ```
 
 Additionally, the `fuzzy_min_len` argument can be used to specify the minimum length of a phrase for fuzzy matching. This also works for multi-token phrases. For example, with `fuzzy` set to `1` and `fuzzy_min_len` set to `5`, the pattern `bloeding graad ii` would also match `bloedin graad ii`, but not `bloeding graad iii`. 
 
 ```python
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"fuzzy": 1, "fuzzy_min_len": 5})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"fuzzy": 1, "fuzzy_min_len": 5})
 ```
 
 #### Terms
@@ -221,7 +221,7 @@ concepts = {
     ]
 }
 
-entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
+entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
 entity_matcher.load_concepts(concepts)
 ```
 
