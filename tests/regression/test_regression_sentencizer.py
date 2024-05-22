@@ -15,6 +15,7 @@ def get_mock_tokens(texts: list[str]):
 
 class TestClinlpSentencizerRegression:
     def test_default_clinlp_sentencizer_examples(self):
+        # Arrange
         sentencizer = Sentencizer()
 
         with open("tests/data/sentencizer_cases.json", "rb") as file:
@@ -22,6 +23,9 @@ class TestClinlpSentencizerRegression:
 
         for example in data:
             tokens = get_mock_tokens(example["tokens"])
-            assert (
-                sentencizer._get_sentence_starts(tokens) == example["sentence_starts"]
-            )
+
+            # Act
+            sentence_starts = sentencizer._get_sentence_starts(tokens)
+
+            # Assert
+            assert sentence_starts == example["sentence_starts"]
