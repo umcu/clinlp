@@ -8,19 +8,12 @@ from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
 
-from clinlp.ie.term import Term
+from clinlp.ie.term import Term, _defaults_term
 from clinlp.util import clinlp_autocomponent
 
 SPANS_KEY = "ents"
 
-_defaults_clinlp_ner = {
-    "resolve_overlap": False,
-    "attr": "TEXT",
-    "proximity": 0,
-    "fuzzy": 0,
-    "fuzzy_min_len": 0,
-    "pseudo": False,
-}
+
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 
@@ -61,19 +54,19 @@ class DeprecatedEntityMatcher:
     name="clinlp_rule_based_entity_matcher",
     requires=["doc.sents"],
     assigns=["doc.spans"],
-    default_config=_defaults_clinlp_ner,
+    default_config=_defaults_term,
 )
 @clinlp_autocomponent
 class RuleBasedEntityMatcher:
     def __init__(
         self,
         nlp: Language,
-        resolve_overlap: bool = _defaults_clinlp_ner["resolve_overlap"],
-        attr: Optional[str] = _defaults_clinlp_ner["attr"],
-        proximity: Optional[int] = _defaults_clinlp_ner["proximity"],
-        fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"],
-        fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"],
-        pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"],
+        resolve_overlap: bool = _defaults_term["resolve_overlap"],
+        attr: Optional[str] = _defaults_term["attr"],
+        proximity: Optional[int] = _defaults_term["proximity"],
+        fuzzy: Optional[int] = _defaults_term["fuzzy"],
+        fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
+        pseudo: Optional[bool] = _defaults_term["pseudo"],
     ):
         self.nlp = nlp
         self.resolve_overlap = resolve_overlap
@@ -96,7 +89,7 @@ class RuleBasedEntityMatcher:
     @property
     def _use_phrase_matcher(self):
         return all(
-            self.term_args[field] == _defaults_clinlp_ner[field]
+            self.term_args[field] == _defaults_term[field]
             for field in _non_phrase_matcher_fields
             if field in self.term_args
         )

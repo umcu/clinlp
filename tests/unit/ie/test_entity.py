@@ -2,8 +2,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, create_concept_dict
-from clinlp.ie.Term import Term
+from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, Term, create_concept_dict
 
 
 @pytest.fixture

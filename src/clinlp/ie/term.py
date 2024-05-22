@@ -3,7 +3,14 @@ from typing import Optional
 import pydantic
 from spacy.language import Language
 
-from clinlp.ie.entity import _defaults_clinlp_ner
+_defaults_term = {
+    "resolve_overlap": False,
+    "attr": "TEXT",
+    "proximity": 0,
+    "fuzzy": 0,
+    "fuzzy_min_len": 0,
+    "pseudo": False,
+}
 
 
 class Term(pydantic.BaseModel):
@@ -23,7 +30,7 @@ class Term(pydantic.BaseModel):
 
     def to_spacy_pattern(self, nlp: Language):
         fields = {
-            field: getattr(self, field) or _defaults_clinlp_ner[field]
+            field: getattr(self, field) or _defaults_term[field]
             for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
         }
 
