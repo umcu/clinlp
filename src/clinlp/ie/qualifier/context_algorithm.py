@@ -104,7 +104,7 @@ _defaults_context_algorithm = {
 
 @Language.factory(
     name="clinlp_context_algorithm",
-    requires=["doc.sents", "doc.spans"],
+    requires=["doc.sents", f"doc.spans[{SPANS_KEY}]"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_context_algorithm,
 )
