@@ -49,7 +49,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 class DeprecatedEntityMatcher:
     def __init__(self):
         raise RuntimeError(
-            "The clinlp_entity_matcher has been renamed"
+            "The clinlp_entity_matcher has been renamed "
             "clinlp_rule_based_entity_matcher."
         )
 
