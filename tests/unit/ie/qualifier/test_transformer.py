@@ -4,7 +4,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
     ExperiencerTransformer,
     NegationTransformer,
@@ -17,7 +17,7 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 def nlp():
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": ENTS_KEYWORD})
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
     ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
     return nlp
 
@@ -30,7 +30,7 @@ def text():
 class TestQualifierTransformer:
     def test_get_ent_window(self, text, nlp):
         doc = nlp(text)
-        span = doc.spans[ENTS_KEYWORD][0]
+        span = doc.spans[SPANS_KEY][0]
 
         assert QualifierTransformer._get_ent_window(span, token_window=1) == (
             "geen SYMPTOOM,",
@@ -91,7 +91,7 @@ class TestQualifierTransformer:
         QualifierTransformer.__abstractmethods__ = set()
         qt = QualifierTransformer(token_window=3, placeholder="X")
 
-        text, ent_start_char, ent_end_char = qt._prepare_ent(doc.spans[ENTS_KEYWORD][0])
+        text, ent_start_char, ent_end_char = qt._prepare_ent(doc.spans[SPANS_KEY][0])
 
         assert text == "patient had geen X, ondanks dat"
         assert ent_start_char == 17
@@ -128,8 +128,8 @@ class TestNegationTransformer:
         doc = nlp("De patient had geen last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Absent"
         }
 
@@ -138,8 +138,8 @@ class TestNegationTransformer:
         doc = nlp("De patient had geen last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Present"
         }
 
@@ -148,8 +148,8 @@ class TestNegationTransformer:
         doc = nlp("De patient had juist wel last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Present"
         }
 
@@ -184,8 +184,8 @@ class TestExperiencerTransformer:
         doc = nlp("De patient had geen last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Patient"
         }
 
@@ -194,8 +194,8 @@ class TestExperiencerTransformer:
         doc = nlp("De patient had geen last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Patient"
         }
 
@@ -204,7 +204,7 @@ class TestExperiencerTransformer:
         doc = nlp("De broer van de patient had last van SYMPTOOM.")
         n(doc)
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 1
-        assert getattr(doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR) == {
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Family"
         }

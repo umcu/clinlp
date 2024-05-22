@@ -10,7 +10,7 @@ from spacy.tokens import Span
 
 from clinlp.util import clinlp_autocomponent
 
-ENTS_KEYWORD = "ents"
+SPANS_KEY = "ents"
 
 _defaults_clinlp_ner = {
     "resolve_overlap": False,
@@ -244,7 +244,7 @@ class RuleBasedEntityMatcher:
             else:
                 pos_matches.append((rule_id, start, end))
 
-        ents = doc.spans.get(ENTS_KEYWORD, [])
+        ents = doc.spans.get(SPANS_KEY, [])
 
         for match_id, start, end in pos_matches:
             if not any(
@@ -258,6 +258,6 @@ class RuleBasedEntityMatcher:
         if self.resolve_overlap:
             ents = self._resolve_ents_overlap(ents)
 
-        doc.spans[ENTS_KEYWORD] = ents
+        doc.spans[SPANS_KEY] = ents
 
         return doc

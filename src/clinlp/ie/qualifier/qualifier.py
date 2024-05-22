@@ -4,7 +4,7 @@ from typing import Optional
 
 from spacy.tokens import Doc, Span
 
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 
 ATTR_QUALIFIERS = "qualifiers"
 ATTR_QUALIFIERS_STR = f"{ATTR_QUALIFIERS}_str"
@@ -137,10 +137,10 @@ class QualifierDetector(ABC):
         pass
 
     def __call__(self, doc: Doc) -> Doc:
-        if ENTS_KEYWORD not in doc.spans or len(doc.spans[ENTS_KEYWORD]) == 0:
+        if SPANS_KEY not in doc.spans or len(doc.spans[SPANS_KEY]) == 0:
             return doc
 
-        for ent in doc.spans[ENTS_KEYWORD]:
+        for ent in doc.spans[SPANS_KEY]:
             self._initialize_ent_qualifiers(ent)
 
         self._detect_qualifiers(doc)

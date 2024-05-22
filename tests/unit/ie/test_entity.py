@@ -2,7 +2,8 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import ENTS_KEYWORD, RuleBasedEntityMatcher, Term, create_concept_dict
+from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, create_concept_dict
+from clinlp.ie.Term import Term
 
 
 @pytest.fixture
@@ -11,9 +12,7 @@ def nlp():
 
 
 def ents(doc):
-    return [
-        (str(ent), ent.start, ent.end, ent.label_) for ent in doc.spans[ENTS_KEYWORD]
-    ]
+    return [(str(ent), ent.start, ent.end, ent.label_) for ent in doc.spans[SPANS_KEY]]
 
 
 class TestTerm:

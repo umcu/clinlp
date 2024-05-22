@@ -3,7 +3,7 @@ import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
     ContextAlgorithm,
     ContextRule,
@@ -18,7 +18,7 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 def nlp():
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": ENTS_KEYWORD})
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
     ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
 
     return nlp
@@ -358,7 +358,7 @@ class TestUnitContextAlgorithm:
 
     def test_resolve_matched_pattern_conflicts(self, nlp, ca):
         doc = nlp("mogelijk SYMPTOOM uitgesloten")
-        ent = doc.spans[ENTS_KEYWORD][0]
+        ent = doc.spans[SPANS_KEY][0]
 
         qualifier_factory = QualifierClass(
             name="Presence",
@@ -418,7 +418,7 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_preceding_with_default(self, nlp):
@@ -441,10 +441,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Temporality.Current" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_preceding_multiple_ents(self, nlp):
@@ -466,10 +466,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_following_multiple_ents(self, nlp):
@@ -491,10 +491,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_bidirectional_multiple_ents(self, nlp):
@@ -515,12 +515,12 @@ class TestUnitContextAlgorithm:
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
         doc = ca(nlp(text))
 
-        assert len(doc.spans[ENTS_KEYWORD]) == 2
+        assert len(doc.spans[SPANS_KEY]) == 2
         assert "Temporality.Historical" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Temporality.Historical" in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_pseudo(self, nlp):
@@ -547,7 +547,7 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_termination_preceding(self, nlp):
@@ -574,10 +574,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_termination_directly_preceding(self, nlp):
@@ -604,10 +604,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_termination_following(self, nlp):
@@ -634,10 +634,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_termination_directly_following(self, nlp):
@@ -664,10 +664,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Plausibility.Hypothetical" not in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifiers_multiple_sentences(self, nlp):
@@ -689,10 +689,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifier_multiple_qualifiers(self, nlp):
@@ -720,10 +720,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Temporality.Historical" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
@@ -756,16 +756,16 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
         assert "Temporality.Historical" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Temporality.Historical" in getattr(
-            doc.spans[ENTS_KEYWORD][1]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
     def test_match_qualifier_multiple_patterns(self, nlp):
@@ -788,7 +788,7 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_overlap_rule_and_ent(self):
@@ -816,7 +816,7 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Negation.Negated" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_multiple_matches_of_same_qualifier(self, nlp):
@@ -848,10 +848,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Presence.Absent" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Presence.Uncertain" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp):
@@ -884,10 +884,10 @@ class TestUnitContextAlgorithm:
         doc = ca(nlp(text))
 
         assert "Presence.Absent" in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Presence.Uncertain" not in getattr(
-            doc.spans[ENTS_KEYWORD][0]._, ATTR_QUALIFIERS_STR
+            doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
     def test_load_default_rules(self, nlp):

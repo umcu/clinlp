@@ -13,7 +13,7 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
@@ -246,7 +246,7 @@ class ContextAlgorithm(QualifierDetector):
 
         sents = defaultdict(list)
 
-        for ent in doc.spans[ENTS_KEYWORD]:
+        for ent in doc.spans[SPANS_KEY]:
             sents[ent.sent].append(ent)
 
         return sents

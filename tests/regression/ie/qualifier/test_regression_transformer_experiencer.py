@@ -4,7 +4,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
@@ -14,7 +14,7 @@ def nlp():
     nlp.add_pipe("clinlp_sentencizer")
 
     # ruler
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": ENTS_KEYWORD})
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
@@ -36,10 +36,10 @@ class TestRegressionTransformer:
         for example in data["examples"]:
             doc = nlp(example["text"])
 
-            assert len(example["ents"]) == len(doc.spans[ENTS_KEYWORD])
+            assert len(example["ents"]) == len(doc.spans[SPANS_KEY])
 
             for predicted_ent, example_ent in zip(
-                doc.spans[ENTS_KEYWORD], example["ents"]
+                doc.spans[SPANS_KEY], example["ents"]
             ):
                 try:
                     assert predicted_ent.start == example_ent["start"]

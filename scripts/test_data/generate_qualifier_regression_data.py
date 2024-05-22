@@ -11,7 +11,7 @@ from pprint import pprint
 import spacy
 
 import clinlp  # noqa: F401
-from clinlp.ie import ENTS_KEYWORD
+from clinlp.ie import SPANS_KEY
 
 
 def get_model():
@@ -61,7 +61,7 @@ if __name__ == "__main__":
                         "text": str(ent),
                         "qualifiers": list(ent._.qualifiers_str),
                     }
-                    for ent in doc.spans[ENTS_KEYWORD]
+                    for ent in doc.spans[SPANS_KEY]
                 ],
             }
         )
