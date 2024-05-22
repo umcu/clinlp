@@ -22,6 +22,9 @@ from clinlp.ie.qualifier.qualifier import (
 )
 from clinlp.util import clinlp_autocomponent, interval_dist
 
+_RESOURCES_DIR = importlib.resources.files("clinlp.resources")
+_DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
+
 
 class ContextRuleDirection(Enum):
     """
