@@ -219,7 +219,6 @@ class TestClinlpNer:
         assert ents(rbem(nlp("doss"))) == []
         assert ents(rbem(nlp("DOS"))) == [("DOS", 0, 1, "delier")]
 
-
     def test_match_mixed_patterns(self, nlp):
         rbem = RuleBasedEntityMatcher(nlp=nlp)
 
@@ -274,5 +273,5 @@ class TestClinlpNer:
 
         assert ents(ner(nlp("patient heeft oesophagus atresie"))) == [
             ("oesophagus atresie", 2, 4, "slokdarmatresie"),
-            ("atresie", 3, 4, "slokdarmatresie")
+            ("atresie", 3, 4, "slokdarmatresie"),
         ]
