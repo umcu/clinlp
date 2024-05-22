@@ -38,9 +38,14 @@ def clinlp_dataset(clinlp_docs):
 
 class TestAnnotation:
     def test_annotation_nervaluate(self):
+        # Arrange
         ann = Annotation(text="test", start=0, end=5, label="test")
 
-        assert ann.to_nervaluate() == {
+        # Act
+        nervaluate = ann.to_nervaluate()
+
+        # Assert
+        assert nervaluate == {
             "text": "test",
             "start": 0,
             "end": 5,
@@ -48,27 +53,37 @@ class TestAnnotation:
         }
 
     def test_annotation_lstrip(self):
+        # Arrange
         ann = Annotation(text=" test", start=0, end=5, label="test")
 
+        # Act
         ann.lstrip()
 
+        # Assert
         assert ann == Annotation(text="test", start=1, end=5, label="test")
 
     def test_annotation_rstrip(self):
+        # Arrange
         ann = Annotation(text="test,", start=0, end=5, label="test")
 
+        # Act
         ann.rstrip()
 
+        # Assert
         assert ann == Annotation(text="test", start=0, end=4, label="test")
 
     def test_annotation_strip(self):
+        # Arrange
         ann = Annotation(text=" test,", start=0, end=6, label="test")
 
+        # Act
         ann.strip()
 
+        # Assert
         assert ann == Annotation(text="test", start=1, end=5, label="test")
 
     def test_annotation_qualifier_names(self):
+        # Arrange
         ann = Annotation(
             text="test",
             start=0,
@@ -80,11 +95,14 @@ class TestAnnotation:
             ],
         )
 
+        # Act
         qualifier_names = ann.qualifier_names
 
+        # Assert
         assert qualifier_names == {"Negation", "Experiencer"}
 
     def test_annotation_get_qualifier_by_name(self):
+        # Arrange
         ann = Annotation(
             text="test",
             start=0,
@@ -96,13 +114,16 @@ class TestAnnotation:
             ],
         )
 
+        # Act
         qualifier = ann.get_qualifier_by_name(qualifier_name="Experiencer")
 
+        # Assert
         assert qualifier == {"name": "Experiencer", "value": "Other"}
 
 
 class TestDocument:
     def test_document_nervaluate(self):
+        # Arrange
         doc = Document(
             identifier="1",
             text="test1 and test2",
@@ -112,12 +133,17 @@ class TestDocument:
             ],
         )
 
-        assert doc.to_nervaluate() == [
+        # Act
+        nervaluate = doc.to_nervaluate()
+
+        # Assert
+        assert nervaluate == [
             {"text": "test1", "start": 0, "end": 5, "label": "test1"},
             {"text": "test2", "start": 10, "end": 15, "label": "test2"},
         ]
 
     def test_document_labels(self):
+        # Arrange
         doc = Document(
             identifier="1",
             text="test1 and test2",
@@ -127,9 +153,14 @@ class TestDocument:
             ],
         )
 
-        assert doc.labels() == {"test1", "test2"}
+        # Act
+        labels = doc.labels()
+
+        # Assert
+        assert labels == {"test1", "test2"}
 
     def test_document_labels_with_filter(self):
+        # Arrange
         doc = Document(
             identifier="1",
             text="test1 and test2",
@@ -139,15 +170,19 @@ class TestDocument:
             ],
         )
 
+        # Act
         labels = doc.labels(ann_filter=(lambda ann: ann.start > 5))
 
+        # Assert
         assert labels == {"test2"}
 
 
 class TestDataset:
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
+        # Arrange & Act
         dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
+        # Assert
         assert len(dataset.docs) == 14
         assert dataset.docs[0].text == "patient had geen anemie"
         assert len(dataset.docs[0].annotations) == 1
@@ -159,22 +194,28 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
+        # Arrange & Act
         dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
+        # Assert
         assert dataset.docs[0].annotations[0].text == "anemie"
         assert dataset.docs[0].annotations[0].start == 17
         assert dataset.docs[0].annotations[0].end == 23
         assert dataset.docs[0].annotations[0].label == "C0002871_anemie"
-
         assert dataset.docs[6].annotations[1].text == "hyperbillirubinaemie"
         assert dataset.docs[6].annotations[1].start == 28
         assert dataset.docs[6].annotations[1].end == 48
         assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_medcatrainer_qualifiers(self, mctrainer_data):
+        # Arrange
         dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
-        assert dataset.docs[0].annotations[0].qualifiers == [
+        # Act
+        qualifiers = dataset.docs[0].annotations[0].qualifiers
+
+        # Assert
+        assert qualifiers == [
             {"name": "Temporality", "value": "Current", "is_default": True},
             {"name": "Plausibility", "value": "Plausible", "is_default": True},
             {"name": "Experiencer", "value": "Patient", "is_default": True},
@@ -182,8 +223,10 @@ class TestDataset:
         ]
 
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
+        # Arrange & Act
         dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
+        # Assert
         assert len(dataset.docs) == 14
         assert dataset.docs[0].text == "patient had geen anemie"
         assert len(dataset.docs[0].annotations) == 1
@@ -195,8 +238,10 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_clinlp_annotations(self, clinlp_docs):
+        # Arrange & Act
         dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
+        # Assert
         assert dataset.docs[0].annotations[0].text == "anemie"
         assert dataset.docs[0].annotations[0].start == 17
         assert dataset.docs[0].annotations[0].end == 23
@@ -207,11 +252,16 @@ class TestDataset:
         assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_clinlp_qualifiers(self, clinlp_docs):
+        # Arrange
         dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
-        assert sorted(
+        # Act
+        qualifiers = sorted(
             dataset.docs[0].annotations[0].qualifiers, key=lambda q: q["name"]
-        ) == [
+        )
+
+        # Assert
+        assert qualifiers == [
             {"name": "Experiencer", "value": "Patient", "is_default": True},
             {"name": "Negation", "value": "Negated", "is_default": False},
             {"name": "Plausibility", "value": "Plausible", "is_default": True},
@@ -219,6 +269,7 @@ class TestDataset:
         ]
 
     def test_dataset_nervaluate(self):
+        # Arrange
         dataset = InfoExtractionDataset(
             docs=[
                 Document(
@@ -250,25 +301,34 @@ class TestDataset:
             ]
         )
 
-        assert dataset.to_nervaluate() == [
+        # Act
+        nervaluate = dataset.to_nervaluate()
+
+        # Assert
+        assert nervaluate == [
             [{"text": "test1", "start": 0, "end": 5, "label": "test1"}],
             [{"text": "test2", "start": 0, "end": 5, "label": "test2"}],
         ]
 
     def test_dataset_to_nervaluate_with_filter(self, mctrainer_dataset):
+        # Arrange
         def ann_filter(ann):
             return any(not qualifier["is_default"] for qualifier in ann.qualifiers)
 
+        # Act
         to_nervaluate = mctrainer_dataset.to_nervaluate(ann_filter=ann_filter)
 
+        # Assert
         assert to_nervaluate[0] == [
             {"end": 23, "label": "C0002871_anemie", "start": 17, "text": "anemie"}
         ]
         assert to_nervaluate[1] == []
 
     def test_infer_default_qualifiers(self, mctrainer_dataset):
+        # Arrange & Act
         default_qualifiers = mctrainer_dataset.infer_default_qualifiers()
 
+        # Assert
         assert default_qualifiers == {
             "Negation": "Affirmed",
             "Experiencer": "Patient",
@@ -277,47 +337,87 @@ class TestDataset:
         }
 
     def test_num_docs(self, mctrainer_dataset):
-        assert mctrainer_dataset.num_docs() == 14
+        # Arrange & Act
+        num_docs = mctrainer_dataset.num_docs()
+
+        # Assert
+        assert num_docs == 14
 
     def test_num_annotations(self, mctrainer_dataset):
-        assert mctrainer_dataset.num_annotations() == 13
+        # Arrange & Act
+        num_annotations = mctrainer_dataset.num_annotations()
+
+        # Assert
+        assert num_annotations == 13
 
     def test_span_counts(self, mctrainer_dataset):
-        assert len(mctrainer_dataset.span_counts()) == 11
+        # Arrange & Act
+        num_span_counts = len(mctrainer_dataset.span_counts())
+
+        # Assert
+        assert num_span_counts == 11
 
     def test_span_counts_n_spans(self, mctrainer_dataset):
-        assert mctrainer_dataset.span_counts(n_spans=3) == {
+        # Arrange & Act
+        span_counts = mctrainer_dataset.span_counts(n_spans=3)
+
+        # Assert
+        assert span_counts == {
             "anemie": 2,
             "bloeding": 2,
             "prematuriteit": 1,
         }
 
     def test_span_counts_callback(self, mctrainer_dataset):
-        assert mctrainer_dataset.span_counts(
+        # Arrange & Act
+        span_counts = mctrainer_dataset.span_counts(
             n_spans=3, span_callback=lambda x: x.upper()
-        ) == {
+        )
+
+        # Assert
+        assert span_counts == {
             "ANEMIE": 2,
             "BLOEDING": 2,
             "PREMATURITEIT": 1,
         }
 
     def test_label_counts(self, mctrainer_dataset):
-        assert len(mctrainer_dataset.label_counts()) == 9
+        # Arrange & Act
+        num_label_counts = len(mctrainer_dataset.label_counts())
+
+        # Assert
+        assert num_label_counts == 9
 
     def test_label_counts_n_labels(self, mctrainer_dataset):
-        assert mctrainer_dataset.label_counts(n_labels=3) == {
+        # Arrange & Act
+        label_counts = mctrainer_dataset.label_counts(n_labels=3)
+
+        # Assert
+        assert label_counts == {
             "C0002871_anemie": 2,
             "C0151526_prematuriteit": 2,
             "C0270191_intraventriculaire_bloeding": 2,
         }
 
     def test_label_counts_callback(self, mctrainer_dataset):
-        assert mctrainer_dataset.label_counts(
+        # Arrange & Act
+        label_counts = mctrainer_dataset.label_counts(
             n_labels=3, label_callback=lambda x: x[x.index("_") + 1 :]
-        ) == {"anemie": 2, "prematuriteit": 2, "intraventriculaire_bloeding": 2}
+        )
+
+        # Assert
+        assert label_counts == {
+            "anemie": 2,
+            "prematuriteit": 2,
+            "intraventriculaire_bloeding": 2,
+        }
 
     def test_qualifier_counts(self, mctrainer_dataset):
-        assert mctrainer_dataset.qualifier_counts() == {
+        # Arrange & Act
+        qualifier_counts = mctrainer_dataset.qualifier_counts()
+
+        # Assert
+        assert qualifier_counts == {
             "Experiencer": {"Patient": 12, "Other": 1},
             "Negation": {"Affirmed": 11, "Negated": 2},
             "Plausibility": {"Plausible": 11, "Hypothetical": 2},
@@ -325,8 +425,10 @@ class TestDataset:
         }
 
     def test_stats(self, mctrainer_dataset):
+        # Arrange & Act
         stats = mctrainer_dataset.stats()
 
+        # Assert
         assert stats["num_docs"] == mctrainer_dataset.num_docs()
         assert stats["num_annotations"] == mctrainer_dataset.num_annotations()
         assert stats["span_counts"] == mctrainer_dataset.span_counts()
@@ -334,13 +436,16 @@ class TestDataset:
         assert stats["qualifier_counts"] == mctrainer_dataset.qualifier_counts()
 
     def test_stats_with_kwargs(self, mctrainer_dataset):
+        # Arrange
         n_labels = 1
         span_callback = lambda x: x.upper()  # noqa: E731
 
+        # Act
         stats = mctrainer_dataset.stats(
             n_labels=n_labels, span_callback=span_callback, unused_argument=None
         )
 
+        # Assert
         assert stats["num_docs"] == mctrainer_dataset.num_docs()
         assert stats["num_annotations"] == mctrainer_dataset.num_annotations()
         assert stats["span_counts"] == mctrainer_dataset.span_counts(
@@ -354,10 +459,13 @@ class TestDataset:
 
 class TestMetrics:
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
+        # Act
         metrics = nlp_metrics.entity_metrics()
 
+        # Assert
         assert list(metrics.keys()) == ["ent_type", "partial", "strict", "exact"]
         assert metrics["strict"]["actual"] == 13
         assert metrics["strict"]["correct"] == 10
@@ -366,12 +474,16 @@ class TestMetrics:
         assert metrics["strict"]["f1"] == 0.7692307692307693
 
     def test_entity_metrics_filter(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
+        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+
         def filter_default(ann):
             return all(qualifier["is_default"] for qualifier in ann.qualifiers)
 
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        # Act
         metrics = nlp_metrics.entity_metrics(ann_filter=filter_default)
 
+        # Assert
         assert metrics["strict"]["actual"] == 6
         assert metrics["strict"]["correct"] == 4
         assert metrics["strict"]["precision"] == 0.6666666666666666
@@ -379,10 +491,13 @@ class TestMetrics:
         assert metrics["strict"]["f1"] == 0.5714285714285715
 
     def test_entity_metrics_classes(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
+        # Act
         metrics = nlp_metrics.entity_metrics(classes=True)
 
+        # Assert
         assert len(metrics) == 9
         assert metrics["C0151526_prematuriteit"]["strict"]["actual"] == 2
         assert metrics["C0151526_prematuriteit"]["strict"]["correct"] == 1
@@ -391,10 +506,13 @@ class TestMetrics:
         assert metrics["C0151526_prematuriteit"]["strict"]["f1"] == 0.5
 
     def test_qualifier_metrics(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
+        # Act
         metrics = nlp_metrics.qualifier_metrics()
 
+        # Assert
         assert metrics["Negation"]["metrics"] == {
             "n": 10,
             "n_pos_pred": 2,
@@ -429,23 +547,30 @@ class TestMetrics:
         }
 
     def test_qualifier_misses(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
+        # Act
         metrics = nlp_metrics.qualifier_metrics()
 
+        # Assert
         assert len(metrics["Negation"]["misses"]) == 0
         assert len(metrics["Experiencer"]["misses"]) == 0
         assert len(metrics["Plausibility"]["misses"]) == 1
         assert len(metrics["Temporality"]["misses"]) == 1
 
     def test_create_metrics_unequal_length(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         mctrainer_dataset.docs = mctrainer_dataset.docs[:-2]
 
+        # Act & Assert
         with pytest.raises(ValueError):
             _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
     def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
         mctrainer_dataset.docs[0].identifier = "test"
 
+        # Act & Assert
         with pytest.raises(ValueError):
             _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)

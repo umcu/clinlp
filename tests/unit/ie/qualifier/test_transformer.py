@@ -29,9 +29,11 @@ def text():
 
 class TestQualifierTransformer:
     def test_get_ent_window(self, text, nlp):
+        # Arrange
         doc = nlp(text)
         span = doc.spans[SPANS_KEY][0]
 
+        # Act & Assert
         assert QualifierTransformer._get_ent_window(span, token_window=1) == (
             "geen SYMPTOOM,",
             5,
@@ -49,6 +51,7 @@ class TestQualifierTransformer:
         )
 
     def test_trim_ent_boundaries(self):
+        # Arrange, Act & Assert
         assert QualifierTransformer._trim_ent_boundaries("geen SYMPTOOM,", 5, 13) == (
             "geen SYMPTOOM,",
             5,
@@ -75,6 +78,7 @@ class TestQualifierTransformer:
         )
 
     def test_fill_ent_placeholder(self):
+        # Arrange, Act & Assert
         assert QualifierTransformer._fill_ent_placeholder(
             "geen SYMPTOOM,", 5, 13, placeholder="SYMPTOOM"
         ) == ("geen SYMPTOOM,", 5, 13)
@@ -87,12 +91,15 @@ class TestQualifierTransformer:
         )
 
     def test_prepare_ent(self, nlp, text):
+        # Arrange
         doc = nlp(text)
         QualifierTransformer.__abstractmethods__ = set()
         qt = QualifierTransformer(token_window=3, placeholder="X")
 
+        # Act
         text, ent_start_char, ent_end_char = qt._prepare_ent(doc.spans[SPANS_KEY][0])
 
+        # Assert
         assert text == "patient had geen X, ondanks dat"
         assert ent_start_char == 17
         assert ent_end_char == 18
@@ -100,8 +107,10 @@ class TestQualifierTransformer:
 
 class TestNegationTransformer:
     def test_predict(self, nlp):
+        # Arrange
         n = NegationTransformer(nlp=nlp)
 
+        # Act & Assert
         assert (
             n._predict(
                 text="geen hoesten,",
@@ -124,30 +133,42 @@ class TestNegationTransformer:
         )
 
     def test_detect_qualifiers_1(self, nlp):
+        # Arrange
         n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Absent"
         }
 
     def test_detect_qualifiers_small_window(self, nlp):
+        # Arrange
         n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Present"
         }
 
     def test_detect_qualifiers_without_negation(self, nlp):
+        # Arrange
         n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had juist wel last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Presence.Present"
@@ -156,8 +177,10 @@ class TestNegationTransformer:
 
 class TestExperiencerTransformer:
     def test_predict(self, nlp):
+        # Arrange
         n = ExperiencerTransformer(nlp=nlp)
 
+        # Act & Assert
         assert (
             n._predict(
                 text="broer heeft aandoening,",
@@ -180,30 +203,42 @@ class TestExperiencerTransformer:
         )
 
     def test_detect_qualifiers_1(self, nlp):
+        # Arrange
         n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Patient"
         }
 
     def test_detect_qualifiers_small_window(self, nlp):
+        # Arrange
         n = ExperiencerTransformer(nlp=nlp, token_window=1, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Patient"
         }
 
     def test_detect_qualifiers_referring_to_family(self, nlp):
+        # Arrange
         n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De broer van de patient had last van SYMPTOOM.")
+
+        # Act
         n(doc)
 
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Family"

@@ -5,6 +5,7 @@ and inconsistenties, and shows them in the terminal (if any).
 
 import json
 from collections import Counter, defaultdict
+from pathlib import Path
 
 RULE_FILE = "src/clinlp/resources/context_rules.json"
 
@@ -26,7 +27,7 @@ def any_in_pseudo(pseudo_term: str, patterns: set):
 
 
 if __name__ == "__main__":
-    with open(RULE_FILE, "r") as f:
+    with Path.open(RULE_FILE, "r") as f:
         data = json.load(f)
 
     for rule in data["rules"]:
