@@ -58,7 +58,7 @@ class DeprecatedEntityMatcher:
     name="clinlp_rule_based_entity_matcher",
     requires=["doc.sents"],
     assigns=["doc.spans"],
-    default_config=_defaults_term,
+    default_config=_defaults_term | _defaults_entity_matcher,
 )
 @clinlp_autocomponent
 class RuleBasedEntityMatcher:
