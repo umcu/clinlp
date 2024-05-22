@@ -4,7 +4,6 @@ import pydantic
 from spacy.language import Language
 
 _defaults_term = {
-    "resolve_overlap": False,
     "attr": "TEXT",
     "proximity": 0,
     "fuzzy": 0,

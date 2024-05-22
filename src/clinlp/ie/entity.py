@@ -13,6 +13,10 @@ from clinlp.util import clinlp_autocomponent
 
 SPANS_KEY = "ents"
 
+_defaults_entity_matcher = {
+    "resolve_overlap": False,
+}
+
 
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
@@ -61,16 +65,17 @@ class RuleBasedEntityMatcher:
     def __init__(
         self,
         nlp: Language,
-        resolve_overlap: bool = _defaults_term["resolve_overlap"],
         attr: Optional[str] = _defaults_term["attr"],
         proximity: Optional[int] = _defaults_term["proximity"],
         fuzzy: Optional[int] = _defaults_term["fuzzy"],
         fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
         pseudo: Optional[bool] = _defaults_term["pseudo"],
+        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],
     ):
         self.nlp = nlp
-        self.resolve_overlap = resolve_overlap
         self.attr = attr
+
+        self.resolve_overlap = resolve_overlap
 
         self.term_args = {
             "attr": attr,
