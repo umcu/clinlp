@@ -241,7 +241,7 @@ class TestUnitClinlpAutocomponent:
 
 class TestUnitIntervalDistance:
     def test_interval_distance(self):
-        # Arrange & Act & Assert
+        # Arrange, Act & Assert
         assert interval_dist(0, 10, 12, 20) == 2
         assert interval_dist(0, 10, 10, 20) == 0
         assert interval_dist(12, 20, 0, 10) == 2
@@ -249,6 +249,6 @@ class TestUnitIntervalDistance:
         assert interval_dist(0, 10, 5, 15) == 0
 
     def test_interval_distance_unhappy(self):
-        # Arrange & Act & Assert
+        # Arrange, Act & Assert
         with pytest.raises(ValueError):
             _ = interval_dist(5, 0, 5, 0)
