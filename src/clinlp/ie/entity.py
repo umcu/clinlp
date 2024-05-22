@@ -57,7 +57,7 @@ class DeprecatedEntityMatcher:
 @Language.factory(
     name="clinlp_rule_based_entity_matcher",
     requires=["doc.sents"],
-    assigns=[f"doc.spans[{SPANS_KEY}]"],
+    assigns=["doc.spans"],
     default_config=_defaults_term,
 )
 @clinlp_autocomponent

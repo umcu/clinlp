@@ -125,7 +125,7 @@ class QualifierTransformer(QualifierDetector):
 
 @Language.factory(
     name="clinlp_negation_transformer",
-    requires=[f"doc.spans[{SPANS_KEY}]"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
@@ -186,7 +186,7 @@ class NegationTransformer(QualifierTransformer):
 
 @Language.factory(
     name="clinlp_experiencer_transformer",
-    requires=[f"doc.spans[{SPANS_KEY}]"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_experiencer_transformer,
 )
