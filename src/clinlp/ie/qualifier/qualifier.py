@@ -103,8 +103,16 @@ class QualifierClass:
         )
 
 
+_defaults_qualifier_detector = {
+    "spans_key": SPANS_KEY,
+}
+
+
 class QualifierDetector(ABC):
     """For usage as a spaCy pipeline component"""
+
+    def __init__(self, spans_key: str = _defaults_qualifier_detector["spans_key"]):
+        self.spans_key = spans_key
 
     @property
     @abstractmethod
@@ -137,10 +145,10 @@ class QualifierDetector(ABC):
         pass
 
     def __call__(self, doc: Doc) -> Doc:
-        if SPANS_KEY not in doc.spans or len(doc.spans[SPANS_KEY]) == 0:
+        if self.spans_key not in doc.spans or len(doc.spans[self.spans_key]) == 0:
             return doc
 
-        for ent in doc.spans[SPANS_KEY]:
+        for ent in doc.spans[self.spans_key]:
             self._initialize_ent_qualifiers(ent)
 
         self._detect_qualifiers(doc)

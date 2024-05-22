@@ -13,7 +13,6 @@ from spacy.language import Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Doc, Span
 
-from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
@@ -99,9 +98,7 @@ class _MatchedContextPattern:
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
     "load_rules": True,
-    "rules": str(
-        importlib.resources.files("clinlp.resources").joinpath("context_rules.json")
-    ),
+    "rules": str(_RESOURCES_DIR.joinpath(_DEFAULT_CONTEXT_RULES_FILE)),
 }
 
 
@@ -133,6 +130,7 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
         load_rules=_defaults_context_algorithm["load_rules"],
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
+        **kwargs,
     ) -> None:
         self._nlp = nlp
 
@@ -151,6 +149,8 @@ class ContextAlgorithm(QualifierDetector):
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
+
+        super().__init__(**kwargs)
 
     @property
     def qualifier_classes(self) -> dict[str, QualifierClass]:
@@ -241,15 +241,14 @@ class ContextAlgorithm(QualifierDetector):
 
         return qualifier_rules
 
-    @staticmethod
-    def _get_sentences_with_entities(doc: Doc) -> dict[Span, list[Span]]:
+    def _get_sentences_with_entities(self, doc: Doc) -> dict[Span, list[Span]]:
         """
         Return sentences in a doc that have at least one entity, mapped to the entities.
         """
 
         sents = defaultdict(list)
 
-        for ent in doc.spans[SPANS_KEY]:
+        for ent in doc.spans[self.spans_key]:
             sents[ent.sent].append(ent)
 
         return sents
