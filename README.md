@@ -174,7 +174,7 @@ entity_matcher.load_concepts(concepts)
 
 > :bulb: The `clinlp_rule_based_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `SpanRuler` can also be used directly with `clinlp` for those who prefer it. You can configure the `SpanRuler` to write to the same `SpanGroup` as follows: 
 
-> ```python
+```python
 from clinlp.ie import SPAN_KEY
 ruler = nlp.add_pipe('span_ruler', config={'span_key': SPAN_KEY})
 ```
