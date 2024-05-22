@@ -17,8 +17,8 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 def nlp():
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-    ruler.load_concepts({"symptoom": ["SYMPTOOM"]})
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": ENTS_KEYWORD})
+    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
     return nlp
 
 

@@ -14,8 +14,8 @@ def nlp():
     nlp.add_pipe("clinlp_sentencizer")
 
     # ruler
-    ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-    ruler.load_concepts({"label": ["ENTITY"]})
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": ENTS_KEYWORD})
+    ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
     # recognizer
     _ = nlp.add_pipe(
