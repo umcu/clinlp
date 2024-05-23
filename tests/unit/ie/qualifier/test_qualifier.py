@@ -113,12 +113,25 @@ class TestUnitQualifier:
         [
             ({"prob": 0.5}, True),
             ({"value": "Negated", "is_default": True, "prob": 0.5}, False),
-            ({"name": "Temporality", "value": "HISTORICAL", "is_default": True, "prob": 0.5}, False)
+            (
+                {
+                    "name": "Temporality",
+                    "value": "HISTORICAL",
+                    "is_default": True,
+                    "prob": 0.5,
+                },
+                False,
+            ),
         ],
     )
     def test_hash_in_set(self, qualifier_kwargs, expected_in_set):
         # Arrange
-        kwargs = {"name": "Negation", "value": "Affirmed", "is_default": False, "prob": 1}
+        kwargs = {
+            "name": "Negation",
+            "value": "Affirmed",
+            "is_default": False,
+            "prob": 1,
+        }
         qualifiers = {Qualifier(**kwargs)}
 
         # Act
