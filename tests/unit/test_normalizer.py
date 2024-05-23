@@ -11,32 +11,50 @@ def mock_doc():
 
 
 class TestNormalizer:
-    def test_lowercase(self):
+    @pytest.mark.parametrize(
+        "input_text, expected_lowercased_text",
+        [
+            ("test", "test"),
+            ("Test", "test"),
+            ("TEST", "test"),
+        ],
+    )
+    def test_lowercase(self, input_text, expected_lowercased_text):
         # Arrange
         n = Normalizer()
 
-        # Act & Assert
-        assert n._lowercase("test") == "test"
-        assert n._lowercase("Test") == "test"
-        assert n._lowercase("TEST") == "test"
+        # Act
+        lowercased = n._lowercase(input_text)
 
-    def test_map_non_ascii_char(self):
+        # Assert
+        assert lowercased == expected_lowercased_text
+
+    @pytest.mark.parametrize(
+        "input_char, expected_non_ascii_char",
+        [
+            ("a", "a"),
+            ("à", "a"),
+            ("e", "e"),
+            ("é", "e"),
+            ("ê", "e"),
+            ("ë", "e"),
+            ("ē", "e"),
+            (" ", " "),
+            ("\n", "\n"),
+            ("µ", "µ"),
+            ("²", "²"),
+            ("1", "1"),
+        ],
+    )
+    def test_map_non_ascii_char(self, input_char, expected_non_ascii_char):
         # Arrange
         n = Normalizer()
 
-        # Act & Assert
-        assert n._map_non_ascii_char("a") == "a"
-        assert n._map_non_ascii_char("à") == "a"
-        assert n._map_non_ascii_char("e") == "e"
-        assert n._map_non_ascii_char("é") == "e"
-        assert n._map_non_ascii_char("ê") == "e"
-        assert n._map_non_ascii_char("ë") == "e"
-        assert n._map_non_ascii_char("ē") == "e"
-        assert n._map_non_ascii_char(" ") == " "
-        assert n._map_non_ascii_char("\n") == "\n"
-        assert n._map_non_ascii_char("µ") == "µ"
-        assert n._map_non_ascii_char("²") == "²"
-        assert n._map_non_ascii_char("1") == "1"
+        # Act
+        non_ascii = n._map_non_ascii_char(input_char)
+
+        # Assert
+        assert non_ascii == expected_non_ascii_char
 
     def test_map_non_ascii_char_nonchar(self):
         # Arrange
@@ -46,18 +64,27 @@ class TestNormalizer:
         with pytest.raises(ValueError):
             n._map_non_ascii_char("ab")
 
-    def test_map_non_ascii_string(self):
+    @pytest.mark.parametrize(
+        "input_string, expected_non_ascii_string",
+        [
+            ("abcde", "abcde"),
+            ("abcdé", "abcde"),
+            ("äbcdé", "abcde"),
+            (
+                "patiënt heeft 1.6m² lichaamsoppervlak",
+                "patient heeft 1.6m² lichaamsoppervlak",
+            ),
+        ],
+    )
+    def test_map_non_ascii_string(self, input_string, expected_non_ascii_string):
         # Arrange
         n = Normalizer()
 
-        # Act & Assert
-        assert n._map_non_ascii_string("abcde") == "abcde"
-        assert n._map_non_ascii_string("abcdé") == "abcde"
-        assert n._map_non_ascii_string("äbcdé") == "abcde"
-        assert (
-            n._map_non_ascii_string("patiënt heeft 1.6m² lichaamsoppervlak")
-            == "patient heeft 1.6m² lichaamsoppervlak"
-        )
+        # Act
+        non_ascii = n._map_non_ascii_string(input_string)
+
+        # Assert
+        assert non_ascii == expected_non_ascii_string
 
     def test_call_normalizer_default(self, mock_doc):
         # Arange

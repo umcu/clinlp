@@ -240,13 +240,22 @@ class TestUnitClinlpAutocomponent:
 
 
 class TestUnitIntervalDistance:
-    def test_interval_distance(self):
-        # Arrange, Act & Assert
-        assert interval_dist(0, 10, 12, 20) == 2
-        assert interval_dist(0, 10, 10, 20) == 0
-        assert interval_dist(12, 20, 0, 10) == 2
-        assert interval_dist(10, 20, 0, 10) == 0
-        assert interval_dist(0, 10, 5, 15) == 0
+    @pytest.mark.parametrize(
+        "a, b, c, d, expected_dist",
+        [
+            (0, 10, 12, 20, 2),
+            (0, 10, 10, 20, 0),
+            (12, 20, 0, 10, 2),
+            (10, 20, 0, 10, 0),
+            (0, 10, 5, 15, 0),
+        ],
+    )
+    def test_interval_distance(self, a, b, c, d, expected_dist):
+        # Arrange, Act
+        dist = interval_dist(a, b, c, d)
+
+        # Assert
+        assert dist == expected_dist
 
     def test_interval_distance_unhappy(self):
         # Arrange, Act & Assert

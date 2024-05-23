@@ -50,14 +50,26 @@ class TestCreateConceptDict:
 
 
 class TestClinlpNer:
-    def test_use_phrase_matcher(self, nlp):
-        # Arrange, Act & Assert
-        assert RuleBasedEntityMatcher(nlp=nlp)._use_phrase_matcher
-        assert RuleBasedEntityMatcher(nlp=nlp, attr="NORM")._use_phrase_matcher
-        assert not RuleBasedEntityMatcher(nlp=nlp, proximity=1)._use_phrase_matcher
-        assert not RuleBasedEntityMatcher(nlp=nlp, fuzzy=1)._use_phrase_matcher
-        assert not RuleBasedEntityMatcher(nlp=nlp, fuzzy_min_len=1)._use_phrase_matcher
-        assert RuleBasedEntityMatcher(nlp=nlp, pseudo=1)._use_phrase_matcher
+    @pytest.mark.parametrize(
+        "rbem_kwargs, expected_use_phrase_matcher",
+        [
+            ({}, True),
+            ({"attr": "NORM"}, True),
+            ({"proximity": 1}, False),
+            ({"fuzzy": 1}, False),
+            ({"fuzzy_min_len": 1}, False),
+            ({"pseudo": 1}, True),
+        ],
+    )
+    def test_use_phrase_matcher(self, nlp, rbem_kwargs, expected_use_phrase_matcher):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp, **rbem_kwargs)
+
+        # Act
+        use_phrase_matcher = rbem._use_phrase_matcher
+
+        # Assert
+        assert use_phrase_matcher == expected_use_phrase_matcher
 
     def test_load_concepts(self, nlp):
         # Arrange
@@ -99,20 +111,36 @@ class TestClinlpNer:
         assert len(rbem._phrase_matcher) + len(rbem._matcher) == 6
         assert len(rbem._terms) == 6
 
-    def test_match_simpe(self, nlp):
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("dhr was delirant", [("delirant", 2, 3, "delier")]),
+            ("dhr was Delirant", []),
+            ("dhr was delirantt", []),
+        ],
+    )
+    def test_match_simple(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts({"delier": ["delier", "delirant"]})
 
-        # Act & Assert
-        assert ents(rbem(nlp("dhr was delirant"))) == [("delirant", 2, 3, "delier")]
-        assert ents(rbem(nlp("dhr was Delirant"))) == []
-        assert ents(rbem(nlp("dhr was delirantt"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_attr(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("dhr was delirant", [("delirant", 2, 3, "delier")]),
+            ("dhr was Delirant", [("Delirant", 2, 3, "delier")]),
+            ("dhr was delirantt", []),
+        ],
+    )
+    def test_match_attr(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-
         rbem.load_concepts(
             {
                 "delier": [
@@ -122,38 +150,63 @@ class TestClinlpNer:
             }
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("dhr was delirant"))) == [("delirant", 2, 3, "delier")]
-        assert ents(rbem(nlp("dhr was Delirant"))) == [("Delirant", 2, 3, "delier")]
-        assert ents(rbem(nlp("dhr was delirantt"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_proximity(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("dhr was kluts kwijt", [("kluts kwijt", 2, 4, "delier")]),
+            ("dhr was kluts even kwijt", [("kluts even kwijt", 2, 5, "delier")]),
+            ("dhr was kluts gister en vandaag kwijt", []),
+        ],
+    )
+    def test_match_proximity(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts(
             {"delier": [Term("delier"), Term("kluts kwijt", proximity=1)]}
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("dhr was kluts kwijt"))) == [
-            ("kluts kwijt", 2, 4, "delier")
-        ]
-        assert ents(rbem(nlp("dhr was kluts even kwijt"))) == [
-            ("kluts even kwijt", 2, 5, "delier")
-        ]
-        assert ents(rbem(nlp("dhr was kluts gister en vandaag kwijt"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_fuzzy(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("dhr was delirant", [("delirant", 2, 3, "delier")]),
+            ("dhr was Delirant", [("Delirant", 2, 3, "delier")]),
+            ("dhr was delirantt", [("delirantt", 2, 3, "delier")]),
+        ],
+    )
+    def test_match_fuzzy(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts({"delier": [Term("delier"), Term("delirant", fuzzy=1)]})
 
-        # Act & Assert
-        assert ents(rbem(nlp("dhr was delirant"))) == [("delirant", 2, 3, "delier")]
-        assert ents(rbem(nlp("dhr was Delirant"))) == [("Delirant", 2, 3, "delier")]
-        assert ents(rbem(nlp("dhr was delirantt"))) == [("delirantt", 2, 3, "delier")]
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_fuzzy_min_len(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("bloeding graad ii", [("bloeding graad ii", 0, 3, "bloeding")]),
+            ("Bloeding graad ii", [("Bloeding graad ii", 0, 3, "bloeding")]),
+            ("bleoding graad ii", []),
+            ("bbloeding graad ii", [("bbloeding graad ii", 0, 3, "bloeding")]),
+            ("bloeding graadd ii", []),
+        ],
+    )
+    def test_match_fuzzy_min_len(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts(
@@ -164,31 +217,40 @@ class TestClinlpNer:
             }
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("bloeding graad ii"))) == [
-            ("bloeding graad ii", 0, 3, "bloeding")
-        ]
-        assert ents(rbem(nlp("Bloeding graad ii"))) == [
-            ("Bloeding graad ii", 0, 3, "bloeding")
-        ]
-        assert ents(rbem(nlp("bleoding graad ii"))) == []
-        assert ents(rbem(nlp("bbloeding graad ii"))) == [
-            ("bbloeding graad ii", 0, 3, "bloeding")
-        ]
-        assert ents(rbem(nlp("bloeding graadd ii"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_pseudo(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("onrustige indruk", [("onrustige", 0, 1, "delier")]),
+            ("onrustige benen", []),
+        ],
+    )
+    def test_match_pseudo(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts(
             {"delier": ["onrustige", Term("onrustige benen", pseudo=True)]}
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("onrustige indruk"))) == [("onrustige", 0, 1, "delier")]
-        assert ents(rbem(nlp("onrustige benen"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_pseudo_different_concepts(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("onrustige indruk", [("onrustige", 0, 1, "delier")]),
+            ("onrustige benen", [("onrustige", 0, 1, "delier")]),
+        ],
+    )
+    def test_match_pseudo_different_concepts(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts(
@@ -198,11 +260,23 @@ class TestClinlpNer:
             }
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("onrustige indruk"))) == [("onrustige", 0, 1, "delier")]
-        assert ents(rbem(nlp("onrustige benen"))) == [("onrustige", 0, 1, "delier")]
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_rbem_level_term_settings(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("was kluts even kwijt", [("kluts even kwijt", 1, 4, "delier")]),
+            ("wekt indruk delierant te zijn", [("delierant", 2, 3, "delier")]),
+            ("status na Delier", [("Delier", 2, 3, "delier")]),
+            ("onrustig", [("onrustig", 0, 1, "delier")]),
+            ("onrustigg", []),
+        ],
+    )
+    def test_rbem_level_term_settings(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(
             nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5
@@ -211,46 +285,59 @@ class TestClinlpNer:
             {"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)]}
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("was kluts even kwijt"))) == [
-            ("kluts even kwijt", 1, 4, "delier")
-        ]
-        assert ents(rbem(nlp("wekt indruk delierant te zijn"))) == [
-            ("delierant", 2, 3, "delier")
-        ]
-        assert ents(rbem(nlp("status na Delier"))) == [("Delier", 2, 3, "delier")]
-        assert ents(rbem(nlp("onrustig"))) == [("onrustig", 0, 1, "delier")]
-        assert ents(rbem(nlp("onrustigg"))) == []
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_overwrite_rbem_level_settings(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("delier", [("delier", 0, 1, "delier")]),
+            ("Delier", [("Delier", 0, 1, "delier")]),
+            ("delir", [("delir", 0, 1, "delier")]),
+            ("delirant", [("delirant", 0, 1, "delier")]),
+            ("delirnt", []),
+            ("Delirant", [("Delirant", 0, 1, "delier")]),
+            ("dos", []),
+            ("doss", []),
+            ("DOS", [("DOS", 0, 1, "delier")]),
+        ],
+    )
+    def test_match_overwrite_rbem_level_settings(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
         rbem.load_concepts(
             {"delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]}
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("delier"))) == [("delier", 0, 1, "delier")]
-        assert ents(rbem(nlp("Delier"))) == [("Delier", 0, 1, "delier")]
-        assert ents(rbem(nlp("delir"))) == [("delir", 0, 1, "delier")]
-        assert ents(rbem(nlp("delirant"))) == [("delirant", 0, 1, "delier")]
-        assert ents(rbem(nlp("delirnt"))) == []
-        assert ents(rbem(nlp("Delirant"))) == [("Delirant", 0, 1, "delier")]
-        assert ents(rbem(nlp("dos"))) == []
-        assert ents(rbem(nlp("doss"))) == []
-        assert ents(rbem(nlp("DOS"))) == [("DOS", 0, 1, "delier")]
+        # Act
+        entities = ents(rbem(nlp(text)))
 
-    def test_match_mixed_patterns(self, nlp):
+        # Assert
+        assert entities == expected_entities
+
+    @pytest.mark.parametrize(
+        "text, expected_entities",
+        [
+            ("delier", [("delier", 0, 1, "delier")]),
+            ("delirant", [("delirant", 0, 1, "delier")]),
+            ("delirium", [("delirium", 0, 1, "delier")]),
+        ],
+    )
+    def test_match_mixed_patterns(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
         rbem.load_concepts(
             {"delier": ["delier", Term("delirant"), [{"TEXT": "delirium"}]]}
         )
 
-        # Act & Assert
-        assert ents(rbem(nlp("delier"))) == [("delier", 0, 1, "delier")]
-        assert ents(rbem(nlp("delirant"))) == [("delirant", 0, 1, "delier")]
-        assert ents(rbem(nlp("delirium"))) == [("delirium", 0, 1, "delier")]
+        # Act
+        entities = ents(rbem(nlp(text)))
+
+        # Assert
+        assert entities == expected_entities
 
     def test_match_mixed_concepts(self, nlp):
         # Arrange

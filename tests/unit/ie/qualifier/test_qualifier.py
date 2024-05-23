@@ -88,40 +88,59 @@ class TestUnitQualifier:
             "prob": 0.8,
         }
 
-    def test_compare_equality(self):
-        # Arrange, Act & Assert
-        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
-            "Negation", "Negated", is_default=True
-        )
-        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
-            "Negation", "Negated", is_default=True, prob=0.8
-        )
-        assert Qualifier("Negation", "Negated", is_default=True) != Qualifier(
-            "Negation", "Affirmed", is_default=False
-        )
+    @pytest.mark.parametrize(
+        "q1_kwargs, q2_kwargs, expected_equality",
+        [
+            ({}, {}, True),
+            ({}, {"prob": 0.8}, True),
+            ({}, {"value": "Affirmed", "is_default": False}, False),
+        ],
+    )
+    def test_compare_equality(self, q1_kwargs, q2_kwargs, expected_equality):
+        # Arrange
+        kwargs = {"name": "Negation", "value": "Negated", "is_default": True}
+        q1 = Qualifier(**(kwargs | q1_kwargs))
+        q2 = Qualifier(**(kwargs | q2_kwargs))
 
-    def test_hash_in_set(self):
-        # Arrange & Act
-        qualifiers = {Qualifier("Negation", "Affirmed", is_default=False, prob=1)}
+        # Act & Assert
+        equality = q1 == q2
 
         # Assert
-        assert (
-            Qualifier("Negation", "Affirmed", is_default=False, prob=0.5) in qualifiers
-        )
-        assert (
-            Qualifier("Negation", "Negated", is_default=True, prob=0.5)
-            not in qualifiers
-        )
-        assert (
-            Qualifier("Temporality", "HISTORICAL", is_default=True, prob=0.5)
-            not in qualifiers
-        )
+        assert equality == expected_equality
 
-    def test_spacy_has_extension(self):
-        # Arrange, Act & Assert
-        assert Span.has_extension(ATTR_QUALIFIERS)
-        assert Span.has_extension(ATTR_QUALIFIERS_STR)
-        assert Span.has_extension(ATTR_QUALIFIERS_DICT)
+    @pytest.mark.parametrize(
+        "qualifier_kwargs, expected_in_set",
+        [
+            ({"prob": 0.5}, True),
+            ({"value": "Negated", "is_default": True, "prob": 0.5}, False),
+            ({"name": "Temporality", "value": "HISTORICAL", "is_default": True, "prob": 0.5}, False)
+        ],
+    )
+    def test_hash_in_set(self, qualifier_kwargs, expected_in_set):
+        # Arrange
+        kwargs = {"name": "Negation", "value": "Affirmed", "is_default": False, "prob": 1}
+        qualifiers = {Qualifier(**kwargs)}
+
+        # Act
+        in_set = Qualifier(**(kwargs | qualifier_kwargs)) in qualifiers
+
+        # Assert
+        assert in_set == expected_in_set
+
+    @pytest.mark.parametrize(
+        "extension, expected_has_extension",
+        [
+            (ATTR_QUALIFIERS, True),
+            (ATTR_QUALIFIERS_STR, True),
+            (ATTR_QUALIFIERS_DICT, True),
+        ],
+    )
+    def test_spacy_has_extension(self, extension, expected_has_extension):
+        # Act
+        has_extension = Span.has_extension(extension)
+
+        # Assert
+        assert has_extension == expected_has_extension
 
     def test_spacy_extension_default(self, nlp):
         # Arrange
@@ -145,40 +164,69 @@ class TestUnitQualifier:
 
 
 class TestUnitQualifierFactory:
-    def test_use_factory(self):
+    @pytest.mark.parametrize(
+        "value, expected_is_default",
+        [
+            ("Affirmed", True),
+            ("Negated", False),
+        ],
+    )
+    def test_use_factory(self, value, expected_is_default):
         # Arrange
         factory = QualifierClass("Negation", ["Affirmed", "Negated"])
 
-        # Act & Assert
-        assert factory.create(value="Affirmed").is_default
-        assert not factory.create(value="Negated").is_default
-        assert factory.create(value="Affirmed") == Qualifier(
-            "Negation", "Affirmed", is_default=True
-        )
+        # Act
+        is_default = factory.create(value=value).is_default
 
-    def test_use_factory_nondefault(self):
+        # Assert
+        assert is_default == expected_is_default
+
+    @pytest.mark.parametrize(
+        "value, expected_is_default",
+        [
+            ("Affirmed", False),
+            ("Negated", True),
+        ],
+    )
+    def test_use_factory_nondefault(self, value, expected_is_default):
         # Arrange
         factory = QualifierClass("Negation", ["Affirmed", "Negated"], default="Negated")
 
-        # Act & Assert
-        assert not factory.create(value="Affirmed").is_default
-        assert factory.create(value="Negated").is_default
-        assert factory.create(value="Affirmed") == Qualifier(
-            "Negation", "Affirmed", is_default=False
-        )
+        # Act
+        is_default = factory.create(value=value).is_default
 
-    def test_use_factory_priority_default(self):
+        # Assert
+        assert is_default == expected_is_default
+
+    @pytest.mark.parametrize(
+        "value, expected_priority",
+        [
+            ("Absent", 0),
+            ("Uncertain", 1),
+            ("Present", 2),
+        ],
+    )
+    def test_use_factory_priority_default(self, value, expected_priority):
         # Arrange
         factory = QualifierClass(
             "Presence", ["Absent", "Uncertain", "Present"], default="Present"
         )
 
-        # Act & Assert
-        assert factory.create("Absent").priority == 0
-        assert factory.create("Uncertain").priority == 1
-        assert factory.create("Present").priority == 2
+        # Act
+        priority = factory.create(value=value).priority
 
-    def test_use_factory_priority_nondefault(self):
+        # Assert
+        assert priority == expected_priority
+
+    @pytest.mark.parametrize(
+        "value, expected_priority",
+        [
+            ("Absent", 1),
+            ("Uncertain", 100),
+            ("Present", 0),
+        ],
+    )
+    def test_use_factory_priority_nondefault(self, value, expected_priority):
         # Arrange
         factory = QualifierClass(
             "Presence",
@@ -187,10 +235,11 @@ class TestUnitQualifierFactory:
             priorities={"Absent": 1, "Uncertain": 100, "Present": 0},
         )
 
-        # Act & Assert
-        assert factory.create("Absent").priority == 1
-        assert factory.create("Uncertain").priority == 100
-        assert factory.create("Present").priority == 0
+        # Act
+        priority = factory.create(value=value).priority
+
+        # Assert
+        assert priority == expected_priority
 
     def test_use_factory_unhappy(self):
         # Arrange
