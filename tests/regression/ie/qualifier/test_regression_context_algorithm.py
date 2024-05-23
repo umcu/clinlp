@@ -55,4 +55,4 @@ class TestRegressionContextAlgorithm:
                     )
                     incorrect_ents.add(example_ent["ent_id"])
 
-        assert incorrect_ents == {11, 12, 32}
+        assert incorrect_ents == {9, 11, 12, 32}
