@@ -49,9 +49,9 @@ for example in data["examples"]:
 
 class TestRegressionNegationTransformer:
     @pytest.mark.parametrize("text, expected_ent", examples)
-    def test_qualifier_cases(self, nlp, text, expected_ent):
+    def test_qualifier_cases(self, nlp_qualifier, text, expected_ent):
         # Act
-        doc = nlp(text)
+        doc = nlp_qualifier(text)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
