@@ -11,39 +11,31 @@ from clinlp.ie.qualifier import (
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
-@pytest.fixture
-def nlp():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
-    return nlp
-
-
-@pytest.fixture
-def text():
-    return "De patient had geen SYMPTOOM, ondanks dat zij dit eerder wel had."
-
-
 class TestQualifierTransformer:
     @pytest.mark.parametrize(
         "token_window, expected_text, expected_start, expected_end",
         [
-            (1, "geen SYMPTOOM,", 5, 13),
-            (2, "had geen SYMPTOOM, ondanks", 9, 17),
+            (1, "geen ENTITY,", 5, 11),
+            (2, "had geen ENTITY, ondanks", 9, 15),
             (
                 32,
-                "De patient had geen SYMPTOOM, ondanks dat zij dit eerder wel had.",
+                "De patient had geen ENTITY, ondanks dat zij dit eerder wel had.",
                 20,
-                28,
+                26,
             ),
         ],
     )
     def test_get_ent_window(
-        self, text, nlp, token_window, expected_text, expected_start, expected_end
+        self,
+        nlp_entity,
+        token_window,
+        expected_text,
+        expected_start,
+        expected_end,
     ):
         # Arrange
-        doc = nlp(text)
+        text = "De patient had geen ENTITY, ondanks dat zij dit eerder wel had."
+        doc = nlp_entity(text)
         span = doc.spans[SPANS_KEY][0]
 
         # Act
@@ -96,9 +88,10 @@ class TestQualifierTransformer:
         assert start == expected_start
         assert end == expected_end
 
-    def test_prepare_ent(self, nlp, text):
+    def test_prepare_ent(self, nlp_entity):
         # Arrange
-        doc = nlp(text)
+        text = "De patient had geen ENTITY, ondanks dat zij dit eerder wel had."
+        doc = nlp_entity(text)
         QualifierTransformer.__abstractmethods__ = set()
         qt = QualifierTransformer(token_window=3, placeholder="X")
 
@@ -112,9 +105,9 @@ class TestQualifierTransformer:
 
 
 class TestNegationTransformer:
-    def test_predict_absnt(self, nlp):
+    def test_predict_absnt(self, nlp_entity):
         # Arrange
-        nt = NegationTransformer(nlp=nlp)
+        nt = NegationTransformer(nlp=nlp_entity)
 
         # Act
         prediction = nt._predict(
@@ -128,9 +121,9 @@ class TestNegationTransformer:
         # Assert
         assert prediction > 0.9
 
-    def test_predict_present(self, nlp):
+    def test_predict_present(self, nlp_entity):
         # Arrange
-        nt = NegationTransformer(nlp=nlp)
+        nt = NegationTransformer(nlp=nlp_entity)
 
         # Act
         prediction = nt._predict(
@@ -144,10 +137,10 @@ class TestNegationTransformer:
         # Assert
         assert prediction < 0.1
 
-    def test_detect_qualifiers_1(self, nlp):
+    def test_detect_qualifiers_1(self, nlp_entity):
         # Arrange
-        nt = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
-        doc = nlp("De patient had geen last van SYMPTOOM.")
+        nt = NegationTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
+        doc = nlp_entity("De patient had geen last van ENTITY.")
 
         # Act
         nt(doc)
@@ -158,10 +151,10 @@ class TestNegationTransformer:
             "Presence.Absent"
         }
 
-    def test_detect_qualifiers_small_window(self, nlp):
+    def test_detect_qualifiers_small_window(self, nlp_entity):
         # Arrange
-        nt = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
-        doc = nlp("De patient had geen last van SYMPTOOM.")
+        nt = NegationTransformer(nlp=nlp_entity, token_window=1, placeholder="X")
+        doc = nlp_entity("De patient had geen last van ENTITY.")
 
         # Act
         nt(doc)
@@ -172,10 +165,10 @@ class TestNegationTransformer:
             "Presence.Present"
         }
 
-    def test_detect_qualifiers_without_negation(self, nlp):
+    def test_detect_qualifiers_without_negation(self, nlp_entity):
         # Arrange
-        nt = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
-        doc = nlp("De patient had juist wel last van SYMPTOOM.")
+        nt = NegationTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
+        doc = nlp_entity("De patient had juist wel last van ENTITY.")
 
         # Act
         nt(doc)
@@ -188,9 +181,9 @@ class TestNegationTransformer:
 
 
 class TestExperiencerTransformer:
-    def test_predict_family(self, nlp):
+    def test_predict_family(self, nlp_entity):
         # Arrange
-        et = ExperiencerTransformer(nlp=nlp)
+        et = ExperiencerTransformer(nlp=nlp_entity)
 
         # Act
         prediction = et._predict(
@@ -204,9 +197,9 @@ class TestExperiencerTransformer:
         # Assert
         assert prediction > 0.9
 
-    def test_predict_patient(self, nlp):
+    def test_predict_patient(self, nlp_entity):
         # Arrange
-        et = ExperiencerTransformer(nlp=nlp)
+        et = ExperiencerTransformer(nlp=nlp_entity)
 
         # Act
         prediction = et._predict(
@@ -220,10 +213,10 @@ class TestExperiencerTransformer:
         # Assert
         assert prediction < 0.1
 
-    def test_detect_qualifiers_1(self, nlp):
+    def test_detect_qualifiers_1(self, nlp_entity):
         # Arrange
-        et = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
-        doc = nlp("De patient had geen last van SYMPTOOM.")
+        et = ExperiencerTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
+        doc = nlp_entity("De patient had geen last van ENTITY.")
 
         # Act
         et(doc)
@@ -234,10 +227,10 @@ class TestExperiencerTransformer:
             "Experiencer.Patient"
         }
 
-    def test_detect_qualifiers_small_window(self, nlp):
+    def test_detect_qualifiers_small_window(self, nlp_entity):
         # Arrange
-        et = ExperiencerTransformer(nlp=nlp, token_window=1, placeholder="X")
-        doc = nlp("De patient had geen last van SYMPTOOM.")
+        et = ExperiencerTransformer(nlp=nlp_entity, token_window=1, placeholder="X")
+        doc = nlp_entity("De patient had geen last van ENTITY.")
 
         # Act
         et(doc)
@@ -248,10 +241,10 @@ class TestExperiencerTransformer:
             "Experiencer.Patient"
         }
 
-    def test_detect_qualifiers_referring_to_family(self, nlp):
+    def test_detect_qualifiers_referring_to_family(self, nlp_entity):
         # Arrange
-        et = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
-        doc = nlp("De broer van de patient had last van SYMPTOOM.")
+        et = ExperiencerTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
+        doc = nlp_entity("De broer van de patient had last van ENTITY.")
 
         # Act
         et(doc)
