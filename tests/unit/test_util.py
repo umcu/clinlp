@@ -1,5 +1,4 @@
 import pytest
-import spacy
 from spacy import Language
 from thinc.api import ConfigValidationError
 
@@ -11,48 +10,43 @@ from clinlp.util import (
 )
 
 
-@pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
-
-
 # Arrange
 @pytest.fixture(scope="session")
 def component_1():
-    @Language.factory(name="myclass")
+    @Language.factory(name="test_component_1")
     @clinlp_autocomponent
-    class MyComponent1:
+    class TestComponent1:
         def __init__(self, nlp, name):
             self.nlp = nlp
             self.name = name
 
-    return MyComponent1
+    return TestComponent1
 
 
 # Arrange
 @pytest.fixture(scope="session")
 def component_2():
-    @Language.factory(name="myclass_test1")
+    @Language.factory(name="test_component_2")
     @clinlp_autocomponent
-    class MyComponent2:
+    class TestComponent2:
         def __init__(self, setting_1=32, setting_2="max"):
             self.setting_1 = setting_1
             self.setting_2 = setting_2
 
-    return MyComponent2
+    return TestComponent2
 
 
 # Arrange
 @pytest.fixture(scope="session")
 def component_3():
-    @Language.factory(name="myclass_test2")
+    @Language.factory(name="test_component_3")
     @clinlp_autocomponent
-    class MyClass:
+    class TestComponent3:
         def __init__(self, name, setting_1=32):
             self.name = name
             self.setting_1 = setting_1
 
-    return MyClass
+    return TestComponent3
 
 
 # Arrange
@@ -60,13 +54,13 @@ def component_3():
 def component_4():
     _defaults = {"setting_1": 1024}
 
-    @Language.factory(name="myclass_test3", default_config=_defaults)
+    @Language.factory(name="test_component_4", default_config=_defaults)
     @clinlp_autocomponent
-    class MyClass:
+    class TestComponent4:
         def __init__(self, setting_1=_defaults["setting_1"]):
             self.setting_1 = setting_1
 
-    return MyClass
+    return TestComponent4
 
 
 # Arrange
@@ -75,26 +69,20 @@ def component_5():
     _base_defaults = {"base_arg": 1}
     _sub_defaults = {"sub_arg": 2}
 
-    class MyClassBase:
+    class TestComponent5Base:
         def __init__(self, base_arg=_base_defaults["base_arg"]):
             self.base_arg = base_arg
 
     @Language.factory(
-        name="myclass_test4", default_config=_sub_defaults | _base_defaults
+        name="test_component_5", default_config=_sub_defaults | _base_defaults
     )
     @clinlp_autocomponent
-    class MyClass(MyClassBase):
+    class TestComponent5(TestComponent5Base):
         def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
             self.sub_arg = sub_arg
             super().__init__(**kwargs)
 
-    return MyClass
-
-
-def add_pipe_for_test(*args, **kwargs):
-    nlp = spacy.blank("clinlp")
-    component = nlp.add_pipe(*args, **kwargs)
-    return component
+    return TestComponent5
 
 
 class TestUnitGetClassInitSignature:
@@ -149,13 +137,13 @@ class TestUnitClinlpAutocomponent:
     @pytest.mark.parametrize(
         "kwargs, attr, expected_value",
         [
-            ({}, "name", "myclass"),
+            ({}, "name", "test_component_1"),
             ({"name": "name"}, "name", "name"),
         ],
     )
     def test_only_args_pipe(self, nlp, component_1, kwargs, attr, expected_value):
         # Act
-        component = nlp.add_pipe("myclass", **kwargs)
+        component = nlp.add_pipe("test_component_1", **kwargs)
 
         # Assert
         assert getattr(component, attr) == expected_value
@@ -197,7 +185,7 @@ class TestUnitClinlpAutocomponent:
             ),
         ],
     )
-    def test_only_kwargs_class(self, nlp, component_2, kwargs, attr, expected_value):
+    def test_only_kwargs_class(self, component_2, kwargs, attr, expected_value):
         # Act
         component = component_2(**kwargs)
 
@@ -219,7 +207,7 @@ class TestUnitClinlpAutocomponent:
         self, nlp, component_2, kwargs, config, attr, expected_value
     ):
         # Act
-        component = nlp.add_pipe("myclass_test1", **kwargs, config=config)
+        component = nlp.add_pipe("test_component_2", **kwargs, config=config)
 
         # Assert
         assert getattr(component, attr) == expected_value
@@ -230,11 +218,11 @@ class TestUnitClinlpAutocomponent:
             # Act
             component_2(setting_3="None")
 
-    def test_only_kwargs_pipe_error_2(self, component_2):
+    def test_only_kwargs_pipe_error_2(self, nlp, component_2):
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
-            add_pipe_for_test("myclass_test1", config={"setting_3": "None"})
+            nlp.add_pipe("test_component_2", config={"setting_3": "None"})
 
     @pytest.mark.parametrize(
         "kwargs, attr, expected_value",
@@ -265,10 +253,10 @@ class TestUnitClinlpAutocomponent:
         ],
     )
     def test_mixed_args_and_kwargs_pipe(
-        self, component_3, kwargs, config, attr, expected_value
+        self, nlp, component_3, kwargs, config, attr, expected_value
     ):
         # Act
-        component = add_pipe_for_test("myclass_test2", **kwargs, config=config)
+        component = nlp.add_pipe("test_component_3", **kwargs, config=config)
 
         # Assert
         assert getattr(component, attr) == expected_value
@@ -279,11 +267,11 @@ class TestUnitClinlpAutocomponent:
             # Act
             component_3(setting_1=10)
 
-    def test_mixed_args_and_kwargs_pipe_error_2(self, component_3):
+    def test_mixed_args_and_kwargs_pipe_error_2(self, nlp, component_3):
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
-            add_pipe_for_test("myclass_test2", config={"setting_3": "None"})
+            nlp.add_pipe("test_component_3", config={"setting_3": "None"})
 
     def test_default_args_component(self, component_4):
         # Act
@@ -299,9 +287,9 @@ class TestUnitClinlpAutocomponent:
             ({"setting_1": 2048}, "setting_1", 2048),
         ],
     )
-    def test_default_args_pipe(self, component_4, config, attr, expected_value):
+    def test_default_args_pipe(self, nlp, component_4, config, attr, expected_value):
         # Act
-        component = add_pipe_for_test("myclass_test3", config=config)
+        component = nlp.add_pipe("test_component_4", config=config)
 
         # Assert
         assert getattr(component, attr) == expected_value
@@ -335,9 +323,11 @@ class TestUnitClinlpAutocomponent:
             ({"sub_arg": 20, "base_arg": 10}, "base_arg", 10),
         ],
     )
-    def test_with_inheritance_pipe(self, component_5, config, attr, expected_value):
+    def test_with_inheritance_pipe(
+        self, nlp, component_5, config, attr, expected_value
+    ):
         # Act
-        component = add_pipe_for_test("myclass_test4", config=config)
+        component = nlp.add_pipe("test_component_5", config=config)
 
         # Assert
         assert getattr(component, attr) == expected_value
