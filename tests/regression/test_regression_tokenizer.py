@@ -15,7 +15,7 @@ tokenizer_cases = [
 
 
 # Arrange
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="class")
 def tokenizer():
     return spacy.blank("clinlp").tokenizer
 
