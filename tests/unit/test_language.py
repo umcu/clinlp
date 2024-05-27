@@ -14,8 +14,10 @@ class TestUnitCreateModel:
 
     def test_version(self, nlp):
         # Assert
+
         assert "clinlp_version" in nlp.meta
 
+    @pytest.mark.filterwarnings("ignore:.*W095.*:UserWarning")
     def test_load_wrong_version(self):
         # Assert
         with pytest.warns(VersionMismatchWarning):

@@ -180,6 +180,7 @@ class TestDocument:
         assert labels == {"test2"}
 
 
+@pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestDataset:
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
         # Act
@@ -456,6 +457,7 @@ class TestDataset:
         assert stats["qualifier_counts"] == mctrainer_dataset.qualifier_counts()
 
 
+@pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestMetrics:
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
