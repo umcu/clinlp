@@ -6,6 +6,16 @@ import clinlp  # noqa F401
 from clinlp.ie import SPANS_KEY
 
 
+class MockToken:
+    def __init__(self, text: str):
+        self.text = text
+        self.is_sent_start = False
+
+
+def get_mock_tokens(texts: list[str]):
+    return [MockToken(text) for text in texts]
+
+
 def _make_nlp():
     return spacy.blank("clinlp")
 
@@ -29,13 +39,3 @@ def nlp():
 @pytest.fixture
 def nlp_entity(nlp):
     return _make_nlp_entity(nlp)
-
-
-class MockToken:
-    def __init__(self, text: str):
-        self.text = text
-        self.is_sent_start = False
-
-
-def get_mock_tokens(texts: list[str]):
-    return [MockToken(text) for text in texts]

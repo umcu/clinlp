@@ -5,6 +5,7 @@ from spacy.tokens import Doc
 from clinlp import Normalizer
 
 
+# Arrange
 @pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["Patiënt", "250", "µg", "toedienen"])

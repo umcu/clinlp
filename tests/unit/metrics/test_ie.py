@@ -11,23 +11,27 @@ from clinlp.metrics.ie import (
 )
 
 
+# Arrange
 @pytest.fixture
 def mctrainer_data():
     with open("tests/data/medcattrainer_export.json", "rb") as f:
         return json.load(f)
 
 
+# Arrange
 @pytest.fixture
 def mctrainer_dataset(mctrainer_data):
     return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
 
+# Arrange
 @pytest.fixture
 def clinlp_docs():
     with open("tests/data/clinlp_docs.pickle", "rb") as f:
         return pickle.load(f)
 
 
+# Arrange
 @pytest.fixture
 def clinlp_dataset(clinlp_docs):
     ids = list(f"doc_{x}" for x in range(0, 15))

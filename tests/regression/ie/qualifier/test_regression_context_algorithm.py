@@ -9,27 +9,6 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 KNOWN_FAILURES = {9, 11, 12, 32}
 
 
-@pytest.fixture(scope="class")
-def nlp():
-    return _make_nlp()
-
-
-@pytest.fixture(scope="class")
-def nlp_entity(nlp):
-    return _make_nlp_entity(nlp)
-
-
-@pytest.fixture(scope="class")
-def nlp_qualifier(nlp_entity):
-    nlp_entity.add_pipe("clinlp_sentencizer")
-
-    nlp_entity.add_pipe(
-        "clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"}
-    )
-
-    return nlp_entity
-
-
 with open("tests/data/qualifier_cases.json", "rb") as file:
     data = json.load(file)
 
@@ -41,6 +20,30 @@ for example in data["examples"]:
     examples.append(
         pytest.param(example["text"], example["ent"], id="qualifier_case_", marks=mark)
     )
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_entity(nlp):
+    return _make_nlp_entity(nlp)
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_qualifier(nlp_entity):
+    nlp_entity.add_pipe("clinlp_sentencizer")
+
+    nlp_entity.add_pipe(
+        "clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"}
+    )
+
+    return nlp_entity
 
 
 class TestRegressionContextAlgorithm:

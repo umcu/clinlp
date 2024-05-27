@@ -14,6 +14,7 @@ sentencizer_cases = [
 ]
 
 
+# Arrange
 @pytest.fixture(scope="class")
 def sentencizer():
     return Sentencizer()

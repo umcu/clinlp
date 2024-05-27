@@ -14,17 +14,20 @@ from clinlp.ie.qualifier import (
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_DICT, ATTR_QUALIFIERS_STR
 
 
+# Arrange
 @pytest.fixture
 def entity(nlp):
     doc = nlp("dit is een test")
     return doc[2:3]
 
 
+# Arrange
 @pytest.fixture
 def mock_qualifier_class():
     return QualifierClass("test", ["test1", "test2"])
 
 
+# Arrange
 @pytest.fixture
 def mock_qualifier_class_2():
     return QualifierClass("test2", ["abc", "def"])

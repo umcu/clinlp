@@ -1,6 +1,6 @@
 import pytest
+from spacy.language import Vocab
 from spacy.tokens import Doc, Span
-from spacy.vocab import Vocab
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
@@ -13,25 +13,29 @@ from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
+# Arrange
 @pytest.fixture()
 def nlp_ca(nlp_entity):
     nlp_entity.add_pipe("clinlp_sentencizer")
     return nlp_entity
 
 
+# Arrange
 @pytest.fixture
-def mock_qualifier_class():
-    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
+def ca(nlp):
+    return ContextAlgorithm(nlp=nlp, load_rules=False)
 
 
+# Arrange
 @pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
+# Arrange
 @pytest.fixture
-def ca(nlp):
-    return ContextAlgorithm(nlp=nlp, load_rules=False)
+def mock_qualifier_class():
+    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
 class TestUnitQualifierRule:

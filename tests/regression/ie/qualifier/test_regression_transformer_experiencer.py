@@ -8,27 +8,6 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 KNOWN_FAILURES = {32, 75, 76}
 
-
-@pytest.fixture(scope="class")
-def nlp():
-    return _make_nlp()
-
-
-@pytest.fixture(scope="class")
-def nlp_entity(nlp):
-    return _make_nlp_entity(nlp)
-
-
-@pytest.fixture(scope="class")
-def nlp_qualifier(nlp_entity):
-    _ = nlp_entity.add_pipe(
-        "clinlp_experiencer_transformer",
-        config={"token_window": 32, "placeholder": "X"},
-    )
-
-    return nlp_entity
-
-
 with open("tests/data/qualifier_cases.json", "rb") as file:
     data = json.load(file)
 
@@ -40,6 +19,29 @@ for example in data["examples"]:
     examples.append(
         pytest.param(example["text"], example["ent"], id="qualifier_case_", marks=mark)
     )
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_entity(nlp):
+    return _make_nlp_entity(nlp)
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_qualifier(nlp_entity):
+    _ = nlp_entity.add_pipe(
+        "clinlp_experiencer_transformer",
+        config={"token_window": 32, "placeholder": "X"},
+    )
+
+    return nlp_entity
 
 
 class TestRegressionExperiencerTransformer:

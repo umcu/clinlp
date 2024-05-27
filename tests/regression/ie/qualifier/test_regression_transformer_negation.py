@@ -26,6 +26,19 @@ KNOWN_FAILURES = {
 }
 
 
+with open("tests/data/qualifier_cases.json", "rb") as file:
+    data = json.load(file)
+
+examples = []
+
+for example in data["examples"]:
+    mark = pytest.mark.xfail if example["example_id"] in KNOWN_FAILURES else []
+
+    examples.append(
+        pytest.param(example["text"], example["ent"], id="qualifier_case_", marks=mark)
+    )
+
+
 @pytest.fixture(scope="class")
 def nlp():
     return _make_nlp()
@@ -43,19 +56,6 @@ def nlp_qualifier(nlp_entity):
     )
 
     return nlp_entity
-
-
-with open("tests/data/qualifier_cases.json", "rb") as file:
-    data = json.load(file)
-
-examples = []
-
-for example in data["examples"]:
-    mark = pytest.mark.xfail if example["example_id"] in KNOWN_FAILURES else []
-
-    examples.append(
-        pytest.param(example["text"], example["ent"], id="qualifier_case_", marks=mark)
-    )
 
 
 class TestRegressionNegationTransformer:
