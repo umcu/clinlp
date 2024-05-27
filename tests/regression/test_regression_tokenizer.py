@@ -1,7 +1,7 @@
 import json
-import spacy
 
 import pytest
+import spacy
 
 import clinlp  # noqa: F401
 
