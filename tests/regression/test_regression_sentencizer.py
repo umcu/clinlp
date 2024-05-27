@@ -1,19 +1,9 @@
 import json
 
 import pytest
+from conftest import get_mock_tokens
 
 from clinlp import Sentencizer
-
-
-class MockToken:
-    def __init__(self, text: str):
-        self.text = text
-        self.is_sent_start = False
-
-
-def get_mock_tokens(texts: list[str]):
-    return [MockToken(text) for text in texts]
-
 
 with open("tests/data/sentencizer_cases.json", "rb") as file:
     examples = json.load(file)["data"]
@@ -24,7 +14,7 @@ sentencizer_cases = [
 ]
 
 
-@pytest.fixture(scope="module")
+@pytest.fixture(scope="class")
 def sentencizer():
     return Sentencizer()
 

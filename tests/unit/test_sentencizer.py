@@ -1,18 +1,9 @@
 from unittest.mock import patch
 
 import pytest
+from conftest import MockToken, get_mock_tokens
 
 from clinlp import Sentencizer
-
-
-class MockToken:
-    def __init__(self, text: str):
-        self.text = text
-        self.is_sent_start = False
-
-
-def get_mock_tokens(texts: list[str]):
-    return [MockToken(text) for text in texts]
 
 
 class TestUnitClinlpSentencizer:
