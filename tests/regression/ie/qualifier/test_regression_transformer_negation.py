@@ -35,28 +35,28 @@ class TestRegressionTransformer:
         for example in data["examples"]:
             doc = nlp(example["text"])
 
-            assert len(example["ents"]) == len(doc.spans[SPANS_KEY])
+            predicted_ent = doc.spans[SPANS_KEY][0]
+            example_ent = example["ent"]
 
-            for predicted_ent, example_ent in zip(
-                doc.spans[SPANS_KEY], example["ents"]
-            ):
-                try:
-                    assert predicted_ent.start == example_ent["start"]
-                    assert predicted_ent.end == example_ent["end"]
-                    assert str(predicted_ent) == example_ent["text"]
-                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issubset(
-                        example_ent["qualifiers"]
-                    )
-                except AssertionError:
-                    print(
-                        f"Incorrect (#{example_ent['ent_id']}): "
-                        f"text="
-                        f"{example['text']}, example_ent={example_ent}, "
-                        f"predicted qualifiers="
-                        f"{getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
-                    )
-                    incorrect_ents.add(example_ent["ent_id"])
+            try:
+                assert predicted_ent.start == example_ent["start"]
+                assert predicted_ent.end == example_ent["end"]
+                assert str(predicted_ent) == example_ent["text"]
+                assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issubset(
+                    set(example_ent["qualifiers"])
+                )
 
+            except AssertionError:
+
+                print(
+                    f"Incorrect (#{example['example_id']}): "
+                    f"text={example['text']}, "
+                    f"example_ent={example_ent}, "
+                    f"predicted qualifiers="
+                    f"{getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
+                )
+
+                incorrect_ents.add(example['example_id'])
         assert incorrect_ents == {
             9,
             16,
