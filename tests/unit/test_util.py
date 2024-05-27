@@ -1,9 +1,7 @@
 import pytest
-import spacy
 from spacy import Language
 from thinc.api import ConfigValidationError
 
-import clinlp  # noqa: F401
 from clinlp.util import (
     clinlp_autocomponent,
     get_class_init_signature,

@@ -3,7 +3,6 @@ from unittest.mock import patch
 import pytest
 from spacy.tokens import Span
 
-import clinlp  # noqa
 from clinlp.ie.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,

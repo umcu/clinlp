@@ -1,6 +1,5 @@
 import pytest
 
-import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, Term, create_concept_dict
 
 

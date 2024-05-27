@@ -1,7 +1,6 @@
 import pytest
 import spacy
 
-import clinlp  # noqa: F401
 from clinlp.exceptions import VersionMismatchWarning
 
 

@@ -3,7 +3,6 @@ import pickle
 
 import pytest
 
-import clinlp  # noqa: F401
 from clinlp.metrics.ie import (
     Annotation,
     Document,

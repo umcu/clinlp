@@ -1,9 +1,7 @@
 import statistics
 
 import pytest
-import spacy
 
-import clinlp  # noqa
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
     ExperiencerTransformer,
