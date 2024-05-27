@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 import pytest
-import spacy
 from spacy.tokens import Span
 
 import clinlp  # noqa
@@ -17,13 +16,8 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_DICT, ATTR_QUALIFIERS_
 
 
 @pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
-
-
-@pytest.fixture
-def entity():
-    doc = spacy.blank("clinlp")("dit is een test")
+def entity(nlp):
+    doc = nlp("dit is een test")
     return doc[2:3]
 
 

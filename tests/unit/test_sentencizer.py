@@ -1,7 +1,6 @@
 from unittest.mock import patch
 
 import pytest
-import spacy
 
 from clinlp import Sentencizer
 
@@ -14,11 +13,6 @@ class MockToken:
 
 def get_mock_tokens(texts: list[str]):
     return [MockToken(text) for text in texts]
-
-
-@pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
 
 
 class TestUnitClinlpSentencizer:

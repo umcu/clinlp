@@ -1,13 +1,7 @@
 import pytest
-import spacy
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, Term, create_concept_dict
-
-
-@pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
 
 
 def ents(doc):

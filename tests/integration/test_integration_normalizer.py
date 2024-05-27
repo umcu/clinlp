@@ -1,13 +1,10 @@
-import spacy
-
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 
 
 class TestNormalizerIntegration:
-    def test_normalizer_with_entity_matching(self):
+    def test_normalizer_with_entity_matching(self, nlp):
         # Arrange
-        nlp = spacy.blank("clinlp")
         nlp.add_pipe("clinlp_normalizer")
 
         ruler = nlp.add_pipe(

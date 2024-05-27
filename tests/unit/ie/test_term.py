@@ -1,12 +1,6 @@
 import pytest
-import spacy
 
 from clinlp.ie import Term
-
-
-@pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
 
 
 class TestTerm:

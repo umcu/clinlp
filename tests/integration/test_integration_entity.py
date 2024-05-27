@@ -1,14 +1,10 @@
-import spacy
-
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 
 
 class TestIntegrationEntity:
-    def test_multiple_matchers(self):
+    def test_multiple_matchers(self, nlp):
         # Arrange
-        nlp = spacy.blank("clinlp")
-
         ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
         ruler.add_patterns([{"label": "delier", "pattern": "delier"}])
 

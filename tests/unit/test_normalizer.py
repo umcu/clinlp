@@ -62,7 +62,6 @@ class TestNormalizer:
 
         # Assert
         with pytest.raises(ValueError):
-
             # Act
             n._map_non_ascii_char("ab")
 
