@@ -56,13 +56,15 @@ class TestNormalizer:
         # Assert
         assert non_ascii == expected_non_ascii_char
 
-    @pytest.mark.xfail(raises=ValueError)
     def test_map_non_ascii_char_nonchar(self):
         # Arrange
         n = Normalizer()
 
-        # Act
-        n._map_non_ascii_char("ab")
+        # Assert
+        with pytest.raises(ValueError):
+
+            # Act
+            n._map_non_ascii_char("ab")
 
     @pytest.mark.parametrize(
         "input_string, expected_non_ascii_string",
