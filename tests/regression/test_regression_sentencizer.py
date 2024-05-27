@@ -19,7 +19,7 @@ with open("tests/data/sentencizer_cases.json", "rb") as file:
     examples = json.load(file)["data"]
 
 sentencizer_cases = [
-    pytest.param(example["tokens"], example["sentence_starts"], id="sentencizer_case")
+    pytest.param(example["tokens"], example["sentence_starts"], id="sentencizer_case_")
     for example in examples
 ]
 

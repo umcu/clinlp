@@ -65,7 +65,7 @@ if __name__ == "__main__":
                     "end": ent.end,
                     "text": str(ent),
                     "qualifiers": list(ent._.qualifiers_str),
-                }
+                },
             }
         )
 

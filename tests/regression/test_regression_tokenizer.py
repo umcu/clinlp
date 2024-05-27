@@ -9,7 +9,7 @@ with open("tests/data/tokenizer_cases.json", "rb") as file:
     examples = json.load(file)["data"]
 
 tokenizer_cases = [
-    pytest.param(example["text"], example["tokens"], id="tokenizer_case")
+    pytest.param(example["text"], example["tokens"], id="tokenizer_case_")
     for example in examples
 ]
 
