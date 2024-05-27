@@ -25,7 +25,7 @@ def nlp_entity():
 
 
 @pytest.fixture
-def mock_factory():
+def mock_qualifier_class():
     return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
@@ -74,11 +74,11 @@ class TestUnitQualifierRule:
 
 
 class TestUnitMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self, mock_factory):
+    def test_create_matched_qualifier_pattern(self, mock_qualifier_class):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
@@ -93,11 +93,11 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end
         assert mqp.scope is None
 
-    def test_create_matched_qualifier_pattern_with_offset(self, mock_factory):
+    def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier_class):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
@@ -114,12 +114,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is None
 
     def test_matched_qualifier_pattern_initial_scope_preceding(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 1
@@ -135,12 +135,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_following(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
         )
         start = 1
@@ -156,12 +156,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (0, 2)
 
     def test_matched_qualifier_pattern_initial_scope_bidirectional(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
         )
         start = 1
@@ -177,12 +177,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (0, 4)
 
     def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
             max_scope=1,
         )
@@ -199,12 +199,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (1, 3)
 
     def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=1,
         )
@@ -221,12 +221,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (1, 3)
 
     def test_matched_qualifier_pattern_initial_scope_bidirectional_with_max_scope(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
             max_scope=1,
         )
@@ -243,12 +243,12 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope == (1, 4)
 
     def test_matched_qualifier_pattern_initial_scope_invalid_scope(
-        self, mock_factory, mock_doc
+        self, mock_qualifier_class, mock_doc
     ):
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=-1,
         )
@@ -293,11 +293,11 @@ class TestUnitContextAlgorithm:
         assert len(ca._matcher) == 1
         assert len(ca._phrase_matcher) == 1
 
-    def test_parse_value(self, mock_factory, ca):
+    def test_parse_value(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock.Mock_1"
-        qualifier_factories = {"Mock": mock_factory}
-        expected_qualifier = mock_factory.create("Mock_1")
+        qualifier_factories = {"Mock": mock_qualifier_class}
+        expected_qualifier = mock_qualifier_class.create("Mock_1")
 
         # Act
         parsed_qualifier = ca._parse_qualifier(value, qualifier_factories)
@@ -305,10 +305,10 @@ class TestUnitContextAlgorithm:
         # Assert
         assert parsed_qualifier == expected_qualifier
 
-    def test_parse_value_unhappy(self, mock_factory, ca):
+    def test_parse_value_unhappy(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock_Mock_1"
-        qualifiers = {"Mock": mock_factory}
+        qualifiers = {"Mock": mock_qualifier_class}
 
         # Assert
         with pytest.raises(ValueError):
@@ -411,7 +411,7 @@ class TestUnitContextAlgorithm:
         doc = nlp_entity("mogelijk SYMPTOOM uitgesloten")
         ent = doc.spans[SPANS_KEY][0]
 
-        qualifier_factory = QualifierClass(
+        qualifier_class = QualifierClass(
             name="Presence",
             values=["Absent", "Uncertain", "Present"],
             default="Present",
@@ -419,12 +419,12 @@ class TestUnitContextAlgorithm:
 
         rule1 = ContextRule(
             pattern="uitgesloten",
-            qualifier=qualifier_factory.create("Absent"),
+            qualifier=qualifier_class.create("Absent"),
             direction=ContextRuleDirection.FOLLOWING,
         )
         rule2 = ContextRule(
             pattern="mogelijk",
-            qualifier=qualifier_factory.create("Uncertain"),
+            qualifier=qualifier_class.create("Uncertain"),
             direction=ContextRuleDirection.PRECEDING,
         )
 
