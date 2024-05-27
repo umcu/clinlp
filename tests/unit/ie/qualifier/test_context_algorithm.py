@@ -35,8 +35,8 @@ def mock_doc():
 
 
 @pytest.fixture
-def ca(nlp_entity):
-    return ContextAlgorithm(nlp=nlp_entity, load_rules=False)
+def ca(nlp):
+    return ContextAlgorithm(nlp=nlp, load_rules=False)
 
 
 class TestUnitQualifierRule:
