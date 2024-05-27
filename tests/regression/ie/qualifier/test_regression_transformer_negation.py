@@ -1,6 +1,7 @@
 import json
 
 import pytest
+from conftest import _make_nlp, _make_nlp_entity
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
@@ -23,6 +24,16 @@ KNOWN_FAILURES = {
     67,
     68,
 }
+
+
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
+@pytest.fixture(scope="class")
+def nlp_entity(nlp):
+    return _make_nlp_entity(nlp)
 
 
 @pytest.fixture(scope="class")

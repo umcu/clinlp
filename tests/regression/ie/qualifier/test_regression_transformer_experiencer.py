@@ -1,11 +1,22 @@
 import json
 
 import pytest
+from conftest import _make_nlp, _make_nlp_entity
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 KNOWN_FAILURES = {32, 75, 76}
+
+
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
+@pytest.fixture(scope="class")
+def nlp_entity(nlp):
+    return _make_nlp_entity(nlp)
 
 
 @pytest.fixture(scope="class")

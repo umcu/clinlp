@@ -1,5 +1,4 @@
 import pytest
-import spacy
 from spacy.tokens import Doc, Span
 from spacy.vocab import Vocab
 
@@ -14,14 +13,10 @@ from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
-@pytest.fixture
-def nlp_entity():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
-
-    return nlp
+@pytest.fixture()
+def nlp_ca(nlp_entity):
+    nlp_entity.add_pipe("clinlp_sentencizer")
+    return nlp_entity
 
 
 @pytest.fixture
@@ -264,7 +259,7 @@ class TestUnitMatchedQualifierPattern:
 
 
 class TestUnitContextAlgorithm:
-    def test_create_qualifier_matcher(self, nlp_entity):
+    def test_create_qualifier_matcher(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -286,7 +281,7 @@ class TestUnitContextAlgorithm:
         }
 
         # Act
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
 
         # Assert
         assert len(ca.rules) == len(rules["rules"])
@@ -392,10 +387,10 @@ class TestUnitContextAlgorithm:
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
 
-    def test_get_sentences_with_entities(self, nlp_entity, ca):
+    def test_get_sentences_with_entities(self, nlp_ca, ca):
         # Arrange
-        text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
-        doc = nlp_entity(text)
+        text = "Patient 1 heeft ENTITY. Patient 2 niet. Patient 3 heeft ook ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         sents = ca._get_sentences_with_entities(doc)
@@ -403,12 +398,12 @@ class TestUnitContextAlgorithm:
         # Assert
         assert len(sents) == 2
         for sent, ents in sents.items():
-            assert "SYMPTOOM" in str(sent)
+            assert "ENTITY" in str(sent)
             assert len(ents) == 1
 
-    def test_resolve_matched_pattern_conflicts(self, nlp_entity, ca):
+    def test_resolve_matched_pattern_conflicts(self, nlp_ca, ca):
         # Arrange
-        doc = nlp_entity("mogelijk SYMPTOOM uitgesloten")
+        doc = nlp_ca("mogelijk ENTITY uitgesloten")
         ent = doc.spans[SPANS_KEY][0]
 
         qualifier_class = QualifierClass(
@@ -439,10 +434,10 @@ class TestUnitContextAlgorithm:
         # Assert
         assert resolved_patterns == [pattern2]
 
-    def test_match_qualifiers_no_ents(self, nlp_entity, ca):
+    def test_match_qualifiers_no_ents(self, nlp_ca, ca):
         # Arrange
         text = "tekst zonder entities"
-        old_doc = nlp_entity(text)
+        old_doc = nlp_ca(text)
 
         # Act
         new_doc = ca(old_doc)
@@ -450,17 +445,17 @@ class TestUnitContextAlgorithm:
         # Assert
         assert new_doc == old_doc
 
-    def test_match_qualifiers_no_rules(self, nlp_entity, ca):
+    def test_match_qualifiers_no_rules(self, nlp_ca, ca):
         # Arrange
-        text = "Patient heeft SYMPTOOM (wel ents, geen rules)"
-        doc = nlp_entity(text)
+        text = "Patient heeft ENTITY (wel ents, geen rules)"
+        doc = nlp_ca(text)
 
         # Assert
         with pytest.raises(RuntimeError):
             # Act
             ca(doc)
 
-    def test_match_qualifiers_preceding(self, nlp_entity):
+    def test_match_qualifiers_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -475,9 +470,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Patient heeft geen SYMPTOOM."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -487,7 +482,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_with_default(self, nlp_entity):
+    def test_match_qualifiers_preceding_with_default(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -503,9 +498,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Patient heeft geen SYMPTOOM."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -518,7 +513,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_multiple_ents(self, nlp_entity):
+    def test_match_qualifiers_preceding_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -533,9 +528,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Patient heeft geen SYMPTOOM of SYMPTOOM."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY of ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -548,7 +543,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_following_multiple_ents(self, nlp_entity):
+    def test_match_qualifiers_following_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -563,9 +558,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Aanwezigheid van SYMPTOOM of SYMPTOOM is uitgesloten."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Aanwezigheid van ENTITY of ENTITY is uitgesloten."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -578,7 +573,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_bidirectional_multiple_ents(self, nlp_entity):
+    def test_match_qualifiers_bidirectional_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -593,9 +588,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "SYMPTOOM als tiener SYMPTOOM"
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY als tiener ENTITY"
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -609,7 +604,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_pseudo(self, nlp_entity):
+    def test_match_qualifiers_pseudo(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -629,9 +624,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Er is geen toename van SYMPTOOM."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen toename van ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -641,7 +636,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_preceding(self, nlp_entity):
+    def test_match_qualifiers_termination_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -661,9 +656,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Er is geen SYMPTOOM, maar wel SYMPTOOM."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen ENTITY, maar wel ENTITY."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -676,7 +671,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_preceding(self, nlp_entity):
+    def test_match_qualifiers_termination_directly_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -696,9 +691,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "SYMPTOOM, mogelijk SYMPTOOM"
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY, mogelijk ENTITY"
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -711,7 +706,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_following(self, nlp_entity):
+    def test_match_qualifiers_termination_following(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -731,9 +726,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Mogelijk SYMPTOOM, maar SYMPTOOM uitgesloten."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Mogelijk ENTITY, maar ENTITY uitgesloten."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -746,7 +741,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_following(self, nlp_entity):
+    def test_match_qualifiers_termination_directly_following(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -766,9 +761,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "SYMPTOOM mogelijk op basis van SYMPTOOM"
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY mogelijk op basis van ENTITY"
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -781,7 +776,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_multiple_sentences(self, nlp_entity):
+    def test_match_qualifiers_multiple_sentences(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -796,9 +791,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Er is geen SYMPTOOM. Daarnaast SYMPTOOM onderzocht."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen ENTITY. Daarnaast ENTITY onderzocht."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -811,7 +806,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_qualifiers(self, nlp_entity):
+    def test_match_qualifier_multiple_qualifiers(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -832,9 +827,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Heeft als kind geen SYMPTOOM gehad."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Heeft als kind geen ENTITY gehad."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -847,7 +842,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_terminate_multiple_qualifiers(self, nlp_entity):
+    def test_match_qualifier_terminate_multiple_qualifiers(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -873,9 +868,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Heeft als kind geen SYMPTOOM, wel SYMPTOOM gehad."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Heeft als kind geen ENTITY, wel ENTITY gehad."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -894,7 +889,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_patterns(self, nlp_entity):
+    def test_match_qualifier_multiple_patterns(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -909,9 +904,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "Liet subklinisch ONHERKEND_SYMPTOOM en geen SYMPTOOM zien."
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Liet subklinisch ONHERKEND_ENTITY en geen ENTITY zien."
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -925,7 +920,7 @@ class TestUnitContextAlgorithm:
         # Arrange
         nlp.add_pipe("clinlp_sentencizer")
         ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-        ruler.load_concepts({"symptoom": ["geen eetlust"]})
+        ruler.load_concepts({"entity": ["geen eetlust"]})
 
         rules = {
             "qualifiers": [
@@ -952,7 +947,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier(self, nlp_entity):
+    def test_multiple_matches_of_same_qualifier(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -976,9 +971,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "mogelijk SYMPTOOM is uitgesloten"
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "mogelijk ENTITY is uitgesloten"
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -991,7 +986,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp_entity):
+    def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -1016,9 +1011,9 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp_entity, rules=rules)
-        text = "mogelijk SYMPTOOM uitgesloten"
-        doc = nlp_entity(text)
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "mogelijk ENTITY uitgesloten"
+        doc = nlp_ca(text)
 
         # Act
         doc = ca(doc)
@@ -1031,9 +1026,9 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_load_default_rules(self, nlp_entity):
+    def test_load_default_rules(self, nlp_ca):
         # Act
-        ca = ContextAlgorithm(nlp=nlp_entity)
+        ca = ContextAlgorithm(nlp=nlp_ca)
 
         # Assert
         assert len(ca.rules) > 100

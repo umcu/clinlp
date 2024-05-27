@@ -11,11 +11,6 @@ from clinlp.util import (
 )
 
 
-@pytest.fixture  # cannot use global fixture because of the scope
-def nlp():
-    return spacy.blank("clinlp")
-
-
 # Arrange
 @pytest.fixture(scope="session")
 def component_1():
