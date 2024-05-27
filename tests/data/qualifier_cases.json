@@ -17,7 +17,7 @@
       ]
     },
     {
-      "text": "Geen ENTITY klachten; niet ENTITY.",
+      "text": "Geen ENTITY klachten; niet koortsig.",
       "ents": [
         {
           "ent_id": 1,
@@ -29,7 +29,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text":"Geen pijn klachten; niet ENTITY.",
+      "ents": [
         {
           "ent_id": 2,
           "start": 5,
@@ -41,6 +46,7 @@
             "Experiencer.Patient"
           ]
         }
+
       ]
     },
     {
@@ -76,7 +82,7 @@
       ]
     },
     {
-      "text": "2022 sept gastroscopie: 11 cm van de ENTITY ENTITY",
+      "text": "2022 sept gastroscopie: 11 cm van de ENTITY is er een stenose",
       "ents": [
         {
           "ent_id": 5,
@@ -88,11 +94,16 @@
             "Presence.Present",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "2022 sept gastroscopie: 11 cm van de tandenrij is er een ENTITY",
+      "ents": [
         {
           "ent_id": 6,
-          "start": 9,
-          "end": 10,
+          "start": 12,
+          "end": 13,
           "text": "ENTITY",
           "qualifiers": [
             "Temporality.Historical",
@@ -103,7 +114,7 @@
       ]
     },
     {
-      "text": "resp: geen ENTITY, kan krachtig ENTITY",
+      "text": "resp: geen ENTITY, kan krachtig hoesten",
       "ents": [
         {
           "ent_id": 7,
@@ -115,7 +126,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text":"resp: geen benauwdheid, kan krachtig ENTITY",
+      "ents": [
         {
           "ent_id": 8,
           "start": 7,
@@ -162,7 +178,7 @@
       ]
     },
     {
-      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (ENTITY, ENTITY of andere gezondheidsproblemen)?",
+      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (ENTITY, verkouden of andere gezondheidsproblemen)?",
       "ents": [
         {
           "ent_id": 11,
@@ -174,7 +190,12 @@
             "Temporality.Future",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (koorts, ENTITY of andere gezondheidsproblemen)?",
+      "ents": [
         {
           "ent_id": 12,
           "start": 13,
@@ -205,7 +226,7 @@
       ]
     },
     {
-      "text": "Heden wel mild macrocytaire ENTITY, zonder zichtbaar ENTITY. ",
+      "text": "Heden wel mild macrocytaire ENTITY, zonder zichtbaar bloedverlies.",
       "ents": [
         {
           "ent_id": 14,
@@ -217,7 +238,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Heden wel mild macrocytaire anemie, zonder zichtbaar ENTITY.",
+      "ents": [
         {
           "ent_id": 15,
           "start": 8,
@@ -280,7 +306,7 @@
       ]
     },
     {
-      "text": "2022: milde ENTITY infcet (ENTITY zonder ENTITY of ENTITY).",
+      "text": "2022: milde ENTITY infcet (keepijn zonder koorts of hoesten).",
       "ents": [
         {
           "ent_id": 19,
@@ -292,7 +318,12 @@
             "Presence.Present",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "2022: milde covid infcet (ENTITY zonder koorts of hoesten).",
+      "ents": [
         {
           "ent_id": 20,
           "start": 6,
@@ -303,7 +334,12 @@
             "Presence.Present",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "2022: milde covid infcet (keepijn zonder ENTITY of hoesten).",
+      "ents": [
         {
           "ent_id": 21,
           "start": 8,
@@ -314,7 +350,12 @@
             "Presence.Absent",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "2022: milde covid infcet (keepijn zonder koorts of ENTITY).",
+      "ents": [
         {
           "ent_id": 22,
           "start": 10,
@@ -329,7 +370,7 @@
       ]
     },
     {
-      "text": "Dochter van patiente heeft ook vergelijkbare klachten van ENTITY en ENTITY. ",
+      "text": "Dochter van patiente heeft ook vergelijkbare klachten van ENTITY en diarree. ",
       "ents": [
         {
           "ent_id": 23,
@@ -341,7 +382,12 @@
             "Presence.Present",
             "Temporality.Current"
           ]
-        },
+        }
+      ]
+    },
+    {
+    "text": "Dochter van patiente heeft ook vergelijkbare klachten van braken en ENTITY. ",
+      "ents": [
         {
           "ent_id": 24,
           "start": 10,
@@ -372,7 +418,7 @@
       ]
     },
     {
-      "text": "Extremiteiten: slanke, soepele ENTITY, geen ENTITY",
+      "text": "Extremiteiten: slanke, soepele ENTITY, geen oedeem",
       "ents": [
         {
           "ent_id": 26,
@@ -384,7 +430,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Extremiteiten: slanke, soepele kuiten, geen ENTITY",
+      "ents": [
         {
           "ent_id": 27,
           "start": 8,
@@ -415,7 +466,7 @@
       ]
     },
     {
-      "text": "Positieve ENTITY maar geen ENTITY.",
+      "text": "Positieve ENTITY op C4, maar geen pijnreductie.",
       "ents": [
         {
           "ent_id": 29,
@@ -427,11 +478,16 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Positieve proefwortelblokkade op C4, maar geen ENTITY.",
+      "ents": [
         {
           "ent_id": 30,
-          "start": 4,
-          "end": 5,
+          "start": 7,
+          "end": 8,
           "text": "ENTITY",
           "qualifiers": [
             "Presence.Absent",
@@ -490,7 +546,7 @@
       ]
     },
     {
-      "text": "Familie anamnese: broer t-cel ENTITY dunnedarm ENTITY gerelateerd",
+      "text": "Familie anamnese: broer t-cel ENTITY dunnedarm coeliakie gerelateerd",
       "ents": [
         {
           "ent_id": 34,
@@ -502,7 +558,12 @@
             "Presence.Present",
             "Temporality.Current"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Familie anamnese: broer t-cel lymfoom dunnedarm ENTITY gerelateerd",
+      "ents": [
         {
           "ent_id": 35,
           "start": 9,
@@ -517,7 +578,7 @@
       ]
     },
     {
-      "text": "Ook een keer ENTITY en ENTITY gelaat gehad in 2014, weet niet welke kant. ",
+      "text": "Ook een keer ENTITY en tintelingen gelaat gehad in 2014, weet niet welke kant.",
       "ents": [
         {
           "ent_id": 36,
@@ -529,7 +590,12 @@
             "Presence.Present",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Ook een keer pijn en ENTITY gelaat gehad in 2014, weet niet welke kant.",
+      "ents": [
         {
           "ent_id": 37,
           "start": 5,
@@ -576,7 +642,7 @@
       ]
     },
     {
-      "text": "CRT-D drager in verband met ENTITY bij ENTITY totaal AV",
+      "text": "CRT-D drager in verband met ENTITY bij passagere totaal AV",
       "ents": [
         {
           "ent_id": 40,
@@ -588,7 +654,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "CRT-D drager in verband met syncope bij ENTITY totaal AV",
+      "ents": [
         {
           "ent_id": 41,
           "start": 9,
@@ -603,7 +674,7 @@
       ]
     },
     {
-      "text": "LO/ Alg ind: niet acuut ENTITY, helder en ENTITY",
+      "text": "LO/ Alg ind: niet acuut ENTITY, helder en alert",
       "ents": [
         {
           "ent_id": 42,
@@ -615,7 +686,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "LO/ Alg ind: niet acuut ziek, helder en ENTITY",
+      "ents": [
         {
           "ent_id": 43,
           "start": 11,
@@ -662,7 +738,7 @@
       ]
     },
     {
-      "text": "Indicatie: analyse ENTITY, elder geduid als bij ENTITY.",
+      "text": "Indicatie: analyse ENTITY, elder geduid als bij astma.",
       "ents": [
         {
           "ent_id": 46,
@@ -674,7 +750,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Indicatie: analyse dyspnoe, elder geduid als bij ENTITY.",
+      "ents": [
         {
           "ent_id": 47,
           "start": 9,
@@ -705,7 +786,7 @@
       ]
     },
     {
-      "text": "Exp: ENTITY en ENTITY antalgisch beperkt",
+      "text": "Exp: ENTITY en hoesten antalgisch beperkt",
       "ents": [
         {
           "ent_id": 49,
@@ -717,7 +798,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Exp: huffen en ENTITY antalgisch beperkt",
+      "ents": [
         {
           "ent_id": 50,
           "start": 4,
@@ -732,7 +818,7 @@
       ]
     },
     {
-      "text": "DD recente ENTITY in peripelviene ENTITY",
+      "text": "DD recente ENTITY in peripelviene cyste",
       "ents": [
         {
           "ent_id": 51,
@@ -744,7 +830,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "DD recente bloeding in peripelviene ENTITY",
+      "ents": [
         {
           "ent_id": 52,
           "start": 5,
@@ -759,7 +850,7 @@
       ]
     },
     {
-      "text": "geen ENTITY, wel meer ENTITY overdag, komt door haar spierziekte ENTITY",
+      "text": "geen ENTITY, wel meer moe overdag, komt door haar spierziekte fibromyalgie",
       "ents": [
         {
           "ent_id": 53,
@@ -771,7 +862,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "geen apneu, wel meer ENTITY overdag, komt door haar spierziekte fibromyalgie",
+      "ents": [
         {
           "ent_id": 54,
           "start": 5,
@@ -782,7 +878,12 @@
             "Temporality.Current",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "geen apneu, wel meer moe overdag, komt door haar spierziekte ENTITY",
+      "ents": [
         {
           "ent_id": 55,
           "start": 12,
@@ -813,7 +914,7 @@
       ]
     },
     {
-      "text": "CMV/EBV ENTITY negatief, ENTITY negatief",
+      "text": "CMV/EBV ENTITY negatief, lues negatief",
       "ents": [
         {
           "ent_id": 57,
@@ -825,7 +926,12 @@
             "Presence.Absent",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "CMV/EBV HIV negatief, ENTITY negatief",
+      "ents": [
         {
           "ent_id": 58,
           "start": 6,
@@ -952,7 +1058,7 @@
       ]
     },
     {
-      "text": "1. dd ENTITY dd ENTITY dd ENTITY? ",
+      "text": "1. dd ENTITY dd getraumatiseerde verruca dd AK? ",
       "ents": [
         {
           "ent_id": 66,
@@ -964,7 +1070,12 @@
             "Presence.Uncertain",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "1. dd pcc dd ENTITY dd AK? ",
+      "ents": [
         {
           "ent_id": 67,
           "start": 4,
@@ -975,11 +1086,16 @@
             "Presence.Uncertain",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "1. dd pcc dd getraumatiseerde verruca dd ENTITY? ",
+      "ents": [
         {
           "ent_id": 68,
-          "start": 6,
-          "end": 7,
+          "start": 7,
+          "end": 8,
           "text": "ENTITY",
           "qualifiers": [
             "Temporality.Current",
@@ -1022,23 +1138,28 @@
       ]
     },
     {
-      "text": "Wel zijn er veel ENTITY, zelfs in die mate dat hij hierdoor een ENTITY kan ontwikkelen.",
+      "text": "Wel zijn er veel klachten van ENTITY, zelfs in die mate dat hij hierdoor een pneumonie kan ontwikkelen.",
       "ents": [
         {
           "ent_id": 71,
-          "start": 4,
-          "end": 5,
+          "start": 6,
+          "end": 7,
           "text": "ENTITY",
           "qualifiers": [
             "Temporality.Current",
             "Presence.Present",
             "Experiencer.Patient"
           ]
-        },
+        }
+      ]
+    },
+    {
+      "text": "Wel zijn er veel klachten van maagzuur, zelfs in die mate dat hij hierdoor een ENTITY kan ontwikkelen.",
+      "ents": [
         {
           "ent_id": 72,
-          "start": 14,
-          "end": 15,
+          "start": 16,
+          "end": 17,
           "text": "ENTITY",
           "qualifiers": [
             "Experiencer.Patient",
