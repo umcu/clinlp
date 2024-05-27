@@ -1,6 +1,7 @@
 import pytest
 from spacy.language import Vocab
 from spacy.tokens import Doc, Span
+from tests.conftest import TEST_DATA_DIR
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
@@ -378,7 +379,7 @@ class TestUnitContextAlgorithm:
 
     def test_load_rules_json(self, ca):
         # Act
-        rules = ca._parse_rules(rules="tests/data/qualifier_rules_simple.json")
+        rules = ca._parse_rules(rules=str(TEST_DATA_DIR / "qualifier_rules_simple.json"))
 
         # Assert
         assert len(rules) == 2

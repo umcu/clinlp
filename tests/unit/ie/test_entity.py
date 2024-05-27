@@ -1,4 +1,5 @@
 import pytest
+from tests.conftest import TEST_DATA_DIR
 
 from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, Term, create_concept_dict
 
@@ -10,7 +11,7 @@ def ents(doc):
 class TestCreateConceptDict:
     def test_create_concept_dict(self):
         # Act
-        concepts = create_concept_dict("tests/data/concept_examples.csv")
+        concepts = create_concept_dict(TEST_DATA_DIR / "concept_examples.csv")
 
         # Assert
         assert concepts == {

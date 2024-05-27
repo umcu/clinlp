@@ -3,11 +3,11 @@ from typing import Collection
 
 import pytest
 
-from tests.conftest import DATA_DIR
+from tests.conftest import TEST_DATA_DIR
 
 
 def load_examples(filename: str) -> list[dict]:
-    with open(DATA_DIR / filename, "rb") as file:
+    with open(TEST_DATA_DIR / filename, "rb") as file:
         return json.load(file)["examples"]
 
 

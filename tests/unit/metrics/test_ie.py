@@ -2,6 +2,7 @@ import json
 import pickle
 
 import pytest
+from tests.conftest import TEST_DATA_DIR
 
 from clinlp.metrics.ie import (
     Annotation,
@@ -14,7 +15,7 @@ from clinlp.metrics.ie import (
 # Arrange
 @pytest.fixture
 def mctrainer_data():
-    with open("tests/data/medcattrainer_export.json", "rb") as f:
+    with open(TEST_DATA_DIR / "medcattrainer_export.json", "rb") as f:
         return json.load(f)
 
 
@@ -27,7 +28,7 @@ def mctrainer_dataset(mctrainer_data):
 # Arrange
 @pytest.fixture
 def clinlp_docs():
-    with open("tests/data/clinlp_docs.pickle", "rb") as f:
+    with open(TEST_DATA_DIR / "clinlp_docs.pickle", "rb") as f:
         return pickle.load(f)
 
 

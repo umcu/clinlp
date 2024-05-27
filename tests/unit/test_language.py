@@ -1,5 +1,6 @@
 import pytest
 import spacy
+from tests.conftest import TEST_DATA_DIR
 
 from clinlp.exceptions import VersionMismatchWarning
 
@@ -22,4 +23,4 @@ class TestUnitCreateModel:
         # Assert
         with pytest.warns(VersionMismatchWarning):
             # Act
-            _ = spacy.load("tests/data/test_spacy_model")
+            _ = spacy.load(TEST_DATA_DIR / "test_spacy_model")

@@ -7,7 +7,7 @@ from spacy import Language
 import clinlp  # noqa F401
 from clinlp.ie import SPANS_KEY
 
-DATA_DIR = Path("tests/data")
+TEST_DATA_DIR = Path("tests/test_data")
 
 
 class MockToken:
