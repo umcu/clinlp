@@ -1,4 +1,5 @@
 import pytest
+import spacy
 from spacy import Language
 from thinc.api import ConfigValidationError
 
@@ -8,6 +9,11 @@ from clinlp.util import (
     get_class_init_signature,
     interval_dist,
 )
+
+
+@pytest.fixture  # cannot use global fixture because of the scope
+def nlp():
+    return spacy.blank("clinlp")
 
 
 # Arrange

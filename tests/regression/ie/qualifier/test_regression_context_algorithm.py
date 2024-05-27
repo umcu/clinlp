@@ -1,27 +1,22 @@
 import json
 
 import pytest
-import spacy
 
-import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 KNOWN_FAILURES = {9, 11, 12, 32}
 
 
-@pytest.fixture(scope="module")
-def nlp():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_normalizer")
-    nlp.add_pipe("clinlp_sentencizer")
+@pytest.fixture(scope="class")
+def nlp_qualifier(nlp_entity):
+    nlp_entity.add_pipe("clinlp_sentencizer")
 
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
+    nlp_entity.add_pipe(
+        "clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"}
+    )
 
-    _ = nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
-
-    return nlp
+    return nlp_entity
 
 
 with open("tests/data/qualifier_cases.json", "rb") as file:
@@ -39,9 +34,9 @@ for example in data["examples"]:
 
 class TestRegressionContextAlgorithm:
     @pytest.mark.parametrize("text, expected_ent", examples)
-    def test_qualifier_cases(self, nlp, text, expected_ent):
+    def test_qualifier_cases(self, nlp_qualifier, text, expected_ent):
         # Act
-        doc = nlp(text)
+        doc = nlp_qualifier(text)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1

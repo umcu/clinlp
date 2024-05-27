@@ -1,7 +1,6 @@
 import json
 
 import pytest
-import spacy
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
@@ -26,21 +25,13 @@ KNOWN_FAILURES = {
 }
 
 
-@pytest.fixture(scope="module")
-def nlp():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_sentencizer")
-
-    # ruler
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
-
-    # recognizer
-    _ = nlp.add_pipe(
+@pytest.fixture(scope="class")
+def nlp_qualifier(nlp_entity):
+    _ = nlp_entity.add_pipe(
         "clinlp_negation_transformer", config={"token_window": 32, "placeholder": "X"}
     )
 
-    return nlp
+    return nlp_entity
 
 
 with open("tests/data/qualifier_cases.json", "rb") as file:

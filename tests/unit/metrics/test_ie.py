@@ -188,9 +188,7 @@ class TestDataset:
         assert len(ied.docs[0].annotations) == 1
         assert ied.docs[3].text == "patient had een prematuur adempatroon"
         assert len(ied.docs[3].annotations) == 0
-        assert (
-            ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
-        )
+        assert ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
         assert len(ied.docs[6].annotations) == 2
 
     def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
@@ -232,9 +230,7 @@ class TestDataset:
         assert len(ied.docs[0].annotations) == 1
         assert ied.docs[3].text == "patient had een prematuur adempatroon"
         assert len(ied.docs[3].annotations) == 1
-        assert (
-            ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
-        )
+        assert ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
         assert len(ied.docs[6].annotations) == 2
 
     def test_dataset_from_clinlp_annotations(self, clinlp_docs):
