@@ -116,10 +116,10 @@ class TestQualifierTransformer:
 class TestNegationTransformer:
     def test_predict_absnt(self, nlp):
         # Arrange
-        n = NegationTransformer(nlp=nlp)
+        nt = NegationTransformer(nlp=nlp)
 
         # Act
-        prediction = n._predict(
+        prediction = nt._predict(
             text="geen hoesten,",
             ent_start_char=5,
             ent_end_char=11,
@@ -132,10 +132,10 @@ class TestNegationTransformer:
 
     def test_predict_present(self, nlp):
         # Arrange
-        n = NegationTransformer(nlp=nlp)
+        nt = NegationTransformer(nlp=nlp)
 
         # Act
-        prediction = n._predict(
+        prediction = nt._predict(
             text="wel hoesten,",
             ent_start_char=4,
             ent_end_char=10,
@@ -148,11 +148,11 @@ class TestNegationTransformer:
 
     def test_detect_qualifiers_1(self, nlp):
         # Arrange
-        n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
+        nt = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        nt(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
@@ -162,11 +162,11 @@ class TestNegationTransformer:
 
     def test_detect_qualifiers_small_window(self, nlp):
         # Arrange
-        n = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
+        nt = NegationTransformer(nlp=nlp, token_window=1, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        nt(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
@@ -176,11 +176,11 @@ class TestNegationTransformer:
 
     def test_detect_qualifiers_without_negation(self, nlp):
         # Arrange
-        n = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
+        nt = NegationTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had juist wel last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        nt(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
@@ -192,10 +192,10 @@ class TestNegationTransformer:
 class TestExperiencerTransformer:
     def test_predict_family(self, nlp):
         # Arrange
-        n = ExperiencerTransformer(nlp=nlp)
+        et = ExperiencerTransformer(nlp=nlp)
 
         # Act
-        prediction = n._predict(
+        prediction = et._predict(
             text="broer heeft aandoening,",
             ent_start_char=12,
             ent_end_char=22,
@@ -208,10 +208,10 @@ class TestExperiencerTransformer:
 
     def test_predict_patient(self, nlp):
         # Arrange
-        n = ExperiencerTransformer(nlp=nlp)
+        et = ExperiencerTransformer(nlp=nlp)
 
         # Act
-        prediction = n._predict(
+        prediction = et._predict(
             text="patient heeft aandoening,",
             ent_start_char=14,
             ent_end_char=24,
@@ -224,11 +224,11 @@ class TestExperiencerTransformer:
 
     def test_detect_qualifiers_1(self, nlp):
         # Arrange
-        n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
+        et = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        et(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
@@ -238,11 +238,11 @@ class TestExperiencerTransformer:
 
     def test_detect_qualifiers_small_window(self, nlp):
         # Arrange
-        n = ExperiencerTransformer(nlp=nlp, token_window=1, placeholder="X")
+        et = ExperiencerTransformer(nlp=nlp, token_window=1, placeholder="X")
         doc = nlp("De patient had geen last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        et(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1
@@ -252,11 +252,11 @@ class TestExperiencerTransformer:
 
     def test_detect_qualifiers_referring_to_family(self, nlp):
         # Arrange
-        n = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
+        et = ExperiencerTransformer(nlp=nlp, token_window=32, placeholder="X")
         doc = nlp("De broer van de patient had last van SYMPTOOM.")
 
         # Act
-        n(doc)
+        et(doc)
 
         # Assert
         assert len(doc.spans[SPANS_KEY]) == 1

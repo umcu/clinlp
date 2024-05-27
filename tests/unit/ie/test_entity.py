@@ -357,24 +357,24 @@ class TestClinlpNer:
 
     def test_resolve_overlap(self, nlp):
         # Arrange
-        ner = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
-        ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
+        rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
+        rbem.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
         text = "patient heeft oesophagus atresie"
 
         # Act
-        entities = ents(ner(nlp(text)))
+        entities = ents(rbem(nlp(text)))
 
         # Assert
         assert entities == [("oesophagus atresie", 2, 4, "slokdarmatresie")]
 
     def test_resolve_overlap_adjacent(self, nlp):
         # Arrange
-        ner = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
-        ner.load_concepts({"anemie": ["erytrocyten", "transfusie"]})
+        rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
+        rbem.load_concepts({"anemie": ["erytrocyten", "transfusie"]})
         text = "patient kreeg erytrocyten transfusie"
 
         # Act
-        entities = ents(ner(nlp(text)))
+        entities = ents(rbem(nlp(text)))
 
         # Assert
         assert entities == [
@@ -384,12 +384,12 @@ class TestClinlpNer:
 
     def test_no_resolve_overlap(self, nlp):
         # Arrange
-        ner = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=False)
-        ner.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
+        rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=False)
+        rbem.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
         text = "patient heeft oesophagus atresie"
 
         # Act
-        entities = ents(ner(nlp(text)))
+        entities = ents(rbem(nlp(text)))
 
         # Assert
         assert entities == [

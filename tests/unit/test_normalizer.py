@@ -90,10 +90,10 @@ class TestNormalizer:
     def test_call_normalizer_default(self, mock_doc):
         # Arange
         expected_norms = ["patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer()
+        n = Normalizer()
 
         # Act
-        doc = normalizer(mock_doc)
+        doc = n(mock_doc)
 
         # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
@@ -103,10 +103,10 @@ class TestNormalizer:
     def test_call_normalizer_disable_lowercase(self, mock_doc):
         # Arange
         expected_norms = ["Patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer(lowercase=False)
+        n = Normalizer(lowercase=False)
 
         # Act
-        doc = normalizer(mock_doc)
+        doc = n(mock_doc)
 
         # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
@@ -116,10 +116,10 @@ class TestNormalizer:
     def test_call_normalizer_disable_map_non_ascii(self, mock_doc):
         # Arange
         expected_norms = ["patiënt", "250", "µg", "toedienen"]
-        normalizer = Normalizer(map_non_ascii=False)
+        n = Normalizer(map_non_ascii=False)
 
         # Act
-        doc = normalizer(mock_doc)
+        doc = n(mock_doc)
 
         # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):

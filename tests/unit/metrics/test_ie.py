@@ -180,39 +180,39 @@ class TestDocument:
 class TestDataset:
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
         # Act
-        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         # Assert
-        assert len(dataset.docs) == 14
-        assert dataset.docs[0].text == "patient had geen anemie"
-        assert len(dataset.docs[0].annotations) == 1
-        assert dataset.docs[3].text == "patient had een prematuur adempatroon"
-        assert len(dataset.docs[3].annotations) == 0
+        assert len(ied.docs) == 14
+        assert ied.docs[0].text == "patient had geen anemie"
+        assert len(ied.docs[0].annotations) == 1
+        assert ied.docs[3].text == "patient had een prematuur adempatroon"
+        assert len(ied.docs[3].annotations) == 0
         assert (
-            dataset.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
+            ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
         )
-        assert len(dataset.docs[6].annotations) == 2
+        assert len(ied.docs[6].annotations) == 2
 
     def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
         # Act
-        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         # Assert
-        assert dataset.docs[0].annotations[0].text == "anemie"
-        assert dataset.docs[0].annotations[0].start == 17
-        assert dataset.docs[0].annotations[0].end == 23
-        assert dataset.docs[0].annotations[0].label == "C0002871_anemie"
-        assert dataset.docs[6].annotations[1].text == "hyperbillirubinaemie"
-        assert dataset.docs[6].annotations[1].start == 28
-        assert dataset.docs[6].annotations[1].end == 48
-        assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
+        assert ied.docs[0].annotations[0].text == "anemie"
+        assert ied.docs[0].annotations[0].start == 17
+        assert ied.docs[0].annotations[0].end == 23
+        assert ied.docs[0].annotations[0].label == "C0002871_anemie"
+        assert ied.docs[6].annotations[1].text == "hyperbillirubinaemie"
+        assert ied.docs[6].annotations[1].start == 28
+        assert ied.docs[6].annotations[1].end == 48
+        assert ied.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_medcatrainer_qualifiers(self, mctrainer_data):
         # Arrange
-        dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         # Act
-        qualifiers = dataset.docs[0].annotations[0].qualifiers
+        qualifiers = ied.docs[0].annotations[0].qualifiers
 
         # Assert
         assert qualifiers == [
@@ -224,40 +224,40 @@ class TestDataset:
 
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
         # Act
-        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Assert
-        assert len(dataset.docs) == 14
-        assert dataset.docs[0].text == "patient had geen anemie"
-        assert len(dataset.docs[0].annotations) == 1
-        assert dataset.docs[3].text == "patient had een prematuur adempatroon"
-        assert len(dataset.docs[3].annotations) == 1
+        assert len(ied.docs) == 14
+        assert ied.docs[0].text == "patient had geen anemie"
+        assert len(ied.docs[0].annotations) == 1
+        assert ied.docs[3].text == "patient had een prematuur adempatroon"
+        assert len(ied.docs[3].annotations) == 1
         assert (
-            dataset.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
+            ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
         )
-        assert len(dataset.docs[6].annotations) == 2
+        assert len(ied.docs[6].annotations) == 2
 
     def test_dataset_from_clinlp_annotations(self, clinlp_docs):
         # Act
-        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Assert
-        assert dataset.docs[0].annotations[0].text == "anemie"
-        assert dataset.docs[0].annotations[0].start == 17
-        assert dataset.docs[0].annotations[0].end == 23
-        assert dataset.docs[0].annotations[0].label == "C0002871_anemie"
-        assert dataset.docs[6].annotations[1].text == "hyperbillirubinaemie"
-        assert dataset.docs[6].annotations[1].start == 28
-        assert dataset.docs[6].annotations[1].end == 48
-        assert dataset.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
+        assert ied.docs[0].annotations[0].text == "anemie"
+        assert ied.docs[0].annotations[0].start == 17
+        assert ied.docs[0].annotations[0].end == 23
+        assert ied.docs[0].annotations[0].label == "C0002871_anemie"
+        assert ied.docs[6].annotations[1].text == "hyperbillirubinaemie"
+        assert ied.docs[6].annotations[1].start == 28
+        assert ied.docs[6].annotations[1].end == 48
+        assert ied.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
     def test_dataset_from_clinlp_qualifiers(self, clinlp_docs):
         # Arrange
-        dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
+        ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Act
         qualifiers = sorted(
-            dataset.docs[0].annotations[0].qualifiers, key=lambda q: q["name"]
+            ied.docs[0].annotations[0].qualifiers, key=lambda q: q["name"]
         )
 
         # Assert
@@ -270,7 +270,7 @@ class TestDataset:
 
     def test_dataset_nervaluate(self):
         # Arrange
-        dataset = InfoExtractionDataset(
+        ied = InfoExtractionDataset(
             docs=[
                 Document(
                     identifier="1",
@@ -302,7 +302,7 @@ class TestDataset:
         )
 
         # Act
-        nervaluate = dataset.to_nervaluate()
+        nervaluate = ied.to_nervaluate()
 
         # Assert
         assert nervaluate == [
@@ -460,10 +460,10 @@ class TestDataset:
 class TestMetrics:
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = nlp_metrics.entity_metrics()
+        metrics = iem.entity_metrics()
 
         # Assert
         assert list(metrics.keys()) == ["ent_type", "partial", "strict", "exact"]
@@ -475,13 +475,13 @@ class TestMetrics:
 
     def test_entity_metrics_filter(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         def filter_default(ann):
             return all(qualifier["is_default"] for qualifier in ann.qualifiers)
 
         # Act
-        metrics = nlp_metrics.entity_metrics(ann_filter=filter_default)
+        metrics = iem.entity_metrics(ann_filter=filter_default)
 
         # Assert
         assert metrics["strict"]["actual"] == 6
@@ -492,10 +492,10 @@ class TestMetrics:
 
     def test_entity_metrics_classes(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = nlp_metrics.entity_metrics(classes=True)
+        metrics = iem.entity_metrics(classes=True)
 
         # Assert
         assert len(metrics) == 9
@@ -507,10 +507,10 @@ class TestMetrics:
 
     def test_qualifier_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = nlp_metrics.qualifier_metrics()
+        metrics = iem.qualifier_metrics()
 
         # Assert
         assert metrics["Negation"]["metrics"] == {
@@ -548,10 +548,10 @@ class TestMetrics:
 
     def test_qualifier_misses(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
-        nlp_metrics = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = nlp_metrics.qualifier_metrics()
+        metrics = iem.qualifier_metrics()
 
         # Assert
         assert len(metrics["Negation"]["misses"]) == 0

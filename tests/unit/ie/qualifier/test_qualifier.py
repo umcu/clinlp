@@ -197,7 +197,9 @@ class TestUnitQualifierClass:
     )
     def test_use_qualifier_class_nondefault(self, value, expected_is_default):
         # Arrange
-        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"], default="Negated")
+        qualifier_class = QualifierClass(
+            "Negation", ["Affirmed", "Negated"], default="Negated"
+        )
 
         # Act
         is_default = qualifier_class.create(value=value).is_default
@@ -336,7 +338,9 @@ class TestUnitQualifierDetector:
         assert qualifier_2 not in get_qualifiers(entity)
 
     @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_multiple(self, entity, mock_qualifier_class, mock_qualifier_class_2):
+    def test_add_qualifier_multiple(
+        self, entity, mock_qualifier_class, mock_qualifier_class_2
+    ):
         # Arrange
         qd = QualifierDetector()
         qualifier_1 = mock_qualifier_class.create("test2")
@@ -359,7 +363,9 @@ class TestUnitQualifierDetector:
         assert qualifier_2 in get_qualifiers(entity)
 
     @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_initialize_qualifiers(self, entity, mock_qualifier_class, mock_qualifier_class_2):
+    def test_initialize_qualifiers(
+        self, entity, mock_qualifier_class, mock_qualifier_class_2
+    ):
         # Arrange
         qd = QualifierDetector()
         factories = {"test1": mock_qualifier_class, "test2": mock_qualifier_class_2}

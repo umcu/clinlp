@@ -43,33 +43,33 @@ class TestUnitQualifierRule:
     def test_create_qualifier_rule_1(self):
         # Arrange
         pattern = "test"
-        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
 
         # Act
-        qr = ContextRule(pattern, qualifier, direction)
+        qr = ContextRule(pattern, qualifier_class, direction)
 
         # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier
+        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
 
     def test_create_qualifier_rule_2(self):
         # Arrange
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
 
         # Act
-        qr = ContextRule(pattern, qualifier, direction)
+        qr = ContextRule(pattern, qualifier_class, direction)
 
         # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier
+        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
 
 
@@ -296,11 +296,11 @@ class TestUnitContextAlgorithm:
     def test_parse_value(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock.Mock_1"
-        qualifier_factories = {"Mock": mock_qualifier_class}
+        qualifier_classes = {"Mock": mock_qualifier_class}
         expected_qualifier = mock_qualifier_class.create("Mock_1")
 
         # Act
-        parsed_qualifier = ca._parse_qualifier(value, qualifier_factories)
+        parsed_qualifier = ca._parse_qualifier(value, qualifier_classes)
 
         # Assert
         assert parsed_qualifier == expected_qualifier
@@ -308,12 +308,12 @@ class TestUnitContextAlgorithm:
     def test_parse_value_error(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock_Mock_1"
-        qualifiers = {"Mock": mock_qualifier_class}
+        qualifier_classes = {"Mock": mock_qualifier_class}
 
         # Assert
         with pytest.raises(ValueError):
             # Act
-            ca._parse_qualifier(value, qualifiers)
+            ca._parse_qualifier(value, qualifier_classes)
 
     @pytest.mark.parametrize(
         "direction, expected",
