@@ -16,6 +16,81 @@ def nlp():
     return spacy.blank("clinlp")
 
 
+# Arrange
+@pytest.fixture(scope="session")
+def component_1():
+    @Language.factory(name="myclass")
+    @clinlp_autocomponent
+    class MyComponent1:
+        def __init__(self, nlp, name):
+            self.nlp = nlp
+            self.name = name
+
+    return MyComponent1
+
+
+# Arrange
+@pytest.fixture(scope="session")
+def component_2():
+    @Language.factory(name="myclass_test1")
+    @clinlp_autocomponent
+    class MyComponent2:
+        def __init__(self, setting_1=32, setting_2="max"):
+            self.setting_1 = setting_1
+            self.setting_2 = setting_2
+
+    return MyComponent2
+
+
+# Arrange
+@pytest.fixture(scope="session")
+def component_3():
+    @Language.factory(name="myclass_test2")
+    @clinlp_autocomponent
+    class MyClass:
+        def __init__(self, name, setting_1=32):
+            self.name = name
+            self.setting_1 = setting_1
+
+    return MyClass
+
+
+# Arrange
+@pytest.fixture(scope="session")
+def component_4():
+    _defaults = {"setting_1": 1024}
+
+    @Language.factory(name="myclass_test3", default_config=_defaults)
+    @clinlp_autocomponent
+    class MyClass:
+        def __init__(self, setting_1=_defaults["setting_1"]):
+            self.setting_1 = setting_1
+
+    return MyClass
+
+
+# Arrange
+@pytest.fixture(scope="session")
+def component_5():
+    _base_defaults = {"base_arg": 1}
+    _sub_defaults = {"sub_arg": 2}
+
+    class MyClassBase:
+        def __init__(self, base_arg=_base_defaults["base_arg"]):
+            self.base_arg = base_arg
+
+    @Language.factory(
+        name="myclass_test4", default_config=_sub_defaults | _base_defaults
+    )
+    @clinlp_autocomponent
+    class MyClass(MyClassBase):
+        def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
+            self.sub_arg = sub_arg
+            super().__init__(**kwargs)
+
+    return MyClass
+
+
 def add_pipe_for_test(*args, **kwargs):
     nlp = spacy.blank("clinlp")
     component = nlp.add_pipe(*args, **kwargs)
@@ -64,179 +139,208 @@ class TestUnitGetClassInitSignature:
 
 
 class TestUnitClinlpAutocomponent:
-    def test_only_args(self, nlp):
-        # Arrange
-        @Language.factory(name="myclass")
-        @clinlp_autocomponent
-        class MyClass:
-            def __init__(self, nlp, name):
-                self.nlp = nlp
-                self.name = name
+    def test_only_args_class(self, component_1):
+        # Act
+        component = component_1(nlp="nlp", name="name")
 
-        # Act & Assert
-        assert MyClass(nlp="nlp", name="name").name == "name"
-        assert nlp.add_pipe("myclass").name == "myclass"
-        assert nlp.add_pipe("myclass", name="name").name == "name"
+        # Assert
+        assert component.name == "name"
 
+    @pytest.mark.parametrize(
+        "kwargs, attr, expected_value",
+        [
+            ({}, "name", "myclass"),
+            ({"name": "name"}, "name", "name"),
+        ],
+    )
+    def test_only_args_pipe(self, nlp, component_1, kwargs, attr, expected_value):
+        # Act
+        component = nlp.add_pipe("myclass", **kwargs)
+
+        # Assert
+        assert getattr(component, attr) == expected_value
+
+    def test_only_args_pipe_error_1(self, component_1):
+        # Assert
         with pytest.raises(TypeError):
-            MyClass()
+            # Act
+            component_1()
 
+    def test_only_args_pipe_error_2(self, component_1):
+        # Assert
         with pytest.raises(TypeError):
-            MyClass(name="bla")
+            # Act
+            component_1(name="bla")
 
+    def test_only_args_pipe_error_3(self, component_1):
+        # Assert
         with pytest.raises(TypeError):
-            MyClass("bla")
+            # Act
+            component_1("bla")
 
-    def test_only_kwargs(self, nlp):
-        # Arrange
-        @Language.factory(name="myclass_test1")
-        @clinlp_autocomponent
-        class MyClass:
-            def __init__(self, setting_1=32, setting_2="max"):
-                self.setting_1 = setting_1
-                self.setting_2 = setting_2
+    @pytest.mark.parametrize(
+        "kwargs, attr, expected_value",
+        [
+            ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
+            ({"nlp": "nlp", "name": "test"}, "setting_2", "max"),
+            ({"setting_1": 64, "setting_2": "min"}, "setting_1", 64),
+            ({"setting_1": 64, "setting_2": "min"}, "setting_2", "min"),
+            (
+                {"nlp": "nlp", "name": "test", "setting_1": 64, "setting_2": "min"},
+                "setting_1",
+                64,
+            ),
+            (
+                {"nlp": "nlp", "name": "test", "setting_1": 64, "setting_2": "min"},
+                "setting_2",
+                "min",
+            ),
+        ],
+    )
+    def test_only_kwargs_class(self, nlp, component_2, kwargs, attr, expected_value):
+        # Act
+        component = component_2(**kwargs)
 
-        # Act & Assert
-        assert MyClass(nlp="nlp", name="test").setting_1 == 32
-        assert MyClass(nlp="nlp", name="test").setting_2 == "max"
-        assert MyClass(setting_1=64, setting_2="min").setting_1 == 64
-        assert MyClass(setting_1=64, setting_2="min").setting_2 == "min"
-        assert (
-            MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_1
-            == 64
-        )
-        assert (
-            MyClass(nlp="nlp", name="test", setting_1=64, setting_2="min").setting_2
-            == "min"
-        )
+        # Assert
+        assert getattr(component, attr) == expected_value
 
-        assert add_pipe_for_test("myclass_test1", name="test").setting_1 == 32
-        assert add_pipe_for_test("myclass_test1", name="test").setting_2 == "max"
-        assert (
-            add_pipe_for_test("myclass_test1", config={"setting_1": 64}).setting_1 == 64
-        )
-        assert (
-            add_pipe_for_test("myclass_test1", config={"setting_2": "min"}).setting_2
-            == "min"
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test1", config={"setting_1": 64}, name="test"
-            ).setting_1
-            == 64
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test1", config={"setting_2": "min"}, name="test"
-            ).setting_2
-            == "min"
-        )
+    @pytest.mark.parametrize(
+        "kwargs, config, attr, expected_value",
+        [
+            ({"name": "test"}, {}, "setting_1", 32),
+            ({"name": "test"}, {}, "setting_2", "max"),
+            ({}, {"setting_1": 64}, "setting_1", 64),
+            ({}, {"setting_2": "min"}, "setting_2", "min"),
+            ({"name": "test"}, {"setting_1": 64}, "setting_1", 64),
+            ({"name": "test"}, {"setting_2": "min"}, "setting_2", "min"),
+        ],
+    )
+    def test_only_kwargs_pipe(
+        self, nlp, component_2, kwargs, config, attr, expected_value
+    ):
+        # Act
+        component = nlp.add_pipe("myclass_test1", **kwargs, config=config)
 
+        # Assert
+        assert getattr(component, attr) == expected_value
+
+    def test_only_kwargs_pipe_error_1(self, component_2):
+        # Assert
         with pytest.raises(TypeError):
-            MyClass(setting_3="None")
+            # Act
+            component_2(setting_3="None")
 
+    def test_only_kwargs_pipe_error_2(self, component_2):
+        # Assert
         with pytest.raises(ConfigValidationError):
+            # Act
             add_pipe_for_test("myclass_test1", config={"setting_3": "None"})
 
-    def test_mixed_args_and_kwargs(self):
-        # Arrange
-        @Language.factory(name="myclass_test2")
-        @clinlp_autocomponent
-        class MyClass:
-            def __init__(self, name, setting_1=32):
-                self.name = name
-                self.setting_1 = setting_1
+    @pytest.mark.parametrize(
+        "kwargs, attr, expected_value",
+        [
+            ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
+            ({"nlp": "nlp", "name": "test"}, "name", "test"),
+            ({"name": "test", "setting_1": 64}, "setting_1", 64),
+            ({"name": "test", "setting_1": 64}, "name", "test"),
+        ],
+    )
+    def test_mixed_args_and_kwargs_class(
+        self, component_3, kwargs, attr, expected_value
+    ):
+        # Act
+        component = component_3(**kwargs)
 
-        # Act & Assert
-        assert MyClass(nlp="nlp", name="test").setting_1 == 32
-        assert MyClass(nlp="nlp", name="test").name == "test"
-        assert MyClass(name="test", setting_1=64).setting_1 == 64
-        assert MyClass(name="test", setting_1=64).name == "test"
-        assert add_pipe_for_test("myclass_test2", name="test").setting_1 == 32
-        assert add_pipe_for_test("myclass_test2", name="test").name == "test"
-        assert (
-            add_pipe_for_test("myclass_test2", config={"setting_1": 64}).setting_1 == 64
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test2", config={"setting_1": 64}, name="test"
-            ).setting_1
-            == 64
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test2", config={"setting_1": 64}, name="test"
-            ).name
-            == "test"
-        )
+        # Assert
+        assert getattr(component, attr) == expected_value
 
+    @pytest.mark.parametrize(
+        "kwargs, config, attr, expected_value",
+        [
+            ({"name": "test"}, {}, "setting_1", 32),
+            ({"name": "test"}, {}, "name", "test"),
+            ({}, {"setting_1": 64}, "setting_1", 64),
+            ({"name": "test"}, {"setting_1": 64}, "setting_1", 64),
+            ({"name": "test"}, {"setting_1": 64}, "name", "test"),
+        ],
+    )
+    def test_mixed_args_and_kwargs_pipe(
+        self, component_3, kwargs, config, attr, expected_value
+    ):
+        # Act
+        component = add_pipe_for_test("myclass_test2", **kwargs, config=config)
+
+        # Assert
+        assert getattr(component, attr) == expected_value
+
+    def test_mixed_args_and_kwargs_pipe_error_1(self, component_3):
+        # Assert
         with pytest.raises(TypeError):
-            MyClass(setting_1=10)
+            # Act
+            component_3(setting_1=10)
 
+    def test_mixed_args_and_kwargs_pipe_error_2(self, component_3):
+        # Assert
         with pytest.raises(ConfigValidationError):
+            # Act
             add_pipe_for_test("myclass_test2", config={"setting_3": "None"})
 
-    def test_default_args(self):
-        # Arrange
-        _defaults = {"setting_1": 1024}
+    def test_default_args_component(self, component_4):
+        # Act
+        component = component_4()
 
-        @Language.factory(name="myclass_test3", default_config=_defaults)
-        @clinlp_autocomponent
-        class MyClass:
-            def __init__(self, setting_1=_defaults["setting_1"]):
-                self.setting_1 = setting_1
+        # Assert
+        assert component.setting_1 == 1024
 
-        # Act & Assert
-        assert MyClass().setting_1 == 1024
-        assert add_pipe_for_test("myclass_test3").setting_1 == 1024
-        assert (
-            add_pipe_for_test("myclass_test3", config={"setting_1": 2048}).setting_1
-            == 2048
-        )
+    @pytest.mark.parametrize(
+        "config, attr, expected_value",
+        [
+            ({}, "setting_1", 1024),
+            ({"setting_1": 2048}, "setting_1", 2048),
+        ],
+    )
+    def test_default_args_pipe(self, component_4, config, attr, expected_value):
+        # Act
+        component = add_pipe_for_test("myclass_test3", config=config)
 
-    def test_with_inheritance(self):
-        # Arrange
-        _base_defaults = {"base_arg": 1}
-        _sub_defaults = {"sub_arg": 2}
+        # Assert
+        assert getattr(component, attr) == expected_value
 
-        class MyClassBase:
-            def __init__(self, base_arg=_base_defaults["base_arg"]):
-                self.base_arg = base_arg
+    @pytest.mark.parametrize(
+        "kwargs, attr, expected_value",
+        [
+            ({}, "sub_arg", 2),
+            ({}, "base_arg", 1),
+            ({"sub_arg": 20}, "sub_arg", 20),
+            ({"base_arg": 10}, "base_arg", 10),
+            ({"sub_arg": 20, "base_arg": 10}, "sub_arg", 20),
+            ({"sub_arg": 20, "base_arg": 10}, "base_arg", 10),
+        ],
+    )
+    def test_with_inheritance_class(self, component_5, kwargs, attr, expected_value):
+        # Act
+        component = component_5(**kwargs)
 
-        @Language.factory(
-            name="myclass_test4", default_config=_sub_defaults | _base_defaults
-        )
-        @clinlp_autocomponent
-        class MyClass(MyClassBase):
-            def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
-                self.sub_arg = sub_arg
-                super().__init__(**kwargs)
+        # Assert
+        assert getattr(component, attr) == expected_value
 
-        # Act & Assert
-        assert MyClass().sub_arg == 2
-        assert MyClass().base_arg == 1
-        assert MyClass(sub_arg=20).sub_arg == 20
-        assert MyClass(base_arg=10).base_arg == 10
-        assert MyClass(sub_arg=20, base_arg=10).sub_arg == 20
-        assert MyClass(sub_arg=20, base_arg=10).base_arg == 10
-        assert add_pipe_for_test("myclass_test4").sub_arg == 2
-        assert add_pipe_for_test("myclass_test4").base_arg == 1
-        assert add_pipe_for_test("myclass_test4", config={"sub_arg": 20}).sub_arg == 20
-        assert (
-            add_pipe_for_test("myclass_test4", config={"base_arg": 10}).base_arg == 10
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test4", config={"sub_arg": 20, "base_arg": 10}
-            ).sub_arg
-            == 20
-        )
-        assert (
-            add_pipe_for_test(
-                "myclass_test4", config={"sub_arg": 20, "base_arg": 10}
-            ).base_arg
-            == 10
-        )
+    @pytest.mark.parametrize(
+        "config, attr, expected_value",
+        [
+            ({}, "sub_arg", 2),
+            ({}, "base_arg", 1),
+            ({"sub_arg": 20}, "sub_arg", 20),
+            ({"base_arg": 10}, "base_arg", 10),
+            ({"sub_arg": 20, "base_arg": 10}, "sub_arg", 20),
+            ({"sub_arg": 20, "base_arg": 10}, "base_arg", 10),
+        ],
+    )
+    def test_with_inheritance_pipe(self, component_5, config, attr, expected_value):
+        # Act
+        component = add_pipe_for_test("myclass_test4", config=config)
+
+        # Assert
+        assert getattr(component, attr) == expected_value
 
 
 class TestUnitIntervalDistance:
@@ -251,13 +355,14 @@ class TestUnitIntervalDistance:
         ],
     )
     def test_interval_distance(self, a, b, c, d, expected_dist):
-        # Arrange, Act
+        # Act
         dist = interval_dist(a, b, c, d)
 
         # Assert
         assert dist == expected_dist
 
     def test_interval_distance_unhappy(self):
-        # Arrange, Act & Assert
+        # Assert
         with pytest.raises(ValueError):
-            _ = interval_dist(5, 0, 5, 0)
+            # Act
+            _ = interval_dist(10, 0, 0, 10)

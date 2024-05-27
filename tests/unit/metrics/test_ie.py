@@ -179,7 +179,7 @@ class TestDocument:
 
 class TestDataset:
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
-        # Arrange & Act
+        # Act
         dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         # Assert
@@ -194,7 +194,7 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
-        # Arrange & Act
+        # Act
         dataset = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
         # Assert
@@ -223,7 +223,7 @@ class TestDataset:
         ]
 
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
-        # Arrange & Act
+        # Act
         dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Assert
@@ -238,7 +238,7 @@ class TestDataset:
         assert len(dataset.docs[6].annotations) == 2
 
     def test_dataset_from_clinlp_annotations(self, clinlp_docs):
-        # Arrange & Act
+        # Act
         dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Assert
@@ -325,7 +325,7 @@ class TestDataset:
         assert to_nervaluate[1] == []
 
     def test_infer_default_qualifiers(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         default_qualifiers = mctrainer_dataset.infer_default_qualifiers()
 
         # Assert
@@ -337,28 +337,28 @@ class TestDataset:
         }
 
     def test_num_docs(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         num_docs = mctrainer_dataset.num_docs()
 
         # Assert
         assert num_docs == 14
 
     def test_num_annotations(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         num_annotations = mctrainer_dataset.num_annotations()
 
         # Assert
         assert num_annotations == 13
 
     def test_span_counts(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         num_span_counts = len(mctrainer_dataset.span_counts())
 
         # Assert
         assert num_span_counts == 11
 
     def test_span_counts_n_spans(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         span_counts = mctrainer_dataset.span_counts(n_spans=3)
 
         # Assert
@@ -369,7 +369,7 @@ class TestDataset:
         }
 
     def test_span_counts_callback(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         span_counts = mctrainer_dataset.span_counts(
             n_spans=3, span_callback=lambda x: x.upper()
         )
@@ -382,14 +382,14 @@ class TestDataset:
         }
 
     def test_label_counts(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         num_label_counts = len(mctrainer_dataset.label_counts())
 
         # Assert
         assert num_label_counts == 9
 
     def test_label_counts_n_labels(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         label_counts = mctrainer_dataset.label_counts(n_labels=3)
 
         # Assert
@@ -400,7 +400,7 @@ class TestDataset:
         }
 
     def test_label_counts_callback(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         label_counts = mctrainer_dataset.label_counts(
             n_labels=3, label_callback=lambda x: x[x.index("_") + 1 :]
         )
@@ -413,7 +413,7 @@ class TestDataset:
         }
 
     def test_qualifier_counts(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         qualifier_counts = mctrainer_dataset.qualifier_counts()
 
         # Assert
@@ -425,7 +425,7 @@ class TestDataset:
         }
 
     def test_stats(self, mctrainer_dataset):
-        # Arrange & Act
+        # Act
         stats = mctrainer_dataset.stats()
 
         # Assert
@@ -563,14 +563,16 @@ class TestMetrics:
         # Arrange
         mctrainer_dataset.docs = mctrainer_dataset.docs[:-2]
 
-        # Act & Assert
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
     def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
         mctrainer_dataset.docs[0].identifier = "test"
 
-        # Act & Assert
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)

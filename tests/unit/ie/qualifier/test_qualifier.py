@@ -102,7 +102,7 @@ class TestUnitQualifier:
         q1 = Qualifier(**(kwargs | q1_kwargs))
         q2 = Qualifier(**(kwargs | q2_kwargs))
 
-        # Act & Assert
+        # Act
         equality = q1 == q2
 
         # Assert
@@ -258,8 +258,9 @@ class TestUnitQualifierFactory:
         # Arrange
         factory = QualifierClass("Negation", ["Affirmed", "Negated"])
 
-        # Act & Assert
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             _ = factory.create(value="Unknown")
 
 
@@ -270,8 +271,9 @@ class TestUnitQualifierDetector:
         qd = QualifierDetector()
         qualifier = mock_factory.create("test1")
 
-        # Act & Assert
+        # Assert
         with pytest.raises(RuntimeError):
+            # Act
             qd.add_qualifier_to_ent(entity, qualifier)
 
     @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())

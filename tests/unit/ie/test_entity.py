@@ -16,7 +16,7 @@ def ents(doc):
 
 class TestCreateConceptDict:
     def test_create_concept_dict(self):
-        # Arrange & Act
+        # Act
         concepts = create_concept_dict("tests/data/concept_examples.csv")
 
         # Assert

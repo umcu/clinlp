@@ -1,5 +1,4 @@
-import warnings
-
+import pytest
 import spacy
 
 import clinlp  # noqa: F401
@@ -25,9 +24,7 @@ class TestUnitCreateModel:
         assert "clinlp_version" in nlp.meta
 
     def test_load_wrong_version(self):
-        with warnings.catch_warnings(record=True) as wrngs:
-            # Arrange & Act
+        # Assert
+        with pytest.warns(VersionMismatchWarning):
+            # Act
             _ = spacy.load("tests/data/test_spacy_model")
-
-            # Assert
-            assert any(issubclass(w.category, VersionMismatchWarning) for w in wrngs)

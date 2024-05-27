@@ -257,8 +257,9 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
-        # Act & Assert
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             mqp.initialize_scope(sentence=sentence)
 
 
@@ -301,6 +302,7 @@ class TestUnitContextAlgorithm:
         # Act
         parsed_qualifier = ca._parse_qualifier(value, qualifier_factories)
 
+        # Assert
         assert parsed_qualifier == expected_qualifier
 
     def test_parse_value_unhappy(self, mock_factory, ca):
@@ -308,19 +310,27 @@ class TestUnitContextAlgorithm:
         value = "Mock_Mock_1"
         qualifiers = {"Mock": mock_factory}
 
-        # Act & Assert
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             ca._parse_qualifier(value, qualifiers)
 
-    def test_parse_direction(self, ca):
-        # Arrange, Act & Assert
-        assert ca._parse_direction("preceding") == ContextRuleDirection.PRECEDING
-        assert ca._parse_direction("following") == ContextRuleDirection.FOLLOWING
-        assert (
-            ca._parse_direction("bidirectional") == ContextRuleDirection.BIDIRECTIONAL
-        )
-        assert ca._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
-        assert ca._parse_direction("termination") == ContextRuleDirection.TERMINATION
+    @pytest.mark.parametrize(
+        "direction, expected",
+        [
+            ("preceding", ContextRuleDirection.PRECEDING),
+            ("following", ContextRuleDirection.FOLLOWING),
+            ("bidirectional", ContextRuleDirection.BIDIRECTIONAL),
+            ("pseudo", ContextRuleDirection.PSEUDO),
+            ("termination", ContextRuleDirection.TERMINATION),
+        ],
+    )
+    def test_parse_direction(self, ca, direction, expected):
+        # Act
+        parsed_direction = ca._parse_direction(direction)
+
+        # Assert
+        assert parsed_direction == expected
 
     def test_load_rules_data(self, ca):
         # Arrange
@@ -368,7 +378,7 @@ class TestUnitContextAlgorithm:
         assert rules[2].max_scope is None
 
     def test_load_rules_json(self, ca):
-        # Arrange & Act
+        # Act
         rules = ca._parse_rules(rules="tests/data/qualifier_rules_simple.json")
 
         # Assert
@@ -445,8 +455,9 @@ class TestUnitContextAlgorithm:
         text = "Patient heeft SYMPTOOM (wel ents, geen rules)"
         doc = nlp(text)
 
-        # Act & Assert
+        # Assert
         with pytest.raises(RuntimeError):
+            # Act
             ca(doc)
 
     def test_match_qualifiers_preceding(self, nlp):
@@ -1022,7 +1033,7 @@ class TestUnitContextAlgorithm:
         )
 
     def test_load_default_rules(self, nlp):
-        # Arrange & Act
+        # Act
         ca = ContextAlgorithm(nlp=nlp)
 
         # Assert
