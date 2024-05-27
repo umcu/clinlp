@@ -1,7 +1,7 @@
 from unittest.mock import patch
 
 import pytest
-from conftest import MockToken, get_mock_tokens
+from tests.conftest import MockToken, get_mock_tokens
 
 from clinlp import Sentencizer
 

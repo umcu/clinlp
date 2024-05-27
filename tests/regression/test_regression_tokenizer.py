@@ -1,16 +1,12 @@
-import json
-
 import pytest
 import spacy
 
 import clinlp  # noqa: F401
-
-with open("tests/data/tokenizer_cases.json", "rb") as file:
-    examples = json.load(file)["data"]
+from tests.regression import load_examples
 
 tokenizer_cases = [
     pytest.param(example["text"], example["tokens"], id="tokenizer_case_")
-    for example in examples
+    for example in load_examples("tokenizer_cases.json")
 ]
 
 

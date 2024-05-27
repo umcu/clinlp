@@ -1,16 +1,12 @@
-import json
-
 import pytest
-from conftest import get_mock_tokens
 
 from clinlp import Sentencizer
-
-with open("tests/data/sentencizer_cases.json", "rb") as file:
-    examples = json.load(file)["data"]
+from tests.conftest import get_mock_tokens
+from tests.regression import load_examples
 
 sentencizer_cases = [
     pytest.param(example["tokens"], example["sentence_starts"], id="sentencizer_case_")
-    for example in examples
+    for example in load_examples("sentencizer_cases.json")
 ]
 
 

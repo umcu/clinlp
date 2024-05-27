@@ -1,5 +1,5 @@
 import pytest
-from conftest import _make_nlp
+from tests.conftest import _make_nlp
 
 import clinlp  # noqa F401
 from clinlp.ie import SPANS_KEY

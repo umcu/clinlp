@@ -1,9 +1,13 @@
+from pathlib import Path
+
 import pytest
 import spacy
 from spacy import Language
 
 import clinlp  # noqa F401
 from clinlp.ie import SPANS_KEY
+
+DATA_DIR = Path("tests/data")
 
 
 class MockToken:

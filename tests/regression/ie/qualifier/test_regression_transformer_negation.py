@@ -1,7 +1,6 @@
-import json
-
 import pytest
-from conftest import _make_nlp, _make_nlp_entity
+from tests.conftest import _make_nlp, _make_nlp_entity
+from tests.regression import load_qualifier_examples
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
@@ -25,18 +24,7 @@ KNOWN_FAILURES = {
     68,
 }
 
-
-with open("tests/data/qualifier_cases.json", "rb") as file:
-    data = json.load(file)
-
-examples = []
-
-for example in data["examples"]:
-    mark = pytest.mark.xfail if example["example_id"] in KNOWN_FAILURES else []
-
-    examples.append(
-        pytest.param(example["text"], example["ent"], id="qualifier_case_", marks=mark)
-    )
+examples = load_qualifier_examples("qualifier_cases.json", KNOWN_FAILURES)
 
 
 @pytest.fixture(scope="class")
