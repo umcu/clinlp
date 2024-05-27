@@ -305,7 +305,7 @@ class TestUnitContextAlgorithm:
         # Assert
         assert parsed_qualifier == expected_qualifier
 
-    def test_parse_value_unhappy(self, mock_qualifier_class, ca):
+    def test_parse_value_error(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock_Mock_1"
         qualifiers = {"Mock": mock_qualifier_class}

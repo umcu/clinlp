@@ -351,7 +351,7 @@ class TestUnitIntervalDistance:
         # Assert
         assert dist == expected_dist
 
-    def test_interval_distance_unhappy(self):
+    def test_interval_distance_error(self):
         # Assert
         with pytest.raises(ValueError):
             # Act

@@ -248,7 +248,7 @@ class TestUnitQualifierClass:
         # Assert
         assert priority == expected_priority
 
-    def test_use_qualifier_class_unhappy(self):
+    def test_use_qualifier_class_error(self):
         # Arrange
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
 
