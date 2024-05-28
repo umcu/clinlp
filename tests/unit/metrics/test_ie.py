@@ -180,6 +180,32 @@ class TestDocument:
         # Assert
         assert labels == {"test2"}
 
+    @pytest.mark.parametrize(
+        "start, end, expected_ann",
+        [
+            (0, 5, Annotation(text="test1", start=0, end=5, label="test1")),
+            (10, 15, Annotation(text="test2", start=10, end=15, label="test2")),
+            (0, 15, None),
+            (5, 10, None),
+        ],
+    )
+    def test_document_annotation_from_span(self, start, end, expected_ann):
+        # Arrange
+        doc = Document(
+            identifier="1",
+            text="test1 and test2",
+            annotations=[
+                Annotation(text="test1", start=0, end=5, label="test1"),
+                Annotation(text="test2", start=10, end=15, label="test2"),
+            ],
+        )
+
+        # Act
+        ann = doc.get_annotation_from_span(start=start, end=end)
+
+        # Assert
+        assert ann == expected_ann
+
 
 @pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestDataset:
