@@ -136,10 +136,10 @@ class TestUnitClinlpSentencizer:
         tokens = get_mock_tokens(["Dit", "is", "een", "test"])
         expected_returns = [True, False, False, False]
 
-        with patch.object(s, "_get_sentence_starts", return_value=expected_returns):
-            # Act
+        # Act
+        with patch.object(s, "_get_sentence_starts", lambda x: expected_returns):
             s(tokens)
 
-            # Assert
-            for token, expected_return in zip(tokens, expected_returns):
-                assert token.is_sent_start == expected_return
+        # Assert
+        for token, expected_return in zip(tokens, expected_returns):
+            assert token.is_sent_start == expected_return
