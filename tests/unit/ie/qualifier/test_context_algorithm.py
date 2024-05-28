@@ -393,6 +393,46 @@ class TestUnitContextAlgorithm:
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
 
+    def test_add_rule(self, ca):
+
+        # Arrange
+        rule = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_1"),
+            direction=ContextRuleDirection.PRECEDING,
+        )
+
+        # Act
+        ca.add_rule(rule)
+
+        # Assert
+        assert len(ca.rules) == 1
+        assert list(ca.rules.values())[0] == rule
+
+    def test_add_rules(self, ca):
+
+        # Arrange
+        rule_1 = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_1"),
+            direction=ContextRuleDirection.PRECEDING,
+        )
+
+        rule_2 = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_2"),
+            direction=ContextRuleDirection.FOLLOWING,
+        )
+
+        # Act
+        ca.add_rules([rule_1, rule_2])
+
+        # Assert
+        assert len(ca.rules) == 2
+        assert list(ca.rules.values())[0] == rule_1
+        assert list(ca.rules.values())[1] == rule_2
+
+
     def test_get_sentences_with_entities(self, nlp_ca, ca):
         # Arrange
         text = "Patient 1 heeft ENTITY. Patient 2 niet. Patient 3 heeft ook ENTITY."
