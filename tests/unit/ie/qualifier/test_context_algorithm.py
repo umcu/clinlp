@@ -394,7 +394,6 @@ class TestUnitContextAlgorithm:
         assert rules[1].max_scope is None
 
     def test_add_rule(self, ca):
-
         # Arrange
         rule = ContextRule(
             pattern="test",
@@ -410,7 +409,6 @@ class TestUnitContextAlgorithm:
         assert list(ca.rules.values())[0] == rule
 
     def test_add_rules(self, ca):
-
         # Arrange
         rule_1 = ContextRule(
             pattern="test",
@@ -431,7 +429,6 @@ class TestUnitContextAlgorithm:
         assert len(ca.rules) == 2
         assert list(ca.rules.values())[0] == rule_1
         assert list(ca.rules.values())[1] == rule_2
-
 
     def test_get_sentences_with_entities(self, nlp_ca, ca):
         # Arrange
