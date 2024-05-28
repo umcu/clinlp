@@ -1,7 +1,6 @@
 import pytest
-import spacy
 
-import clinlp  # noqa: F401
+from tests.conftest import _make_nlp
 from tests.regression import load_examples
 
 tokenizer_cases = [
@@ -10,10 +9,15 @@ tokenizer_cases = [
 ]
 
 
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
 # Arrange
 @pytest.fixture(scope="class")
-def tokenizer():
-    return spacy.blank("clinlp").tokenizer
+def tokenizer(nlp):
+    return nlp.tokenizer
 
 
 class TestTokenizerRegression:

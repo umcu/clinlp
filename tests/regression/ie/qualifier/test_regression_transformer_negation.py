@@ -2,7 +2,6 @@ import pytest
 from tests.conftest import _make_nlp, _make_nlp_entity
 from tests.regression import load_qualifier_examples
 
-import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
