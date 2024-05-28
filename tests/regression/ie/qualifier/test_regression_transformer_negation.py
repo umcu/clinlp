@@ -48,7 +48,7 @@ def nlp_qualifier(nlp_entity):
 
 class TestRegressionNegationTransformer:
     @pytest.mark.parametrize("text, expected_ent", examples)
-    def test_qualifier_cases(self, nlp_qualifier, text, expected_ent):
+    def test_regression_negation_transformer(self, nlp_qualifier, text, expected_ent):
         # Act
         doc = nlp_qualifier(text)
 

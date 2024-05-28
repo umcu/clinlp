@@ -39,8 +39,8 @@ def mock_qualifier_class():
     return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
-class TestUnitQualifierRule:
-    def test_create_qualifier_rule_1(self):
+class TestUnitContextRule:
+    def test_create_context_rule_1(self):
         # Arrange
         pattern = "test"
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
@@ -56,7 +56,7 @@ class TestUnitQualifierRule:
         assert qr.qualifier == qualifier_class
         assert qr.direction == direction
 
-    def test_create_qualifier_rule_2(self):
+    def test_create_context_rule_2(self):
         # Arrange
         pattern = [{"LOWER": "test"}]
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
@@ -74,7 +74,7 @@ class TestUnitQualifierRule:
 
 
 class TestUnitMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self, mock_qualifier_class):
+    def test_create_mqp_pattern(self, mock_qualifier_class):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -93,7 +93,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end
         assert mqp.scope is None
 
-    def test_create_matched_qualifier_pattern_with_offset(self, mock_qualifier_class):
+    def test_create_mqp_with_offset(self, mock_qualifier_class):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -113,9 +113,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.end == end + offset
         assert mqp.scope is None
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(
-        self, mock_qualifier_class, mock_doc
-    ):
+    def test_mqp_initialize_scope_preceding(self, mock_qualifier_class, mock_doc):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -134,9 +132,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_following(
-        self, mock_qualifier_class, mock_doc
-    ):
+    def test_mqp_initialize_scope_following(self, mock_qualifier_class, mock_doc):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -155,9 +151,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
-    def test_matched_qualifier_pattern_initial_scope_bidirectional(
-        self, mock_qualifier_class, mock_doc
-    ):
+    def test_mqp_initialize_scope_bidirectional(self, mock_qualifier_class, mock_doc):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -176,7 +170,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (0, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
+    def test_mqp_initialize_scope_preceding_with_max_scope(
         self, mock_qualifier_class, mock_doc
     ):
         # Arrange
@@ -198,7 +192,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(
+    def test_mqp_initialize_scope_following_with_max_scope(
         self, mock_qualifier_class, mock_doc
     ):
         # Arrange
@@ -220,7 +214,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_bidirectional_with_max_scope(
+    def test_mqp_initialize_scope_bidirectional_with_max_scope(
         self, mock_qualifier_class, mock_doc
     ):
         # Arrange
@@ -242,9 +236,7 @@ class TestUnitMatchedQualifierPattern:
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_invalid_scope(
-        self, mock_qualifier_class, mock_doc
-    ):
+    def test_mqp_initialize_scope_invalid_scope(self, mock_qualifier_class, mock_doc):
         # Arrange
         rule = ContextRule(
             pattern="_",
@@ -264,7 +256,7 @@ class TestUnitMatchedQualifierPattern:
 
 
 class TestUnitContextAlgorithm:
-    def test_create_qualifier_matcher(self, nlp_ca):
+    def test_create_context_algorithm(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -293,7 +285,7 @@ class TestUnitContextAlgorithm:
         assert len(ca._matcher) == 1
         assert len(ca._phrase_matcher) == 1
 
-    def test_parse_value(self, mock_qualifier_class, ca):
+    def test_parse_qualifier(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock.Mock_1"
         qualifier_classes = {"Mock": mock_qualifier_class}
@@ -305,7 +297,7 @@ class TestUnitContextAlgorithm:
         # Assert
         assert parsed_qualifier == expected_qualifier
 
-    def test_parse_value_error(self, mock_qualifier_class, ca):
+    def test_parse_qualifier_error(self, mock_qualifier_class, ca):
         # Arrange
         value = "Mock_Mock_1"
         qualifier_classes = {"Mock": mock_qualifier_class}
@@ -314,6 +306,13 @@ class TestUnitContextAlgorithm:
         with pytest.raises(ValueError):
             # Act
             ca._parse_qualifier(value, qualifier_classes)
+
+    def test_load_default_rules(self, nlp_ca):
+        # Act
+        ca = ContextAlgorithm(nlp=nlp_ca)
+
+        # Assert
+        assert len(ca.rules) > 100
 
     @pytest.mark.parametrize(
         "direction, expected",
@@ -332,7 +331,7 @@ class TestUnitContextAlgorithm:
         # Assert
         assert parsed_direction == expected
 
-    def test_load_rules_data(self, ca):
+    def test_parse_rules_data(self, ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -377,9 +376,11 @@ class TestUnitContextAlgorithm:
         assert str(rules[2].direction) == "ContextRuleDirection.BIDIRECTIONAL"
         assert rules[2].max_scope is None
 
-    def test_load_rules_json(self, ca):
+    def test_parse_rules_json(self, ca):
         # Act
-        rules = ca._parse_rules(rules=str(TEST_DATA_DIR / "qualifier_rules_simple.json"))
+        rules = ca._parse_rules(
+            rules=str(TEST_DATA_DIR / "qualifier_rules_simple.json")
+        )
 
         # Assert
         assert len(rules) == 2
@@ -439,7 +440,7 @@ class TestUnitContextAlgorithm:
         # Assert
         assert resolved_patterns == [pattern2]
 
-    def test_match_qualifiers_no_ents(self, nlp_ca, ca):
+    def test_call_no_ents(self, nlp_ca, ca):
         # Arrange
         text = "tekst zonder entities"
         old_doc = nlp_ca(text)
@@ -450,7 +451,7 @@ class TestUnitContextAlgorithm:
         # Assert
         assert new_doc == old_doc
 
-    def test_match_qualifiers_no_rules(self, nlp_ca, ca):
+    def test_call_no_rules(self, nlp_ca, ca):
         # Arrange
         text = "Patient heeft ENTITY (wel ents, geen rules)"
         doc = nlp_ca(text)
@@ -460,7 +461,7 @@ class TestUnitContextAlgorithm:
             # Act
             ca(doc)
 
-    def test_match_qualifiers_preceding(self, nlp_ca):
+    def test_call_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -487,7 +488,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_with_default(self, nlp_ca):
+    def test_call_preceding_with_default(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -518,7 +519,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_multiple_ents(self, nlp_ca):
+    def test_call_preceding_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -548,7 +549,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_following_multiple_ents(self, nlp_ca):
+    def test_call_following_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -578,7 +579,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_bidirectional_multiple_ents(self, nlp_ca):
+    def test_call_bidirectional_multiple_ents(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -609,7 +610,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_pseudo(self, nlp_ca):
+    def test_call_pseudo(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -641,7 +642,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_preceding(self, nlp_ca):
+    def test_call_termination_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -676,7 +677,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_preceding(self, nlp_ca):
+    def test_call_termination_directly_preceding(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -711,7 +712,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_following(self, nlp_ca):
+    def test_call_termination_following(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -746,7 +747,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_following(self, nlp_ca):
+    def test_call_termination_directly_following(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -781,7 +782,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_multiple_sentences(self, nlp_ca):
+    def test_call_multiple_sentences(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -811,7 +812,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_qualifiers(self, nlp_ca):
+    def test_call_multiple_qualifiers(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -847,7 +848,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_terminate_multiple_qualifiers(self, nlp_ca):
+    def test_call_terminate_multiple_qualifiers(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -894,7 +895,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_patterns(self, nlp_ca):
+    def test_call_multiple_patterns(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -921,7 +922,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_overlap_rule_and_ent(self, nlp):
+    def test_call_overlap_rule_and_ent(self, nlp):
         # Arrange
         nlp.add_pipe("clinlp_sentencizer")
         ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
@@ -952,7 +953,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier(self, nlp_ca):
+    def test_call_multiple_of_same_qualifier(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -991,7 +992,7 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp_ca):
+    def test_call_multiple_of_same_qualifier_with_priorities(self, nlp_ca):
         # Arrange
         rules = {
             "qualifiers": [
@@ -1030,10 +1031,3 @@ class TestUnitContextAlgorithm:
         assert "Presence.Uncertain" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
-
-    def test_load_default_rules(self, nlp_ca):
-        # Act
-        ca = ContextAlgorithm(nlp=nlp_ca)
-
-        # Assert
-        assert len(ca.rules) > 100

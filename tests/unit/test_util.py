@@ -147,19 +147,19 @@ class TestUnitClinlpAutocomponent:
         # Assert
         assert getattr(component, attr) == expected_value
 
-    def test_only_args_pipe_error_1(self, component_1):
+    def test_only_args_error_1(self, component_1):
         # Assert
         with pytest.raises(TypeError):
             # Act
             component_1()
 
-    def test_only_args_pipe_error_2(self, component_1):
+    def test_only_args_error_2(self, component_1):
         # Assert
         with pytest.raises(TypeError):
             # Act
             component_1(name="bla")
 
-    def test_only_args_pipe_error_3(self, component_1):
+    def test_only_args_error_3(self, component_1):
         # Assert
         with pytest.raises(TypeError):
             # Act
@@ -211,13 +211,13 @@ class TestUnitClinlpAutocomponent:
         # Assert
         assert getattr(component, attr) == expected_value
 
-    def test_only_kwargs_pipe_error_1(self, component_2):
+    def test_only_kwargs_error_1(self, component_2):
         # Assert
         with pytest.raises(TypeError):
             # Act
             component_2(setting_3="None")
 
-    def test_only_kwargs_pipe_error_2(self, nlp, component_2):
+    def test_only_kwargs_error_2(self, nlp, component_2):
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
@@ -260,19 +260,19 @@ class TestUnitClinlpAutocomponent:
         # Assert
         assert getattr(component, attr) == expected_value
 
-    def test_mixed_args_and_kwargs_pipe_error_1(self, component_3):
+    def test_mixed_args_and_kwargs_error_1(self, component_3):
         # Assert
         with pytest.raises(TypeError):
             # Act
             component_3(setting_1=10)
 
-    def test_mixed_args_and_kwargs_pipe_error_2(self, nlp, component_3):
+    def test_mixed_args_and_kwargs_error_2(self, nlp, component_3):
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
             nlp.add_pipe("test_component_3", config={"setting_3": "None"})
 
-    def test_default_args_component(self, component_4):
+    def test_default_args_class(self, component_4):
         # Act
         component = component_4()
 

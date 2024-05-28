@@ -7,7 +7,49 @@ from clinlp import Sentencizer
 
 
 class TestUnitClinlpSentencizer:
-    def test_clinlp_sentencizer_predict_1(self):
+    @pytest.mark.parametrize(
+        "text, expected_can_start_sent",
+        [
+            ("abcde", True),
+            ("1250mg", True),
+            ("[TAG]", True),
+            ("-", True),
+            ("*", True),
+            ("+", False),
+        ],
+    )
+    def test_sentencizer_can_start_sent(self, text, expected_can_start_sent):
+        # Arrange
+        s = Sentencizer(sent_start_punct=["-", "*"])
+
+        # Act
+        can_start_sent = s._token_can_start_sent(MockToken(text))
+
+        # Assert
+        assert can_start_sent == expected_can_start_sent
+
+    @pytest.mark.parametrize(
+        "text, expected_can_end_sent",
+        [
+            ("\n", True),
+            (".", True),
+            (" ", False),
+            ("abc", False),
+            ("1250mg", False),
+            (",", False),
+        ],
+    )
+    def test_sentencizer_can_end_sent(self, text, expected_can_end_sent):
+        # Arrange
+        s = Sentencizer(sent_end_chars=["\n", "."])
+
+        # Act
+        can_end_sent = s._token_can_end_sent(MockToken(text))
+
+        # Assert
+        assert can_end_sent == expected_can_end_sent
+
+    def test_sentencizer_get_sentence_starts_1(self):
         # Arrange
         s = Sentencizer(sent_end_chars=[], sent_start_punct=[])
         tokens = get_mock_tokens(
@@ -29,7 +71,7 @@ class TestUnitClinlpSentencizer:
             False,
         ]
 
-    def test_clinlp_sentencizer_predict_2(self):
+    def test_sentencizer_get_sentence_starts_2(self):
         # Arrange
         s = Sentencizer(sent_end_chars=["\n"], sent_start_punct=[])
         tokens = get_mock_tokens(
@@ -51,7 +93,7 @@ class TestUnitClinlpSentencizer:
             False,
         ]
 
-    def test_clinlp_sentencizer_predict_3(self):
+    def test_sentencizer_get_sentence_starts_3(self):
         # Arrange
         s = Sentencizer(sent_end_chars=["\n"], sent_start_punct=[])
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "."])
@@ -69,7 +111,7 @@ class TestUnitClinlpSentencizer:
             False,
         ]
 
-    def test_clinlp_sentencizer_predict_4(self):
+    def test_sentencizer_get_sentence_starts_4(self):
         # Arrange
         s = Sentencizer(sent_end_chars=["\n"], sent_start_punct=["*"])
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "*", "opsomming"])
@@ -88,49 +130,7 @@ class TestUnitClinlpSentencizer:
             False,
         ]
 
-    @pytest.mark.parametrize(
-        "text, expected_can_start_sent",
-        [
-            ("abcde", True),
-            ("1250mg", True),
-            ("[TAG]", True),
-            ("-", True),
-            ("*", True),
-            ("+", False),
-        ],
-    )
-    def test_clinlp_sentencizer_start(self, text, expected_can_start_sent):
-        # Arrange
-        s = Sentencizer(sent_start_punct=["-", "*"])
-
-        # Act
-        can_start_sent = s._token_can_start_sent(MockToken(text))
-
-        # Assert
-        assert can_start_sent == expected_can_start_sent
-
-    @pytest.mark.parametrize(
-        "text, expected_can_end_sent",
-        [
-            ("\n", True),
-            (".", True),
-            (" ", False),
-            ("abc", False),
-            ("1250mg", False),
-            (",", False),
-        ],
-    )
-    def test_clinlp_sentencizer_end(self, text, expected_can_end_sent):
-        # Arrange
-        s = Sentencizer(sent_end_chars=["\n", "."])
-
-        # Act
-        can_end_sent = s._token_can_end_sent(MockToken(text))
-
-        # Assert
-        assert can_end_sent == expected_can_end_sent
-
-    def test_clinlp_sentencizer_call(self):
+    def test_sentencizer_call(self):
         # Arrange
         s = Sentencizer()
         tokens = get_mock_tokens(["Dit", "is", "een", "test"])

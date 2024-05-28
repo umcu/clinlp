@@ -36,7 +36,7 @@ def nlp_qualifier(nlp_entity):
 
 class TestRegressionContextAlgorithm:
     @pytest.mark.parametrize("text, expected_ent", examples)
-    def test_qualifier_cases(self, nlp_qualifier, text, expected_ent):
+    def test_regression_context_algorithm(self, nlp_qualifier, text, expected_ent):
         # Act
         doc = nlp_qualifier(text)
 

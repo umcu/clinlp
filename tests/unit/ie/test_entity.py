@@ -299,7 +299,7 @@ class TestClinlpNer:
             ("DOS", [("DOS", 0, 1, "delier")]),
         ],
     )
-    def test_match_overwrite_rbem_level_settings(self, nlp, text, expected_entities):
+    def test_rbem_level_term_settings_overwrite(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
         rbem.load_concepts(
@@ -382,7 +382,7 @@ class TestClinlpNer:
             ("transfusie", 3, 4, "anemie"),
         ]
 
-    def test_no_resolve_overlap(self, nlp):
+    def test_resolve_overlap_disabled(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=False)
         rbem.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})

@@ -105,7 +105,7 @@ class TestQualifierTransformer:
 
 
 class TestNegationTransformer:
-    def test_predict_absnt(self, nlp_entity):
+    def test_predict_absent(self, nlp_entity):
         # Arrange
         nt = NegationTransformer(nlp=nlp_entity)
 
@@ -137,7 +137,7 @@ class TestNegationTransformer:
         # Assert
         assert prediction < 0.1
 
-    def test_detect_qualifiers_1(self, nlp_entity):
+    def test_detect_qualifiers(self, nlp_entity):
         # Arrange
         nt = NegationTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
         doc = nlp_entity("De patient had geen last van ENTITY.")
@@ -165,7 +165,7 @@ class TestNegationTransformer:
             "Presence.Present"
         }
 
-    def test_detect_qualifiers_without_negation(self, nlp_entity):
+    def test_detect_qualifiers_present(self, nlp_entity):
         # Arrange
         nt = NegationTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
         doc = nlp_entity("De patient had juist wel last van ENTITY.")
@@ -213,7 +213,7 @@ class TestExperiencerTransformer:
         # Assert
         assert prediction < 0.1
 
-    def test_detect_qualifiers_1(self, nlp_entity):
+    def test_detect_qualifiers(self, nlp_entity):
         # Arrange
         et = ExperiencerTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
         doc = nlp_entity("De patient had geen last van ENTITY.")
@@ -241,7 +241,7 @@ class TestExperiencerTransformer:
             "Experiencer.Patient"
         }
 
-    def test_detect_qualifiers_referring_to_family(self, nlp_entity):
+    def test_detect_qualifiers_family(self, nlp_entity):
         # Arrange
         et = ExperiencerTransformer(nlp=nlp_entity, token_window=32, placeholder="X")
         doc = nlp_entity("De broer van de patient had last van ENTITY.")

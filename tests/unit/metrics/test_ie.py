@@ -41,21 +41,6 @@ def clinlp_dataset(clinlp_docs):
 
 
 class TestAnnotation:
-    def test_annotation_nervaluate(self):
-        # Arrange
-        ann = Annotation(text="test", start=0, end=5, label="test")
-
-        # Act
-        nervaluate = ann.to_nervaluate()
-
-        # Assert
-        assert nervaluate == {
-            "text": "test",
-            "start": 0,
-            "end": 5,
-            "label": "test",
-        }
-
     def test_annotation_lstrip(self):
         # Arrange
         ann = Annotation(text=" test", start=0, end=5, label="test")
@@ -85,6 +70,21 @@ class TestAnnotation:
 
         # Assert
         assert ann == Annotation(text="test", start=1, end=5, label="test")
+
+    def test_annotation_nervaluate(self):
+        # Arrange
+        ann = Annotation(text="test", start=0, end=5, label="test")
+
+        # Act
+        nervaluate = ann.to_nervaluate()
+
+        # Assert
+        assert nervaluate == {
+            "text": "test",
+            "start": 0,
+            "end": 5,
+            "label": "test",
+        }
 
     def test_annotation_qualifier_names(self):
         # Arrange
@@ -183,47 +183,17 @@ class TestDocument:
 
 @pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestDataset:
-    def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
+    def test_infer_default_qualifiers(self, mctrainer_dataset):
         # Act
-        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+        default_qualifiers = mctrainer_dataset.infer_default_qualifiers()
 
         # Assert
-        assert len(ied.docs) == 14
-        assert ied.docs[0].text == "patient had geen anemie"
-        assert len(ied.docs[0].annotations) == 1
-        assert ied.docs[3].text == "patient had een prematuur adempatroon"
-        assert len(ied.docs[3].annotations) == 0
-        assert ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
-        assert len(ied.docs[6].annotations) == 2
-
-    def test_dataset_from_medcattrainer_annotations(self, mctrainer_data):
-        # Act
-        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
-
-        # Assert
-        assert ied.docs[0].annotations[0].text == "anemie"
-        assert ied.docs[0].annotations[0].start == 17
-        assert ied.docs[0].annotations[0].end == 23
-        assert ied.docs[0].annotations[0].label == "C0002871_anemie"
-        assert ied.docs[6].annotations[1].text == "hyperbillirubinaemie"
-        assert ied.docs[6].annotations[1].start == 28
-        assert ied.docs[6].annotations[1].end == 48
-        assert ied.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
-
-    def test_dataset_from_medcatrainer_qualifiers(self, mctrainer_data):
-        # Arrange
-        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
-
-        # Act
-        qualifiers = ied.docs[0].annotations[0].qualifiers
-
-        # Assert
-        assert qualifiers == [
-            {"name": "Temporality", "value": "Current", "is_default": True},
-            {"name": "Plausibility", "value": "Plausible", "is_default": True},
-            {"name": "Experiencer", "value": "Patient", "is_default": True},
-            {"name": "Negation", "value": "Negated", "is_default": False},
-        ]
+        assert default_qualifiers == {
+            "Negation": "Affirmed",
+            "Experiencer": "Patient",
+            "Temporality": "Current",
+            "Plausibility": "Plausible",
+        }
 
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
         # Act
@@ -238,7 +208,7 @@ class TestDataset:
         assert ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
         assert len(ied.docs[6].annotations) == 2
 
-    def test_dataset_from_clinlp_annotations(self, clinlp_docs):
+    def test_dataset_from_clinlp_docs_annotations(self, clinlp_docs):
         # Act
         ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
@@ -252,7 +222,7 @@ class TestDataset:
         assert ied.docs[6].annotations[1].end == 48
         assert ied.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
 
-    def test_dataset_from_clinlp_qualifiers(self, clinlp_docs):
+    def test_dataset_from_clinlp_docs_qualifiers(self, clinlp_docs):
         # Arrange
         ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
@@ -267,6 +237,48 @@ class TestDataset:
             {"name": "Negation", "value": "Negated", "is_default": False},
             {"name": "Plausibility", "value": "Plausible", "is_default": True},
             {"name": "Temporality", "value": "Current", "is_default": True},
+        ]
+
+    def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
+        # Act
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+
+        # Assert
+        assert len(ied.docs) == 14
+        assert ied.docs[0].text == "patient had geen anemie"
+        assert len(ied.docs[0].annotations) == 1
+        assert ied.docs[3].text == "patient had een prematuur adempatroon"
+        assert len(ied.docs[3].annotations) == 0
+        assert ied.docs[6].text == "na fototherapie verminderde hyperbillirubinaemie"
+        assert len(ied.docs[6].annotations) == 2
+
+    def test_dataset_from_medcattrainer_docs_annotations(self, mctrainer_data):
+        # Act
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+
+        # Assert
+        assert ied.docs[0].annotations[0].text == "anemie"
+        assert ied.docs[0].annotations[0].start == 17
+        assert ied.docs[0].annotations[0].end == 23
+        assert ied.docs[0].annotations[0].label == "C0002871_anemie"
+        assert ied.docs[6].annotations[1].text == "hyperbillirubinaemie"
+        assert ied.docs[6].annotations[1].start == 28
+        assert ied.docs[6].annotations[1].end == 48
+        assert ied.docs[6].annotations[1].label == "C0020433_hyperbilirubinemie"
+
+    def test_dataset_from_medcatrainer_docs_qualifiers(self, mctrainer_data):
+        # Arrange
+        ied = InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
+
+        # Act
+        qualifiers = ied.docs[0].annotations[0].qualifiers
+
+        # Assert
+        assert qualifiers == [
+            {"name": "Temporality", "value": "Current", "is_default": True},
+            {"name": "Plausibility", "value": "Plausible", "is_default": True},
+            {"name": "Experiencer", "value": "Patient", "is_default": True},
+            {"name": "Negation", "value": "Negated", "is_default": False},
         ]
 
     def test_dataset_nervaluate(self):
@@ -324,18 +336,6 @@ class TestDataset:
             {"end": 23, "label": "C0002871_anemie", "start": 17, "text": "anemie"}
         ]
         assert to_nervaluate[1] == []
-
-    def test_infer_default_qualifiers(self, mctrainer_dataset):
-        # Act
-        default_qualifiers = mctrainer_dataset.infer_default_qualifiers()
-
-        # Assert
-        assert default_qualifiers == {
-            "Negation": "Affirmed",
-            "Experiencer": "Patient",
-            "Temporality": "Current",
-            "Plausibility": "Plausible",
-        }
 
     def test_num_docs(self, mctrainer_dataset):
         # Act
@@ -460,6 +460,26 @@ class TestDataset:
 
 @pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestMetrics:
+    def test_create_metrics_unequal_length(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem.pred.docs = iem.pred.docs[:-2]
+
+        # Assert
+        with pytest.raises(ValueError):
+            # Act
+            iem._validate_self()
+
+    def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
+        # Arrange
+        iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
+        iem.true.docs[0].identifier = "test"
+
+        # Assert
+        with pytest.raises(ValueError):
+            # Act
+            iem._validate_self()
+
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
@@ -507,7 +527,7 @@ class TestMetrics:
         assert metrics["C0151526_prematuriteit"]["strict"]["recall"] == 0.5
         assert metrics["C0151526_prematuriteit"]["strict"]["f1"] == 0.5
 
-    def test_qualifier_metrics(self, mctrainer_dataset, clinlp_dataset):
+    def test_qualifier_metrics_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
@@ -548,7 +568,7 @@ class TestMetrics:
             "f1": 0.6666666666666666,
         }
 
-    def test_qualifier_misses(self, mctrainer_dataset, clinlp_dataset):
+    def test_qualifier_metrics_misses(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
@@ -560,21 +580,3 @@ class TestMetrics:
         assert len(metrics["Experiencer"]["misses"]) == 0
         assert len(metrics["Plausibility"]["misses"]) == 1
         assert len(metrics["Temporality"]["misses"]) == 1
-
-    def test_create_metrics_unequal_length(self, mctrainer_dataset, clinlp_dataset):
-        # Arrange
-        mctrainer_dataset.docs = mctrainer_dataset.docs[:-2]
-
-        # Assert
-        with pytest.raises(ValueError):
-            # Act
-            _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
-
-    def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
-        # Arrange
-        mctrainer_dataset.docs[0].identifier = "test"
-
-        # Assert
-        with pytest.raises(ValueError):
-            # Act
-            _ = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)

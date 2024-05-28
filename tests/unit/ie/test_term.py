@@ -4,7 +4,39 @@ from clinlp.ie import Term
 
 
 class TestTerm:
-    def test_spacy_pattern_simple(self, nlp):
+    def test_term_from_dict(self):
+        # Arrange
+        term_dict = {
+            "phrase": "Diabetes",
+            "fuzzy": 1,
+        }
+
+        # Act
+        t = Term(**term_dict)
+
+        # Assert
+        assert t.phrase == "Diabetes"
+        assert t.fuzzy == 1
+
+    def test_term_from_dict_with_extra_items(self):
+        # Arrange
+        term_dict = {
+            "phrase": "Diabetes",
+            "fuzzy": 1,
+            "comment": "This term refers to diabetes",
+        }
+
+        # Act
+        t = Term(**term_dict)
+
+        # Assert
+        assert t.phrase == "Diabetes"
+        assert t.fuzzy == 1
+
+        with pytest.raises(AttributeError):
+            _ = t.comment
+
+    def test_spacy_pattern(self, nlp):
         # Arrange
         t = Term(phrase="diabetes", attr="NORM")
 
@@ -61,35 +93,3 @@ class TestTerm:
 
         # Assert
         assert spacy_pattern == [{"TEXT": "diabetes"}]
-
-    def test_term_from_dict(self):
-        # Arrange
-        term_dict = {
-            "phrase": "Diabetes",
-            "fuzzy": 1,
-        }
-
-        # Act
-        t = Term(**term_dict)
-
-        # Assert
-        assert t.phrase == "Diabetes"
-        assert t.fuzzy == 1
-
-    def test_term_from_dict_with_extra_items(self):
-        # Arrange
-        term_dict = {
-            "phrase": "Diabetes",
-            "fuzzy": 1,
-            "comment": "This term refers to diabetes",
-        }
-
-        # Act
-        t = Term(**term_dict)
-
-        # Assert
-        assert t.phrase == "Diabetes"
-        assert t.fuzzy == 1
-
-        with pytest.raises(AttributeError):
-            _ = t.comment

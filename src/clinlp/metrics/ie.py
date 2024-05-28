@@ -221,6 +221,38 @@ class InfoExtractionDataset:
     ]
     """ All methods to call when computing full dataset stats """
 
+    def infer_default_qualifiers(self) -> dict:
+        """
+        Infer the default values for qualifiers, based on the majority class, and
+        set this value on all annotations.
+
+        Returns
+        A dictionary with defaults, e.g. {"Negation": "Negated", "Experiencer":
+        "Patient"}.
+        -------
+        """
+
+        default_qualifiers = {
+            name: max(counts, key=lambda item: counts[item])
+            for name, counts in self.qualifier_counts().items()
+        }
+
+        warnings.warn(
+            f"Inferred the following qualifier defaults from the majority "
+            f"classes: {default_qualifiers}. ",
+            UserWarning,
+            stacklevel=2,
+        )
+
+        for doc in self.docs:
+            for annotation in doc.annotations:
+                for qualifier in annotation.qualifiers:
+                    qualifier["is_default"] = (
+                        default_qualifiers[qualifier["name"]] == qualifier["value"]
+                    )
+
+        return default_qualifiers
+
     @staticmethod
     def from_clinlp_docs(
         nlp_docs: Iterable[spacy.language.Doc], ids: Optional[Iterable[str]] = None
@@ -275,38 +307,6 @@ class InfoExtractionDataset:
             )
 
         return InfoExtractionDataset(docs=docs)
-
-    def infer_default_qualifiers(self) -> dict:
-        """
-        Infer the default values for qualifiers, based on the majority class, and
-        set this value on all annotations.
-
-        Returns
-        A dictionary with defaults, e.g. {"Negation": "Negated", "Experiencer":
-        "Patient"}.
-        -------
-        """
-
-        default_qualifiers = {
-            name: max(counts, key=lambda item: counts[item])
-            for name, counts in self.qualifier_counts().items()
-        }
-
-        warnings.warn(
-            f"Inferred the following qualifier defaults from the majority "
-            f"classes: {default_qualifiers}. ",
-            UserWarning,
-            stacklevel=2,
-        )
-
-        for doc in self.docs:
-            for annotation in doc.annotations:
-                for qualifier in annotation.qualifiers:
-                    qualifier["is_default"] = (
-                        default_qualifiers[qualifier["name"]] == qualifier["value"]
-                    )
-
-        return default_qualifiers
 
     @staticmethod
     def from_medcattrainer(

@@ -33,6 +33,45 @@ def mock_qualifier_class_2():
     return QualifierClass("test2", ["abc", "def"])
 
 
+class TestUnitQualifierExtension:
+    @pytest.mark.parametrize(
+        "extension, expected_has_extension",
+        [
+            (ATTR_QUALIFIERS, True),
+            (ATTR_QUALIFIERS_STR, True),
+            (ATTR_QUALIFIERS_DICT, True),
+        ],
+    )
+    def test_spacy_has_extension(self, extension, expected_has_extension):
+        # Act
+        has_extension = Span.has_extension(extension)
+
+        # Assert
+        assert has_extension == expected_has_extension
+
+
+class TestUnitGetSetQualifiers:
+    def test_get_set_qualifiers(self, mock_qualifier_class, entity):
+        # Arrange
+        qualifiers = {mock_qualifier_class.create()}
+
+        # Act
+        set_qualifiers(entity, qualifiers)
+
+        # Assert
+        assert get_qualifiers(entity) == qualifiers
+
+    def test_get_set_qualifiers_default(self, nlp):
+        # Arrange
+        doc = nlp("dit is een test")
+
+        # Act
+        qualifiers = get_qualifiers(doc[0:3])
+
+        # Assert
+        assert qualifiers is None
+
+
 class TestUnitQualifier:
     def test_qualifier_str(self):
         # Arrange
@@ -54,7 +93,7 @@ class TestUnitQualifier:
         # Assert
         assert priority == 10
 
-    def test_qualifier_dict_1(self):
+    def test_to_dict_1(self):
         # Arrange
         qualifier = Qualifier("Negation", "Negated", is_default=True)
 
@@ -69,7 +108,7 @@ class TestUnitQualifier:
             "prob": None,
         }
 
-    def test_qualifier_dict_2(self):
+    def test_to_dict_2(self):
         # Arrange
         qualifier = Qualifier("Negation", "Negated", is_default=True, prob=0.8)
 
@@ -92,7 +131,7 @@ class TestUnitQualifier:
             ({}, {"value": "Affirmed", "is_default": False}, False),
         ],
     )
-    def test_compare_equality(self, q1_kwargs, q2_kwargs, expected_equality):
+    def test_equals(self, q1_kwargs, q2_kwargs, expected_equality):
         # Arrange
         kwargs = {"name": "Negation", "value": "Negated", "is_default": True}
         q1 = Qualifier(**(kwargs | q1_kwargs))
@@ -120,7 +159,7 @@ class TestUnitQualifier:
             ),
         ],
     )
-    def test_hash_in_set(self, qualifier_kwargs, expected_in_set):
+    def test_qualifier_in_set_1(self, qualifier_kwargs, expected_in_set):
         # Arrange
         kwargs = {
             "name": "Negation",
@@ -136,41 +175,6 @@ class TestUnitQualifier:
         # Assert
         assert in_set == expected_in_set
 
-    @pytest.mark.parametrize(
-        "extension, expected_has_extension",
-        [
-            (ATTR_QUALIFIERS, True),
-            (ATTR_QUALIFIERS_STR, True),
-            (ATTR_QUALIFIERS_DICT, True),
-        ],
-    )
-    def test_spacy_has_extension(self, extension, expected_has_extension):
-        # Act
-        has_extension = Span.has_extension(extension)
-
-        # Assert
-        assert has_extension == expected_has_extension
-
-    def test_spacy_extension_default(self, nlp):
-        # Arrange
-        doc = nlp("dit is een test")
-
-        # Act
-        qualifiers = get_qualifiers(doc[0:3])
-
-        # Assert
-        assert qualifiers is None
-
-    def test_set_qualifiers(self, mock_qualifier_class, entity):
-        # Arrange
-        qualifiers = {mock_qualifier_class.create()}
-
-        # Act
-        set_qualifiers(entity, qualifiers)
-
-        # Assert
-        assert get_qualifiers(entity) == qualifiers
-
 
 class TestUnitQualifierClass:
     @pytest.mark.parametrize(
@@ -180,7 +184,7 @@ class TestUnitQualifierClass:
             ("Negated", False),
         ],
     )
-    def test_qualifier_class_create(self, value, expected_is_default):
+    def test_qualifier_class_default(self, value, expected_is_default):
         # Arrange
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
 
@@ -197,7 +201,7 @@ class TestUnitQualifierClass:
             ("Negated", True),
         ],
     )
-    def test_use_qualifier_class_nondefault(self, value, expected_is_default):
+    def test_qualifier_class_nondefault(self, value, expected_is_default):
         # Arrange
         qualifier_class = QualifierClass(
             "Negation", ["Affirmed", "Negated"], default="Negated"
@@ -217,7 +221,7 @@ class TestUnitQualifierClass:
             ("Present", 2),
         ],
     )
-    def test_use_qualifier_class_priority_default(self, value, expected_priority):
+    def test_qualifier_class_priority_default(self, value, expected_priority):
         # Arrange
         qualifier_class = QualifierClass(
             "Presence", ["Absent", "Uncertain", "Present"], default="Present"
@@ -237,7 +241,7 @@ class TestUnitQualifierClass:
             ("Present", 0),
         ],
     )
-    def test_use_qualifier_class_priority_nondefault(self, value, expected_priority):
+    def test_qualifier_class_priority_nondefault(self, value, expected_priority):
         # Arrange
         qualifier_class = QualifierClass(
             "Presence",
@@ -252,7 +256,7 @@ class TestUnitQualifierClass:
         # Assert
         assert priority == expected_priority
 
-    def test_use_qualifier_class_error(self):
+    def test_qualifier_class_error(self):
         # Arrange
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
 
