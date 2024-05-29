@@ -236,7 +236,7 @@ class ContextAlgorithm(QualifierDetector):
                 f"Don't know how to process ContextRule with pattern of "
                 f"type {type(rule.pattern)}"
             )
-            raise ValueError(msg)
+            raise TypeError(msg)
 
     def add_rules(self, rules: list[ContextRule]) -> None:
         """
