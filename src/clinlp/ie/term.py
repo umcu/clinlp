@@ -47,6 +47,6 @@ class Term(pydantic.BaseModel):
 
             if i != len(phrase_tokens) - 1:
                 for _ in range(fields["proximity"]):
-                    spacy_pattern.append({"OP": "?"})
+                    spacy_pattern.append({"OP": "?"})  # noqa: PERF401
 
         return spacy_pattern
