@@ -267,7 +267,7 @@ class TestUnitQualifierClass:
 
 
 class TestUnitQualifierDetector:
-    @patch.multiple(QualifierDetector, __abstractmethods__=set())
+
     def test_add_qualifier_no_init(self, entity, mock_qualifier_class):
         # Arrange
         qd = QualifierDetector()
@@ -278,7 +278,6 @@ class TestUnitQualifierDetector:
             # Act
             qd.add_qualifier_to_ent(entity, qualifier)
 
-    @patch.object(QualifierDetector, "__abstractmethods__", set())
     def test_add_qualifier_default(self, entity, mock_qualifier_class):
         # Arrange
         qd = QualifierDetector()
@@ -299,7 +298,6 @@ class TestUnitQualifierDetector:
         assert qualifier in get_qualifiers(entity)
         assert mock_qualifier_class.create("test2") not in get_qualifiers(entity)
 
-    @patch.object(QualifierDetector, "__abstractmethods__", set())
     def test_add_qualifier_non_default(self, entity, mock_qualifier_class):
         # Arrange
         qd = QualifierDetector()
@@ -320,7 +318,6 @@ class TestUnitQualifierDetector:
         assert mock_qualifier_class.create("test1") not in get_qualifiers(entity)
         assert qualifier in get_qualifiers(entity)
 
-    @patch.object(QualifierDetector, "__abstractmethods__", set())
     def test_add_qualifier_overwrite_nondefault(self, entity, mock_qualifier_class):
         # Arrange
         qd = QualifierDetector()
@@ -343,7 +340,6 @@ class TestUnitQualifierDetector:
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 not in get_qualifiers(entity)
 
-    @patch.object(QualifierDetector, "__abstractmethods__", set())
     def test_add_qualifier_multiple(
         self, entity, mock_qualifier_class, mock_qualifier_class_2
     ):
@@ -371,7 +367,6 @@ class TestUnitQualifierDetector:
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 in get_qualifiers(entity)
 
-    @patch.object(QualifierDetector, "__abstractmethods__", set())
     def test_initialize_qualifiers(
         self, entity, mock_qualifier_class, mock_qualifier_class_2
     ):

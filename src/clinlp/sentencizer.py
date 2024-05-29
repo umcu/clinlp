@@ -1,6 +1,7 @@
 from typing import Optional
 
 import spacy.tokens
+from spacy.pipeline import Pipe
 
 from clinlp.util import clinlp_component
 
@@ -15,7 +16,7 @@ _defaults_sentencizer = {
     assigns=["token.is_sent_start", "doc.sents"],
     default_config=_defaults_sentencizer,
 )
-class Sentencizer:
+class Sentencizer(Pipe):
     def __init__(
         self,
         sent_end_chars: Optional[list[str]] = None,

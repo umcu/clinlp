@@ -1,5 +1,6 @@
 import unicodedata
 
+from spacy.pipeline import Pipe
 from spacy.tokens import Doc
 
 from clinlp.util import clinlp_component
@@ -12,7 +13,7 @@ _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
     assigns=["token.norm"],
     default_config=_defaults_normalizer,
 )
-class Normalizer:
+class Normalizer(Pipe):
     def __init__(
         self,
         lowercase=_defaults_normalizer["lowercase"],

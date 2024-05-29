@@ -6,6 +6,7 @@ import pandas as pd
 import pydantic
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
+from spacy.pipeline import Pipe
 from spacy.tokens import Span
 
 from clinlp.ie.term import Term, _defaults_term
@@ -45,7 +46,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
 
 @clinlp_component(name="clinlp_entity_matcher")
-class DeprecatedEntityMatcher:
+class DeprecatedEntityMatcher(Pipe):
     def __init__(self):
         raise RuntimeError(
             "The clinlp_entity_matcher has been renamed "
@@ -59,7 +60,7 @@ class DeprecatedEntityMatcher:
     assigns=["doc.spans"],
     default_config=_defaults_term | _defaults_entity_matcher,
 )
-class RuleBasedEntityMatcher:
+class RuleBasedEntityMatcher(Pipe):
     def __init__(
         self,
         nlp: Language,

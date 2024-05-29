@@ -1,7 +1,8 @@
-from abc import ABC, abstractmethod
+from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional
 
+from spacy.pipeline import Pipe
 from spacy.tokens import Doc, Span
 
 from clinlp.ie import SPANS_KEY
@@ -108,7 +109,7 @@ _defaults_qualifier_detector = {
 }
 
 
-class QualifierDetector(ABC):
+class QualifierDetector(Pipe):
     """For usage as a spaCy pipeline component"""
 
     def __init__(self, spans_key: str = _defaults_qualifier_detector["spans_key"]):
