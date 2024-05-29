@@ -36,19 +36,17 @@ def clinlp_component(*args, register=True, **kwargs):
         make_component_args = component_args.copy()
 
         if "nlp" not in make_component_args:
-            make_component_args = ["nlp"] + make_component_args
+            make_component_args = ["nlp", *make_component_args]
 
         if "name" not in make_component_args:
-            make_component_args = ["name"] + make_component_args
+            make_component_args = ["name", *make_component_args]
 
-        params = []
-
-        for arg in make_component_args:
-            params.append(
-                Parameter(
-                    arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
-                )
+        params = [
+            Parameter(
+                arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
             )
+            for arg in make_component_args
+        ]
 
         for kwarg, default in component_kwargs.items():
             params.append(
