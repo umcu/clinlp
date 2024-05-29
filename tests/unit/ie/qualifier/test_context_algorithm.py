@@ -406,7 +406,7 @@ class TestUnitContextAlgorithm:
 
         # Assert
         assert len(ca.rules) == 1
-        assert list(ca.rules.values())[0] == rule
+        assert next(iter(ca.rules.values())) == rule
 
     def test_add_rules(self, ca):
         # Arrange
@@ -424,11 +424,12 @@ class TestUnitContextAlgorithm:
 
         # Act
         ca.add_rules([rule_1, rule_2])
+        rules = iter(ca.rules.values())
 
         # Assert
         assert len(ca.rules) == 2
-        assert list(ca.rules.values())[0] == rule_1
-        assert list(ca.rules.values())[1] == rule_2
+        assert next(rules) == rule_1
+        assert next(rules) == rule_2
 
     def test_get_sentences_with_entities(self, nlp_ca, ca):
         # Arrange
