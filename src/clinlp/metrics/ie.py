@@ -30,7 +30,7 @@ class Annotation:
     label: str
     """ The label/tag"""
 
-    qualifiers: list[dict] = field(default_factory=lambda: [])
+    qualifiers: list[dict] = field(default_factory=list)
     """ Optionally, a list of qualifiers"""
 
     def lstrip(self, chars=" ,"):
