@@ -342,12 +342,12 @@ def _get_tokenizer_prefixes():
 
 def _get_tokenizer_infix_rules(quotes: list[str]):
     return [
-        r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-        r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-        r'(?<=[{a}"])[:<>=](?=[{a}])'.format(a=ALPHA),
-        r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+        rf"(?<=[{ALPHA_LOWER}])\.(?=[{ALPHA_UPPER}])",
+        rf"(?<=[{ALPHA}])[,!?](?=[{ALPHA}])",
+        rf'(?<=[{ALPHA}"])[:<>=](?=[{ALPHA}])',
+        rf"(?<=[{ALPHA}]),(?=[{ALPHA}])",
         r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q="".join(quotes)),
-        r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
+        rf"(?<=[{ALPHA}])--(?=[{ALPHA}])",
         r"-(?![0-9]{1,2}\])",
         r"(?<=[0-9])x(?=[0-9])",
         r"(?<=10)E(?=\d)",
@@ -378,7 +378,7 @@ def _get_tokenizer_suffix_rules(
         r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(
             al=ALPHA_LOWER, e=r"%²\-\+", q="".join(quotes), p="|".join(punct)
         ),
-        r"(?<=[{au}][{au}])\.".format(au=ALPHA_UPPER),
+        rf"(?<=[{ALPHA_UPPER}][{ALPHA_UPPER}])\.",
         r"(?<=[0-9]\])\S+",
         r"(?<!([A-Z]-\d|-\d\d))\]",  # tricky one
         r"(?<=[0-9])x",
