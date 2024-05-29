@@ -35,7 +35,7 @@ def clinlp_docs():
 # Arrange
 @pytest.fixture
 def clinlp_dataset(clinlp_docs):
-    ids = list(f"doc_{x}" for x in range(0, 15))
+    ids = [f"doc_{x}" for x in range(0, 15)]
 
     return InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs, ids=ids)
 
