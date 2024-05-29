@@ -249,6 +249,7 @@ def _get_abbreviations():
 
 def _get_tokenizer_exceptions(
     abbreviations: list[str],
+    *,
     abbrev_transforms: list[Callable[[str], str]] = None,
     keep_emoticons: bool = False,
 ):

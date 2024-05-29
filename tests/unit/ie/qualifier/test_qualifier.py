@@ -267,7 +267,6 @@ class TestUnitQualifierClass:
 
 
 class TestUnitQualifierDetector:
-
     def test_add_qualifier_no_init(self, entity, mock_qualifier_class):
         # Arrange
         qd = QualifierDetector()

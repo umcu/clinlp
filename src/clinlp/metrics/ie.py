@@ -311,6 +311,7 @@ class InfoExtractionDataset:
     @staticmethod
     def from_medcattrainer(
         data: dict,
+        *,
         strip_spans: bool = True,
         default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
@@ -577,6 +578,7 @@ class InfoExtractionMetrics:
 
     def entity_metrics(
         self,
+        *,
         ann_filter: Optional[Callable[[Annotation], bool]] = None,
         classes: bool = False,
     ) -> dict:
@@ -675,7 +677,7 @@ class InfoExtractionMetrics:
 
         return aggregation
 
-    def qualifier_metrics(self, misses: bool = True) -> dict:
+    def qualifier_metrics(self, *, misses: bool = True) -> dict:
         """
         Computes metrics for qualifiers, including precision, recall and f1-score.
         Only computes metrics for combinations of annotations with the same start

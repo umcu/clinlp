@@ -69,7 +69,7 @@ class RuleBasedEntityMatcher(Pipe):
         fuzzy: Optional[int] = _defaults_term["fuzzy"],
         fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
         pseudo: Optional[bool] = _defaults_term["pseudo"],
-        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],
+        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
     ):
         self.nlp = nlp
         self.attr = attr

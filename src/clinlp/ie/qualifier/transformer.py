@@ -44,7 +44,7 @@ class QualifierTransformer(QualifierDetector):
     def __init__(
         self,
         token_window: int = _defaults_qualifier_transformer["token_window"],
-        strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],
+        strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],  # noqa: FBT001
         placeholder: Optional[str] = _defaults_qualifier_transformer["placeholder"],
         prob_aggregator: int = _defaults_qualifier_transformer["prob_aggregator"],
         **kwargs,
