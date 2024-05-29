@@ -47,7 +47,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
 @clinlp_component(name="clinlp_entity_matcher")
 class DeprecatedEntityMatcher(Pipe):
-    def __init__(self):
+    def __init__(self) -> None:
         msg = (
             "The clinlp_entity_matcher has been renamed "
             "clinlp_rule_based_entity_matcher."
@@ -72,7 +72,7 @@ class RuleBasedEntityMatcher(Pipe):
         fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
         pseudo: Optional[bool] = _defaults_term["pseudo"],
         resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
-    ):
+    ) -> None:
         self.nlp = nlp
         self.attr = attr
 
@@ -93,14 +93,14 @@ class RuleBasedEntityMatcher(Pipe):
         self._concepts = {}
 
     @property
-    def _use_phrase_matcher(self):
+    def _use_phrase_matcher(self) -> bool:
         return all(
             self.term_args[field] == _defaults_term[field]
             for field in _non_phrase_matcher_fields
             if field in self.term_args
         )
 
-    def load_concepts(self, concepts: str | dict):
+    def load_concepts(self, concepts: str | dict) -> None:
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
                 identifier = str(len(self._terms))
@@ -149,7 +149,7 @@ class RuleBasedEntityMatcher(Pipe):
                     )
                     raise TypeError(msg)
 
-    def _get_matches(self, doc: Doc):
+    def _get_matches(self, doc: Doc) -> list[tuple[str, int, int]]:
         if len(self._terms) == 0:
             msg = "No concepts added."
             raise RuntimeError(msg)
@@ -191,7 +191,7 @@ class RuleBasedEntityMatcher(Pipe):
 
         return disjoint_ents
 
-    def __call__(self, doc: Doc):
+    def __call__(self, doc: Doc) -> Doc:
         matches = self._get_matches(doc)
 
         pos_matches = []

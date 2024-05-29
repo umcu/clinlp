@@ -1,5 +1,6 @@
 import inspect
 from inspect import Parameter, Signature
+from typing import Callable, Tuple, Type
 
 from makefun import with_signature
 from spacy.language import Language
@@ -9,7 +10,7 @@ class _UnusedArgument:
     pass
 
 
-def get_class_init_signature(cls):
+def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     args = []
     kwargs = {}
 
@@ -29,8 +30,8 @@ def get_class_init_signature(cls):
     return args, kwargs
 
 
-def clinlp_component(*args, register=True, **kwargs):
-    def _clinlp_component(cls):
+def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
+    def _clinlp_component(cls: Type) -> Callable:
         component_args, component_kwargs = get_class_init_signature(cls)
 
         make_component_args = component_args.copy()
@@ -54,7 +55,7 @@ def clinlp_component(*args, register=True, **kwargs):
             )
 
         @with_signature(Signature(params), func_name="make_component")
-        def make_component(*args, **kwargs):
+        def make_component(*args, **kwargs) -> Type:
             if len(args) > 0:
                 msg = "Please pass all arguments as keywords."
                 raise RuntimeError(msg)

@@ -48,7 +48,7 @@ class QualifierTransformer(QualifierDetector):
         placeholder: Optional[str] = _defaults_qualifier_transformer["placeholder"],
         prob_aggregator: int = _defaults_qualifier_transformer["prob_aggregator"],
         **kwargs,
-    ):
+    ) -> None:
         self.token_window = token_window
         self.strip_entities = strip_entities
         self.placeholder = placeholder
@@ -160,7 +160,7 @@ class NegationTransformer(QualifierTransformer):
             )
         }
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
@@ -216,7 +216,7 @@ class ExperiencerTransformer(QualifierTransformer):
             )
         }
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 

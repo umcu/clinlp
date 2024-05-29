@@ -21,7 +21,7 @@ class Sentencizer(Pipe):
         self,
         sent_end_chars: Optional[list[str]] = None,
         sent_start_punct: Optional[list[str]] = None,
-    ):
+    ) -> None:
         self.sent_end_chars = (
             _defaults_sentencizer["sent_end_chars"]
             if sent_end_chars is None
@@ -46,7 +46,7 @@ class Sentencizer(Pipe):
             or (token.text in self.sent_start_punct)
         )
 
-    def _token_can_end_sent(self, token: spacy.tokens.Token):
+    def _token_can_end_sent(self, token: spacy.tokens.Token) -> bool:
         """
         Determines whether a token can end a sentence
         """
@@ -73,7 +73,7 @@ class Sentencizer(Pipe):
 
         return sentence_starts
 
-    def __call__(self, doc: spacy.tokens.Doc):
+    def __call__(self, doc: spacy.tokens.Doc) -> spacy.tokens.Doc:
         if len(doc) == 0:
             return doc
 

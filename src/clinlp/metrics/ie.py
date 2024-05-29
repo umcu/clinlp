@@ -33,7 +33,7 @@ class Annotation:
     qualifiers: list[dict] = field(default_factory=list)
     """ Optionally, a list of qualifiers"""
 
-    def lstrip(self, chars=" ,"):
+    def lstrip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the beginning of the annotation.
         """
@@ -41,7 +41,7 @@ class Annotation:
         self.start += len(self.text) - len(self.text.lstrip(chars))
         self.text = self.text.lstrip(chars)
 
-    def rstrip(self, chars=" ,"):
+    def rstrip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the end of the annotation.
         """
@@ -49,7 +49,7 @@ class Annotation:
         self.end -= len(self.text) - len(self.text.rstrip(chars))
         self.text = self.text.rstrip(chars)
 
-    def strip(self, chars=" ,"):
+    def strip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the beginning and end of the annotation.
         """
@@ -193,7 +193,7 @@ class InfoExtractionDataset:
     default_qualifiers: dict[str, str] = None
     """ Mapping of qualifiers to their default value, e.g. {"Negation": "Affirmed"}"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
         Responsible for setting the default qualifiers by checking the default
         qualifiers set on Annotations, if set, or inferring them from the majority
@@ -543,7 +543,9 @@ class InfoExtractionMetrics:
         "f1": f1_score,
     }
 
-    def __init__(self, true: InfoExtractionDataset, pred: InfoExtractionDataset):
+    def __init__(
+        self, true: InfoExtractionDataset, pred: InfoExtractionDataset
+    ) -> None:
         """
         Initialize metrics.
 
@@ -557,7 +559,7 @@ class InfoExtractionMetrics:
 
         self._validate_self()
 
-    def _validate_self(self):
+    def _validate_self(self) -> None:
         """
         Validate the two datasets. Will raise an ValueError when datasets don't contain
         the same documents.

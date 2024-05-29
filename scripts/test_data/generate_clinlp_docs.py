@@ -7,6 +7,7 @@ import pickle
 from pathlib import Path
 
 import spacy
+from spacy.language import Language
 
 from clinlp.ie import Term
 
@@ -55,7 +56,7 @@ concepts = {
 }
 
 
-def get_model():
+def get_model() -> Language:
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")

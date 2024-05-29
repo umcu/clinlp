@@ -16,9 +16,9 @@ _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 class Normalizer(Pipe):
     def __init__(
         self,
-        lowercase=_defaults_normalizer["lowercase"],
-        map_non_ascii=_defaults_normalizer["map_non_ascii"],
-    ):
+        lowercase: bool = _defaults_normalizer["lowercase"],  # noqa FBT001
+        map_non_ascii: bool = _defaults_normalizer["map_non_ascii"],  # noqa FBT001
+    ) -> None:
         self.lowercase = lowercase
         self.map_non_ascii = map_non_ascii
 
@@ -43,7 +43,7 @@ class Normalizer(Pipe):
     def _map_non_ascii_string(self, text: str) -> str:
         return "".join(self._map_non_ascii_char(char) for char in text)
 
-    def __call__(self, doc: Doc):
+    def __call__(self, doc: Doc) -> Doc:
         if len(doc) == 0:
             return doc
 

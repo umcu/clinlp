@@ -70,7 +70,7 @@ class QualifierClass:
         values: list[str],
         default: Optional[str] = None,
         priorities: Optional[dict] = None,
-    ):
+    ) -> None:
         self.name = name
         self.values = values
         self.default = default or values[0]
@@ -115,7 +115,9 @@ _defaults_qualifier_detector = {
 class QualifierDetector(Pipe):
     """For usage as a spaCy pipeline component"""
 
-    def __init__(self, spans_key: str = _defaults_qualifier_detector["spans_key"]):
+    def __init__(
+        self, spans_key: str = _defaults_qualifier_detector["spans_key"]
+    ) -> None:
         self.spans_key = spans_key
 
     @property

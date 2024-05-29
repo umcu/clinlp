@@ -14,7 +14,7 @@ import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 
 
-def get_model():
+def get_model() -> spacy.language.Language:
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")

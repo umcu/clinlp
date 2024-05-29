@@ -129,7 +129,7 @@ class ContextAlgorithm(QualifierDetector):
         self,
         nlp: Language,
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
-        load_rules=_defaults_context_algorithm["load_rules"],
+        load_rules: bool = _defaults_context_algorithm["load_rules"],  # noqa FBT001
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
         **kwargs,
     ) -> None:
@@ -377,7 +377,7 @@ class ContextAlgorithm(QualifierDetector):
 
         return result_patterns
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         """
         Apply the Context Algorithm to a doc.
         """
