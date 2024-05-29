@@ -48,10 +48,12 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 @clinlp_component(name="clinlp_entity_matcher")
 class DeprecatedEntityMatcher(Pipe):
     def __init__(self):
-        raise RuntimeError(
+        msg = (
             "The clinlp_entity_matcher has been renamed "
             "clinlp_rule_based_entity_matcher."
         )
+
+        raise RuntimeError(msg)
 
 
 @clinlp_component(
@@ -141,14 +143,16 @@ class RuleBasedEntityMatcher(Pipe):
                     )
 
                 else:
-                    raise ValueError(
+                    msg = (
                         f"Not sure how to load a term with type {type(concept_term)}, "
                         f"please provide str, list or clinlp.Term"
                     )
+                    raise ValueError(msg)
 
     def _get_matches(self, doc: Doc):
         if len(self._terms) == 0:
-            raise RuntimeError("No concepts added.")
+            msg = "No concepts added."
+            raise RuntimeError(msg)
 
         matches = []
 

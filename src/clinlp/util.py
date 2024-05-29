@@ -58,7 +58,8 @@ def clinlp_component(*args, register=True, **kwargs):
         @with_signature(Signature(params), func_name="make_component")
         def make_component(*args, **kwargs):
             if len(args) > 0:
-                raise RuntimeError("Please pass all arguments as keywords.")
+                msg = "Please pass all arguments as keywords."
+                raise RuntimeError(msg)
 
             cls_kwargs = {
                 k: v
@@ -79,6 +80,7 @@ def clinlp_component(*args, register=True, **kwargs):
 
 def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
     if (end_a < start_a) or (end_b < start_b):
-        raise ValueError("Input malformed interval.")
+        msg = "Input malformed interval."
+        raise ValueError(msg)
 
     return max(0, start_a - end_b, start_b - end_a)

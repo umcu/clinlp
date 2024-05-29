@@ -77,20 +77,23 @@ class QualifierClass:
         self.priorities = priorities or {value: n for n, value in enumerate(values)}
 
         if len(set(values)) != len(values):
-            raise ValueError(f"Please do not provide any duplicate values ({values})")
+            msg = f"Please do not provide any duplicate values ({values})"
+            raise ValueError(msg)
 
         if self.default not in values:
-            raise ValueError(f"Default {default} not in provided value {values}")
+            msg = f"Default {default} not in provided value {values}"
+            raise ValueError(msg)
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         if value is None:
             value = self.default
 
         if value not in self.values:
-            raise ValueError(
+            msg = (
                 f"The qualifier {self.name} cannot take value '{value}'. "
                 f"Please choose one of {self.values}."
             )
+            raise ValueError(msg)
 
         is_default = value == self.default
         priority = self.priorities[value]
@@ -125,9 +128,8 @@ class QualifierDetector(Pipe):
         qualifiers = get_qualifiers(entity)
 
         if qualifiers is None:
-            raise RuntimeError(
-                "Cannot add qualifier to entity with non-initialized qualifiers."
-            )
+            msg = "Cannot add qualifier to entity with non-initialized qualifiers."
+            raise RuntimeError(msg)
 
         qualifiers = {q for q in qualifiers if q.name != new_qualifier.name}
         qualifiers.add(new_qualifier)

@@ -101,7 +101,8 @@ class Annotation:
             if qualifier["name"] == qualifier_name:
                 return qualifier
 
-        raise KeyError(f"No qualifier with name {qualifier_name}.")
+        msg = f"No qualifier with name {qualifier_name}."
+        raise KeyError(msg)
 
 
 @dataclass
@@ -335,9 +336,8 @@ class InfoExtractionDataset:
         """
 
         if len(data["projects"]) > 1:
-            raise ValueError(
-                "Cannot read MedCATTrainer exports with more than 1 project."
-            )
+            msg = "Cannot read MedCATTrainer exports with more than 1 project."
+            raise ValueError(msg)
 
         data = data["projects"][0]
         docs = []
@@ -565,16 +565,19 @@ class InfoExtractionMetrics:
         the same documents.
         """
         if self.true.num_docs() != self.pred.num_docs():
-            raise ValueError("Can only compute metrics for Datasets with same size")
+            msg = "Can only compute metrics for Datasets with same size"
+            raise ValueError(msg)
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
             if true_doc.identifier != pred_doc.identifier:
-                raise ValueError(
+                msg = (
                     "Found two documents with non-matching ids "
                     f"(true={true_doc.identifier}, pred={pred_doc.identifier}). "
                     "Please make sure to present the same documents, "
                     "in the same order."
                 )
+
+                raise ValueError(msg)
 
     def entity_metrics(
         self,
@@ -701,7 +704,8 @@ class InfoExtractionMetrics:
             pred_unique_values = set(values["pred"])
 
             if max(len(true_unique_values), len(pred_unique_values)) > 2:
-                raise ValueError("Can oly compute metrics for binary qualifier values")
+                msg = "Can oly compute metrics for binary qualifier values"
+                raise ValueError(msg)
 
             pos_label = next(
                 val

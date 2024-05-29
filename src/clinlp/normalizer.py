@@ -29,9 +29,11 @@ class Normalizer(Pipe):
     @staticmethod
     def _map_non_ascii_char(char: str) -> str:
         if len(char) != 1:
-            raise ValueError(
-                "Please only use the _map_non_ascii_char method on strings of length 1."
+            msg = (
+                "Please only use the _map_non_ascii_char method "
+                "on strings of length 1."
             )
+            raise ValueError(msg)
 
         normalized_char = unicodedata.normalize("NFD", char)
         normalized_char = str(normalized_char.encode("ascii", "ignore").decode("utf-8"))

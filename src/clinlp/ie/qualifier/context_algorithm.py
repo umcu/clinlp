@@ -80,7 +80,8 @@ class _MatchedContextPattern:
         max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
-            raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
+            msg = f"max_scope must be at least 1, but got {max_scope}"
+            raise ValueError(msg)
 
         scoped_start = max(self.start - max_scope, sentence.start)
         scoped_end = min(self.end + max_scope, sentence.end)
@@ -141,10 +142,11 @@ class ContextAlgorithm(QualifierDetector):
 
         if load_rules:
             if rules is None:
-                raise ValueError(
+                msg = (
                     "Did not provide rules. Set `load_rules` to False if you "
                     "want to add `ContextRule` manually."
                 )
+                raise ValueError(msg)
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
@@ -171,10 +173,11 @@ class ContextAlgorithm(QualifierDetector):
         match_regexp = r"\w+\.\w+"
 
         if not re.match(match_regexp, qualifier):
-            raise ValueError(
+            msg = (
                 f"Cannot parse qualifier {qualifier}, please adhere to format "
                 f"{match_regexp} (e.g. NegationQualifier.NEGATED)"
             )
+            raise ValueError(msg)
 
         qualifier_class, qualifier = qualifier.split(".")
 
@@ -228,10 +231,11 @@ class ContextAlgorithm(QualifierDetector):
             self._matcher.add(key=rule_key, patterns=[rule.pattern])
 
         else:
-            raise ValueError(
+            msg = (
                 f"Don't know how to process ContextRule with pattern of "
                 f"type {type(rule.pattern)}"
             )
+            raise ValueError(msg)
 
     def add_rules(self, rules: list[ContextRule]) -> None:
         """
@@ -378,7 +382,8 @@ class ContextAlgorithm(QualifierDetector):
         """
 
         if len(self.rules) == 0:
-            raise RuntimeError("Cannot match qualifiers without any ContextRule.")
+            msg = "Cannot match qualifiers without any ContextRule."
+            raise RuntimeError(msg)
 
         for sentence, ents in self._get_sentences_with_entities(doc).items():
             with warnings.catch_warnings():

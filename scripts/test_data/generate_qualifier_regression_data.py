@@ -54,7 +54,8 @@ if __name__ == "__main__":
         ents = doc.spans[SPANS_KEY]
 
         if len(ents) != 1:
-            raise ValueError(f"Expected 1 entity, got {len(ents)}")
+            msg = f"Expected 1 entity, got {len(ents)}"
+            raise ValueError(msg)
 
         ent = ents[0]
 
