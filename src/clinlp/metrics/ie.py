@@ -3,7 +3,7 @@ import itertools
 import warnings
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from typing import Callable, Iterable, Optional
+from typing import Callable, ClassVar, Iterable, Optional
 
 import nervaluate
 import spacy
@@ -213,7 +213,7 @@ class InfoExtractionDataset:
         except KeyError:
             self.default_qualifiers = self.infer_default_qualifiers()
 
-    _ALL_STATS = [
+    _ALL_STATS: ClassVar[list] = [
         "num_docs",
         "num_annotations",
         "span_counts",
@@ -280,16 +280,14 @@ class InfoExtractionDataset:
             annotations = []
 
             for ent in doc.spans[SPANS_KEY]:
-                qualifiers = []
-
-                for qualifier in ent._.qualifiers_dict:
-                    qualifiers.append(
-                        {
-                            "name": qualifier["name"].title(),
-                            "value": qualifier["value"].title(),
-                            "is_default": qualifier["is_default"],
-                        }
-                    )
+                qualifiers = [
+                    {
+                        "name": qualifier.name.title(),
+                        "value": qualifier.value.title(),
+                        "is_default": qualifier.is_default,
+                    }
+                    for qualifier in ent._.qualifiers
+                ]
 
                 annotations.append(
                     Annotation(
@@ -539,7 +537,7 @@ class InfoExtractionMetrics:
     """
 
     """ Compute these metrics for qualifiers. """
-    _QUALIFIER_METRICS = {
+    _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
         "recall": recall_score,
         "f1": f1_score,

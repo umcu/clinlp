@@ -1,6 +1,6 @@
 import importlib.metadata
 import warnings
-from typing import Callable, Optional
+from typing import Callable, ClassVar, Optional
 
 import spacy.lang.char_classes
 import spacy.lang.nl.tokenizer_exceptions
@@ -250,7 +250,7 @@ def _get_abbreviations():
 def _get_tokenizer_exceptions(
     abbreviations: list[str],
     *,
-    abbrev_transforms: list[Callable[[str], str]] = None,
+    abbrev_transforms: Optional[list[Callable[[str], str]]] = None,
     keep_emoticons: bool = False,
 ):
     tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
@@ -318,7 +318,7 @@ def _get_tokenizer_prefixes():
             "%",
             "=",
             "—",
-            "–",
+            "–",  # noqa RUF001
             r"\+(?![0-9])",
             "/",
             "-",
@@ -391,7 +391,7 @@ def _get_tokenizer_suffix_rules(
 def _get_tokenizer_suffixes():
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
-        add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],
+        add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],  # noqa RUF001
         remove=[r"\]"],
     )
 
@@ -416,13 +416,17 @@ class ClinlpDefaults(BaseDefaults):
     infixes = _get_tokenizer_infixes()
     suffixes = _get_tokenizer_suffixes()
 
-    lex_attr_getters = {}
-    syntax_iterators = {}
-    stop_words = []
+    lex_attr_getters: ClassVar[dict] = {}
+    syntax_iterators: ClassVar[dict] = {}
+    stop_words: ClassVar[dict] = []
     url_match = None
     token_match = None
 
-    writing_system = {"direction": "ltr", "has_case": True, "has_letters": True}
+    writing_system: ClassVar[dict] = {
+        "direction": "ltr",
+        "has_case": True,
+        "has_letters": True,
+    }
 
 
 @spacy.registry.languages("clinlp")
