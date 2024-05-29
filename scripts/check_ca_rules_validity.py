@@ -26,7 +26,7 @@ def any_in_pseudo(pseudo_term: str, patterns: set):
 
 
 if __name__ == "__main__":
-    with open(RULE_FILE, "r") as f:
+    with open(RULE_FILE) as f:
         data = json.load(f)
 
     for rule in data["rules"]:
