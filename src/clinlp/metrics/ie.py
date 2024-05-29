@@ -134,7 +134,7 @@ class Document:
         A list of dictionaries corresponding to annotations.
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return [ann.to_nervaluate() for ann in self.annotations if ann_filter(ann)]
 
@@ -153,7 +153,7 @@ class Document:
         -------
         A set containing all annotation labels for this document.
         """
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return {
             annotation.label
@@ -400,7 +400,7 @@ class InfoExtractionDataset:
         A nested list of dictionaries corresponding to annotations.
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return [doc.to_nervaluate(ann_filter) for doc in self.docs]
 
@@ -605,7 +605,7 @@ class InfoExtractionMetrics:
 
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         true_anns = self.true.to_nervaluate(ann_filter)
         pred_anns = self.pred.to_nervaluate(ann_filter)

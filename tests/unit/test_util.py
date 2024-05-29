@@ -145,7 +145,7 @@ class TestUnitClinlpComponent:
             ({"name": "name"}, "name", "name"),
         ],
     )
-    def test_only_args_pipe(self, nlp, component_1, kwargs, attr, expected_value):
+    def test_only_args_pipe(self, nlp, component_1, kwargs, attr, expected_value):  # noqa: ARG002
         # Act
         component = nlp.add_pipe("test_component_1", **kwargs)
 
@@ -208,7 +208,13 @@ class TestUnitClinlpComponent:
         ],
     )
     def test_only_kwargs_pipe(
-        self, nlp, component_2, kwargs, config, attr, expected_value
+        self,
+        nlp,
+        component_2,  # noqa: ARG002
+        kwargs,
+        config,
+        attr,
+        expected_value,
     ):
         # Act
         component = nlp.add_pipe("test_component_2", **kwargs, config=config)
@@ -222,7 +228,7 @@ class TestUnitClinlpComponent:
             # Act
             component_2(setting_3="None")
 
-    def test_only_kwargs_error_2(self, nlp, component_2):
+    def test_only_kwargs_error_2(self, nlp, component_2):  # noqa: ARG002
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
@@ -257,7 +263,13 @@ class TestUnitClinlpComponent:
         ],
     )
     def test_mixed_args_and_kwargs_pipe(
-        self, nlp, component_3, kwargs, config, attr, expected_value
+        self,
+        nlp,
+        component_3,  # noqa: ARG002
+        kwargs,
+        config,
+        attr,
+        expected_value,
     ):
         # Act
         component = nlp.add_pipe("test_component_3", **kwargs, config=config)
@@ -271,7 +283,7 @@ class TestUnitClinlpComponent:
             # Act
             component_3(setting_1=10)
 
-    def test_mixed_args_and_kwargs_error_2(self, nlp, component_3):
+    def test_mixed_args_and_kwargs_error_2(self, nlp, component_3):  # noqa: ARG002
         # Assert
         with pytest.raises(ConfigValidationError):
             # Act
@@ -291,7 +303,7 @@ class TestUnitClinlpComponent:
             ({"setting_1": 2048}, "setting_1", 2048),
         ],
     )
-    def test_default_args_pipe(self, nlp, component_4, config, attr, expected_value):
+    def test_default_args_pipe(self, nlp, component_4, config, attr, expected_value):  # noqa: ARG002
         # Act
         component = nlp.add_pipe("test_component_4", config=config)
 
@@ -328,7 +340,12 @@ class TestUnitClinlpComponent:
         ],
     )
     def test_with_inheritance_pipe(
-        self, nlp, component_5, config, attr, expected_value
+        self,
+        nlp,
+        component_5,  # noqa: ARG002
+        config,
+        attr,
+        expected_value,
     ):
         # Act
         component = nlp.add_pipe("test_component_5", config=config)
@@ -336,7 +353,7 @@ class TestUnitClinlpComponent:
         # Assert
         assert getattr(component, attr) == expected_value
 
-    def test_without_registering(self, nlp, component_6):
+    def test_without_registering(self, nlp, component_6):  # noqa: ARG002
         # Assert
         with pytest.raises(ValueError, match=".*E002.*"):
             # Act

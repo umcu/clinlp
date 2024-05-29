@@ -137,7 +137,7 @@ class TestUnitClinlpSentencizer:
         expected_returns = [True, False, False, False]
 
         # Act
-        with patch.object(s, "_get_sentence_starts", lambda x: expected_returns):
+        with patch.object(s, "_get_sentence_starts", lambda _: expected_returns):
             s(tokens)
 
         # Assert
