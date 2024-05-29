@@ -1,17 +1,17 @@
 import unicodedata
 
-from spacy import Language
 from spacy.tokens import Doc
 
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_component
 
 _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 
 
-@Language.factory(
-    "clinlp_normalizer", assigns=["token.norm"], default_config=_defaults_normalizer
+@clinlp_component(
+    name="clinlp_normalizer",
+    assigns=["token.norm"],
+    default_config=_defaults_normalizer,
 )
-@clinlp_autocomponent
 class Normalizer:
     def __init__(
         self,

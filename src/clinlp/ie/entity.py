@@ -9,7 +9,7 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
 
 from clinlp.ie.term import Term, _defaults_term
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_component
 
 SPANS_KEY = "ents"
 
@@ -44,8 +44,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     return dict(zip(df["concept"], df["term"]))
 
 
-@Language.factory(name="clinlp_entity_matcher")
-@clinlp_autocomponent
+@clinlp_component(name="clinlp_entity_matcher")
 class DeprecatedEntityMatcher:
     def __init__(self):
         raise RuntimeError(
@@ -54,13 +53,12 @@ class DeprecatedEntityMatcher:
         )
 
 
-@Language.factory(
+@clinlp_component(
     name="clinlp_rule_based_entity_matcher",
     requires=["doc.sents"],
     assigns=["doc.spans"],
     default_config=_defaults_term | _defaults_entity_matcher,
 )
-@clinlp_autocomponent
 class RuleBasedEntityMatcher:
     def __init__(
         self,

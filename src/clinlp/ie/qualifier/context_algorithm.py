@@ -19,7 +19,7 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierClass,
     QualifierDetector,
 )
-from clinlp.util import clinlp_autocomponent, interval_dist
+from clinlp.util import clinlp_component, interval_dist
 
 _RESOURCES_DIR = importlib.resources.files("clinlp.resources")
 _DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
@@ -102,13 +102,12 @@ _defaults_context_algorithm = {
 }
 
 
-@Language.factory(
+@clinlp_component(
     name="clinlp_context_algorithm",
     requires=["doc.sents", "doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_context_algorithm,
 )
-@clinlp_autocomponent
 class ContextAlgorithm(QualifierDetector):
     """
     Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as

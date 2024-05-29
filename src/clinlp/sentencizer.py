@@ -1,9 +1,8 @@
 from typing import Optional
 
 import spacy.tokens
-from spacy.language import Language
 
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_component
 
 _defaults_sentencizer = {
     "sent_end_chars": [".", "!", "?", "\n", "\r"],
@@ -11,12 +10,11 @@ _defaults_sentencizer = {
 }
 
 
-@Language.factory(
-    "clinlp_sentencizer",
+@clinlp_component(
+    name="clinlp_sentencizer",
     assigns=["token.is_sent_start", "doc.sents"],
     default_config=_defaults_sentencizer,
 )
-@clinlp_autocomponent
 class Sentencizer:
     def __init__(
         self,

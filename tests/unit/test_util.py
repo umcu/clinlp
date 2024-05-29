@@ -1,9 +1,8 @@
 import pytest
-from spacy import Language
 from thinc.api import ConfigValidationError
 
 from clinlp.util import (
-    clinlp_autocomponent,
+    clinlp_component,
     get_class_init_signature,
     interval_dist,
 )
@@ -12,8 +11,7 @@ from clinlp.util import (
 # Arrange
 @pytest.fixture(scope="session")
 def component_1():
-    @Language.factory(name="test_component_1")
-    @clinlp_autocomponent
+    @clinlp_component(name="test_component_1")
     class TestComponent1:
         def __init__(self, nlp, name):
             self.nlp = nlp
@@ -25,8 +23,7 @@ def component_1():
 # Arrange
 @pytest.fixture(scope="session")
 def component_2():
-    @Language.factory(name="test_component_2")
-    @clinlp_autocomponent
+    @clinlp_component(name="test_component_2")
     class TestComponent2:
         def __init__(self, setting_1=32, setting_2="max"):
             self.setting_1 = setting_1
@@ -38,8 +35,7 @@ def component_2():
 # Arrange
 @pytest.fixture(scope="session")
 def component_3():
-    @Language.factory(name="test_component_3")
-    @clinlp_autocomponent
+    @clinlp_component(name="test_component_3")
     class TestComponent3:
         def __init__(self, name, setting_1=32):
             self.name = name
@@ -53,8 +49,7 @@ def component_3():
 def component_4():
     _defaults = {"setting_1": 1024}
 
-    @Language.factory(name="test_component_4", default_config=_defaults)
-    @clinlp_autocomponent
+    @clinlp_component(name="test_component_4", default_config=_defaults)
     class TestComponent4:
         def __init__(self, setting_1=_defaults["setting_1"]):
             self.setting_1 = setting_1
@@ -72,16 +67,24 @@ def component_5():
         def __init__(self, base_arg=_base_defaults["base_arg"]):
             self.base_arg = base_arg
 
-    @Language.factory(
+    @clinlp_component(
         name="test_component_5", default_config=_sub_defaults | _base_defaults
     )
-    @clinlp_autocomponent
     class TestComponent5(TestComponent5Base):
         def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
             self.sub_arg = sub_arg
             super().__init__(**kwargs)
 
     return TestComponent5
+
+
+# Arrange
+@pytest.fixture(scope="session")
+def component_6():
+    @clinlp_component(name="test_component_6", register=False)
+    class TestComponent6:
+        def __init__():
+            pass
 
 
 class TestUnitGetClassInitSignature:
@@ -125,7 +128,7 @@ class TestUnitGetClassInitSignature:
         assert kwargs == {"b": "test"}
 
 
-class TestUnitClinlpAutocomponent:
+class TestUnitClinlpComponent:
     def test_only_args_class(self, component_1):
         # Act
         component = component_1(nlp="nlp", name="name")
@@ -330,6 +333,12 @@ class TestUnitClinlpAutocomponent:
 
         # Assert
         assert getattr(component, attr) == expected_value
+
+    def test_without_registering(self, nlp, component_6):
+        # Assert
+        with pytest.raises(ValueError, match="[E002]*"):
+            # Act
+            _ = nlp.add_pipe("test_component_6")
 
 
 class TestUnitIntervalDistance:
