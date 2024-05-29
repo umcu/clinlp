@@ -364,9 +364,7 @@ def _get_tokenizer_infixes():
 
     quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`", r"\'"])
 
-    infixes = punct + _get_ellipses() + _get_tokenizer_infix_rules(quotes)
-
-    return infixes
+    return punct + _get_ellipses() + _get_tokenizer_infix_rules(quotes)
 
 
 def _get_tokenizer_suffix_rules(
