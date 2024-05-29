@@ -6,6 +6,7 @@ import warnings
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Optional, Union
 
 import intervaltree as ivt
@@ -197,7 +198,7 @@ class ContextAlgorithm(QualifierDetector):
 
     def _parse_rules(self, rules: Union[str | dict]) -> list[ContextRule]:
         if isinstance(rules, str):
-            with open(rules, "rb") as file:
+            with Path.open(rules, "rb") as file:
                 rules = json.load(file)
 
         for qualifier in rules["qualifiers"]:

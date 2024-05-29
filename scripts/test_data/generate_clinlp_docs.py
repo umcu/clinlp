@@ -4,6 +4,7 @@ test data when breaking changes in clinlp.
 """
 
 import pickle
+from pathlib import Path
 
 import spacy
 
@@ -82,5 +83,5 @@ if __name__ == "__main__":
 
     docs = list(nlp.pipe(texts))
 
-    with open("clinlp_docs.pickle", "wb") as f:
+    with Path.open("clinlp_docs.pickle", "wb") as f:
         pickle.dump(docs, f)

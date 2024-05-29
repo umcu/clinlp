@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 from typing import Collection
 
 import pytest
@@ -7,7 +8,7 @@ from tests.conftest import TEST_DATA_DIR
 
 
 def load_examples(filename: str) -> list[dict]:
-    with open(TEST_DATA_DIR / filename, "rb") as file:
+    with Path.open(TEST_DATA_DIR / filename, "rb") as file:
         return json.load(file)["examples"]
 
 
