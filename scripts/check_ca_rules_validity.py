@@ -18,12 +18,7 @@ def get_patterns_from_direction(rules: list[dict], direction: str) -> list[dict]
 
 
 def any_in_pseudo(pseudo_term: str, patterns: set):
-    for pattern in patterns:
-        if pattern in pseudo_term:
-            return True
-
-    return False
-
+    return any(pattern in pseudo_term for pattern in patterns)
 
 if __name__ == "__main__":
     with open(RULE_FILE) as f:
