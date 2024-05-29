@@ -21,7 +21,7 @@ def tokenizer(nlp):
 
 
 class TestTokenizerRegression:
-    @pytest.mark.parametrize("text, expected_tokens", tokenizer_cases)
+    @pytest.mark.parametrize(("text", "expected_tokens"), tokenizer_cases)
     def test_regression_tokenizer(self, tokenizer, text, expected_tokens):
         # Act
         tokens = [token.text for token in tokenizer(text)]

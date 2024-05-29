@@ -66,7 +66,7 @@ def nlp_qualifier_experiencer(nlp_entity):
 
 
 class TestRegressionNegationTransformer:
-    @pytest.mark.parametrize("text, expected_ent", examples["negation"])
+    @pytest.mark.parametrize(("text", "expected_ent"), examples["negation"])
     def test_regression_negation_transformer(
         self, nlp_qualifier_negation, text, expected_ent
     ):
@@ -84,7 +84,7 @@ class TestRegressionNegationTransformer:
 
 
 class TestRegressionExperiencerTransformer:
-    @pytest.mark.parametrize("text, expected_ent", examples["experiencer"])
+    @pytest.mark.parametrize(("text", "expected_ent"), examples["experiencer"])
     def test_regression_experiencer_transformer(
         self, nlp_qualifier_experiencer, text, expected_ent
     ):

@@ -6,14 +6,14 @@ from clinlp import Normalizer
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mock_doc():
     return Doc(Vocab(), words=["Patiënt", "250", "µg", "toedienen"])
 
 
 class TestNormalizer:
     @pytest.mark.parametrize(
-        "input_text, expected_lowercased_text",
+        ("input_text", "expected_lowercased_text"),
         [
             ("test", "test"),
             ("Test", "test"),
@@ -31,7 +31,7 @@ class TestNormalizer:
         assert lowercased == expected_lowercased_text
 
     @pytest.mark.parametrize(
-        "input_char, expected_non_ascii_char",
+        ("input_char", "expected_non_ascii_char"),
         [
             ("a", "a"),
             ("à", "a"),
@@ -62,12 +62,14 @@ class TestNormalizer:
         n = Normalizer()
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(
+            ValueError, match=".*Please only use the _map_non_ascii_char.*"
+        ):
             # Act
             n._map_non_ascii_char("ab")
 
     @pytest.mark.parametrize(
-        "input_string, expected_non_ascii_string",
+        ("input_string", "expected_non_ascii_string"),
         [
             ("abcde", "abcde"),
             ("abcdé", "abcde"),

@@ -13,27 +13,27 @@ from clinlp.metrics.ie import (
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mctrainer_data():
     with open(TEST_DATA_DIR / "medcattrainer_export.json", "rb") as f:
         return json.load(f)
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mctrainer_dataset(mctrainer_data):
     return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def clinlp_docs():
     with open(TEST_DATA_DIR / "clinlp_docs.pickle", "rb") as f:
         return pickle.load(f)
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def clinlp_dataset(clinlp_docs):
     ids = [f"doc_{x}" for x in range(15)]
 
@@ -181,7 +181,7 @@ class TestDocument:
         assert labels == {"test2"}
 
     @pytest.mark.parametrize(
-        "start, end, expected_ann",
+        ("start", "end", "expected_ann"),
         [
             (0, 5, Annotation(text="test1", start=0, end=5, label="test1")),
             (10, 15, Annotation(text="test2", start=10, end=15, label="test2")),
@@ -492,7 +492,7 @@ class TestMetrics:
         iem.pred.docs = iem.pred.docs[:-2]
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*Datasets with same size.*"):
             # Act
             iem._validate_self()
 
@@ -502,7 +502,7 @@ class TestMetrics:
         iem.true.docs[0].identifier = "test"
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*non-matching ids.*"):
             # Act
             iem._validate_self()
 

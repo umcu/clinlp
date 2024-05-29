@@ -17,7 +17,7 @@ def sentencizer():
 
 
 class TestClinlpSentencizerRegression:
-    @pytest.mark.parametrize("tokens, expected_sentence_starts", sentencizer_cases)
+    @pytest.mark.parametrize(("tokens", "expected_sentence_starts"), sentencizer_cases)
     def test_regression_sentencizer(
         self, sentencizer, tokens, expected_sentence_starts
     ):

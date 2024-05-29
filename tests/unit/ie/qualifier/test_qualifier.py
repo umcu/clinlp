@@ -15,27 +15,27 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_DICT, ATTR_QUALIFIERS_
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def entity(nlp):
     doc = nlp("dit is een test")
     return doc[2:3]
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mock_qualifier_class():
     return QualifierClass("test", ["test1", "test2"])
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mock_qualifier_class_2():
     return QualifierClass("test2", ["abc", "def"])
 
 
 class TestUnitQualifierExtension:
     @pytest.mark.parametrize(
-        "extension, expected_has_extension",
+        ("extension", "expected_has_extension"),
         [
             (ATTR_QUALIFIERS, True),
             (ATTR_QUALIFIERS_STR, True),
@@ -124,7 +124,7 @@ class TestUnitQualifier:
         }
 
     @pytest.mark.parametrize(
-        "q1_kwargs, q2_kwargs, expected_equality",
+        ("q1_kwargs", "q2_kwargs", "expected_equality"),
         [
             ({}, {}, True),
             ({}, {"prob": 0.8}, True),
@@ -144,7 +144,7 @@ class TestUnitQualifier:
         assert equality == expected_equality
 
     @pytest.mark.parametrize(
-        "qualifier_kwargs, expected_in_set",
+        ("qualifier_kwargs", "expected_in_set"),
         [
             ({"prob": 0.5}, True),
             ({"value": "Negated", "is_default": True, "prob": 0.5}, False),
@@ -178,7 +178,7 @@ class TestUnitQualifier:
 
 class TestUnitQualifierClass:
     @pytest.mark.parametrize(
-        "value, expected_is_default",
+        ("value", "expected_is_default"),
         [
             ("Affirmed", True),
             ("Negated", False),
@@ -195,7 +195,7 @@ class TestUnitQualifierClass:
         assert is_default == expected_is_default
 
     @pytest.mark.parametrize(
-        "value, expected_is_default",
+        ("value", "expected_is_default"),
         [
             ("Affirmed", False),
             ("Negated", True),
@@ -214,7 +214,7 @@ class TestUnitQualifierClass:
         assert is_default == expected_is_default
 
     @pytest.mark.parametrize(
-        "value, expected_priority",
+        ("value", "expected_priority"),
         [
             ("Absent", 0),
             ("Uncertain", 1),
@@ -234,7 +234,7 @@ class TestUnitQualifierClass:
         assert priority == expected_priority
 
     @pytest.mark.parametrize(
-        "value, expected_priority",
+        ("value", "expected_priority"),
         [
             ("Absent", 1),
             ("Uncertain", 100),
@@ -261,7 +261,7 @@ class TestUnitQualifierClass:
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*cannot take value.*"):
             # Act
             _ = qualifier_class.create(value="Unknown")
 

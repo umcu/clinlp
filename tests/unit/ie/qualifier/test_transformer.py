@@ -13,7 +13,7 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 class TestQualifierTransformer:
     @pytest.mark.parametrize(
-        "token_window, expected_text, expected_start, expected_end",
+        ("token_window", "expected_text", "expected_start", "expected_end"),
         [
             (1, "geen ENTITY,", 5, 11),
             (2, "had geen ENTITY, ondanks", 9, 15),
@@ -49,7 +49,7 @@ class TestQualifierTransformer:
         assert end == expected_end
 
     @pytest.mark.parametrize(
-        "text, start, end, expected_text, expected_start, expected_end",
+        ("text", "start", "end", "expected_text", "expected_start", "expected_end"),
         [
             ("geen SYMPTOOM,", 5, 13, "geen SYMPTOOM,", 5, 13),
             ("geen SYMPTOOM,", 4, 13, "geen SYMPTOOM,", 5, 13),
@@ -69,7 +69,15 @@ class TestQualifierTransformer:
         assert end == expected_end
 
     @pytest.mark.parametrize(
-        "text, start, end, placeholder, expected_text, expected_start, expected_end",
+        (
+            "text",
+            "start",
+            "end",
+            "placeholder",
+            "expected_text",
+            "expected_start",
+            "expected_end",
+        ),
         [
             ("geen SYMPTOOM,", 5, 13, "SYMPTOOM", "geen SYMPTOOM,", 5, 13),
             ("geen SYMPTOOM,", 5, 13, "X", "geen X,", 5, 6),

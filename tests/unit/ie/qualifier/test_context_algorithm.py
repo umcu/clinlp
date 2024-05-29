@@ -22,19 +22,19 @@ def nlp_ca(nlp_entity):
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def ca(nlp):
     return ContextAlgorithm(nlp=nlp, load_rules=False)
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mock_doc():
     return Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
 # Arrange
-@pytest.fixture
+@pytest.fixture()
 def mock_qualifier_class():
     return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
@@ -250,7 +250,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*max_scope must be at least 1.*"):
             # Act
             mqp.initialize_scope(sentence=sentence)
 
@@ -303,7 +303,7 @@ class TestUnitContextAlgorithm:
         qualifier_classes = {"Mock": mock_qualifier_class}
 
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*Cannot parse qualifier.*"):
             # Act
             ca._parse_qualifier(value, qualifier_classes)
 
@@ -315,7 +315,7 @@ class TestUnitContextAlgorithm:
         assert len(ca.rules) > 100
 
     @pytest.mark.parametrize(
-        "direction, expected",
+        ("direction", "expected"),
         [
             ("preceding", ContextRuleDirection.PRECEDING),
             ("following", ContextRuleDirection.FOLLOWING),

@@ -86,6 +86,8 @@ def component_6():
         def __init__():
             pass
 
+    return TestComponent6
+
 
 class TestUnitGetClassInitSignature:
     def test_args_only(self):
@@ -137,7 +139,7 @@ class TestUnitClinlpComponent:
         assert component.name == "name"
 
     @pytest.mark.parametrize(
-        "kwargs, attr, expected_value",
+        ("kwargs", "attr", "expected_value"),
         [
             ({}, "name", "test_component_1"),
             ({"name": "name"}, "name", "name"),
@@ -169,7 +171,7 @@ class TestUnitClinlpComponent:
             component_1("bla")
 
     @pytest.mark.parametrize(
-        "kwargs, attr, expected_value",
+        ("kwargs", "attr", "expected_value"),
         [
             ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
             ({"nlp": "nlp", "name": "test"}, "setting_2", "max"),
@@ -195,7 +197,7 @@ class TestUnitClinlpComponent:
         assert getattr(component, attr) == expected_value
 
     @pytest.mark.parametrize(
-        "kwargs, config, attr, expected_value",
+        ("kwargs", "config", "attr", "expected_value"),
         [
             ({"name": "test"}, {}, "setting_1", 32),
             ({"name": "test"}, {}, "setting_2", "max"),
@@ -227,7 +229,7 @@ class TestUnitClinlpComponent:
             nlp.add_pipe("test_component_2", config={"setting_3": "None"})
 
     @pytest.mark.parametrize(
-        "kwargs, attr, expected_value",
+        ("kwargs", "attr", "expected_value"),
         [
             ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
             ({"nlp": "nlp", "name": "test"}, "name", "test"),
@@ -245,7 +247,7 @@ class TestUnitClinlpComponent:
         assert getattr(component, attr) == expected_value
 
     @pytest.mark.parametrize(
-        "kwargs, config, attr, expected_value",
+        ("kwargs", "config", "attr", "expected_value"),
         [
             ({"name": "test"}, {}, "setting_1", 32),
             ({"name": "test"}, {}, "name", "test"),
@@ -283,7 +285,7 @@ class TestUnitClinlpComponent:
         assert component.setting_1 == 1024
 
     @pytest.mark.parametrize(
-        "config, attr, expected_value",
+        ("config", "attr", "expected_value"),
         [
             ({}, "setting_1", 1024),
             ({"setting_1": 2048}, "setting_1", 2048),
@@ -297,7 +299,7 @@ class TestUnitClinlpComponent:
         assert getattr(component, attr) == expected_value
 
     @pytest.mark.parametrize(
-        "kwargs, attr, expected_value",
+        ("kwargs", "attr", "expected_value"),
         [
             ({}, "sub_arg", 2),
             ({}, "base_arg", 1),
@@ -315,7 +317,7 @@ class TestUnitClinlpComponent:
         assert getattr(component, attr) == expected_value
 
     @pytest.mark.parametrize(
-        "config, attr, expected_value",
+        ("config", "attr", "expected_value"),
         [
             ({}, "sub_arg", 2),
             ({}, "base_arg", 1),
@@ -336,14 +338,14 @@ class TestUnitClinlpComponent:
 
     def test_without_registering(self, nlp, component_6):
         # Assert
-        with pytest.raises(ValueError, match="[E002]*"):
+        with pytest.raises(ValueError, match=".*E002.*"):
             # Act
             _ = nlp.add_pipe("test_component_6")
 
 
 class TestUnitIntervalDistance:
     @pytest.mark.parametrize(
-        "a, b, c, d, expected_dist",
+        ("a", "b", "c", "d", "expected_dist"),
         [
             (0, 10, 12, 20, 2),
             (0, 10, 10, 20, 0),
@@ -361,6 +363,6 @@ class TestUnitIntervalDistance:
 
     def test_interval_distance_error(self):
         # Assert
-        with pytest.raises(ValueError):
+        with pytest.raises(ValueError, match=".*Input malformed interval.*"):
             # Act
             _ = interval_dist(10, 0, 0, 10)

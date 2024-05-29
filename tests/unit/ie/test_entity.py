@@ -45,7 +45,7 @@ class TestCreateConceptDict:
 
 class TestClinlpNer:
     @pytest.mark.parametrize(
-        "rbem_kwargs, expected_use_phrase_matcher",
+        ("rbem_kwargs", "expected_use_phrase_matcher"),
         [
             ({}, True),
             ({"attr": "NORM"}, True),
@@ -106,7 +106,7 @@ class TestClinlpNer:
         assert len(rbem._terms) == 6
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("dhr was delirant", [("delirant", 2, 3, "delier")]),
             ("dhr was Delirant", []),
@@ -125,7 +125,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("dhr was delirant", [("delirant", 2, 3, "delier")]),
             ("dhr was Delirant", [("Delirant", 2, 3, "delier")]),
@@ -151,7 +151,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("dhr was kluts kwijt", [("kluts kwijt", 2, 4, "delier")]),
             ("dhr was kluts even kwijt", [("kluts even kwijt", 2, 5, "delier")]),
@@ -172,7 +172,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("dhr was delirant", [("delirant", 2, 3, "delier")]),
             ("dhr was Delirant", [("Delirant", 2, 3, "delier")]),
@@ -191,7 +191,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("bloeding graad ii", [("bloeding graad ii", 0, 3, "bloeding")]),
             ("Bloeding graad ii", [("Bloeding graad ii", 0, 3, "bloeding")]),
@@ -218,7 +218,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("onrustige indruk", [("onrustige", 0, 1, "delier")]),
             ("onrustige benen", []),
@@ -238,7 +238,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("onrustige indruk", [("onrustige", 0, 1, "delier")]),
             ("onrustige benen", [("onrustige", 0, 1, "delier")]),
@@ -261,7 +261,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("was kluts even kwijt", [("kluts even kwijt", 1, 4, "delier")]),
             ("wekt indruk delierant te zijn", [("delierant", 2, 3, "delier")]),
@@ -286,7 +286,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("delier", [("delier", 0, 1, "delier")]),
             ("Delier", [("Delier", 0, 1, "delier")]),
@@ -313,7 +313,7 @@ class TestClinlpNer:
         assert entities == expected_entities
 
     @pytest.mark.parametrize(
-        "text, expected_entities",
+        ("text", "expected_entities"),
         [
             ("delier", [("delier", 0, 1, "delier")]),
             ("delirant", [("delirant", 0, 1, "delier")]),
