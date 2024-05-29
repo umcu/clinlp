@@ -140,7 +140,7 @@ class QualifierDetector(Pipe):
         if get_qualifiers(entity) is None:
             set_qualifiers(entity, set())
 
-        for _, qualifier_class in self.qualifier_classes.items():
+        for qualifier_class in self.qualifier_classes.values():
             self.add_qualifier_to_ent(entity, qualifier_class.create())
 
     @abstractmethod
