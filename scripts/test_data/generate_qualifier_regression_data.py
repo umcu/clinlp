@@ -53,7 +53,9 @@ if __name__ == "__main__":
 
         ents = doc.spans[SPANS_KEY]
 
-        assert len(ents) == 1
+        if len(ents) != 1:
+            raise ValueError(f"Expected 1 entity, got {len(ents)}")
+
         ent = ents[0]
 
         data.append(
