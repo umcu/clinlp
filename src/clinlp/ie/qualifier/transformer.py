@@ -1,5 +1,6 @@
 import statistics
-from typing import Callable, Optional, Tuple
+from abc import abstractmethod
+from typing import Callable, Tuple
 
 import torch
 from spacy import Language
@@ -44,17 +45,27 @@ class QualifierTransformer(QualifierDetector):
     def __init__(
         self,
         token_window: int = _defaults_qualifier_transformer["token_window"],
-        strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],
-        placeholder: Optional[str] = _defaults_qualifier_transformer["placeholder"],
-        prob_aggregator: int = _defaults_qualifier_transformer["prob_aggregator"],
+        strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],  # noqa: FBT001
+        placeholder: str = _defaults_qualifier_transformer["placeholder"],
+        prob_aggregator: Callable = _defaults_qualifier_transformer["prob_aggregator"],
         **kwargs,
-    ):
+    ) -> None:
         self.token_window = token_window
         self.strip_entities = strip_entities
         self.placeholder = placeholder
         self.prob_aggregator = prob_aggregator
 
         super().__init__(**kwargs)
+
+    @property
+    @abstractmethod
+    def tokenizer(self) -> AutoTokenizer:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def model(self) -> RobertaForTokenClassification:
+        raise NotImplementedError
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
@@ -132,6 +143,9 @@ class QualifierTransformer(QualifierDetector):
     default_config=_defaults_negation_transformer,
 )
 class NegationTransformer(QualifierTransformer):
+    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
+    model = RobertaForTokenClassification.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
+
     def __init__(
         self,
         nlp: Language,
@@ -145,11 +159,6 @@ class NegationTransformer(QualifierTransformer):
         self.absence_threshold = absence_threshold
         self.presence_threshold = presence_threshold
 
-        self.tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
-        self.model = RobertaForTokenClassification.from_pretrained(
-            **HF_FROM_PRETRAINED_NEGATION
-        )
-
         super().__init__(**kwargs)
 
     @property
@@ -160,7 +169,7 @@ class NegationTransformer(QualifierTransformer):
             )
         }
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
@@ -192,6 +201,11 @@ class NegationTransformer(QualifierTransformer):
     default_config=_defaults_experiencer_transformer,
 )
 class ExperiencerTransformer(QualifierTransformer):
+    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_EXPERIENCER)
+    model = RobertaForTokenClassification.from_pretrained(
+        **HF_FROM_PRETRAINED_EXPERIENCER
+    )
+
     def __init__(
         self,
         nlp: Language,
@@ -200,11 +214,6 @@ class ExperiencerTransformer(QualifierTransformer):
     ) -> None:
         self.nlp = nlp
         self.other_threshold = other_threshold
-
-        self.tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_EXPERIENCER)
-        self.model = RobertaForTokenClassification.from_pretrained(
-            **HF_FROM_PRETRAINED_EXPERIENCER
-        )
 
         super().__init__(**kwargs)
 
@@ -216,7 +225,7 @@ class ExperiencerTransformer(QualifierTransformer):
             )
         }
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 

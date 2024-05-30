@@ -8,7 +8,7 @@ from clinlp import Sentencizer
 
 class TestUnitClinlpSentencizer:
     @pytest.mark.parametrize(
-        "text, expected_can_start_sent",
+        ("text", "expected_can_start_sent"),
         [
             ("abcde", True),
             ("1250mg", True),
@@ -29,7 +29,7 @@ class TestUnitClinlpSentencizer:
         assert can_start_sent == expected_can_start_sent
 
     @pytest.mark.parametrize(
-        "text, expected_can_end_sent",
+        ("text", "expected_can_end_sent"),
         [
             ("\n", True),
             (".", True),
@@ -137,7 +137,7 @@ class TestUnitClinlpSentencizer:
         expected_returns = [True, False, False, False]
 
         # Act
-        with patch.object(s, "_get_sentence_starts", lambda x: expected_returns):
+        with patch.object(s, "_get_sentence_starts", lambda _: expected_returns):
             s(tokens)
 
         # Assert

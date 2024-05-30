@@ -4,8 +4,10 @@ test data when breaking changes in clinlp.
 """
 
 import pickle
+from pathlib import Path
 
 import spacy
+from spacy.language import Language
 
 from clinlp.ie import Term
 
@@ -54,7 +56,7 @@ concepts = {
 }
 
 
-def get_model():
+def get_model() -> Language:
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")
@@ -82,5 +84,5 @@ if __name__ == "__main__":
 
     docs = list(nlp.pipe(texts))
 
-    with open("clinlp_docs.pickle", "wb") as f:
+    with Path("clinlp_docs.pickle").open(mode="wb") as f:
         pickle.dump(docs, f)

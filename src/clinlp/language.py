@@ -238,7 +238,7 @@ ALPHA_UPPER = "A-Z"
 ALPHA = "a-zA-Z"
 
 
-def _get_abbreviations():
+def _get_abbreviations() -> list[str]:
     base = set(spacy.lang.nl.tokenizer_exceptions.abbrevs.copy())
 
     for abbrev in CLINLP_REMOVE_ABBREVIATIONS:
@@ -249,10 +249,12 @@ def _get_abbreviations():
 
 def _get_tokenizer_exceptions(
     abbreviations: list[str],
-    abbrev_transforms: list[Callable[[str], str]] = None,
+    *,
+    abbrev_transforms: Optional[list[Callable[[str], str]]] = None,
     keep_emoticons: bool = False,
-):
+) -> dict[str, list[dict]]:
     tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
+    abbrev_transforms = abbrev_transforms or []
 
     if not keep_emoticons:
         for emoticon in spacy.lang.tokenizer_exceptions.emoticons:
@@ -269,7 +271,7 @@ def _get_tokenizer_exceptions(
 
 def _get_list(
     base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None
-):
+) -> list[str]:
     """
     Create a list, based on a base list, with some additions and removals.
     """
@@ -286,19 +288,19 @@ def _get_list(
     return _lst
 
 
-def _get_ellipses():
+def _get_ellipses() -> list[str]:
     return spacy.lang.punctuation.LIST_ELLIPSES.copy()
 
 
-def _get_currencies():
+def _get_currencies() -> list[str]:
     return spacy.lang.punctuation.LIST_CURRENCY.copy()
 
 
-def _get_units():
+def _get_units() -> list[str]:
     return CLINLP_UNITS.copy()
 
 
-def _get_tokenizer_prefix_rules():
+def _get_tokenizer_prefix_rules() -> list[str]:
     return [
         r"\[(?![A-Z]{3,}-)",
         r"\S+(?=\[[A-Z]{3,}-)",
@@ -308,7 +310,7 @@ def _get_tokenizer_prefix_rules():
     ]
 
 
-def _get_tokenizer_prefixes():
+def _get_tokenizer_prefixes() -> list[str]:
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
         add=[
@@ -317,7 +319,7 @@ def _get_tokenizer_prefixes():
             "%",
             "=",
             "—",
-            "–",
+            "–",  # noqa RUF001
             r"\+(?![0-9])",
             "/",
             "-",
@@ -340,14 +342,14 @@ def _get_tokenizer_prefixes():
     )
 
 
-def _get_tokenizer_infix_rules(quotes: list[str]):
+def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
     return [
-        r"(?<=[{al}])\.(?=[{au}])".format(al=ALPHA_LOWER, au=ALPHA_UPPER),
-        r"(?<=[{a}])[,!?](?=[{a}])".format(a=ALPHA),
-        r'(?<=[{a}"])[:<>=](?=[{a}])'.format(a=ALPHA),
-        r"(?<=[{a}]),(?=[{a}])".format(a=ALPHA),
+        rf"(?<=[{ALPHA_LOWER}])\.(?=[{ALPHA_UPPER}])",
+        rf"(?<=[{ALPHA}])[,!?](?=[{ALPHA}])",
+        rf'(?<=[{ALPHA}"])[:<>=](?=[{ALPHA}])',
+        rf"(?<=[{ALPHA}]),(?=[{ALPHA}])",
         r"(?<=[{a}])([{q}\)\]\(\[])(?=[{a}])".format(a=ALPHA, q="".join(quotes)),
-        r"(?<=[{a}])--(?=[{a}])".format(a=ALPHA),
+        rf"(?<=[{ALPHA}])--(?=[{ALPHA}])",
         r"-(?![0-9]{1,2}\])",
         r"(?<=[0-9])x(?=[0-9])",
         r"(?<=10)E(?=\d)",
@@ -355,7 +357,7 @@ def _get_tokenizer_infix_rules(quotes: list[str]):
     ]
 
 
-def _get_tokenizer_infixes():
+def _get_tokenizer_infixes() -> list[str]:
     punct = _get_list(
         base=[],
         add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"],
@@ -363,14 +365,12 @@ def _get_tokenizer_infixes():
 
     quotes = _get_list(base=spacy.lang.punctuation.LIST_QUOTES, remove=["`", r"\'"])
 
-    infixes = punct + _get_ellipses() + _get_tokenizer_infix_rules(quotes)
-
-    return infixes
+    return punct + _get_ellipses() + _get_tokenizer_infix_rules(quotes)
 
 
 def _get_tokenizer_suffix_rules(
     currencies: list[str], units: list[str], punct: list[str], quotes: list[str]
-):
+) -> list[str]:
     return [
         r"(?<=[0-9])\+",
         r"(?<=°[FfCcKk])\.",
@@ -378,7 +378,7 @@ def _get_tokenizer_suffix_rules(
         r"(?<=[0-9{al}{e}{p}(?:{q})])\.".format(
             al=ALPHA_LOWER, e=r"%²\-\+", q="".join(quotes), p="|".join(punct)
         ),
-        r"(?<=[{au}][{au}])\.".format(au=ALPHA_UPPER),
+        rf"(?<=[{ALPHA_UPPER}][{ALPHA_UPPER}])\.",
         r"(?<=[0-9]\])\S+",
         r"(?<!([A-Z]-\d|-\d\d))\]",  # tricky one
         r"(?<=[0-9])x",
@@ -389,10 +389,10 @@ def _get_tokenizer_suffix_rules(
     ]
 
 
-def _get_tokenizer_suffixes():
+def _get_tokenizer_suffixes() -> list[str]:
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
-        add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],
+        add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],  # noqa RUF001
         remove=[r"\]"],
     )
 
@@ -417,13 +417,17 @@ class ClinlpDefaults(BaseDefaults):
     infixes = _get_tokenizer_infixes()
     suffixes = _get_tokenizer_suffixes()
 
-    lex_attr_getters = {}
-    syntax_iterators = {}
-    stop_words = []
+    lex_attr_getters = {}  # noqa: RUF012
+    syntax_iterators = {}  # noqa: RUF012
+    stop_words = set()  # noqa: RUF012
     url_match = None
     token_match = None
 
-    writing_system = {"direction": "ltr", "has_case": True, "has_letters": True}
+    writing_system = {  # noqa: RUF012
+        "direction": "ltr",
+        "has_case": True,
+        "has_letters": True,
+    }
 
 
 @spacy.registry.languages("clinlp")
@@ -431,7 +435,7 @@ class Clinlp(Language):
     lang = "clinlp"
     Defaults = ClinlpDefaults
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **kwargs) -> None:
         meta = dict(kwargs.pop("meta", {}))
         clinlp_version = importlib.metadata.version(__package__ or __name__)
 

@@ -9,12 +9,13 @@ import itertools
 from pprint import pprint
 
 import spacy
+from spacy.language import Language
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 
 
-def get_model():
+def get_model() -> Language:
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")
@@ -53,7 +54,10 @@ if __name__ == "__main__":
 
         ents = doc.spans[SPANS_KEY]
 
-        assert len(ents) == 1
+        if len(ents) != 1:
+            msg = f"Expected 1 entity, got {len(ents)}"
+            raise ValueError(msg)
+
         ent = ents[0]
 
         data.append(

@@ -5,6 +5,7 @@ and inconsistenties, and shows them in the terminal (if any).
 
 import json
 from collections import Counter, defaultdict
+from pathlib import Path
 
 RULE_FILE = "src/clinlp/resources/context_rules.json"
 
@@ -17,16 +18,12 @@ def get_patterns_from_direction(rules: list[dict], direction: str) -> list[dict]
     return []
 
 
-def any_in_pseudo(pseudo_term: str, patterns: set):
-    for pattern in patterns:
-        if pattern in pseudo_term:
-            return True
-
-    return False
+def any_in_pseudo(pseudo_term: str, patterns: set) -> bool:
+    return any(pattern in pseudo_term for pattern in patterns)
 
 
 if __name__ == "__main__":
-    with open(RULE_FILE, "r") as f:
+    with Path(RULE_FILE).open() as f:
         data = json.load(f)
 
     for rule in data["rules"]:
@@ -68,7 +65,7 @@ if __name__ == "__main__":
         pseudo = set(get_patterns_from_direction(rules, "pseudo"))
         termination = set(get_patterns_from_direction(rules, "termination"))
 
-        def print_if_nonempty(name: str, items: set):
+        def print_if_nonempty(name: str, items: set) -> None:
             if len(items) > 0:
                 print("Overlap:", name, items)
 

@@ -3,7 +3,7 @@ import itertools
 import warnings
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
-from typing import Callable, Iterable, Optional
+from typing import Callable, ClassVar, Iterable, Optional
 
 import nervaluate
 import spacy
@@ -30,10 +30,10 @@ class Annotation:
     label: str
     """ The label/tag"""
 
-    qualifiers: list[dict] = field(default_factory=lambda: list())
+    qualifiers: list[dict] = field(default_factory=list)
     """ Optionally, a list of qualifiers"""
 
-    def lstrip(self, chars=" ,"):
+    def lstrip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the beginning of the annotation.
         """
@@ -41,7 +41,7 @@ class Annotation:
         self.start += len(self.text) - len(self.text.lstrip(chars))
         self.text = self.text.lstrip(chars)
 
-    def rstrip(self, chars=" ,"):
+    def rstrip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the end of the annotation.
         """
@@ -49,7 +49,7 @@ class Annotation:
         self.end -= len(self.text) - len(self.text.rstrip(chars))
         self.text = self.text.rstrip(chars)
 
-    def strip(self, chars=" ,"):
+    def strip(self, chars: str = " ,") -> None:
         """
         Strips punctuation and whitespaces from the beginning and end of the annotation.
         """
@@ -101,7 +101,8 @@ class Annotation:
             if qualifier["name"] == qualifier_name:
                 return qualifier
 
-        raise KeyError(f"No qualifier with name {qualifier_name}.")
+        msg = f"No qualifier with name {qualifier_name}."
+        raise KeyError(msg)
 
 
 @dataclass
@@ -133,7 +134,7 @@ class Document:
         A list of dictionaries corresponding to annotations.
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return [ann.to_nervaluate() for ann in self.annotations if ann_filter(ann)]
 
@@ -152,7 +153,7 @@ class Document:
         -------
         A set containing all annotation labels for this document.
         """
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return {
             annotation.label
@@ -189,10 +190,10 @@ class InfoExtractionDataset:
     docs: list[Document]
     """ The annotated documents. """
 
-    default_qualifiers: dict[str, str] = None
+    default_qualifiers: Optional[dict[str, str]] = None
     """ Mapping of qualifiers to their default value, e.g. {"Negation": "Affirmed"}"""
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         """
         Responsible for setting the default qualifiers by checking the default
         qualifiers set on Annotations, if set, or inferring them from the majority
@@ -212,7 +213,7 @@ class InfoExtractionDataset:
         except KeyError:
             self.default_qualifiers = self.infer_default_qualifiers()
 
-    _ALL_STATS = [
+    _ALL_STATS: ClassVar[list] = [
         "num_docs",
         "num_annotations",
         "span_counts",
@@ -279,16 +280,14 @@ class InfoExtractionDataset:
             annotations = []
 
             for ent in doc.spans[SPANS_KEY]:
-                qualifiers = []
-
-                for qualifier in ent._.qualifiers_dict:
-                    qualifiers.append(
-                        {
-                            "name": qualifier["name"].title(),
-                            "value": qualifier["value"].title(),
-                            "is_default": qualifier["is_default"],
-                        }
-                    )
+                qualifiers = [
+                    {
+                        "name": qualifier.name.title(),
+                        "value": qualifier.value.title(),
+                        "is_default": qualifier.is_default,
+                    }
+                    for qualifier in ent._.qualifiers
+                ]
 
                 annotations.append(
                     Annotation(
@@ -311,6 +310,7 @@ class InfoExtractionDataset:
     @staticmethod
     def from_medcattrainer(
         data: dict,
+        *,
         strip_spans: bool = True,
         default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
@@ -334,9 +334,8 @@ class InfoExtractionDataset:
         """
 
         if len(data["projects"]) > 1:
-            raise ValueError(
-                "Cannot read MedCATTrainer exports with more than 1 project."
-            )
+            msg = "Cannot read MedCATTrainer exports with more than 1 project."
+            raise ValueError(msg)
 
         data = data["projects"][0]
         docs = []
@@ -399,7 +398,7 @@ class InfoExtractionDataset:
         A nested list of dictionaries corresponding to annotations.
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         return [doc.to_nervaluate(ann_filter) for doc in self.docs]
 
@@ -538,13 +537,15 @@ class InfoExtractionMetrics:
     """
 
     """ Compute these metrics for qualifiers. """
-    _QUALIFIER_METRICS = {
+    _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
         "recall": recall_score,
         "f1": f1_score,
     }
 
-    def __init__(self, true: InfoExtractionDataset, pred: InfoExtractionDataset):
+    def __init__(
+        self, true: InfoExtractionDataset, pred: InfoExtractionDataset
+    ) -> None:
         """
         Initialize metrics.
 
@@ -558,25 +559,29 @@ class InfoExtractionMetrics:
 
         self._validate_self()
 
-    def _validate_self(self):
+    def _validate_self(self) -> None:
         """
         Validate the two datasets. Will raise an ValueError when datasets don't contain
         the same documents.
         """
         if self.true.num_docs() != self.pred.num_docs():
-            raise ValueError("Can only compute metrics for Datasets with same size")
+            msg = "Can only compute metrics for Datasets with same size"
+            raise ValueError(msg)
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
             if true_doc.identifier != pred_doc.identifier:
-                raise ValueError(
+                msg = (
                     "Found two documents with non-matching ids "
                     f"(true={true_doc.identifier}, pred={pred_doc.identifier}). "
                     "Please make sure to present the same documents, "
                     "in the same order."
                 )
 
+                raise ValueError(msg)
+
     def entity_metrics(
         self,
+        *,
         ann_filter: Optional[Callable[[Annotation], bool]] = None,
         classes: bool = False,
     ) -> dict:
@@ -600,7 +605,7 @@ class InfoExtractionMetrics:
 
         """
 
-        ann_filter = ann_filter or (lambda ann: True)
+        ann_filter = ann_filter or (lambda _: True)
 
         true_anns = self.true.to_nervaluate(ann_filter)
         pred_anns = self.pred.to_nervaluate(ann_filter)
@@ -641,7 +646,7 @@ class InfoExtractionMetrics:
         }
         """
 
-        aggregation = defaultdict(lambda: defaultdict(list))
+        aggregation: dict = defaultdict(lambda: defaultdict(list))
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
             for true_annotation in true_doc.annotations:
@@ -675,7 +680,7 @@ class InfoExtractionMetrics:
 
         return aggregation
 
-    def qualifier_metrics(self, misses: bool = True) -> dict:
+    def qualifier_metrics(self, *, misses: bool = True) -> dict:
         """
         Computes metrics for qualifiers, including precision, recall and f1-score.
         Only computes metrics for combinations of annotations with the same start
@@ -699,7 +704,8 @@ class InfoExtractionMetrics:
             pred_unique_values = set(values["pred"])
 
             if max(len(true_unique_values), len(pred_unique_values)) > 2:
-                raise ValueError("Can oly compute metrics for binary qualifier values")
+                msg = "Can oly compute metrics for binary qualifier values"
+                raise ValueError(msg)
 
             pos_label = next(
                 val

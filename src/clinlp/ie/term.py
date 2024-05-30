@@ -22,12 +22,12 @@ class Term(pydantic.BaseModel):
 
     model_config = {"extra": "ignore"}
 
-    def __init__(self, phrase: str, **kwargs):
+    def __init__(self, phrase: str, **kwargs) -> None:
         """This init makes sure Term accepts phrase as a positional argument,
         which is more readable in large concept lists."""
         super().__init__(phrase=phrase, **kwargs)
 
-    def to_spacy_pattern(self, nlp: Language):
+    def to_spacy_pattern(self, nlp: Language) -> list[dict]:
         fields = {
             field: getattr(self, field) or _defaults_term[field]
             for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
@@ -47,6 +47,6 @@ class Term(pydantic.BaseModel):
 
             if i != len(phrase_tokens) - 1:
                 for _ in range(fields["proximity"]):
-                    spacy_pattern.append({"OP": "?"})
+                    spacy_pattern.append({"OP": "?"})  # noqa: PERF401
 
         return spacy_pattern

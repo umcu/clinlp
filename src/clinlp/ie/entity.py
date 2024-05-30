@@ -1,4 +1,3 @@
-from typing import Optional
 
 import intervaltree as ivt
 import numpy as np
@@ -6,6 +5,7 @@ import pandas as pd
 import pydantic
 from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
+from spacy.pipeline import Pipe
 from spacy.tokens import Span
 
 from clinlp.ie.term import Term, _defaults_term
@@ -45,12 +45,14 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
 
 @clinlp_component(name="clinlp_entity_matcher")
-class DeprecatedEntityMatcher:
-    def __init__(self):
-        raise RuntimeError(
+class DeprecatedEntityMatcher(Pipe):
+    def __init__(self) -> None:
+        msg = (
             "The clinlp_entity_matcher has been renamed "
             "clinlp_rule_based_entity_matcher."
         )
+
+        raise RuntimeError(msg)
 
 
 @clinlp_component(
@@ -59,17 +61,17 @@ class DeprecatedEntityMatcher:
     assigns=["doc.spans"],
     default_config=_defaults_term | _defaults_entity_matcher,
 )
-class RuleBasedEntityMatcher:
+class RuleBasedEntityMatcher(Pipe):
     def __init__(
         self,
         nlp: Language,
-        attr: Optional[str] = _defaults_term["attr"],
-        proximity: Optional[int] = _defaults_term["proximity"],
-        fuzzy: Optional[int] = _defaults_term["fuzzy"],
-        fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
-        pseudo: Optional[bool] = _defaults_term["pseudo"],
-        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],
-    ):
+        attr: str = _defaults_term["attr"],
+        proximity: int = _defaults_term["proximity"],
+        fuzzy: int = _defaults_term["fuzzy"],
+        fuzzy_min_len: int = _defaults_term["fuzzy_min_len"],
+        pseudo: bool = _defaults_term["pseudo"],  # noqa: FBT001
+        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
+    ) -> None:
         self.nlp = nlp
         self.attr = attr
 
@@ -90,14 +92,14 @@ class RuleBasedEntityMatcher:
         self._concepts = {}
 
     @property
-    def _use_phrase_matcher(self):
+    def _use_phrase_matcher(self) -> bool:
         return all(
             self.term_args[field] == _defaults_term[field]
             for field in _non_phrase_matcher_fields
             if field in self.term_args
         )
 
-    def load_concepts(self, concepts: str | dict):
+    def load_concepts(self, concepts: dict) -> None:
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
                 identifier = str(len(self._terms))
@@ -140,14 +142,16 @@ class RuleBasedEntityMatcher:
                     )
 
                 else:
-                    raise ValueError(
+                    msg = (
                         f"Not sure how to load a term with type {type(concept_term)}, "
                         f"please provide str, list or clinlp.Term"
                     )
+                    raise TypeError(msg)
 
-    def _get_matches(self, doc: Doc):
+    def _get_matches(self, doc: Doc) -> list[tuple[int, int, int]]:
         if len(self._terms) == 0:
-            raise RuntimeError("No concepts added.")
+            msg = "No concepts added."
+            raise RuntimeError(msg)
 
         matches = []
 
@@ -186,7 +190,7 @@ class RuleBasedEntityMatcher:
 
         return disjoint_ents
 
-    def __call__(self, doc: Doc):
+    def __call__(self, doc: Doc) -> Doc:
         matches = self._get_matches(doc)
 
         pos_matches = []
@@ -203,13 +207,13 @@ class RuleBasedEntityMatcher:
 
         ents = doc.spans.get(SPANS_KEY, [])
 
-        for match_id, start, end in pos_matches:
+        for rule_id, start, end in pos_matches:
             if not any(
-                self._concepts[match_id] == self._concepts[neg_match_id.data]
+                self._concepts[rule_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
                 ents.append(
-                    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
+                    Span(doc=doc, start=start, end=end, label=self._concepts[rule_id])
                 )
 
         if self.resolve_overlap:

@@ -1,5 +1,6 @@
 import inspect
 from inspect import Parameter, Signature
+from typing import Callable, Tuple, Type
 
 from makefun import with_signature
 from spacy.language import Language
@@ -9,7 +10,7 @@ class _UnusedArgument:
     pass
 
 
-def get_class_init_signature(cls):
+def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     args = []
     kwargs = {}
 
@@ -29,26 +30,24 @@ def get_class_init_signature(cls):
     return args, kwargs
 
 
-def clinlp_component(*args, register=True, **kwargs):
-    def _clinlp_component(cls):
+def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
+    def _clinlp_component(cls: Type) -> Callable:
         component_args, component_kwargs = get_class_init_signature(cls)
 
         make_component_args = component_args.copy()
 
         if "nlp" not in make_component_args:
-            make_component_args = ["nlp"] + make_component_args
+            make_component_args = ["nlp", *make_component_args]
 
         if "name" not in make_component_args:
-            make_component_args = ["name"] + make_component_args
+            make_component_args = ["name", *make_component_args]
 
-        params = []
-
-        for arg in make_component_args:
-            params.append(
-                Parameter(
-                    arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
-                )
+        params = [
+            Parameter(
+                arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
             )
+            for arg in make_component_args
+        ]
 
         for kwarg, default in component_kwargs.items():
             params.append(
@@ -56,9 +55,10 @@ def clinlp_component(*args, register=True, **kwargs):
             )
 
         @with_signature(Signature(params), func_name="make_component")
-        def make_component(*args, **kwargs):
+        def make_component(*args, **kwargs) -> Type:
             if len(args) > 0:
-                raise RuntimeError("Please pass all arguments as keywords.")
+                msg = "Please pass all arguments as keywords."
+                raise RuntimeError(msg)
 
             cls_kwargs = {
                 k: v
@@ -79,6 +79,7 @@ def clinlp_component(*args, register=True, **kwargs):
 
 def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
     if (end_a < start_a) or (end_b < start_b):
-        raise ValueError("Input malformed interval.")
+        msg = "Input malformed interval."
+        raise ValueError(msg)
 
     return max(0, start_a - end_b, start_b - end_a)

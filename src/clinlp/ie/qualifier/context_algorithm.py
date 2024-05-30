@@ -6,6 +6,7 @@ import warnings
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
+from pathlib import Path
 from typing import Optional, Union
 
 import intervaltree as ivt
@@ -80,7 +81,8 @@ class _MatchedContextPattern:
         max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
-            raise ValueError(f"max_scope must be at least 1, but got {max_scope}")
+            msg = f"max_scope must be at least 1, but got {max_scope}"
+            raise ValueError(msg)
 
         scoped_start = max(self.start - max_scope, sentence.start)
         scoped_end = min(self.end + max_scope, sentence.end)
@@ -127,7 +129,7 @@ class ContextAlgorithm(QualifierDetector):
         self,
         nlp: Language,
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
-        load_rules=_defaults_context_algorithm["load_rules"],
+        load_rules: bool = _defaults_context_algorithm["load_rules"],  # noqa FBT001
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
         **kwargs,
     ) -> None:
@@ -141,13 +143,14 @@ class ContextAlgorithm(QualifierDetector):
 
         if load_rules:
             if rules is None:
-                raise ValueError(
+                msg = (
                     "Did not provide rules. Set `load_rules` to False if you "
                     "want to add `ContextRule` manually."
                 )
+                raise ValueError(msg)
 
-            rules = self._parse_rules(rules)
-            self.add_rules(rules)
+            parsed_rules = self._parse_rules(rules)
+            self.add_rules(parsed_rules)
 
         super().__init__(**kwargs)
 
@@ -171,10 +174,11 @@ class ContextAlgorithm(QualifierDetector):
         match_regexp = r"\w+\.\w+"
 
         if not re.match(match_regexp, qualifier):
-            raise ValueError(
+            msg = (
                 f"Cannot parse qualifier {qualifier}, please adhere to format "
                 f"{match_regexp} (e.g. NegationQualifier.NEGATED)"
             )
+            raise ValueError(msg)
 
         qualifier_class, qualifier = qualifier.split(".")
 
@@ -194,7 +198,7 @@ class ContextAlgorithm(QualifierDetector):
 
     def _parse_rules(self, rules: Union[str | dict]) -> list[ContextRule]:
         if isinstance(rules, str):
-            with open(rules, "rb") as file:
+            with Path(rules).open(mode="rb") as file:
                 rules = json.load(file)
 
         for qualifier in rules["qualifiers"]:
@@ -228,10 +232,11 @@ class ContextAlgorithm(QualifierDetector):
             self._matcher.add(key=rule_key, patterns=[rule.pattern])
 
         else:
-            raise ValueError(
+            msg = (
                 f"Don't know how to process ContextRule with pattern of "
                 f"type {type(rule.pattern)}"
             )
+            raise TypeError(msg)
 
     def add_rules(self, rules: list[ContextRule]) -> None:
         """
@@ -372,13 +377,14 @@ class ContextAlgorithm(QualifierDetector):
 
         return result_patterns
 
-    def _detect_qualifiers(self, doc: Doc):
+    def _detect_qualifiers(self, doc: Doc) -> None:
         """
         Apply the Context Algorithm to a doc.
         """
 
         if len(self.rules) == 0:
-            raise RuntimeError("Cannot match qualifiers without any ContextRule.")
+            msg = "Cannot match qualifiers without any ContextRule."
+            raise RuntimeError(msg)
 
         for sentence, ents in self._get_sentences_with_entities(doc).items():
             with warnings.catch_warnings():
