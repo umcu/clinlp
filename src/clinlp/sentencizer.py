@@ -1,7 +1,7 @@
 from typing import Optional
 
-from spacy.tokens import Token, Doc
 from spacy.pipeline import Pipe
+from spacy.tokens import Doc, Token
 
 from clinlp.util import clinlp_component
 

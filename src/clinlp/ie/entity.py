@@ -1,4 +1,3 @@
-from typing import Optional
 
 import intervaltree as ivt
 import numpy as np
