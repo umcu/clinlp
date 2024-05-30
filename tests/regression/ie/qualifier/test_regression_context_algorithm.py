@@ -4,6 +4,7 @@ import pytest
 import spacy
 
 import clinlp  # noqa: F401
+from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
@@ -13,11 +14,9 @@ def nlp():
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")
 
-    # ruler
-    ruler = nlp.add_pipe("entity_ruler")
+    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
     ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
-    # recognizer
     _ = nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
 
     return nlp
@@ -33,9 +32,11 @@ class TestRegressionContextAlgorithm:
         for example in data["examples"]:
             doc = nlp(example["text"])
 
-            assert len(example["ents"]) == len(doc.ents)
+            assert len(example["ents"]) == len(doc.spans[SPANS_KEY])
 
-            for predicted_ent, example_ent in zip(doc.ents, example["ents"]):
+            for predicted_ent, example_ent in zip(
+                doc.spans[SPANS_KEY], example["ents"]
+            ):
                 try:
                     assert predicted_ent.start == example_ent["start"]
                     assert predicted_ent.end == example_ent["end"]

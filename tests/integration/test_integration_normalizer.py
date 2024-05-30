@@ -1,6 +1,7 @@
 import spacy
 
 import clinlp  # noqa: F401
+from clinlp.ie import SPANS_KEY
 
 
 class TestNormalizerIntegration:
@@ -8,7 +9,10 @@ class TestNormalizerIntegration:
         nlp = spacy.blank("clinlp")
         nlp.add_pipe("clinlp_normalizer")
 
-        ruler = nlp.add_pipe("entity_ruler", config={"phrase_matcher_attr": "NORM"})
+        ruler = nlp.add_pipe(
+            "span_ruler",
+            config={"phrase_matcher_attr": "NORM", "spans_key": SPANS_KEY},
+        )
 
         concepts = {"symptomen": ["caries"]}
 
@@ -17,5 +21,5 @@ class TestNormalizerIntegration:
 
         doc = nlp("patient heeft veel last van cariës")
 
-        assert len(doc.ents) == 1
-        assert doc.ents[0].text == "cariës"
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert doc.spans[SPANS_KEY][0].text == "cariës"

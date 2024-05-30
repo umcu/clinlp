@@ -11,6 +11,7 @@ from pprint import pprint
 import spacy
 
 import clinlp  # noqa: F401
+from clinlp.ie import SPANS_KEY
 
 
 def get_model():
@@ -23,7 +24,9 @@ def get_model():
         "named_entity": ["ENTITY"],
     }
 
-    entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM"})
+    entity_matcher = nlp.add_pipe(
+        "clinlp_rule_based_entity_matcher", config={"attr": "NORM"}
+    )
     entity_matcher.load_concepts(concepts)
 
     # Qualifiers
@@ -58,7 +61,7 @@ if __name__ == "__main__":
                         "text": str(ent),
                         "qualifiers": list(ent._.qualifiers_str),
                     }
-                    for ent in doc.ents
+                    for ent in doc.spans[SPANS_KEY]
                 ],
             }
         )

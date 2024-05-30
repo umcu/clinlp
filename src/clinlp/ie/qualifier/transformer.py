@@ -47,11 +47,14 @@ class QualifierTransformer(QualifierDetector):
         strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],
         placeholder: Optional[str] = _defaults_qualifier_transformer["placeholder"],
         prob_aggregator: int = _defaults_qualifier_transformer["prob_aggregator"],
+        **kwargs,
     ):
         self.token_window = token_window
         self.strip_entities = strip_entities
         self.placeholder = placeholder
         self.prob_aggregator = prob_aggregator
+
+        super().__init__(**kwargs)
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
@@ -124,7 +127,7 @@ class QualifierTransformer(QualifierDetector):
 
 @Language.factory(
     name="clinlp_negation_transformer",
-    requires=["doc.ents"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
@@ -159,7 +162,7 @@ class NegationTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc):
-        for ent in doc.ents:
+        for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
             prob = 1 - self._predict(
@@ -185,7 +188,7 @@ class NegationTransformer(QualifierTransformer):
 
 @Language.factory(
     name="clinlp_experiencer_transformer",
-    requires=["doc.ents"],
+    requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_experiencer_transformer,
 )
@@ -216,7 +219,7 @@ class ExperiencerTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc):
-        for ent in doc.ents:
+        for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
             prob = self._predict(

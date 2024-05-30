@@ -8,56 +8,17 @@ from spacy.language import Doc, Language
 from spacy.matcher import Matcher, PhraseMatcher
 from spacy.tokens import Span
 
+from clinlp.ie.term import Term, _defaults_term
 from clinlp.util import clinlp_autocomponent
 
-_defaults_clinlp_ner = {
-    "attr": "TEXT",
-    "proximity": 0,
-    "fuzzy": 0,
-    "fuzzy_min_len": 0,
-    "pseudo": False,
+SPANS_KEY = "ents"
+
+_defaults_entity_matcher = {
+    "resolve_overlap": False,
 }
+
+
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
-
-
-class Term(pydantic.BaseModel):
-    phrase: str
-    attr: Optional[str] = None
-    proximity: Optional[int] = None
-    fuzzy: Optional[int] = None
-    fuzzy_min_len: Optional[int] = None
-    pseudo: Optional[bool] = None
-
-    model_config = {"extra": "ignore"}
-
-    def __init__(self, phrase: str, **kwargs):
-        """This init makes sure Term accepts phrase as a positional argument,
-        which is more readable in large concept lists."""
-        super().__init__(phrase=phrase, **kwargs)
-
-    def to_spacy_pattern(self, nlp: Language):
-        fields = {
-            field: getattr(self, field) or _defaults_clinlp_ner[field]
-            for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
-        }
-
-        spacy_pattern = []
-
-        phrase_tokens = [token.text for token in nlp.tokenizer(self.phrase)]
-
-        for i, token in enumerate(phrase_tokens):
-            if (fields["fuzzy"] > 0) and (len(token) >= fields["fuzzy_min_len"]):
-                token_pattern = {f"FUZZY{fields['fuzzy']}": token}
-            else:
-                token_pattern = token
-
-            spacy_pattern.append({fields["attr"]: token_pattern})
-
-            if i != len(phrase_tokens) - 1:
-                for _ in range(fields["proximity"]):
-                    spacy_pattern.append({"OP": "?"})
-
-        return spacy_pattern
 
 
 def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
@@ -83,25 +44,38 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     return dict(zip(df["concept"], df["term"]))
 
 
+@Language.factory(name="clinlp_entity_matcher")
+@clinlp_autocomponent
+class DeprecatedEntityMatcher:
+    def __init__(self):
+        raise RuntimeError(
+            "The clinlp_entity_matcher has been renamed "
+            "clinlp_rule_based_entity_matcher."
+        )
+
+
 @Language.factory(
-    name="clinlp_entity_matcher",
-    requires=["doc.sents", "doc.ents"],
-    assigns=["doc.ents"],
-    default_config=_defaults_clinlp_ner,
+    name="clinlp_rule_based_entity_matcher",
+    requires=["doc.sents"],
+    assigns=["doc.spans"],
+    default_config=_defaults_term | _defaults_entity_matcher,
 )
 @clinlp_autocomponent
-class EntityMatcher:
+class RuleBasedEntityMatcher:
     def __init__(
         self,
         nlp: Language,
-        attr: Optional[str] = _defaults_clinlp_ner["attr"],
-        proximity: Optional[int] = _defaults_clinlp_ner["proximity"],
-        fuzzy: Optional[int] = _defaults_clinlp_ner["fuzzy"],
-        fuzzy_min_len: Optional[int] = _defaults_clinlp_ner["fuzzy_min_len"],
-        pseudo: Optional[bool] = _defaults_clinlp_ner["pseudo"],
+        attr: Optional[str] = _defaults_term["attr"],
+        proximity: Optional[int] = _defaults_term["proximity"],
+        fuzzy: Optional[int] = _defaults_term["fuzzy"],
+        fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
+        pseudo: Optional[bool] = _defaults_term["pseudo"],
+        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],
     ):
         self.nlp = nlp
         self.attr = attr
+
+        self.resolve_overlap = resolve_overlap
 
         self.term_args = {
             "attr": attr,
@@ -120,7 +94,7 @@ class EntityMatcher:
     @property
     def _use_phrase_matcher(self):
         return all(
-            self.term_args[field] == _defaults_clinlp_ner[field]
+            self.term_args[field] == _defaults_term[field]
             for field in _non_phrase_matcher_fields
             if field in self.term_args
         )
@@ -190,7 +164,7 @@ class EntityMatcher:
     @staticmethod
     def _resolve_ents_overlap(ents: list[Span]) -> list[Span]:
         """
-        Resolves overlap between spans. Current logic: take the longest.
+        Resolves overlap between spans, by taking the longest.
 
         Args:
             ents: The input Spans, with possible overlap.
@@ -229,7 +203,7 @@ class EntityMatcher:
             else:
                 pos_matches.append((rule_id, start, end))
 
-        ents = []
+        ents = doc.spans.get(SPANS_KEY, [])
 
         for match_id, start, end in pos_matches:
             if not any(
@@ -240,7 +214,9 @@ class EntityMatcher:
                     Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
                 )
 
-        ents = self._resolve_ents_overlap(ents)
-        doc.set_ents(entities=ents)
+        if self.resolve_overlap:
+            ents = self._resolve_ents_overlap(ents)
+
+        doc.spans[SPANS_KEY] = ents
 
         return doc

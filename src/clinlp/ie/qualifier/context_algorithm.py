@@ -6,7 +6,7 @@ import warnings
 from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
-from typing import Iterator, Optional, Union
+from typing import Optional, Union
 
 import intervaltree as ivt
 from spacy.language import Language
@@ -20,6 +20,9 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
 )
 from clinlp.util import clinlp_autocomponent, interval_dist
+
+_RESOURCES_DIR = importlib.resources.files("clinlp.resources")
+_DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
 
 
 class ContextRuleDirection(Enum):
@@ -95,15 +98,13 @@ class _MatchedContextPattern:
 _defaults_context_algorithm = {
     "phrase_matcher_attr": "TEXT",
     "load_rules": True,
-    "rules": str(
-        importlib.resources.files("clinlp.resources").joinpath("context_rules.json")
-    ),
+    "rules": str(_RESOURCES_DIR.joinpath(_DEFAULT_CONTEXT_RULES_FILE)),
 }
 
 
 @Language.factory(
     name="clinlp_context_algorithm",
-    requires=["doc.sents", "doc.ents"],
+    requires=["doc.sents", "doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_context_algorithm,
 )
@@ -129,6 +130,7 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
         load_rules=_defaults_context_algorithm["load_rules"],
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
+        **kwargs,
     ) -> None:
         self._nlp = nlp
 
@@ -147,6 +149,8 @@ class ContextAlgorithm(QualifierDetector):
 
             rules = self._parse_rules(rules)
             self.add_rules(rules)
+
+        super().__init__(**kwargs)
 
     @property
     def qualifier_classes(self) -> dict[str, QualifierClass]:
@@ -237,12 +241,17 @@ class ContextAlgorithm(QualifierDetector):
 
         return qualifier_rules
 
-    @staticmethod
-    def _get_sentences_having_entity(doc: Doc) -> Iterator[Span]:
+    def _get_sentences_with_entities(self, doc: Doc) -> dict[Span, list[Span]]:
         """
-        Return sentences in a doc that have at least one entity.
+        Return sentences in a doc that have at least one entity, mapped to the entities.
         """
-        return (sent for sent in doc.sents if len(sent.ents) > 0)
+
+        sents = defaultdict(list)
+
+        for ent in doc.spans[self.spans_key]:
+            sents[ent.sent].append(ent)
+
+        return sents
 
     def _get_rule_from_match_id(self, match_id: int) -> ContextRule:
         """
@@ -372,7 +381,7 @@ class ContextAlgorithm(QualifierDetector):
         if len(self.rules) == 0:
             raise RuntimeError("Cannot match qualifiers without any ContextRule.")
 
-        for sentence in self._get_sentences_having_entity(doc):
+        for sentence, ents in self._get_sentences_with_entities(doc).items():
             with warnings.catch_warnings():
                 # a UserWarning will trigger when one of the matchers is empty
                 warnings.simplefilter("ignore", UserWarning)
@@ -402,7 +411,7 @@ class ContextAlgorithm(QualifierDetector):
 
             match_scopes = self._compute_match_scopes(matched_patterns)
 
-            for ent in sentence.ents:
+            for ent in ents:
                 matched_patterns = []
 
                 for match_interval in match_scopes.overlap(ent.start, ent.end):
