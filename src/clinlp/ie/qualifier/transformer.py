@@ -1,4 +1,5 @@
 import statistics
+from abc import abstractmethod
 from typing import Callable, Optional, Tuple
 
 import torch
@@ -55,6 +56,16 @@ class QualifierTransformer(QualifierDetector):
         self.prob_aggregator = prob_aggregator
 
         super().__init__(**kwargs)
+
+    @property
+    @abstractmethod
+    def tokenizer(self) -> AutoTokenizer:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def model(self) -> RobertaForTokenClassification:
+        raise NotImplementedError
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
@@ -132,6 +143,9 @@ class QualifierTransformer(QualifierDetector):
     default_config=_defaults_negation_transformer,
 )
 class NegationTransformer(QualifierTransformer):
+    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
+    model = RobertaForTokenClassification.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
+
     def __init__(
         self,
         nlp: Language,
@@ -144,11 +158,6 @@ class NegationTransformer(QualifierTransformer):
         self.nlp = nlp
         self.absence_threshold = absence_threshold
         self.presence_threshold = presence_threshold
-
-        self.tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
-        self.model = RobertaForTokenClassification.from_pretrained(
-            **HF_FROM_PRETRAINED_NEGATION
-        )
 
         super().__init__(**kwargs)
 
@@ -192,6 +201,11 @@ class NegationTransformer(QualifierTransformer):
     default_config=_defaults_experiencer_transformer,
 )
 class ExperiencerTransformer(QualifierTransformer):
+    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_EXPERIENCER)
+    model = RobertaForTokenClassification.from_pretrained(
+        **HF_FROM_PRETRAINED_EXPERIENCER
+    )
+
     def __init__(
         self,
         nlp: Language,
@@ -200,11 +214,6 @@ class ExperiencerTransformer(QualifierTransformer):
     ) -> None:
         self.nlp = nlp
         self.other_threshold = other_threshold
-
-        self.tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_EXPERIENCER)
-        self.model = RobertaForTokenClassification.from_pretrained(
-            **HF_FROM_PRETRAINED_EXPERIENCER
-        )
 
         super().__init__(**kwargs)
 
