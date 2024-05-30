@@ -9,12 +9,13 @@ import itertools
 from pprint import pprint
 
 import spacy
+from spacy.language import Language
 
 import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 
 
-def get_model() -> spacy.language.Language:
+def get_model() -> Language:
     nlp = spacy.blank("clinlp")
     nlp.add_pipe("clinlp_normalizer")
     nlp.add_pipe("clinlp_sentencizer")

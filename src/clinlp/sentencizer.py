@@ -1,6 +1,6 @@
 from typing import Optional
 
-import spacy.tokens
+from spacy.tokens import Token, Doc
 from spacy.pipeline import Pipe
 
 from clinlp.util import clinlp_component
@@ -33,7 +33,7 @@ class Sentencizer(Pipe):
             else sent_start_punct
         )
 
-    def _token_can_start_sent(self, token: spacy.tokens.Token) -> bool:
+    def _token_can_start_sent(self, token: Token) -> bool:
         """
         Determines whether a token can start a sentence
         """
@@ -43,13 +43,13 @@ class Sentencizer(Pipe):
             or (token.text in self.sent_start_punct)
         )
 
-    def _token_can_end_sent(self, token: spacy.tokens.Token) -> bool:
+    def _token_can_end_sent(self, token: Token) -> bool:
         """
         Determines whether a token can end a sentence
         """
         return token.text in self.sent_end_chars
 
-    def _get_sentence_starts(self, doc: spacy.tokens.Doc) -> list[bool]:
+    def _get_sentence_starts(self, doc: Doc) -> list[bool]:
         if len(doc) == 0:
             return []
 
@@ -70,7 +70,7 @@ class Sentencizer(Pipe):
 
         return sentence_starts
 
-    def __call__(self, doc: spacy.tokens.Doc) -> spacy.tokens.Doc:
+    def __call__(self, doc: Doc) -> Doc:
         if len(doc) == 0:
             return doc
 
