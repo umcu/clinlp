@@ -190,7 +190,7 @@ class InfoExtractionDataset:
     docs: list[Document]
     """ The annotated documents. """
 
-    default_qualifiers: dict[str, str] = None
+    default_qualifiers: Optional[dict[str, str]] = None
     """ Mapping of qualifiers to their default value, e.g. {"Negation": "Affirmed"}"""
 
     def __post_init__(self) -> None:
@@ -646,7 +646,7 @@ class InfoExtractionMetrics:
         }
         """
 
-        aggregation = defaultdict(lambda: defaultdict(list))
+        aggregation: dict = defaultdict(lambda: defaultdict(list))
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
             for true_annotation in true_doc.annotations:

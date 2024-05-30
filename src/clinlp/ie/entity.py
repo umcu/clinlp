@@ -66,11 +66,11 @@ class RuleBasedEntityMatcher(Pipe):
     def __init__(
         self,
         nlp: Language,
-        attr: Optional[str] = _defaults_term["attr"],
-        proximity: Optional[int] = _defaults_term["proximity"],
-        fuzzy: Optional[int] = _defaults_term["fuzzy"],
-        fuzzy_min_len: Optional[int] = _defaults_term["fuzzy_min_len"],
-        pseudo: Optional[bool] = _defaults_term["pseudo"],
+        attr: str = _defaults_term["attr"],
+        proximity: int = _defaults_term["proximity"],
+        fuzzy: int = _defaults_term["fuzzy"],
+        fuzzy_min_len: int = _defaults_term["fuzzy_min_len"],
+        pseudo: bool = _defaults_term["pseudo"],  # noqa: FBT001
         resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
     ) -> None:
         self.nlp = nlp
@@ -100,7 +100,7 @@ class RuleBasedEntityMatcher(Pipe):
             if field in self.term_args
         )
 
-    def load_concepts(self, concepts: str | dict) -> None:
+    def load_concepts(self, concepts: dict) -> None:
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
                 identifier = str(len(self._terms))
@@ -149,7 +149,7 @@ class RuleBasedEntityMatcher(Pipe):
                     )
                     raise TypeError(msg)
 
-    def _get_matches(self, doc: Doc) -> list[tuple[str, int, int]]:
+    def _get_matches(self, doc: Doc) -> list[tuple[int, int, int]]:
         if len(self._terms) == 0:
             msg = "No concepts added."
             raise RuntimeError(msg)
@@ -208,13 +208,13 @@ class RuleBasedEntityMatcher(Pipe):
 
         ents = doc.spans.get(SPANS_KEY, [])
 
-        for match_id, start, end in pos_matches:
+        for rule_id, start, end in pos_matches:
             if not any(
-                self._concepts[match_id] == self._concepts[neg_match_id.data]
+                self._concepts[rule_id] == self._concepts[neg_match_id.data]
                 for neg_match_id in neg_matches.overlap(start, end)
             ):
                 ents.append(
-                    Span(doc=doc, start=start, end=end, label=self._concepts[match_id])
+                    Span(doc=doc, start=start, end=end, label=self._concepts[rule_id])
                 )
 
         if self.resolve_overlap:

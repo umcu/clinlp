@@ -1,6 +1,6 @@
 import statistics
 from abc import abstractmethod
-from typing import Callable, Optional, Tuple
+from typing import Callable, Tuple
 
 import torch
 from spacy import Language
@@ -46,8 +46,8 @@ class QualifierTransformer(QualifierDetector):
         self,
         token_window: int = _defaults_qualifier_transformer["token_window"],
         strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],  # noqa: FBT001
-        placeholder: Optional[str] = _defaults_qualifier_transformer["placeholder"],
-        prob_aggregator: int = _defaults_qualifier_transformer["prob_aggregator"],
+        placeholder: str = _defaults_qualifier_transformer["placeholder"],
+        prob_aggregator: Callable = _defaults_qualifier_transformer["prob_aggregator"],
         **kwargs,
     ) -> None:
         self.token_window = token_window

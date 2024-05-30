@@ -22,19 +22,16 @@ class Sentencizer(Pipe):
         sent_end_chars: Optional[list[str]] = None,
         sent_start_punct: Optional[list[str]] = None,
     ) -> None:
-        self.sent_end_chars = (
+        self.sent_end_chars = set(
             _defaults_sentencizer["sent_end_chars"]
             if sent_end_chars is None
             else sent_end_chars
         )
-        self.sent_start_punct = (
+        self.sent_start_punct = set(
             _defaults_sentencizer["sent_start_punct"]
             if sent_start_punct is None
             else sent_start_punct
         )
-
-        self.sent_end_chars = set(self.sent_end_chars)
-        self.sent_start_punct = set(self.sent_start_punct)
 
     def _token_can_start_sent(self, token: spacy.tokens.Token) -> bool:
         """

@@ -149,8 +149,8 @@ class ContextAlgorithm(QualifierDetector):
                 )
                 raise ValueError(msg)
 
-            rules = self._parse_rules(rules)
-            self.add_rules(rules)
+            parsed_rules = self._parse_rules(rules)
+            self.add_rules(parsed_rules)
 
         super().__init__(**kwargs)
 

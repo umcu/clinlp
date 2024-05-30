@@ -1,6 +1,6 @@
 import importlib.metadata
 import warnings
-from typing import Callable, ClassVar, Optional
+from typing import Callable, Optional
 
 import spacy.lang.char_classes
 import spacy.lang.nl.tokenizer_exceptions
@@ -254,6 +254,7 @@ def _get_tokenizer_exceptions(
     keep_emoticons: bool = False,
 ) -> dict[str, list[dict]]:
     tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
+    abbrev_transforms = abbrev_transforms or []
 
     if not keep_emoticons:
         for emoticon in spacy.lang.tokenizer_exceptions.emoticons:
@@ -416,13 +417,13 @@ class ClinlpDefaults(BaseDefaults):
     infixes = _get_tokenizer_infixes()
     suffixes = _get_tokenizer_suffixes()
 
-    lex_attr_getters: ClassVar[dict] = {}
-    syntax_iterators: ClassVar[dict] = {}
-    stop_words: ClassVar[dict] = []
+    lex_attr_getters = {}  # noqa: RUF012
+    syntax_iterators = {}  # noqa: RUF012
+    stop_words = set()  # noqa: RUF012
     url_match = None
     token_match = None
 
-    writing_system: ClassVar[dict] = {
+    writing_system = {  # noqa: RUF012
         "direction": "ltr",
         "has_case": True,
         "has_letters": True,
