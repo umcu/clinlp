@@ -1,7 +1,7 @@
 import pytest
-import spacy
+from spacy.language import Vocab
 from spacy.tokens import Doc, Span
-from spacy.vocab import Vocab
+from tests.conftest import TEST_DATA_DIR
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
@@ -14,108 +14,110 @@ from clinlp.ie.qualifier.context_algorithm import _MatchedContextPattern
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
+# Arrange
+@pytest.fixture()
+def nlp_ca(nlp_entity):
+    nlp_entity.add_pipe("clinlp_sentencizer")
+    return nlp_entity
+
+
+# Arrange
 @pytest.fixture
-def nlp():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_sentencizer")
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "symptoom", "pattern": "SYMPTOOM"}])
-
-    return nlp
+def ca(nlp):
+    return ContextAlgorithm(nlp=nlp, load_rules=False)
 
 
-@pytest.fixture
-def mock_factory():
-    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
-
-
+# Arrange
 @pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
+# Arrange
 @pytest.fixture
-def ca():
-    return ContextAlgorithm(nlp=spacy.blank("clinlp"), load_rules=False)
+def mock_qualifier_class():
+    return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
 
-class TestUnitQualifierRuleDirection:
-    def test_qualifier_rule_direction_create(self):
-        assert ContextRuleDirection.PRECEDING
-        assert ContextRuleDirection.FOLLOWING
-        assert ContextRuleDirection.BIDIRECTIONAL
-        assert ContextRuleDirection.PSEUDO
-        assert ContextRuleDirection.TERMINATION
-
-
-class TestUnitQualifierRule:
-    def test_create_qualifier_rule_1(self):
+class TestUnitContextRule:
+    def test_create_context_rule_1(self):
+        # Arrange
         pattern = "test"
-        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
 
-        qr = ContextRule(pattern, qualifier, direction)
+        # Act
+        qr = ContextRule(pattern, qualifier_class, direction)
 
+        # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier
+        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
 
-    def test_create_qualifier_rule_2(self):
+    def test_create_context_rule_2(self):
+        # Arrange
         pattern = [{"LOWER": "test"}]
-        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
         direction = ContextRuleDirection.PRECEDING
 
-        qr = ContextRule(pattern, qualifier, direction)
+        # Act
+        qr = ContextRule(pattern, qualifier_class, direction)
 
+        # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier
+        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
 
 
 class TestUnitMatchedQualifierPattern:
-    def test_create_matched_qualifier_pattern(self, mock_factory):
+    def test_create_mqp_pattern(self, mock_qualifier_class):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
         end = 10
 
+        # Act
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
 
+        # Assert
         assert mqp.rule is rule
         assert mqp.start == start
         assert mqp.end == end
         assert mqp.scope is None
 
-    def test_create_matched_qualifier_pattern_with_offset(self, mock_factory):
+    def test_create_mqp_with_offset(self, mock_qualifier_class):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 0
         end = 10
         offset = 25
 
+        # Act
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end, offset=offset)
 
+        # Assert
         assert mqp.rule is rule
         assert mqp.start == start + offset
         assert mqp.end == end + offset
         assert mqp.scope is None
 
-    def test_matched_qualifier_pattern_initial_scope_preceding(
-        self, mock_factory, mock_doc
-    ):
+    def test_mqp_initialize_scope_preceding(self, mock_qualifier_class, mock_doc):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
         )
         start = 1
@@ -123,17 +125,18 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_following(
-        self, mock_factory, mock_doc
-    ):
+    def test_mqp_initialize_scope_following(self, mock_qualifier_class, mock_doc):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
         )
         start = 1
@@ -141,17 +144,18 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (0, 2)
 
-    def test_matched_qualifier_pattern_initial_scope_bidirectional(
-        self, mock_factory, mock_doc
-    ):
+    def test_mqp_initialize_scope_bidirectional(self, mock_qualifier_class, mock_doc):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
         )
         start = 1
@@ -159,17 +163,20 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (0, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_preceding_with_max_scope(
-        self, mock_factory, mock_doc
+    def test_mqp_initialize_scope_preceding_with_max_scope(
+        self, mock_qualifier_class, mock_doc
     ):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
             max_scope=1,
         )
@@ -178,17 +185,20 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_following_with_max_scope(
-        self, mock_factory, mock_doc
+    def test_mqp_initialize_scope_following_with_max_scope(
+        self, mock_qualifier_class, mock_doc
     ):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=1,
         )
@@ -197,17 +207,20 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (1, 3)
 
-    def test_matched_qualifier_pattern_initial_scope_bidirectional_with_max_scope(
-        self, mock_factory, mock_doc
+    def test_mqp_initialize_scope_bidirectional_with_max_scope(
+        self, mock_qualifier_class, mock_doc
     ):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
             max_scope=1,
         )
@@ -216,17 +229,18 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Act
         mqp.initialize_scope(sentence=sentence)
 
+        # Assert
         assert mqp.scope is not None
         assert mqp.scope == (1, 4)
 
-    def test_matched_qualifier_pattern_initial_scope_invalid_scope(
-        self, mock_factory, mock_doc
-    ):
+    def test_mqp_initialize_scope_invalid_scope(self, mock_qualifier_class, mock_doc):
+        # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_factory.create("Mock_1"),
+            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
             max_scope=-1,
         )
@@ -235,12 +249,15 @@ class TestUnitMatchedQualifierPattern:
         mqp = _MatchedContextPattern(rule=rule, start=start, end=end)
         sentence = Span(mock_doc, start=0, end=4)
 
+        # Assert
         with pytest.raises(ValueError):
+            # Act
             mqp.initialize_scope(sentence=sentence)
 
 
 class TestUnitContextAlgorithm:
-    def test_create_qualifier_matcher(self, nlp):
+    def test_create_context_algorithm(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -260,37 +277,62 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
+        # Act
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
 
+        # Assert
         assert len(ca.rules) == len(rules["rules"])
         assert len(ca._matcher) == 1
         assert len(ca._phrase_matcher) == 1
 
-    def test_parse_value(self, mock_factory, ca):
+    def test_parse_qualifier(self, mock_qualifier_class, ca):
+        # Arrange
         value = "Mock.Mock_1"
-        qualifier_factories = {"Mock": mock_factory}
+        qualifier_classes = {"Mock": mock_qualifier_class}
+        expected_qualifier = mock_qualifier_class.create("Mock_1")
 
-        assert ca._parse_qualifier(value, qualifier_factories) == mock_factory.create(
-            "Mock_1"
-        )
+        # Act
+        parsed_qualifier = ca._parse_qualifier(value, qualifier_classes)
 
-    def test_parse_value_unhappy(self, mock_factory, ca):
+        # Assert
+        assert parsed_qualifier == expected_qualifier
+
+    def test_parse_qualifier_error(self, mock_qualifier_class, ca):
+        # Arrange
         value = "Mock_Mock_1"
-        qualifiers = {"Mock": mock_factory}
+        qualifier_classes = {"Mock": mock_qualifier_class}
 
+        # Assert
         with pytest.raises(ValueError):
-            ca._parse_qualifier(value, qualifiers)
+            # Act
+            ca._parse_qualifier(value, qualifier_classes)
 
-    def test_parse_direction(self, ca):
-        assert ca._parse_direction("preceding") == ContextRuleDirection.PRECEDING
-        assert ca._parse_direction("following") == ContextRuleDirection.FOLLOWING
-        assert (
-            ca._parse_direction("bidirectional") == ContextRuleDirection.BIDIRECTIONAL
-        )
-        assert ca._parse_direction("pseudo") == ContextRuleDirection.PSEUDO
-        assert ca._parse_direction("termination") == ContextRuleDirection.TERMINATION
+    def test_load_default_rules(self, nlp_ca):
+        # Act
+        ca = ContextAlgorithm(nlp=nlp_ca)
 
-    def test_load_rules_data(self, ca):
+        # Assert
+        assert len(ca.rules) > 100
+
+    @pytest.mark.parametrize(
+        "direction, expected",
+        [
+            ("preceding", ContextRuleDirection.PRECEDING),
+            ("following", ContextRuleDirection.FOLLOWING),
+            ("bidirectional", ContextRuleDirection.BIDIRECTIONAL),
+            ("pseudo", ContextRuleDirection.PSEUDO),
+            ("termination", ContextRuleDirection.TERMINATION),
+        ],
+    )
+    def test_parse_direction(self, ca, direction, expected):
+        # Act
+        parsed_direction = ca._parse_direction(direction)
+
+        # Assert
+        assert parsed_direction == expected
+
+    def test_parse_rules_data(self, ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -316,8 +358,10 @@ class TestUnitContextAlgorithm:
             ],
         }
 
+        # Act
         rules = ca._parse_rules(rules=rules)
 
+        # Assert
         assert len(rules) == 3
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.Negated"
@@ -332,9 +376,13 @@ class TestUnitContextAlgorithm:
         assert str(rules[2].direction) == "ContextRuleDirection.BIDIRECTIONAL"
         assert rules[2].max_scope is None
 
-    def test_load_rules_json(self, ca):
-        rules = ca._parse_rules(rules="tests/data/qualifier_rules_simple.json")
+    def test_parse_rules_json(self, ca):
+        # Act
+        rules = ca._parse_rules(
+            rules=str(TEST_DATA_DIR / "qualifier_rules_simple.json")
+        )
 
+        # Assert
         assert len(rules) == 2
         assert rules[0].pattern == "geen"
         assert str(rules[0].qualifier) == "Negation.Negated"
@@ -345,22 +393,63 @@ class TestUnitContextAlgorithm:
         assert str(rules[1].direction) == "ContextRuleDirection.FOLLOWING"
         assert rules[1].max_scope is None
 
-    def test_get_sentences_with_entities(self, nlp, ca):
-        text = "Patient 1 heeft SYMPTOOM. Patient 2 niet. Patient 3 heeft ook SYMPTOOM."
-        doc = nlp(text)
+    def test_add_rule(self, ca):
+        # Arrange
+        rule = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_1"),
+            direction=ContextRuleDirection.PRECEDING,
+        )
 
+        # Act
+        ca.add_rule(rule)
+
+        # Assert
+        assert len(ca.rules) == 1
+        assert list(ca.rules.values())[0] == rule
+
+    def test_add_rules(self, ca):
+        # Arrange
+        rule_1 = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_1"),
+            direction=ContextRuleDirection.PRECEDING,
+        )
+
+        rule_2 = ContextRule(
+            pattern="test",
+            qualifier=QualifierClass("Mock", ["Mock_1", "Mock_2"]).create("Mock_2"),
+            direction=ContextRuleDirection.FOLLOWING,
+        )
+
+        # Act
+        ca.add_rules([rule_1, rule_2])
+
+        # Assert
+        assert len(ca.rules) == 2
+        assert list(ca.rules.values())[0] == rule_1
+        assert list(ca.rules.values())[1] == rule_2
+
+    def test_get_sentences_with_entities(self, nlp_ca, ca):
+        # Arrange
+        text = "Patient 1 heeft ENTITY. Patient 2 niet. Patient 3 heeft ook ENTITY."
+        doc = nlp_ca(text)
+
+        # Act
         sents = ca._get_sentences_with_entities(doc)
 
+        # Assert
         assert len(sents) == 2
         for sent, ents in sents.items():
-            assert "SYMPTOOM" in str(sent)
+            assert "ENTITY" in str(sent)
             assert len(ents) == 1
 
-    def test_resolve_matched_pattern_conflicts(self, nlp, ca):
-        doc = nlp("mogelijk SYMPTOOM uitgesloten")
+    def test_resolve_matched_pattern_conflicts(self, nlp_ca, ca):
+        # Arrange
+        doc = nlp_ca("mogelijk ENTITY uitgesloten")
         ent = doc.spans[SPANS_KEY][0]
 
-        qualifier_factory = QualifierClass(
+        qualifier_class = QualifierClass(
             name="Presence",
             values=["Absent", "Uncertain", "Present"],
             default="Present",
@@ -368,38 +457,49 @@ class TestUnitContextAlgorithm:
 
         rule1 = ContextRule(
             pattern="uitgesloten",
-            qualifier=qualifier_factory.create("Absent"),
+            qualifier=qualifier_class.create("Absent"),
             direction=ContextRuleDirection.FOLLOWING,
         )
         rule2 = ContextRule(
             pattern="mogelijk",
-            qualifier=qualifier_factory.create("Uncertain"),
+            qualifier=qualifier_class.create("Uncertain"),
             direction=ContextRuleDirection.PRECEDING,
         )
 
         pattern1 = _MatchedContextPattern(rule=rule1, start=0, end=1)
         pattern2 = _MatchedContextPattern(rule=rule2, start=2, end=3)
 
-        assert ca._resolve_matched_pattern_conflicts(ent, [pattern1, pattern2]) == [
-            pattern2
-        ]
+        # Act
+        resolved_patterns = ca._resolve_matched_pattern_conflicts(
+            ent, [pattern1, pattern2]
+        )
 
-    def test_match_qualifiers_no_ents(self, nlp, ca):
+        # Assert
+        assert resolved_patterns == [pattern2]
+
+    def test_call_no_ents(self, nlp_ca, ca):
+        # Arrange
         text = "tekst zonder entities"
-        old_doc = nlp(text)
+        old_doc = nlp_ca(text)
 
+        # Act
         new_doc = ca(old_doc)
 
+        # Assert
         assert new_doc == old_doc
 
-    def test_match_qualifiers_no_rules(self, nlp, ca):
-        text = "Patient heeft SYMPTOOM (wel ents, geen rules)"
-        doc = nlp(text)
+    def test_call_no_rules(self, nlp_ca, ca):
+        # Arrange
+        text = "Patient heeft ENTITY (wel ents, geen rules)"
+        doc = nlp_ca(text)
 
+        # Assert
         with pytest.raises(RuntimeError):
+            # Act
             ca(doc)
 
-    def test_match_qualifiers_preceding(self, nlp):
+    def test_call_preceding(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -413,15 +513,20 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Patient heeft geen SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_with_default(self, nlp):
+    def test_call_preceding_with_default(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -436,10 +541,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Patient heeft geen SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -447,7 +556,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_preceding_multiple_ents(self, nlp):
+    def test_call_preceding_multiple_ents(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -461,10 +571,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Patient heeft geen SYMPTOOM of SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Patient heeft geen ENTITY of ENTITY."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -472,7 +586,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_following_multiple_ents(self, nlp):
+    def test_call_following_multiple_ents(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -486,10 +601,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Aanwezigheid van SYMPTOOM of SYMPTOOM is uitgesloten."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Aanwezigheid van ENTITY of ENTITY is uitgesloten."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -497,7 +616,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_bidirectional_multiple_ents(self, nlp):
+    def test_call_bidirectional_multiple_ents(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Temporality", "values": ["Historical", "Current"]},
@@ -511,10 +631,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "SYMPTOOM als tiener SYMPTOOM"
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY als tiener ENTITY"
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert len(doc.spans[SPANS_KEY]) == 2
         assert "Temporality.Historical" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
@@ -523,7 +647,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_pseudo(self, nlp):
+    def test_call_pseudo(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -542,15 +667,20 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Er is geen toename van SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen toename van ENTITY."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_preceding(self, nlp):
+    def test_call_termination_preceding(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -569,10 +699,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Er is geen SYMPTOOM, maar wel SYMPTOOM."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen ENTITY, maar wel ENTITY."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -580,7 +714,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_preceding(self, nlp):
+    def test_call_termination_directly_preceding(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Plausibility", "values": ["Plausible", "Hypothetical"]},
@@ -599,10 +734,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "SYMPTOOM, mogelijk SYMPTOOM"
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY, mogelijk ENTITY"
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Plausibility.Hypothetical" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -610,7 +749,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_following(self, nlp):
+    def test_call_termination_following(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -629,10 +769,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Mogelijk SYMPTOOM, maar SYMPTOOM uitgesloten."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Mogelijk ENTITY, maar ENTITY uitgesloten."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -640,7 +784,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_termination_directly_following(self, nlp):
+    def test_call_termination_directly_following(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Plausibility", "values": ["Plausible", "Hypothetical"]},
@@ -659,10 +804,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "SYMPTOOM mogelijk op basis van SYMPTOOM"
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "ENTITY mogelijk op basis van ENTITY"
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Plausibility.Hypothetical" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -670,7 +819,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifiers_multiple_sentences(self, nlp):
+    def test_call_multiple_sentences(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -684,10 +834,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Er is geen SYMPTOOM. Daarnaast SYMPTOOM onderzocht."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Er is geen ENTITY. Daarnaast ENTITY onderzocht."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -695,7 +849,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_qualifiers(self, nlp):
+    def test_call_multiple_qualifiers(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -715,10 +870,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Heeft als kind geen SYMPTOOM gehad."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Heeft als kind geen ENTITY gehad."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -726,7 +885,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_terminate_multiple_qualifiers(self, nlp):
+    def test_call_terminate_multiple_qualifiers(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -751,10 +911,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Heeft als kind geen SYMPTOOM, wel SYMPTOOM gehad."
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Heeft als kind geen ENTITY, wel ENTITY gehad."
+        doc = nlp_ca(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -768,7 +932,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][1]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_match_qualifier_multiple_patterns(self, nlp):
+    def test_call_multiple_patterns(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {"name": "Negation", "values": ["Affirmed", "Negated"]},
@@ -782,20 +947,23 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Liet subklinisch ONHERKEND_SYMPTOOM en geen SYMPTOOM zien."
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "Liet subklinisch ONHERKEND_ENTITY en geen ENTITY zien."
+        doc = nlp_ca(text)
 
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        # Act
+        doc = ca(doc)
 
+        # Assert
         assert "Negation.Negated" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_overlap_rule_and_ent(self):
-        nlp = spacy.blank("clinlp")
+    def test_call_overlap_rule_and_ent(self, nlp):
+        # Arrange
         nlp.add_pipe("clinlp_sentencizer")
         ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-        ruler.load_concepts({"symptoom": ["geen eetlust"]})
+        ruler.load_concepts({"entity": ["geen eetlust"]})
 
         rules = {
             "qualifiers": [
@@ -810,16 +978,20 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "Patient laat weten geen eetlust te hebben"
-
         ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        text = "Patient laat weten geen eetlust te hebben"
+        doc = nlp(text)
 
+        # Act
+        doc = ca(doc)
+
+        # Assert
         assert "Negation.Negated" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier(self, nlp):
+    def test_call_multiple_of_same_qualifier(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {
@@ -842,11 +1014,14 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "mogelijk SYMPTOOM is uitgesloten"
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "mogelijk ENTITY is uitgesloten"
+        doc = nlp_ca(text)
 
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        # Act
+        doc = ca(doc)
 
+        # Assert
         assert "Presence.Absent" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
@@ -854,7 +1029,8 @@ class TestUnitContextAlgorithm:
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
 
-    def test_multiple_matches_of_same_qualifier_with_priorities(self, nlp):
+    def test_call_multiple_of_same_qualifier_with_priorities(self, nlp_ca):
+        # Arrange
         rules = {
             "qualifiers": [
                 {
@@ -878,19 +1054,17 @@ class TestUnitContextAlgorithm:
             ],
         }
 
-        text = "mogelijk SYMPTOOM uitgesloten"
+        ca = ContextAlgorithm(nlp=nlp_ca, rules=rules)
+        text = "mogelijk ENTITY uitgesloten"
+        doc = nlp_ca(text)
 
-        ca = ContextAlgorithm(nlp=nlp, rules=rules)
-        doc = ca(nlp(text))
+        # Act
+        doc = ca(doc)
 
+        # Assert
         assert "Presence.Absent" in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
         assert "Presence.Uncertain" not in getattr(
             doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR
         )
-
-    def test_load_default_rules(self, nlp):
-        ca = ContextAlgorithm(nlp=nlp)
-
-        assert len(ca.rules) > 100

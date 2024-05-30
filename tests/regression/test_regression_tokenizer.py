@@ -1,18 +1,30 @@
-import json
+import pytest
 
-import spacy
+from tests.conftest import _make_nlp
+from tests.regression import load_examples
 
-import clinlp  # noqa: F401
+tokenizer_cases = [
+    pytest.param(example["text"], example["tokens"], id="tokenizer_case_")
+    for example in load_examples("tokenizer_cases.json")
+]
+
+
+@pytest.fixture(scope="class")
+def nlp():
+    return _make_nlp()
+
+
+# Arrange
+@pytest.fixture(scope="class")
+def tokenizer(nlp):
+    return nlp.tokenizer
 
 
 class TestTokenizerRegression:
-    def test_tokenize_cases(self):
-        tokenizer = spacy.blank("clinlp").tokenizer
+    @pytest.mark.parametrize("text, expected_tokens", tokenizer_cases)
+    def test_regression_tokenizer(self, tokenizer, text, expected_tokens):
+        # Act
+        tokens = [token.text for token in tokenizer(text)]
 
-        with open("tests/data/tokenizer_cases.json", "rb") as file:
-            data = json.load(file)["data"]
-
-        for example in data:
-            assert [token.text for token in tokenizer(example["text"])] == example[
-                "tokens"
-            ]
+        # Assert
+        assert tokens == expected_tokens

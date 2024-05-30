@@ -39,30 +39,33 @@ if __name__ == "__main__":
     nlp = get_model()
 
     texts = [
-        "CMV/EBV ENTITY negatief, ENTITY negatief",
+        "CMV/EBV ENTITY negatief, lues negatief",
+        "CMV/EBV HIV negatief, ENTITY negatief",
     ]
 
     data = []
-    ent_id = 57
+    start_example_id = 77
 
     cntr = itertools.count()
 
     for text in texts:
         doc = nlp(text)
 
+        ents = doc.spans[SPANS_KEY]
+
+        assert len(ents) == 1
+        ent = ents[0]
+
         data.append(
             {
                 "text": text,
-                "ents": [
-                    {
-                        "ent_id": ent_id + next(cntr),
-                        "start": ent.start,
-                        "end": ent.end,
-                        "text": str(ent),
-                        "qualifiers": list(ent._.qualifiers_str),
-                    }
-                    for ent in doc.spans[SPANS_KEY]
-                ],
+                "example_id": start_example_id + next(cntr),
+                "ent": {
+                    "start": ent.start,
+                    "end": ent.end,
+                    "text": str(ent),
+                    "qualifiers": list(ent._.qualifiers_str),
+                },
             }
         )
 

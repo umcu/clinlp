@@ -1,0 +1,1082 @@
+{
+  "examples": [
+    {
+      "text": "2004 poli interne vanwege ENTITY.",
+      "example_id": 0,
+      "ent": {
+        "start": 4,
+        "end": 5,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Geen ENTITY klachten; niet koortsig.",
+      "example_id": 1,
+      "ent": {
+        "start": 1,
+        "end": 2,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Geen pijn klachten; niet ENTITY.",
+      "example_id": 2,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Gaat pas slapen als hij ENTITY is.",
+      "example_id": 3,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Future",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Bij kliniek sinds [DATUM-1] jaar continue en toenemende ENTITY in de benen",
+      "example_id": 4,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022 sept gastroscopie: 11 cm van de ENTITY is er een stenose",
+      "example_id": 5,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022 sept gastroscopie: 11 cm van de tandenrij is er een ENTITY",
+      "example_id": 6,
+      "ent": {
+        "start": 12,
+        "end": 13,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "resp: geen ENTITY, kan krachtig hoesten",
+      "example_id": 7,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "resp: geen benauwdheid, kan krachtig ENTITY",
+      "example_id": 8,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Gezien geen aanwijzingen voor cardiologische oorzaak thoracale ENTITY, geen poliklinische follow-up",
+      "example_id": 9,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Patiënt werd op [DATUM-10] opgenomen via de SEH in verband met ENTITY",
+      "example_id": 10,
+      "ent": {
+        "start": 11,
+        "end": 12,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (ENTITY, verkouden of andere gezondheidsproblemen)?",
+      "example_id": 11,
+      "ent": {
+        "start": 11,
+        "end": 12,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Future",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Wordt u ziek 1 tot 2 weken voor de operatie (koorts, ENTITY of andere gezondheidsproblemen)?",
+      "example_id": 12,
+      "ent": {
+        "start": 13,
+        "end": 14,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Future",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "S: Dhr heeft geen ENTITY geuit. ",
+      "example_id": 13,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Heden wel mild macrocytaire ENTITY, zonder zichtbaar bloedverlies.",
+      "example_id": 14,
+      "ent": {
+        "start": 4,
+        "end": 5,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Heden wel mild macrocytaire anemie, zonder zichtbaar ENTITY.",
+      "example_id": 15,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Interventieradioloog gebeld, nagaan post renale ENTITY?",
+      "example_id": 16,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "S1S2, geen ENTITY, HA rond 70/min ",
+      "example_id": 17,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "vanochtend jammerig/ oncomfortabel, onduidelijk of dit ENTITY/ onbekendheid vpk is ",
+      "example_id": 18,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022: milde ENTITY infcet (keepijn zonder koorts of hoesten).",
+      "example_id": 19,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022: milde covid infcet (ENTITY zonder koorts of hoesten).",
+      "example_id": 20,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022: milde covid infcet (keepijn zonder ENTITY of hoesten).",
+      "example_id": 21,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "2022: milde covid infcet (keepijn zonder koorts of ENTITY).",
+      "example_id": 22,
+      "ent": {
+        "start": 10,
+        "end": 11,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Dochter van patiente heeft ook vergelijkbare klachten van ENTITY en diarree.",
+      "example_id": 23,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Family",
+          "Presence.Present",
+          "Temporality.Current"
+        ]
+      }
+    },
+    {
+      "text": "Dochter van patiente heeft ook vergelijkbare klachten van braken en ENTITY.",
+      "example_id": 24,
+      "ent": {
+        "start": 10,
+        "end": 11,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Family",
+          "Presence.Present",
+          "Temporality.Current"
+        ]
+      }
+    },
+    {
+      "text": "Nuchter, niet gespuugd of ENTITY geweest. ",
+      "example_id": 25,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Extremiteiten: slanke, soepele ENTITY, geen oedeem",
+      "example_id": 26,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Extremiteiten: slanke, soepele kuiten, geen ENTITY",
+      "example_id": 27,
+      "ent": {
+        "start": 8,
+        "end": 9,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "U kan nog een paar dagen last hebben van ENTITY.",
+      "example_id": 28,
+      "ent": {
+        "start": 9,
+        "end": 10,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Positieve ENTITY op C4, maar geen pijnreductie.",
+      "example_id": 29,
+      "ent": {
+        "start": 1,
+        "end": 2,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Positieve proefwortelblokkade op C4, maar geen ENTITY.",
+      "example_id": 30,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Overname [INSTELLING-1] verdenking ENTITY",
+      "example_id": 31,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Er zou een erfelijke vorm van ENTITY in de familie zitten, hier wordt patiënte nog op getest.",
+      "example_id": 32,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "kan goed op de geopereerde kant liggen, dan geen ENTITY.",
+      "example_id": 33,
+      "ent": {
+        "start": 10,
+        "end": 11,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Familie anamnese: broer t-cel ENTITY dunnedarm coeliakie gerelateerd",
+      "example_id": 34,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Family",
+          "Presence.Present",
+          "Temporality.Current"
+        ]
+      }
+    },
+    {
+      "text": "Familie anamnese: broer t-cel lymfoom dunnedarm ENTITY gerelateerd",
+      "example_id": 35,
+      "ent": {
+        "start": 9,
+        "end": 10,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Family",
+          "Presence.Present",
+          "Temporality.Current"
+        ]
+      }
+    },
+    {
+      "text": "Ook een keer ENTITY en tintelingen gelaat gehad in 2014, weet niet welke kant.",
+      "example_id": 36,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Ook een keer pijn en ENTITY gelaat gehad in 2014, weet niet welke kant.",
+      "example_id": 37,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Historical",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Mw voelt zich nog beroerd, veel ENTITY li flank merkt weinig verbetering.",
+      "example_id": 38,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "In rust hijgt hij van de ENTITY.",
+      "example_id": 39,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "CRT-D drager in verband met ENTITY bij passagere totaal AV",
+      "example_id": 40,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "CRT-D drager in verband met syncope bij ENTITY totaal AV",
+      "example_id": 41,
+      "ent": {
+        "start": 9,
+        "end": 10,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "LO/ Alg ind: niet acuut ENTITY, helder en alert",
+      "example_id": 42,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "LO/ Alg ind: niet acuut ziek, helder en ENTITY",
+      "example_id": 43,
+      "ent": {
+        "start": 11,
+        "end": 12,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Uiteindelijk is het fraai gelukt om de ENTITY macroscopisch compleet te verwijderen.",
+      "example_id": 44,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Hij is motorisch ENTITY en snel afgeleid.",
+      "example_id": 45,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Indicatie: analyse ENTITY, elder geduid als bij astma.",
+      "example_id": 46,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Indicatie: analyse dyspnoe, elder geduid als bij ENTITY.",
+      "example_id": 47,
+      "ent": {
+        "start": 9,
+        "end": 10,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Mw is ENTITY aanwezig, moe na het familiebezoek ",
+      "example_id": 48,
+      "ent": {
+        "start": 2,
+        "end": 3,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Exp: ENTITY en hoesten antalgisch beperkt",
+      "example_id": 49,
+      "ent": {
+        "start": 2,
+        "end": 3,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Exp: huffen en ENTITY antalgisch beperkt",
+      "example_id": 50,
+      "ent": {
+        "start": 4,
+        "end": 5,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "DD recente ENTITY in peripelviene cyste",
+      "example_id": 51,
+      "ent": {
+        "start": 2,
+        "end": 3,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "DD recente bloeding in peripelviene ENTITY",
+      "example_id": 52,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Uncertain",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "geen ENTITY, wel meer moe overdag, komt door haar spierziekte fibromyalgie",
+      "example_id": 53,
+      "ent": {
+        "start": 1,
+        "end": 2,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Absent",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "geen apneu, wel meer ENTITY overdag, komt door haar spierziekte fibromyalgie",
+      "example_id": 54,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "geen apneu, wel meer moe overdag, komt door haar spierziekte ENTITY",
+      "example_id": 55,
+      "ent": {
+        "start": 12,
+        "end": 13,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "4dd 1000mg ivm ENTITY",
+      "example_id": 56,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Temporality.Current",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "CMV/EBV ENTITY negatief, lues negatief",
+      "example_id": 57,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "CMV/EBV HIV negatief, ENTITY negatief",
+      "example_id": 58,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "ENTITY verdween na gebruik diclofenac 50 mg 3dd grotendeels",
+      "example_id": 59,
+      "ent": {
+        "start": 0,
+        "end": 1,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Absent",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "geen verklaring voor ENTITY AD",
+      "example_id": 60,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Geen genetische verklaring voor gevonden, dus losstaand van de ENTITY",
+      "example_id": 61,
+      "ent": {
+        "start": 10,
+        "end": 11,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Vannacht slapend gezien, leek niet ENTITY",
+      "example_id": 62,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "ENTITY: niet bekend",
+      "example_id": 63,
+      "ent": {
+        "start": 0,
+        "end": 1,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "- ENTITY (onwaarschijnlijk, laag d-dimeer)",
+      "example_id": 64,
+      "ent": {
+        "start": 1,
+        "end": 2,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "ENTITY 100 ml 3 dd in beide oren",
+      "example_id": 65,
+      "ent": {
+        "start": 0,
+        "end": 1,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "1. dd ENTITY dd getraumatiseerde verruca dd AK? ",
+      "example_id": 66,
+      "ent": {
+        "start": 2,
+        "end": 3,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "1. dd pcc dd ENTITY dd AK? ",
+      "example_id": 67,
+      "ent": {
+        "start": 4,
+        "end": 5,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "1. dd pcc dd getraumatiseerde verruca dd ENTITY? ",
+      "example_id": 68,
+      "ent": {
+        "start": 7,
+        "end": 8,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Uncertain",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Nemen contact op indien er ENTITY zijn.",
+      "example_id": 69,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Patient",
+          "Presence.Present",
+          "Temporality.Future"
+        ]
+      }
+    },
+    {
+      "text": "- Predocs verhoogd risico op ENTITY",
+      "example_id": 70,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Patient",
+          "Presence.Present",
+          "Temporality.Future"
+        ]
+      }
+    },
+    {
+      "text": "Wel zijn er veel klachten van ENTITY, zelfs in die mate dat hij hierdoor een pneumonie kan ontwikkelen.",
+      "example_id": 71,
+      "ent": {
+        "start": 6,
+        "end": 7,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Patient"
+        ]
+      }
+    },
+    {
+      "text": "Wel zijn er veel klachten van maagzuur, zelfs in die mate dat hij hierdoor een ENTITY kan ontwikkelen.",
+      "example_id": 72,
+      "ent": {
+        "start": 16,
+        "end": 17,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Patient",
+          "Presence.Present",
+          "Temporality.Future"
+        ]
+      }
+    },
+    {
+      "text": "Bij te verwachten ENTITY op iv laten.",
+      "example_id": 73,
+      "ent": {
+        "start": 3,
+        "end": 4,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Experiencer.Patient",
+          "Presence.Present",
+          "Temporality.Future"
+        ]
+      }
+    },
+    {
+      "text": "psycholoog: als tiener: ENTITY, geen last meer",
+      "example_id": 74,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Presence.Present",
+          "Experiencer.Patient",
+          "Temporality.Historical"
+        ]
+      }
+    },
+    {
+      "text": "Mw. kon niet slapen ivm ENTITY bij buurvrouw.",
+      "example_id": 75,
+      "ent": {
+        "start": 5,
+        "end": 6,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Other"
+        ]
+      }
+    },
+    {
+      "text": "Bij haar huisgenote is ENTITY gediagnosticeerd.",
+      "example_id": 76,
+      "ent": {
+        "start": 4,
+        "end": 5,
+        "text": "ENTITY",
+        "qualifiers": [
+          "Temporality.Current",
+          "Presence.Present",
+          "Experiencer.Other"
+        ]
+      }
+    }
+  ]
+}

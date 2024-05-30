@@ -5,70 +5,124 @@ from spacy.tokens import Doc
 from clinlp import Normalizer
 
 
+# Arrange
 @pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["Patiënt", "250", "µg", "toedienen"])
 
 
 class TestNormalizer:
-    def test_lowercase(self):
-        assert Normalizer()._lowercase("test") == "test"
-        assert Normalizer()._lowercase("Test") == "test"
-        assert Normalizer()._lowercase("TEST") == "test"
+    @pytest.mark.parametrize(
+        "input_text, expected_lowercased_text",
+        [
+            ("test", "test"),
+            ("Test", "test"),
+            ("TEST", "test"),
+        ],
+    )
+    def test_lowercase(self, input_text, expected_lowercased_text):
+        # Arrange
+        n = Normalizer()
 
-    def test_map_non_ascii_char(self):
-        assert Normalizer()._map_non_ascii_char("a") == "a"
-        assert Normalizer()._map_non_ascii_char("à") == "a"
-        assert Normalizer()._map_non_ascii_char("e") == "e"
-        assert Normalizer()._map_non_ascii_char("é") == "e"
-        assert Normalizer()._map_non_ascii_char("ê") == "e"
-        assert Normalizer()._map_non_ascii_char("ë") == "e"
-        assert Normalizer()._map_non_ascii_char("ē") == "e"
-        assert Normalizer()._map_non_ascii_char(" ") == " "
-        assert Normalizer()._map_non_ascii_char("\n") == "\n"
-        assert Normalizer()._map_non_ascii_char("µ") == "µ"
-        assert Normalizer()._map_non_ascii_char("²") == "²"
-        assert Normalizer()._map_non_ascii_char("1") == "1"
+        # Act
+        lowercased = n._lowercase(input_text)
+
+        # Assert
+        assert lowercased == expected_lowercased_text
+
+    @pytest.mark.parametrize(
+        "input_char, expected_non_ascii_char",
+        [
+            ("a", "a"),
+            ("à", "a"),
+            ("e", "e"),
+            ("é", "e"),
+            ("ê", "e"),
+            ("ë", "e"),
+            ("ē", "e"),
+            (" ", " "),
+            ("\n", "\n"),
+            ("µ", "µ"),
+            ("²", "²"),
+            ("1", "1"),
+        ],
+    )
+    def test_map_non_ascii_char(self, input_char, expected_non_ascii_char):
+        # Arrange
+        n = Normalizer()
+
+        # Act
+        non_ascii = n._map_non_ascii_char(input_char)
+
+        # Assert
+        assert non_ascii == expected_non_ascii_char
 
     def test_map_non_ascii_char_nonchar(self):
-        with pytest.raises(ValueError):
-            Normalizer()._map_non_ascii_char("ab")
+        # Arrange
+        n = Normalizer()
 
-    def test_map_non_ascii_string(self):
-        assert Normalizer()._map_non_ascii_string("abcde") == "abcde"
-        assert Normalizer()._map_non_ascii_string("abcdé") == "abcde"
-        assert Normalizer()._map_non_ascii_string("äbcdé") == "abcde"
-        assert (
-            Normalizer()._map_non_ascii_string("patiënt heeft 1.6m² lichaamsoppervlak")
-            == "patient heeft 1.6m² lichaamsoppervlak"
-        )
+        # Assert
+        with pytest.raises(ValueError):
+            # Act
+            n._map_non_ascii_char("ab")
+
+    @pytest.mark.parametrize(
+        "input_string, expected_non_ascii_string",
+        [
+            ("abcde", "abcde"),
+            ("abcdé", "abcde"),
+            ("äbcdé", "abcde"),
+            (
+                "patiënt heeft 1.6m² lichaamsoppervlak",
+                "patient heeft 1.6m² lichaamsoppervlak",
+            ),
+        ],
+    )
+    def test_map_non_ascii_string(self, input_string, expected_non_ascii_string):
+        # Arrange
+        n = Normalizer()
+
+        # Act
+        non_ascii = n._map_non_ascii_string(input_string)
+
+        # Assert
+        assert non_ascii == expected_non_ascii_string
 
     def test_call_normalizer_default(self, mock_doc):
+        # Arange
         expected_norms = ["patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer()
+        n = Normalizer()
 
-        doc = normalizer(mock_doc)
+        # Act
+        doc = n(mock_doc)
 
+        # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
     def test_call_normalizer_disable_lowercase(self, mock_doc):
+        # Arange
         expected_norms = ["Patient", "250", "µg", "toedienen"]
-        normalizer = Normalizer(lowercase=False)
+        n = Normalizer(lowercase=False)
 
-        doc = normalizer(mock_doc)
+        # Act
+        doc = n(mock_doc)
 
+        # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
     def test_call_normalizer_disable_map_non_ascii(self, mock_doc):
+        # Arange
         expected_norms = ["patiënt", "250", "µg", "toedienen"]
-        normalizer = Normalizer(map_non_ascii=False)
+        n = Normalizer(map_non_ascii=False)
 
-        doc = normalizer(mock_doc)
+        # Act
+        doc = n(mock_doc)
 
+        # Assert
         for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm

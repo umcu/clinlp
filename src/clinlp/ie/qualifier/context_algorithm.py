@@ -156,32 +156,6 @@ class ContextAlgorithm(QualifierDetector):
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         return self._qualifier_classes
 
-    def add_rule(self, rule: ContextRule) -> None:
-        """
-        Add a rule.
-        """
-        rule_key = f"rule_{len(self.rules)}"
-        self.rules[rule_key] = rule
-
-        if isinstance(rule.pattern, str):
-            self._phrase_matcher.add(key=rule_key, docs=[self._nlp(rule.pattern)])
-
-        elif isinstance(rule.pattern, list):
-            self._matcher.add(key=rule_key, patterns=[rule.pattern])
-
-        else:
-            raise ValueError(
-                f"Don't know how to process ContextRule with pattern of "
-                f"type {type(rule.pattern)}"
-            )
-
-    def add_rules(self, rules: list[ContextRule]) -> None:
-        """
-        Add multiple rules.
-        """
-        for rule in rules:
-            self.add_rule(rule)
-
     @staticmethod
     def _parse_qualifier(
         qualifier: str, qualifier_classes: dict[str, QualifierClass]
@@ -240,6 +214,32 @@ class ContextAlgorithm(QualifierDetector):
             ]
 
         return qualifier_rules
+
+    def add_rule(self, rule: ContextRule) -> None:
+        """
+        Add a rule.
+        """
+        rule_key = f"rule_{len(self.rules)}"
+        self.rules[rule_key] = rule
+
+        if isinstance(rule.pattern, str):
+            self._phrase_matcher.add(key=rule_key, docs=[self._nlp(rule.pattern)])
+
+        elif isinstance(rule.pattern, list):
+            self._matcher.add(key=rule_key, patterns=[rule.pattern])
+
+        else:
+            raise ValueError(
+                f"Don't know how to process ContextRule with pattern of "
+                f"type {type(rule.pattern)}"
+            )
+
+    def add_rules(self, rules: list[ContextRule]) -> None:
+        """
+        Add multiple rules.
+        """
+        for rule in rules:
+            self.add_rule(rule)
 
     def _get_sentences_with_entities(self, doc: Doc) -> dict[Span, list[Span]]:
         """

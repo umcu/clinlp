@@ -1,27 +1,31 @@
-import json
+import pytest
 
 from clinlp import Sentencizer
+from tests.conftest import get_mock_tokens
+from tests.regression import load_examples
+
+sentencizer_cases = [
+    pytest.param(example["tokens"], example["sentence_starts"], id="sentencizer_case_")
+    for example in load_examples("sentencizer_cases.json")
+]
 
 
-class MockToken:
-    def __init__(self, text: str):
-        self.text = text
-        self.is_sent_start = False
-
-
-def get_mock_tokens(texts: list[str]):
-    return [MockToken(text) for text in texts]
+# Arrange
+@pytest.fixture(scope="class")
+def sentencizer():
+    return Sentencizer()
 
 
 class TestClinlpSentencizerRegression:
-    def test_default_clinlp_sentencizer_examples(self):
-        sentencizer = Sentencizer()
+    @pytest.mark.parametrize("tokens, expected_sentence_starts", sentencizer_cases)
+    def test_regression_sentencizer(
+        self, sentencizer, tokens, expected_sentence_starts
+    ):
+        # Arrange
+        tokens = get_mock_tokens(tokens)
 
-        with open("tests/data/sentencizer_cases.json", "rb") as file:
-            data = json.load(file)["data"]
+        # Act
+        sentence_starts = sentencizer._get_sentence_starts(tokens)
 
-        for example in data:
-            tokens = get_mock_tokens(example["tokens"])
-            assert (
-                sentencizer._get_sentence_starts(tokens) == example["sentence_starts"]
-            )
+        # Assert
+        assert sentence_starts == expected_sentence_starts

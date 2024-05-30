@@ -1,58 +1,50 @@
-import json
-
 import pytest
-import spacy
+from tests.conftest import _make_nlp, _make_nlp_entity
+from tests.regression import load_qualifier_examples
 
-import clinlp  # noqa: F401
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
+KNOWN_FAILURES = {9, 11, 12, 32}
 
-@pytest.fixture()
+examples = load_qualifier_examples("qualifier_cases.json", KNOWN_FAILURES)
+
+
+# Arrange
+@pytest.fixture(scope="class")
 def nlp():
-    nlp = spacy.blank("clinlp")
-    nlp.add_pipe("clinlp_normalizer")
-    nlp.add_pipe("clinlp_sentencizer")
+    return _make_nlp()
 
-    ruler = nlp.add_pipe("span_ruler", config={"spans_key": SPANS_KEY})
-    ruler.add_patterns([{"label": "named_entity", "pattern": "ENTITY"}])
 
-    _ = nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_entity(nlp):
+    return _make_nlp_entity(nlp)
 
-    return nlp
+
+# Arrange
+@pytest.fixture(scope="class")
+def nlp_qualifier(nlp_entity):
+    nlp_entity.add_pipe("clinlp_sentencizer")
+
+    nlp_entity.add_pipe(
+        "clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"}
+    )
+
+    return nlp_entity
 
 
 class TestRegressionContextAlgorithm:
-    def test_qualifier_cases(self, nlp):
-        with open("tests/data/qualifier_cases.json", "rb") as file:
-            data = json.load(file)
+    @pytest.mark.parametrize("text, expected_ent", examples)
+    def test_regression_context_algorithm(self, nlp_qualifier, text, expected_ent):
+        # Act
+        doc = nlp_qualifier(text)
 
-        incorrect_ents = set()
-
-        for example in data["examples"]:
-            doc = nlp(example["text"])
-
-            assert len(example["ents"]) == len(doc.spans[SPANS_KEY])
-
-            for predicted_ent, example_ent in zip(
-                doc.spans[SPANS_KEY], example["ents"]
-            ):
-                try:
-                    assert predicted_ent.start == example_ent["start"]
-                    assert predicted_ent.end == example_ent["end"]
-                    assert str(predicted_ent) == example_ent["text"]
-                    assert getattr(predicted_ent._, ATTR_QUALIFIERS_STR).issuperset(
-                        set(example_ent["qualifiers"])
-                    )
-
-                except AssertionError:
-                    print(
-                        f"Incorrect (#{example_ent['ent_id']}): "
-                        f"text={example['text']}, "
-                        f"example_ent={example_ent}, "
-                        f"predicted qualifiers="
-                        f"{getattr(predicted_ent._, ATTR_QUALIFIERS_STR)}"
-                    )
-                    incorrect_ents.add(example_ent["ent_id"])
-
-        assert incorrect_ents == {11, 12, 32}
+        # Assert
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert doc.spans[SPANS_KEY][0].start == expected_ent["start"]
+        assert doc.spans[SPANS_KEY][0].end == expected_ent["end"]
+        assert str(doc.spans[SPANS_KEY][0]) == expected_ent["text"]
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR).issubset(
+            set(expected_ent["qualifiers"])
+        )

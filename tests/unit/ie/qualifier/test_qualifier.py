@@ -1,10 +1,8 @@
 from unittest.mock import patch
 
 import pytest
-import spacy
 from spacy.tokens import Span
 
-import clinlp  # noqa
 from clinlp.ie.qualifier import (
     ATTR_QUALIFIERS,
     Qualifier,
@@ -16,257 +14,384 @@ from clinlp.ie.qualifier import (
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_DICT, ATTR_QUALIFIERS_STR
 
 
+# Arrange
 @pytest.fixture
-def nlp():
-    return spacy.blank("clinlp")
-
-
-@pytest.fixture
-def entity():
-    doc = spacy.blank("clinlp")("dit is een test")
+def entity(nlp):
+    doc = nlp("dit is een test")
     return doc[2:3]
 
 
+# Arrange
 @pytest.fixture
-def mock_factory():
+def mock_qualifier_class():
     return QualifierClass("test", ["test1", "test2"])
 
 
+# Arrange
 @pytest.fixture
-def mock_factory_2():
+def mock_qualifier_class_2():
     return QualifierClass("test2", ["abc", "def"])
 
 
-class TestUnitQualifier:
-    def test_qualifier(self):
-        assert Qualifier("Negation", "Affirmed", is_default=False)
-        assert Qualifier("Negation", "Negated", is_default=True)
-        assert Qualifier("Negation", "Negated", is_default=True, prob=1)
-        assert Qualifier("Negation", "Negated", is_default=True, priority=1, prob=1)
+class TestUnitQualifierExtension:
+    @pytest.mark.parametrize(
+        "extension, expected_has_extension",
+        [
+            (ATTR_QUALIFIERS, True),
+            (ATTR_QUALIFIERS_STR, True),
+            (ATTR_QUALIFIERS_DICT, True),
+        ],
+    )
+    def test_spacy_has_extension(self, extension, expected_has_extension):
+        # Act
+        has_extension = Span.has_extension(extension)
 
+        # Assert
+        assert has_extension == expected_has_extension
+
+
+class TestUnitGetSetQualifiers:
+    def test_get_set_qualifiers(self, mock_qualifier_class, entity):
+        # Arrange
+        qualifiers = {mock_qualifier_class.create()}
+
+        # Act
+        set_qualifiers(entity, qualifiers)
+
+        # Assert
+        assert get_qualifiers(entity) == qualifiers
+
+    def test_get_set_qualifiers_default(self, nlp):
+        # Arrange
+        doc = nlp("dit is een test")
+
+        # Act
+        qualifiers = get_qualifiers(doc[0:3])
+
+        # Assert
+        assert qualifiers is None
+
+
+class TestUnitQualifier:
     def test_qualifier_str(self):
-        assert (
-            str(Qualifier("Negation", "Negated", is_default=True)) == "Negation.Negated"
-        )
+        # Arrange
+        qualifier = Qualifier("Negation", "Negated", is_default=True)
+
+        # Act
+        qualifier_str = str(qualifier)
+
+        # Assert
+        assert qualifier_str == "Negation.Negated"
 
     def test_qualifier_priority(self):
-        assert (
-            Qualifier("Negation", "Negated", is_default=False, priority=10).priority
-            == 10
-        )
+        # Arrange
+        qualifier = Qualifier("Negation", "Negated", is_default=False, priority=10)
 
-    def test_qualifier_dict(self):
-        assert Qualifier("Negation", "Negated", is_default=True).to_dict() == {
+        # Act
+        priority = qualifier.priority
+
+        # Assert
+        assert priority == 10
+
+    def test_to_dict_1(self):
+        # Arrange
+        qualifier = Qualifier("Negation", "Negated", is_default=True)
+
+        # Act
+        qualifier_dict = qualifier.to_dict()
+
+        # Assert
+        assert qualifier_dict == {
             "name": "Negation",
             "value": "Negated",
             "is_default": True,
             "prob": None,
         }
-        assert Qualifier(
-            "Negation", "Negated", is_default=True, prob=0.8
-        ).to_dict() == {
+
+    def test_to_dict_2(self):
+        # Arrange
+        qualifier = Qualifier("Negation", "Negated", is_default=True, prob=0.8)
+
+        # Act
+        qualifier_dict = qualifier.to_dict()
+
+        # Assert
+        assert qualifier_dict == {
             "name": "Negation",
             "value": "Negated",
             "is_default": True,
             "prob": 0.8,
         }
 
-    def test_compare_equality(self):
-        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
-            "Negation", "Negated", is_default=True
+    @pytest.mark.parametrize(
+        "q1_kwargs, q2_kwargs, expected_equality",
+        [
+            ({}, {}, True),
+            ({}, {"prob": 0.8}, True),
+            ({}, {"value": "Affirmed", "is_default": False}, False),
+        ],
+    )
+    def test_equals(self, q1_kwargs, q2_kwargs, expected_equality):
+        # Arrange
+        kwargs = {"name": "Negation", "value": "Negated", "is_default": True}
+        q1 = Qualifier(**(kwargs | q1_kwargs))
+        q2 = Qualifier(**(kwargs | q2_kwargs))
+
+        # Act
+        equality = q1 == q2
+
+        # Assert
+        assert equality == expected_equality
+
+    @pytest.mark.parametrize(
+        "qualifier_kwargs, expected_in_set",
+        [
+            ({"prob": 0.5}, True),
+            ({"value": "Negated", "is_default": True, "prob": 0.5}, False),
+            (
+                {
+                    "name": "Temporality",
+                    "value": "HISTORICAL",
+                    "is_default": True,
+                    "prob": 0.5,
+                },
+                False,
+            ),
+        ],
+    )
+    def test_qualifier_in_set_1(self, qualifier_kwargs, expected_in_set):
+        # Arrange
+        kwargs = {
+            "name": "Negation",
+            "value": "Affirmed",
+            "is_default": False,
+            "prob": 1,
+        }
+        qualifiers = {Qualifier(**kwargs)}
+
+        # Act
+        in_set = Qualifier(**(kwargs | qualifier_kwargs)) in qualifiers
+
+        # Assert
+        assert in_set == expected_in_set
+
+
+class TestUnitQualifierClass:
+    @pytest.mark.parametrize(
+        "value, expected_is_default",
+        [
+            ("Affirmed", True),
+            ("Negated", False),
+        ],
+    )
+    def test_qualifier_class_default(self, value, expected_is_default):
+        # Arrange
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
+
+        # Act
+        is_default = qualifier_class.create(value=value).is_default
+
+        # Assert
+        assert is_default == expected_is_default
+
+    @pytest.mark.parametrize(
+        "value, expected_is_default",
+        [
+            ("Affirmed", False),
+            ("Negated", True),
+        ],
+    )
+    def test_qualifier_class_nondefault(self, value, expected_is_default):
+        # Arrange
+        qualifier_class = QualifierClass(
+            "Negation", ["Affirmed", "Negated"], default="Negated"
         )
-        assert Qualifier("Negation", "Negated", is_default=True) == Qualifier(
-            "Negation", "Negated", is_default=True, prob=0.8
-        )
-        assert Qualifier("Negation", "Negated", is_default=True) != Qualifier(
-            "Negation", "Affirmed", is_default=False
-        )
 
-    def test_hash_in_set(self):
-        qualifiers = {Qualifier("Negation", "Affirmed", is_default=False, prob=1)}
+        # Act
+        is_default = qualifier_class.create(value=value).is_default
 
-        assert (
-            Qualifier("Negation", "Affirmed", is_default=False, prob=0.5) in qualifiers
-        )
-        assert (
-            Qualifier("Negation", "Negated", is_default=True, prob=0.5)
-            not in qualifiers
-        )
-        assert (
-            Qualifier("Temporality", "HISTORICAL", is_default=True, prob=0.5)
-            not in qualifiers
-        )
+        # Assert
+        assert is_default == expected_is_default
 
-    def test_spacy_has_extension(self):
-        assert Span.has_extension(ATTR_QUALIFIERS)
-        assert Span.has_extension(ATTR_QUALIFIERS_STR)
-        assert Span.has_extension(ATTR_QUALIFIERS_DICT)
-
-    def test_spacy_extension_default(self, nlp):
-        doc = nlp("dit is een test")
-        assert get_qualifiers(doc[0:3]) is None
-
-    def test_set_qualifiers(self, mock_factory, entity):
-        qualifiers = {mock_factory.create()}
-        set_qualifiers(entity, qualifiers)
-
-        assert get_qualifiers(entity) == qualifiers
-
-
-class TestUnitQualifierFactory:
-    def test_create_factory(self):
-        assert QualifierClass("Negation", ["Affirmed", "Negated"])
-
-    def test_use_factory(self):
-        factory = QualifierClass("Negation", ["Affirmed", "Negated"])
-
-        assert factory.create(value="Affirmed").is_default
-        assert not factory.create(value="Negated").is_default
-        assert factory.create(value="Affirmed") == Qualifier(
-            "Negation", "Affirmed", is_default=True
-        )
-
-    def test_use_factory_nondefault(self):
-        factory = QualifierClass("Negation", ["Affirmed", "Negated"], default="Negated")
-
-        assert not factory.create(value="Affirmed").is_default
-        assert factory.create(value="Negated").is_default
-        assert factory.create(value="Affirmed") == Qualifier(
-            "Negation", "Affirmed", is_default=False
-        )
-
-    def test_use_factory_priority_default(self):
-        factory = QualifierClass(
+    @pytest.mark.parametrize(
+        "value, expected_priority",
+        [
+            ("Absent", 0),
+            ("Uncertain", 1),
+            ("Present", 2),
+        ],
+    )
+    def test_qualifier_class_priority_default(self, value, expected_priority):
+        # Arrange
+        qualifier_class = QualifierClass(
             "Presence", ["Absent", "Uncertain", "Present"], default="Present"
         )
 
-        assert factory.create("Absent").priority == 0
-        assert factory.create("Uncertain").priority == 1
-        assert factory.create("Present").priority == 2
+        # Act
+        priority = qualifier_class.create(value=value).priority
 
-    def test_use_factory_priority_nondefault(self):
-        factory = QualifierClass(
+        # Assert
+        assert priority == expected_priority
+
+    @pytest.mark.parametrize(
+        "value, expected_priority",
+        [
+            ("Absent", 1),
+            ("Uncertain", 100),
+            ("Present", 0),
+        ],
+    )
+    def test_qualifier_class_priority_nondefault(self, value, expected_priority):
+        # Arrange
+        qualifier_class = QualifierClass(
             "Presence",
             ["Absent", "Uncertain", "Present"],
             default="Present",
             priorities={"Absent": 1, "Uncertain": 100, "Present": 0},
         )
 
-        assert factory.create("Absent").priority == 1
-        assert factory.create("Uncertain").priority == 100
-        assert factory.create("Present").priority == 0
+        # Act
+        priority = qualifier_class.create(value=value).priority
 
-    def test_use_factory_unhappy(self):
-        factory = QualifierClass("Negation", ["Affirmed", "Negated"])
+        # Assert
+        assert priority == expected_priority
 
+    def test_qualifier_class_error(self):
+        # Arrange
+        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
+
+        # Assert
         with pytest.raises(ValueError):
-            _ = factory.create(value="Unknown")
+            # Act
+            _ = qualifier_class.create(value="Unknown")
 
 
 class TestUnitQualifierDetector:
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_create_qualifier_detector(self):
-        _ = QualifierDetector()
-
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_no_init(self, entity, mock_factory):
+    @patch.multiple(QualifierDetector, __abstractmethods__=set())
+    def test_add_qualifier_no_init(self, entity, mock_qualifier_class):
+        # Arrange
         qd = QualifierDetector()
-        qualifier = mock_factory.create("test1")
+        qualifier = mock_qualifier_class.create("test1")
 
+        # Assert
         with pytest.raises(RuntimeError):
+            # Act
             qd.add_qualifier_to_ent(entity, qualifier)
 
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_default(self, entity, mock_factory):
+    @patch.object(QualifierDetector, "__abstractmethods__", set())
+    def test_add_qualifier_default(self, entity, mock_qualifier_class):
+        # Arrange
         qd = QualifierDetector()
-        factories = {"test": mock_factory}
-        qualifier = mock_factory.create("test1")
+        qualifier_classes = {"test": mock_qualifier_class}
+        qualifier = mock_qualifier_class.create("test1")
 
         with patch(
             "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
-            factories,
+            qualifier_classes,
         ):
             qd._initialize_ent_qualifiers(entity)
 
+        # Act
         qd.add_qualifier_to_ent(entity, qualifier)
 
+        # Assert
         assert len(get_qualifiers(entity)) == 1
         assert qualifier in get_qualifiers(entity)
-        assert mock_factory.create("test2") not in get_qualifiers(entity)
+        assert mock_qualifier_class.create("test2") not in get_qualifiers(entity)
 
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_non_default(self, entity, mock_factory):
+    @patch.object(QualifierDetector, "__abstractmethods__", set())
+    def test_add_qualifier_non_default(self, entity, mock_qualifier_class):
+        # Arrange
         qd = QualifierDetector()
-        factories = {"test": mock_factory}
-        qualifier = mock_factory.create("test2")
+        qualifier_classes = {"test": mock_qualifier_class}
+        qualifier = mock_qualifier_class.create("test2")
 
         with patch(
             "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
-            factories,
+            qualifier_classes,
         ):
             qd._initialize_ent_qualifiers(entity)
 
+        # Act
         qd.add_qualifier_to_ent(entity, qualifier)
 
+        # Assert
         assert len(get_qualifiers(entity)) == 1
-        assert mock_factory.create("test1") not in get_qualifiers(entity)
+        assert mock_qualifier_class.create("test1") not in get_qualifiers(entity)
         assert qualifier in get_qualifiers(entity)
 
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_overwrite_nondefault(self, entity, mock_factory):
+    @patch.object(QualifierDetector, "__abstractmethods__", set())
+    def test_add_qualifier_overwrite_nondefault(self, entity, mock_qualifier_class):
+        # Arrange
         qd = QualifierDetector()
-        factories = {"test": mock_factory}
-        qualifier_1 = mock_factory.create("test1")
-        qualifier_2 = mock_factory.create("test2")
+        qualifier_classes = {"test": mock_qualifier_class}
+        qualifier_1 = mock_qualifier_class.create("test1")
+        qualifier_2 = mock_qualifier_class.create("test2")
 
         with patch(
             "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
-            factories,
+            qualifier_classes,
         ):
             qd._initialize_ent_qualifiers(entity)
 
+        # Act
         qd.add_qualifier_to_ent(entity, qualifier_2)
         qd.add_qualifier_to_ent(entity, qualifier_1)
 
+        # Assert
         assert len(get_qualifiers(entity)) == 1
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 not in get_qualifiers(entity)
 
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_add_qualifier_multiple(self, entity, mock_factory, mock_factory_2):
+    @patch.object(QualifierDetector, "__abstractmethods__", set())
+    def test_add_qualifier_multiple(
+        self, entity, mock_qualifier_class, mock_qualifier_class_2
+    ):
+        # Arrange
         qd = QualifierDetector()
-        qualifier_1 = mock_factory.create("test2")
-        qualifier_2 = mock_factory_2.create("abc")
-
-        factories = {"test1": mock_factory, "test2": mock_factory_2}
+        qualifier_1 = mock_qualifier_class.create("test2")
+        qualifier_2 = mock_qualifier_class_2.create("abc")
+        qualifier_classes = {
+            "test1": mock_qualifier_class,
+            "test2": mock_qualifier_class_2,
+        }
 
         with patch(
             "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
-            factories,
+            qualifier_classes,
         ):
             qd._initialize_ent_qualifiers(entity)
 
+        # Act
         qd.add_qualifier_to_ent(entity, qualifier_1)
         qd.add_qualifier_to_ent(entity, qualifier_2)
 
+        # Assert
         assert len(get_qualifiers(entity)) == 2
         assert qualifier_1 in get_qualifiers(entity)
         assert qualifier_2 in get_qualifiers(entity)
 
-    @patch("clinlp.ie.qualifier.qualifier.QualifierDetector.__abstractmethods__", set())
-    def test_initialize_qualifiers(self, entity, mock_factory, mock_factory_2):
+    @patch.object(QualifierDetector, "__abstractmethods__", set())
+    def test_initialize_qualifiers(
+        self, entity, mock_qualifier_class, mock_qualifier_class_2
+    ):
+        # Arrange
         qd = QualifierDetector()
+        qualifier_classes = {
+            "test1": mock_qualifier_class,
+            "test2": mock_qualifier_class_2,
+        }
 
-        factories = {"test1": mock_factory, "test2": mock_factory_2}
-
+        # Act
         with patch(
             "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
-            factories,
+            qualifier_classes,
         ):
             qd._initialize_ent_qualifiers(entity)
 
+        # Assert
         assert len(get_qualifiers(entity)) == 2
-        assert mock_factory.create() in get_qualifiers(entity)
-        assert mock_factory.create("test2") not in get_qualifiers(entity)
-        assert mock_factory_2.create() in get_qualifiers(entity)
-        assert mock_factory_2.create("def") not in get_qualifiers(entity)
+        assert mock_qualifier_class.create() in get_qualifiers(entity)
+        assert mock_qualifier_class.create("test2") not in get_qualifiers(entity)
+        assert mock_qualifier_class_2.create() in get_qualifiers(entity)
+        assert mock_qualifier_class_2.create("def") not in get_qualifiers(entity)
