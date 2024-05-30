@@ -11,7 +11,7 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierClass,
     QualifierDetector,
 )
-from clinlp.util import clinlp_autocomponent
+from clinlp.util import clinlp_component
 
 HF_FROM_PRETRAINED_NEGATION = {
     "pretrained_model_name_or_path": "UMCU/MedRoBERTa.nl_NegationDetection",
@@ -125,13 +125,12 @@ class QualifierTransformer(QualifierDetector):
         )
 
 
-@Language.factory(
+@clinlp_component(
     name="clinlp_negation_transformer",
     requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_negation_transformer,
 )
-@clinlp_autocomponent
 class NegationTransformer(QualifierTransformer):
     def __init__(
         self,
@@ -186,13 +185,12 @@ class NegationTransformer(QualifierTransformer):
             )
 
 
-@Language.factory(
+@clinlp_component(
     name="clinlp_experiencer_transformer",
     requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
     default_config=_defaults_experiencer_transformer,
 )
-@clinlp_autocomponent
 class ExperiencerTransformer(QualifierTransformer):
     def __init__(
         self,

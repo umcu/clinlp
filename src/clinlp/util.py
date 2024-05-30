@@ -2,6 +2,7 @@ import inspect
 from inspect import Parameter, Signature
 
 from makefun import with_signature
+from spacy.language import Language
 
 
 class _UnusedArgument:
@@ -28,46 +29,52 @@ def get_class_init_signature(cls):
     return args, kwargs
 
 
-def clinlp_autocomponent(cls):
-    component_args, component_kwargs = get_class_init_signature(cls)
+def clinlp_component(*args, register=True, **kwargs):
+    def _clinlp_component(cls):
+        component_args, component_kwargs = get_class_init_signature(cls)
 
-    params = []
+        make_component_args = component_args.copy()
 
-    make_component_args = component_args.copy()
+        if "nlp" not in make_component_args:
+            make_component_args = ["nlp"] + make_component_args
 
-    if "nlp" not in make_component_args:
-        make_component_args = ["nlp"] + make_component_args
+        if "name" not in make_component_args:
+            make_component_args = ["name"] + make_component_args
 
-    if "name" not in make_component_args:
-        make_component_args = ["name"] + make_component_args
+        params = []
 
-    for arg in make_component_args:
-        params.append(
-            Parameter(
-                arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
+        for arg in make_component_args:
+            params.append(
+                Parameter(
+                    arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
+                )
             )
-        )
 
-    for kwarg, default in component_kwargs.items():
-        params.append(
-            Parameter(kwarg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=default)
-        )
+        for kwarg, default in component_kwargs.items():
+            params.append(
+                Parameter(kwarg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=default)
+            )
 
-    @with_signature(Signature(params), func_name="make_component")
-    def make_component(*args, **kwargs):
-        if len(args) > 0:
-            raise RuntimeError("Please pass all arguments as keywords.")
+        @with_signature(Signature(params), func_name="make_component")
+        def make_component(*args, **kwargs):
+            if len(args) > 0:
+                raise RuntimeError("Please pass all arguments as keywords.")
 
-        cls_kwargs = {
-            k: v
-            for k, v in kwargs.items()
-            if (k in component_args or k in component_kwargs)
-            and (not isinstance(v, _UnusedArgument))
-        }
+            cls_kwargs = {
+                k: v
+                for k, v in kwargs.items()
+                if (k in component_args or k in component_kwargs)
+                and (not isinstance(v, _UnusedArgument))
+            }
 
-        return cls(**cls_kwargs)
+            return cls(**cls_kwargs)
 
-    return make_component
+        if register:
+            Language.factory(*args, func=make_component, **kwargs)
+
+        return make_component
+
+    return _clinlp_component
 
 
 def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
