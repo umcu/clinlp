@@ -84,5 +84,5 @@ if __name__ == "__main__":
 
     docs = list(nlp.pipe(texts))
 
-    with Path.open("clinlp_docs.pickle", "wb") as f:
+    with Path("clinlp_docs.pickle").open(mode="wb") as f:
         pickle.dump(docs, f)

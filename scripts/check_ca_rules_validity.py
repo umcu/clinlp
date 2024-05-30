@@ -23,7 +23,7 @@ def any_in_pseudo(pseudo_term: str, patterns: set) -> bool:
 
 
 if __name__ == "__main__":
-    with Path.open(RULE_FILE) as f:
+    with Path(RULE_FILE).open() as f:
         data = json.load(f)
 
     for rule in data["rules"]:
