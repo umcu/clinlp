@@ -495,7 +495,7 @@ class TestMetrics:
         # Assert
         with pytest.raises(ValueError, match=".*Datasets with same size.*"):
             # Act
-            iem._validate_self()
+            iem._validate_dataset_compatibility()
 
     def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
@@ -505,7 +505,7 @@ class TestMetrics:
         # Assert
         with pytest.raises(ValueError, match=".*non-matching ids.*"):
             # Act
-            iem._validate_self()
+            iem._validate_dataset_compatibility()
 
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
@@ -544,7 +544,7 @@ class TestMetrics:
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = iem.entity_metrics(classes=True)
+        metrics = iem.entity_metrics(per_label=True)
 
         # Assert
         assert len(metrics) == 9
