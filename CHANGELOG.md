@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
-## (unreleased)
+## 0.8.0 (2024-06-03)
 
 ### Changed
 * :exclamation: Renamed the `clinlp_entity_matcher` to `clinlp_rule_based_entity_matcher`
