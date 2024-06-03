@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Refactored tests to use `pytest` best practices
 * Changed `clinlp_autocomponent` to `clinlp_component`, which automatically registers your component with spaCy
 * Codebase and linting improvements
+* Renamed the `other_threshold` config to `family_threshold` in the `clinlp_experiencer_transformer` component
 
 ### Fixed
 * The `clinlp_rule_based_entity_matcher` no longer overwrites entities detected by other components (but appends them)
