@@ -1,4 +1,4 @@
-"""Custom exceptions for the clinlp package."""
+"""Custom exceptions for the `clinlp` package."""
 
 
 class VersionMismatchWarning(Warning):
