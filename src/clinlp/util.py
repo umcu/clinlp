@@ -1,3 +1,5 @@
+"""Utility functions that are used across the library."""
+
 import inspect
 from inspect import Parameter, Signature
 from typing import Callable, Tuple, Type
@@ -7,10 +9,22 @@ from spacy.language import Language
 
 
 class _UnusedArgument:
-    pass
+    """Placeholder for unused arguments in the signature of a function."""
 
 
 def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
+    """
+    Get the arguments and keyword arguments of a class's __init__ method.
+
+    Parameters
+    ----------
+    cls
+        The class to get the signature of.
+
+    Returns
+    -------
+        The arguments and keyword arguments of the class's __init__ method.
+    """
     args = []
     kwargs = {}
 
@@ -31,6 +45,24 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
 
 
 def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
+    """
+    Denote a class as clinlp component.
+
+    Should be used as a decorator on a class. Additionally handles the `name` and `nlp`
+    arguments, and handles inheritance.
+
+    Parameters
+    ----------
+    register, optional
+        Whether to automatically register the class as a spaCy component, or to only
+        return the make function, by default `True`. If set to `False`, should
+        probably be further decorated with `@Language.factory`.
+
+    Returns
+    -------
+        The make function for the class.
+    """
+
     def _clinlp_component(cls: Type) -> Callable:
         component_args, component_kwargs = get_class_init_signature(cls)
 
@@ -78,6 +110,29 @@ def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
 
 
 def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
+    """
+    Calculate the distance between two intervals.
+
+    Parameters
+    ----------
+    start_a
+        The start of the first interval.
+    end_a
+        The end of the first interval.
+    start_b
+        The start of the second interval.
+    end_b
+        The end of the second interval.
+
+    Returns
+    -------
+        The distance between the two intervals.
+
+    Raises
+    ------
+    ValueError
+        If an input interval is malformed.
+    """
     if (end_a < start_a) or (end_b < start_b):
         msg = "Input malformed interval."
         raise ValueError(msg)
