@@ -232,9 +232,9 @@ class InfoExtractionDataset:
     _ALL_STATS: ClassVar[list] = [
         "num_docs",
         "num_annotations",
-        "span_counts",
-        "label_counts",
-        "qualifier_counts",
+        "span_freqs",
+        "label_freqs",
+        "qualifier_freqs",
     ]
 
     def __post_init__(self) -> None:
@@ -267,7 +267,7 @@ class InfoExtractionDataset:
         """
         default_qualifiers = {
             name: max(counts, key=lambda item: counts[item])
-            for name, counts in self.qualifier_counts().items()
+            for name, counts in self.qualifier_freqs().items()
         }
 
         warnings.warn(
@@ -464,7 +464,7 @@ class InfoExtractionDataset:
         """
         return sum(len(doc.annotations) for doc in self.docs)
 
-    def span_counts(
+    def span_freqs(
         self,
         n_spans: Optional[int] = 25,
         span_callback: Optional[Callable] = None,
@@ -497,7 +497,7 @@ class InfoExtractionDataset:
 
         return dict(cntr.most_common(n_spans))
 
-    def label_counts(
+    def label_freqs(
         self,
         n_labels: Optional[int] = 25,
         label_callback: Optional[Callable] = None,
@@ -530,7 +530,7 @@ class InfoExtractionDataset:
 
         return dict(cntr.most_common(n_labels))
 
-    def qualifier_counts(self) -> dict:
+    def qualifier_freqs(self) -> dict:
         """
         Compute frequency of all qualifier values in this dataset.
 

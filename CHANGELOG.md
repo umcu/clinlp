@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## (unreleased)
+
+### Changed
+* In `InformationExtractionDataset`, renamed `span_counts`, `label_counts` and `qualifier_counts` to `span_freqs`, `label_freqs` and `qualifier_freqs` respectively.
+
 ## 0.8.0 (2024-06-03)
 
 ### Changed
