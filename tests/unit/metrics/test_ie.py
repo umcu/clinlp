@@ -479,9 +479,7 @@ class TestDataset:
         assert stats["span_freqs"] == mctrainer_dataset.span_freqs(
             span_callback=span_callback
         )
-        assert stats["label_freqs"] == mctrainer_dataset.label_freqs(
-            n_labels=n_labels
-        )
+        assert stats["label_freqs"] == mctrainer_dataset.label_freqs(n_labels=n_labels)
         assert stats["qualifier_freqs"] == mctrainer_dataset.qualifier_freqs()
 
 
