@@ -37,7 +37,7 @@ _defaults_negation_transformer = {
 }
 _defaults_experiencer_transformer = {
     "token_window": 64,
-    "other_threshold": 0.5,
+    "family_threshold": 0.5,
 }
 
 
@@ -209,11 +209,11 @@ class ExperiencerTransformer(QualifierTransformer):
     def __init__(
         self,
         nlp: Language,
-        other_threshold: float = _defaults_experiencer_transformer["other_threshold"],
+        family_threshold: float = _defaults_experiencer_transformer["family_threshold"],
         **kwargs,
     ) -> None:
         self.nlp = nlp
-        self.other_threshold = other_threshold
+        self.family_threshold = family_threshold
 
         super().__init__(**kwargs)
 
@@ -221,7 +221,7 @@ class ExperiencerTransformer(QualifierTransformer):
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         return {
             "Experiencer": QualifierClass(
-                "Experiencer", ["Patient", "Family"], default="Patient"
+                "Experiencer", ["Patient", "Family", "Other"], default="Patient"
             )
         }
 
@@ -237,7 +237,7 @@ class ExperiencerTransformer(QualifierTransformer):
                 prob_aggregator=self.prob_aggregator,
             )
 
-            if prob > self.other_threshold:
+            if prob > self.family_threshold:
                 self.add_qualifier_to_ent(
                     ent,
                     self.qualifier_classes["Experiencer"].create("Family", prob=prob),
