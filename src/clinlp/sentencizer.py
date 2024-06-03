@@ -1,4 +1,4 @@
-from typing import Optional
+"""Functionality for sentencizing text."""
 
 from spacy.pipeline import Pipe
 from spacy.tokens import Doc, Token
@@ -17,10 +17,30 @@ _defaults_sentencizer = {
     default_config=_defaults_sentencizer,
 )
 class Sentencizer(Pipe):
+    r"""
+    A spaCy pipeline component for sentencizing text.
+
+    Uses the following logic for detecting sentence boundaries: any character included
+    in `sent_end_chars` can mark the end of a sentence. The actual sentence boundary
+    then occurs at the next token that either:
+        - Is an alphanumeric token
+        - Starts with `[`
+        - Is included in `sent_start_punct`
+
+    Parameters
+    ----------
+    sent_end_chars, optional
+        A list of characters that can end a sentence,
+        by default `[".", "!", "?", "\n", "\r"]`.
+    sent_start_punct, optional
+        Any punctuation that is allowed to start a sentence,
+        by default `["-", "*", "[", "("]`.
+    """
+
     def __init__(
         self,
-        sent_end_chars: Optional[list[str]] = None,
-        sent_start_punct: Optional[list[str]] = None,
+        sent_end_chars: list[str] = _defaults_sentencizer["sent_end_chars"],
+        sent_start_punct: list[str] = _defaults_sentencizer["sent_start_punct"],
     ) -> None:
         self.sent_end_chars = set(
             _defaults_sentencizer["sent_end_chars"]
@@ -35,7 +55,16 @@ class Sentencizer(Pipe):
 
     def _token_can_start_sent(self, token: Token) -> bool:
         """
-        Determines whether a token can start a sentence
+        Determine whether a token can start a sentence.
+
+        Parameters
+        ----------
+        token
+            The token to check.
+
+        Returns
+        -------
+            Whether the token can start a sentence.
         """
         return (
             token.text[0].isalnum()
@@ -45,11 +74,33 @@ class Sentencizer(Pipe):
 
     def _token_can_end_sent(self, token: Token) -> bool:
         """
-        Determines whether a token can end a sentence
+        Determine whether a token can end a sentence.
+
+        Parameters
+        ----------
+        token
+            The token to check.
+
+        Returns
+        -------
+            Whether the token can end a sentence.
         """
         return token.text in self.sent_end_chars
 
     def _get_sentence_starts(self, doc: Doc) -> list[bool]:
+        """
+        Get the sentence starts for a document.
+
+        Parameters
+        ----------
+        doc
+            The doc to sentencize.
+
+        Returns
+        -------
+            A list of booleans indicating whether each token marks the start of a
+            sentence.
+        """
         if len(doc) == 0:
             return []
 
@@ -71,6 +122,19 @@ class Sentencizer(Pipe):
         return sentence_starts
 
     def __call__(self, doc: Doc) -> Doc:
+        """
+        Sentencize the text in the doc.
+
+        Parameters
+        ----------
+        doc
+            The doc to sentencize.
+
+        Returns
+        -------
+            The doc with `token.is_sent_start` set to whether the token starts a
+            sentence.
+        """
         if len(doc) == 0:
             return doc
 
