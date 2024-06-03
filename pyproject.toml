@@ -48,8 +48,8 @@ ignore = [
     "ANN002", "ANN003", "ANN101", "ANN102"
 ]
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S", "ANN"]
-"scripts/*" = ["T20"]
+"tests/*" = ["D", "S", "ANN"]
+"scripts/*" = ["D", "T20"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
