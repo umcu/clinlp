@@ -1,3 +1,5 @@
+"""Functions and classes for evaluating information extraction tasks."""
+
 import inspect
 import itertools
 import warnings
@@ -6,8 +8,8 @@ from dataclasses import dataclass, field
 from typing import Callable, ClassVar, Iterable, Optional
 
 import nervaluate
-import spacy
 from sklearn.metrics import f1_score, precision_score, recall_score
+from spacy.language import Doc
 
 from clinlp.ie import SPANS_KEY
 
@@ -15,51 +17,67 @@ from clinlp.ie import SPANS_KEY
 @dataclass
 class Annotation:
     """
-    An annotation of a single entity in a piece of text.
+    Represents an annotation in a document.
+
+    Parameters
+    ----------
+    text
+        The text/str span of this annotation
+    start
+        The start char
+    end
+        The end char
+    label
+        The label/tag
+    qualifiers
+        The applicable qualifiers, by default `[]`.
     """
 
     text: str
-    """ The text/str span of this annotation """
-
     start: int
-    """ The start char """
-
     end: int
-    """ The end char"""
-
     label: str
-    """ The label/tag"""
-
     qualifiers: list[dict] = field(default_factory=list)
-    """ Optionally, a list of qualifiers"""
 
     def lstrip(self, chars: str = " ,") -> None:
         """
-        Strips punctuation and whitespaces from the beginning of the annotation.
-        """
+        Strip punctuation and whitespaces from the beginning of the annotation.
 
+        Parameters
+        ----------
+        chars
+            The characters to strip from the beginning, by default " ,".
+        """
         self.start += len(self.text) - len(self.text.lstrip(chars))
         self.text = self.text.lstrip(chars)
 
     def rstrip(self, chars: str = " ,") -> None:
         """
-        Strips punctuation and whitespaces from the end of the annotation.
-        """
+        Strip punctuation and whitespaces from the end of the annotation.
 
+        Parameters
+        ----------
+        chars
+            The characters to strip from the end, by default " ,".
+        """
         self.end -= len(self.text) - len(self.text.rstrip(chars))
         self.text = self.text.rstrip(chars)
 
     def strip(self, chars: str = " ,") -> None:
         """
-        Strips punctuation and whitespaces from the beginning and end of the annotation.
-        """
+        Strip punctuation and whitespaces from the beginning and end of the annotation.
 
+        Parameters
+        ----------
+        chars
+            The characters to strip from the beginning and end, by default " ,".
+        """
         self.lstrip(chars=chars)
         self.rstrip(chars=chars)
 
     def to_nervaluate(self) -> dict:
         """
-        Converts to format that nervaluate ingests.
+        Convert to format that nervaluate ingests.
 
         Returns
         -------
@@ -79,23 +97,27 @@ class Annotation:
 
         Returns
         -------
-        A set of unique qualifier names, e.g. {"Negation", "Experiencer"}.
+        A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
         """
         return {qualifier["name"] for qualifier in self.qualifiers}
 
     def get_qualifier_by_name(self, qualifier_name: str) -> dict:
         """
-        Get a qualifier from the set of qualifiers by its name, or raise an error
-        when this qualifier is not present.
+        Get a qualifier by name.
 
         Parameters
         ----------
-        qualifier_name: The name of the qualifier, e.g. Negation
+        qualifier_name
+            The name of the qualifier.
 
         Returns
         -------
-        The entire qualifier, e.g. {"name": "Negation", "value": "Affirmed", ...}
+            The qualifier with the provided name.
 
+        Raises
+        ------
+        KeyError
+            If no qualifier with the provided name exists.
         """
         for qualifier in self.qualifiers:
             if qualifier["name"] == qualifier_name:
@@ -107,33 +129,40 @@ class Annotation:
 
 @dataclass
 class Document:
-    """Any length of annotated text."""
+    """
+    Represents a document with annotations.
+
+    Parameters
+    ----------
+    identifier
+        Any identifier for the document.
+    text
+        The text.
+    annotations
+        A list of annotations.
+    """
 
     identifier: str
-    """ Any identifier for the document. """
-
     text: str
-    """ The text. """
-
     annotations: list[Annotation]
-    """ A list of annotations. """
 
     def to_nervaluate(
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[dict]:
         """
-        Converts to format that nervaluate ingests.
+        Convert to format that nervaluate ingests.
 
         Parameters
         ----------
-        ann_filter: A filter to apply to annotations, should map to annotations to True
-        if they should be included, False otherwise.
+        ann_filter, optional
+            A filter to apply to annotations, by default `None`. Should map to
+            annotations to `True` if they should be included, `False` otherwise,
+            by default `None`.
 
         Returns
         -------
-        A list of dictionaries corresponding to annotations.
+            A list of dictionaries corresponding to annotations.
         """
-
         ann_filter = ann_filter or (lambda _: True)
 
         return [ann.to_nervaluate() for ann in self.annotations if ann_filter(ann)]
@@ -163,19 +192,20 @@ class Document:
 
     def get_annotation_from_span(self, start: int, end: int) -> Optional[Annotation]:
         """
-        Get annotation that exactly matches start and end char.
+        Get an annotation by span.
 
         Parameters
         ----------
-        start: The start char.
-        end: The end char.
+        start
+            The start char.
+        end
+            The end char.
 
         Returns
         -------
-        The Annotation with the provided start and end char, of None if no such
-        Annotation exists.
+            The annotation with the provided span, or `None` if no such annotation
+            exists.
         """
-
         for annotation in self.annotations:
             if (annotation.start == start) and (annotation.end == end):
                 return annotation
@@ -185,21 +215,35 @@ class Document:
 
 @dataclass
 class InfoExtractionDataset:
-    """Any number of Documents."""
+    """
+    Represents a dataset with annotated documents.
+
+    Parameters
+    ----------
+    docs
+        The annotated documents.
+    default_qualifiers
+        Mapping of qualifiers to their default value, e.g. `{"Presence": "Present"}`.
+    """
 
     docs: list[Document]
-    """ The annotated documents. """
-
     default_qualifiers: Optional[dict[str, str]] = None
-    """ Mapping of qualifiers to their default value, e.g. {"Negation": "Affirmed"}"""
+
+    _ALL_STATS: ClassVar[list] = [
+        "num_docs",
+        "num_annotations",
+        "span_counts",
+        "label_counts",
+        "qualifier_counts",
+    ]
 
     def __post_init__(self) -> None:
         """
-        Responsible for setting the default qualifiers by checking the default
-        qualifiers set on Annotations, if set, or inferring them from the majority
-        class otherwise.
-        """
+        Initialize the dataset.
 
+        Initializes the default qualifiers, from the annotations (if available) or
+        infers them from the majority class.
+        """
         self.default_qualifiers = {}
 
         try:
@@ -213,26 +257,14 @@ class InfoExtractionDataset:
         except KeyError:
             self.default_qualifiers = self.infer_default_qualifiers()
 
-    _ALL_STATS: ClassVar[list] = [
-        "num_docs",
-        "num_annotations",
-        "span_counts",
-        "label_counts",
-        "qualifier_counts",
-    ]
-    """ All methods to call when computing full dataset stats """
-
     def infer_default_qualifiers(self) -> dict:
         """
-        Infer the default values for qualifiers, based on the majority class, and
-        set this value on all annotations.
+        Infer and set Annotations' default qualifiers from majority classes.
 
         Returns
-        A dictionary with defaults, e.g. {"Negation": "Negated", "Experiencer":
-        "Patient"}.
         -------
+            A dictionary mapping qualifier names to their default values.
         """
-
         default_qualifiers = {
             name: max(counts, key=lambda item: counts[item])
             for name, counts in self.qualifier_counts().items()
@@ -256,21 +288,23 @@ class InfoExtractionDataset:
 
     @staticmethod
     def from_clinlp_docs(
-        nlp_docs: Iterable[spacy.language.Doc], ids: Optional[Iterable[str]] = None
+        nlp_docs: Iterable[Doc], ids: Optional[Iterable[str]] = None
     ) -> "InfoExtractionDataset":
         """
-        Creates a new dataset from clinlp output, by converting the spaCy Docs.
+        Create a new dataset from clinlp documents.
 
         Parameters
         ----------
-        nlp_docs: An iterable of docs produced by clinlp (a generator from nlp.pipe
-        also works)
-        ids: An iterable of identifiers, that should have the same length as nlp_docs.
-        If none is provided, a simple counter will be used.
+        nlp_docs
+            An iterable of docs produced by clinlp (for example a list of `Doc`, or a
+            generator from `nlp.pipe`)
+        ids, optional
+            An iterable of identifiers, that should have the same length as `nlp_docs`,
+            by default None. If not provided, will use a counter.
 
         Returns
         -------
-        A Dataset, corresponding to the provided spaCy docs that clinlp produced.
+            A dataset, corresponding to the provided clinlp documents.
         """
         ids = ids or itertools.count()
 
@@ -315,24 +349,31 @@ class InfoExtractionDataset:
         default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
         """
-        Creates a new dataset from medcattrainer output, by converting downloaded json.
+        Create a new dataset from a MedCATTrainer export.
 
         Parameters
         ----------
-        data: The output from medcattrainer, as downloaded from the interface in
-        json format and provided as a dict.
-        strip_spans: Whether to remove punctuation and whitespaces from the beginning or
-        end of annotations. Used to clean up accidental over-annotations.
-        default_qualifiers: Optionally, the default qualifiers (which are not included
-        in the medcattrainer export), e.g. {"Negation": "Negated", "Experiencer":
-        "Patient"}. If None, will assume majority class is default.
+        data
+            The data from a MedCATTrainer export as a dictionary, as downloaded from
+            the web interface in JSON format.
+        strip_spans, optional
+            Whether to remove punctuation and whitespaces from the beginning or end
+            of annotations, by default True. Used to clean up accidental
+            over-annotations.
+        default_qualifiers, optional
+            THe default qualifiers (which are not included in the MedCATTrainer export),
+             e.g. `{"Presence": "Absent", "Experiencer": "Patient"}`, by default `None`.
+             If `None`, will infer the default qualifiers from the majority class.
 
         Returns
         -------
-        A Dataset, corresponding to the provided data that medcattrainer produced.
+            A dataset, corresponding to the provided MedCATTrainer export.
 
+        Raises
+        ------
+        ValueError
+            If the MedCATTrainer export contains more than one project.
         """
-
         if len(data["projects"]) > 1:
             msg = "Cannot read MedCATTrainer exports with more than 1 project."
             raise ValueError(msg)
@@ -386,41 +427,40 @@ class InfoExtractionDataset:
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[list[dict]]:
         """
-        Converts to format that nervaluate ingests.
+        Convert to format that nervaluate ingests.
 
         Parameters
         ----------
-        ann_filter: A filter to apply to annotations, should map to annotations to True
-        if they should be included, False otherwise.
+        ann_filter, optional
+            A filter to apply to annotations, by default `None`. Should map to
+            annotations to `True` if they should be included, `False` otherwise,
+            by default `None`.
 
         Returns
         -------
-        A nested list of dictionaries corresponding to annotations.
+            A list of lists of dictionaries corresponding to annotations.
         """
-
         ann_filter = ann_filter or (lambda _: True)
 
         return [doc.to_nervaluate(ann_filter) for doc in self.docs]
 
     def num_docs(self) -> int:
         """
-        The number of documents in this dataset.
+        Compute the number of documents in this dataset.
 
         Returns
         -------
-        The number of documents in this dataset.
-
+            The number of documents in this dataset.
         """
         return len(self.docs)
 
     def num_annotations(self) -> int:
         """
-        The number of annotations in all documents of this dataset.
+        Compute the number of annotations in all documents of this dataset.
 
         Returns
         -------
-        The number of annotations in all documents of this dataset.
-
+            The number of annotations in all documents of this dataset.
         """
         return sum(len(doc.annotations) for doc in self.docs)
 
@@ -430,16 +470,19 @@ class InfoExtractionDataset:
         span_callback: Optional[Callable] = None,
     ) -> dict:
         """
-        Counts the text spans of all annotations in this dataset.
+        Compute frequency of all text spans in this dataset.
 
         Parameters
         ----------
-        n_spans: The maximum number of spans to return, ordered by frequency
-        span_callback: A callback that is applied to each text span
+        n_spans, optional
+            The `n` most frequent text spans to return, by default 25.
+        span_callback, optional
+            A callback applied to each text span, by default None. For instance
+            useful for normalizing text.
 
         Returns
         -------
-        A dictionary containing the frequency of the requested text spans.
+            A dictionary containing the frequency of the requested text spans.
         """
         cntr = Counter()
         span_callback = span_callback or (lambda x: x)
@@ -460,18 +503,20 @@ class InfoExtractionDataset:
         label_callback: Optional[Callable] = None,
     ) -> dict:
         """
-        Counts the annotation labels of all annotations in this dataset.
+        Compute frequency of all labels in this dataset.
 
         Parameters
         ----------
-        n_labels: The maximum number of labels to return, ordered by frequency
-        label_callback: A callback that is applied to each label
+        n_spans, optional
+            The `n` most frequent labels to return, by default 25.
+        span_callback, optional
+            A callback applied to each label, by default None. For instance
+            useful for normalizing text.
 
         Returns
         -------
-        A dictionary containing the frequency of the requested annotation labels.
+            A dictionary containing the frequency of the requested labels.
         """
-
         cntr = Counter()
         label_callback = label_callback or (lambda x: x)
 
@@ -487,13 +532,12 @@ class InfoExtractionDataset:
 
     def qualifier_counts(self) -> dict:
         """
-        Counts the values of all qualifiers.
+        Compute frequency of all qualifier values in this dataset.
 
         Returns
         -------
-        A dictionary, mapping qualifier names to the frequencies of their values.
-        E.g.: {"Negation": {"Affirmed": 34, "Negated": 12}}
-
+            The computed frequencies, as a mapping from qualifier names to values to
+            frequencies, e.g. `{"Presence": {"Present": 25, "Absent": 10}, ...}`.
         """
         cntrs = defaultdict(lambda: Counter())
 
@@ -506,15 +550,17 @@ class InfoExtractionDataset:
 
     def stats(self, **kwargs) -> dict:
         """
-        Compute all the stats of this dataset, as defined in the
-        _ALL_STATS class variable.
+        Compute all stats for this dataset.
+
+        Combines the return values of all stats functions, defined in the `_ALL_STATS`
+        class variable. Any additional keyword arguments are passed to the respective
+        stats functions, if they accept them.
 
         Returns
         -------
-        A dictionary mapping the name of the stat to the values.
-        E.g.: {'num_docs': 384, 'num_annotations': 4353, ...}
+            A dictionary containing all computed stats, e.g.
+            `{'num_docs': 384, 'num_annotations': 4353, ...}`.
         """
-
         stats = {}
 
         for stat in self._ALL_STATS:
@@ -533,10 +579,16 @@ class InfoExtractionDataset:
 
 class InfoExtractionMetrics:
     """
-    Use this class to implement metrics comparing datasets.
+    Compute metrics for information extraction tasks.
+
+    Parameters
+    ----------
+    true
+        The dataset containing true (annotated/gold standard) annotations.
+    pred
+        The dataset containing pred (predicted/inferred) annotations.
     """
 
-    """ Compute these metrics for qualifiers. """
     _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
         "recall": recall_score,
@@ -546,23 +598,21 @@ class InfoExtractionMetrics:
     def __init__(
         self, true: InfoExtractionDataset, pred: InfoExtractionDataset
     ) -> None:
-        """
-        Initialize metrics.
-
-        Parameters
-        ----------
-        true: The dataset containing true (annotated/gold standard) annotations.
-        pred: The dataset containing pred (predicted/inferred) annotations.
-        """
         self.true = true
         self.pred = pred
 
-        self._validate_self()
+        self._validate_dataset_compatibility()
 
-    def _validate_self(self) -> None:
+    def _validate_dataset_compatibility(self) -> None:
         """
-        Validate the two datasets. Will raise an ValueError when datasets don't contain
-        the same documents.
+        Validate that the datasets are compatible for metric computation.
+
+        Raises
+        ------
+        ValueError
+            If the datasets don't have the same number of documents.
+        ValueError
+            If the datasets contain documents with non-matching identifiers.
         """
         if self.true.num_docs() != self.pred.num_docs():
             msg = "Can only compute metrics for Datasets with same size"
@@ -583,28 +633,25 @@ class InfoExtractionMetrics:
         self,
         *,
         ann_filter: Optional[Callable[[Annotation], bool]] = None,
-        classes: bool = False,
+        per_label: bool = False,
     ) -> dict:
         """
         Compute metrics for entities, including precision, recall and f1-score.
-        Returns all measures for exact, strict, partial, and type matching, based on
-        the nervaluate libary (for more information, see:
-        https://github.com/MantisAI/nervaluate)
 
         Parameters
         ----------
-        ann_filter: An optional filter to apply to annotations, e.g. including
-        only annotations with a certain label or qualifier. Annotations are only
-        included if ann_filter evaluates to True.
-        classes: Will return metrics per class when set to True, or micro-averaged over
-        all classes when set to False.
+        ann_filter, optional
+            A filter to apply to annotations, by default None. Can for instance be used
+            to exclude annotations with certain labels or qualifiers. Annotations are
+            only included in the metrics computation if the filter maps them to `True`.
+        per_label, optional
+            Whether to compute metrics per label, by default False. If set to `True`,
+            will micro-average the metrics across all labels.
 
         Returns
         -------
-        A dictionary containing the relevant metrics.
-
+            The computed entity metrics.
         """
-
         ann_filter = ann_filter or (lambda _: True)
 
         true_anns = self.true.to_nervaluate(ann_filter)
@@ -620,32 +667,33 @@ class InfoExtractionMetrics:
 
         results, class_results = evaluator.evaluate()
 
-        return class_results if classes else results
+        return class_results if per_label else results
 
     def _aggregate_qualifier_values(self) -> dict[str, dict[str, list]]:
         """
-        Aggregates all Annotation qualifier values for metric computation. Matches
-        Annotations from true docs to an Annotation from pred docs with equal span,
-        but not necessarily the same label. Only aggregates qualifiers that are present
-        in both Annotations.
+        Aggregate qualifier values for true and predicted annotations.
+
+        Matches annotations based on their start and end char, and only includes
+        annotations with the same start and end char in the aggregation. Only includes
+        qualifiers that are present in both the true and predicted annotations.
 
         Returns
         -------
-        For each qualifier, the true values, predicted values, and misses aggregated
-        into lists, e.g.:
+            A dictionary containing the aggregated qualifier values, e.g.:
 
-        {
-            "Negation": {
-                "true": ["Affirmed", "Negated", "Affirmed"],
-                "pred": ["Affirmed", "Negated", "Negated"],
-                "misses": [
-                    {"doc.identifier": 1, annotation: {"start": 0, "end": 5, "text":
-                    "test"}, true_label: "Affirmed", pred_label: "Negated"}, ...]
-            },
-            ...
-        }
+            ```
+            {
+                "Presence": {
+                    "true": ["Present", "Absent", "Present"],
+                    "pred": ["Present", "Absent", "Absent"],
+                    "misses": [
+                        {"doc.identifier": 1, annotation: {"start": 0, "end": 5, "text":
+                        "test"}, true_label: "Present", pred_label: "Absent"}, ...]
+                },
+                ...
+            }
+            ```
         """
-
         aggregation: dict = defaultdict(lambda: defaultdict(list))
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
@@ -682,19 +730,23 @@ class InfoExtractionMetrics:
 
     def qualifier_metrics(self, *, misses: bool = True) -> dict:
         """
-        Computes metrics for qualifiers, including precision, recall and f1-score.
-        Only computes metrics for combinations of annotations with the same start
-        and end char, but regardless of whether the labels match.
+        Compute metrics for qualifiers, including precision, recall and f1-score.
 
         Parameters
         ----------
-        misses: Whether to include all misses (false positive/negatives) in the results.
+        misses, optional
+            Whether to include all misses (false positives/negatives) in the results,
+            by default `True`
 
         Returns
         -------
-        A dictionary with metrics for each qualifier.
-        """
+            The computed qualifier metrics.
 
+        Raises
+        ------
+        ValueError
+            If the datasets contain non-binary qualifier values.
+        """
         aggregation = self._aggregate_qualifier_values()
 
         result = {}
