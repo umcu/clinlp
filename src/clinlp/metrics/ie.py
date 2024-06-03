@@ -638,6 +638,10 @@ class InfoExtractionMetrics:
         """
         Compute metrics for entities, including precision, recall and f1-score.
 
+        Computes measures for exact, strict, partial, and type matching, using the
+        [nervaluate](https://github.com/MantisAI/nervaluate) implementation of
+        the SemEval 2013 9.1 task evaluation.
+
         Parameters
         ----------
         ann_filter, optional
