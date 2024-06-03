@@ -13,8 +13,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * :exclamation: Renamed the `clinlp_entity_matcher` to `clinlp_rule_based_entity_matcher`
 * :exclamation: `clinlp` now stores entities in `doc.spans['ents']` rather than `doc.ents`, allowing for overlap
   * :exclamation: Overlap in entities found by the entity matcher is no longer resolved by default (replacing old behaviour). To remove overlap, pass `resolve_overlap=True`.
+* Refactored tests to use `pytest` best practices
 * Changed `clinlp_autocomponent` to `clinlp_component`, which automatically registers your component with spaCy
-* Refactored tests
 * Codebase and linting improvements
 
 ### Fixed
