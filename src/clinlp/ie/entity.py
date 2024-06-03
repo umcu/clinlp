@@ -56,7 +56,6 @@ class DeprecatedEntityMatcher(Pipe):
 
 @clinlp_component(
     name="clinlp_rule_based_entity_matcher",
-    requires=["doc.sents"],
     assigns=["doc.spans"],
     default_config=_defaults_term | _defaults_entity_matcher,
 )
