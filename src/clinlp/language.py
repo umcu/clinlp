@@ -578,7 +578,6 @@ class Clinlp(Language):
     Defaults = ClinlpDefaults
 
     def __init__(self, *args, **kwargs) -> None:
-
         meta = dict(kwargs.pop("meta", {}))
         clinlp_version = importlib.metadata.version(__package__ or __name__)
 
