@@ -1,3 +1,5 @@
+"""Functionality for extracting qualifiers from clinical text."""
+
 import importlib.util
 
 from .context_algorithm import ContextAlgorithm, ContextRule, ContextRuleDirection
