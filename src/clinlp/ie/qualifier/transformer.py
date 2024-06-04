@@ -1,3 +1,5 @@
+"""Transformer-based qualifier detectors."""
+
 import statistics
 from abc import abstractmethod
 from typing import Callable, Tuple
@@ -13,16 +15,6 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
 )
 from clinlp.util import clinlp_component
-
-HF_FROM_PRETRAINED_NEGATION = {
-    "pretrained_model_name_or_path": "UMCU/MedRoBERTa.nl_NegationDetection",
-    "revision": "83068ba132b6ce38e9f668c1e3ab636f79b774d3",
-}
-
-HF_FROM_PRETRAINED_EXPERIENCER = {
-    "pretrained_model_name_or_path": "UMCU/MedRoBERTa.nl_Experiencer",
-    "revision": "d9318c4b2b0ab0dfe50afedca58319b2369f1a71",
-}
 
 _defaults_qualifier_transformer = {
     "token_window": 32,
@@ -42,6 +34,25 @@ _defaults_experiencer_transformer = {
 
 
 class QualifierTransformer(QualifierDetector):
+    """
+    Transformer-based qualifier detector.
+
+    Implements some helper methods, but cannot be used directly. Specifically, does not
+    implement the abstract properties `qualifier_classes`, `tokenizer` and `model`,
+    and abstract method `_detect_qualifiers`.
+
+    Parameters
+    ----------
+    token_window
+        The number of tokens to include before and after an entity.
+    strip_entities
+        Whether to strip whitespaces etc. from entities from the text.
+    placeholder
+        The placeholder to replace the entity with intext.
+    prob_aggregator
+        The function to aggregate the probabilities of the tokens in the entity.
+    """
+
     def __init__(
         self,
         token_window: int = _defaults_qualifier_transformer["token_window"],
@@ -60,12 +71,24 @@ class QualifierTransformer(QualifierDetector):
     @property
     @abstractmethod
     def tokenizer(self) -> AutoTokenizer:
-        raise NotImplementedError
+        """
+        The tokenizer.
+
+        Returns
+        -------
+            The tokenizer.
+        """
 
     @property
     @abstractmethod
     def model(self) -> RobertaForTokenClassification:
-        raise NotImplementedError
+        """
+        The model.
+
+        Returns
+        -------
+            The model.
+        """
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
@@ -83,6 +106,22 @@ class QualifierTransformer(QualifierDetector):
     def _trim_ent_boundaries(
         text: str, ent_start_char: int, ent_end_char: int
     ) -> Tuple[str, int, int]:
+        """
+        Trim the entity boundaries.
+
+        Parameters
+        ----------
+        text
+            The text.
+        ent_start_char
+            The entity start character.
+        ent_end_char
+            The entity end character.
+
+        Returns
+        -------
+            A new text, entity start character and entity end character.
+        """
         entity = text[ent_start_char:ent_end_char]
 
         ent_start_char += len(entity) - len(entity.lstrip())
@@ -94,12 +133,44 @@ class QualifierTransformer(QualifierDetector):
     def _fill_ent_placeholder(
         text: str, ent_start_char: int, ent_end_char: int, placeholder: str
     ) -> Tuple[str, int, int]:
+        """
+        Fill the entity placeholder.
+
+        Parameters
+        ----------
+        text
+            The text.
+        ent_start_char
+            The entity start character.
+        ent_end_char
+            The entity end character.
+        placeholder
+            The placeholder.
+
+        Returns
+        -------
+            A new text, entity start character and entity end character.
+        """
         text = text[0:ent_start_char] + placeholder + text[ent_end_char:]
         ent_end_char = ent_start_char + len(placeholder)
 
         return text, ent_start_char, ent_end_char
 
     def _prepare_ent(self, ent: Span) -> Tuple[str, int, int]:
+        """
+        Prepare the entity for prediction.
+
+        Applies the configured settings to the entity.
+
+        Parameters
+        ----------
+        ent
+            The entity.
+
+        Returns
+        -------
+            The modified text, entity start character and entity end character.
+        """
         text, ent_start_char, ent_end_char = self._get_ent_window(
             ent, token_window=self.token_window
         )
@@ -124,6 +195,26 @@ class QualifierTransformer(QualifierDetector):
         prob_indices: list,
         prob_aggregator: Callable,
     ) -> float:
+        """
+        Predict the probability of a qualifier.
+
+        Parameters
+        ----------
+        text
+            The text.
+        ent_start_char
+            The entity start character.
+        ent_end_char
+            The entity end character.
+        prob_indices
+            The indices of the probabilities to aggregate.
+        prob_aggregator
+            The function to aggregate the probabilities.
+
+        Returns
+        -------
+            The probability.
+        """
         inputs = self.tokenizer(text, return_tensors="pt")
         output = self.model.forward(inputs["input_ids"])
         probs = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
@@ -143,8 +234,30 @@ class QualifierTransformer(QualifierDetector):
     default_config=_defaults_negation_transformer,
 )
 class NegationTransformer(QualifierTransformer):
-    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
-    model = RobertaForTokenClassification.from_pretrained(**HF_FROM_PRETRAINED_NEGATION)
+    """
+    Transformer-based negation detector.
+
+    Parameters
+    ----------
+    nlp
+        The spaCy language pipeline.
+    absence_threshold
+        The threshold for absence. Will classify qualifier as Presence.Absent if
+        prediction < absence threshold.
+    presence_threshold
+        The threshold for presence. Will classify qualifier as Presence.Present if
+        prediction > presence threshold.
+    """
+
+    PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_NegationDetection"
+    REVISION = "83068ba132b6ce38e9f668c1e3ab636f79b774d3"
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
+    model = RobertaForTokenClassification.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
 
     def __init__(
         self,
@@ -162,7 +275,7 @@ class NegationTransformer(QualifierTransformer):
         super().__init__(**kwargs)
 
     @property
-    def qualifier_classes(self) -> dict[str, QualifierClass]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:  # noqa: D102
         return {
             "Presence": QualifierClass(
                 "Presence", ["Absent", "Uncertain", "Present"], default="Present"
@@ -170,6 +283,19 @@ class NegationTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc) -> None:
+        """
+        Detect qualifiers.
+
+        Prepares the entity, then predicts the probability of the qualifier. If the
+        probability is below the absence threshold, the qualifier is classified as
+        "Absent". If the probability is above the presence threshold, the qualifier is
+        classified as "Present". Otherwise, it is classified as "Uncertain".
+
+        Parameters
+        ----------
+        doc
+            The Doc object.
+        """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
@@ -201,9 +327,30 @@ class NegationTransformer(QualifierTransformer):
     default_config=_defaults_experiencer_transformer,
 )
 class ExperiencerTransformer(QualifierTransformer):
-    tokenizer = AutoTokenizer.from_pretrained(**HF_FROM_PRETRAINED_EXPERIENCER)
+    """
+    Transformer-based experiencer detector.
+
+    Currently, only detects Experiencer.Patient (default) and Experiencer.Family --
+    Experiencer.Other is not yet implemented.
+
+    Parameters
+    ----------
+    nlp
+        The spaCy language pipeline.
+    family_threshold
+        The threshold for family. Will classify qualifier as Experiencer.Family if
+        prediction > family threshold.
+
+    """
+
+    PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_Experiencer"
+    REVISION = "d9318c4b2b0ab0dfe50afedca58319b2369f1a71"
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
     model = RobertaForTokenClassification.from_pretrained(
-        **HF_FROM_PRETRAINED_EXPERIENCER
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
     )
 
     def __init__(
@@ -218,7 +365,7 @@ class ExperiencerTransformer(QualifierTransformer):
         super().__init__(**kwargs)
 
     @property
-    def qualifier_classes(self) -> dict[str, QualifierClass]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:  # noqa: D102
         return {
             "Experiencer": QualifierClass(
                 "Experiencer", ["Patient", "Family", "Other"], default="Patient"
@@ -226,6 +373,18 @@ class ExperiencerTransformer(QualifierTransformer):
         }
 
     def _detect_qualifiers(self, doc: Doc) -> None:
+        """
+        Detect qualifiers.
+
+        Prepares the entity, then predicts the probability of the qualifier. If the
+        probability is above the family threshold, the qualifier is classified as
+        "Family". Otherwise, it is classified as "Patient" (default).
+
+        Parameters
+        ----------
+        doc
+            The Doc object.
+        """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
 
