@@ -1,3 +1,5 @@
+"""Reusable components for detecting qualifiers in clinical text."""
+
 from abc import abstractmethod
 from dataclasses import dataclass, field
 from typing import Optional
@@ -13,6 +15,19 @@ ATTR_QUALIFIERS_DICT = f"{ATTR_QUALIFIERS}_dict"
 
 
 def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
+    """
+    Get qualifier information in string format.
+
+    Parameters
+    ----------
+    ent
+        The entity to get qualifiers from.
+
+    Returns
+    -------
+        The qualifiers in string format, e.g. `{'Presence.Present', ...}`, or `None` if
+        no qualifiers are present.
+    """
     qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
     if qualifiers is None:
@@ -22,6 +37,20 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
 
 def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
+    """
+    Get qualifier information in dict format.
+
+    Parameters
+    ----------
+    ent
+        The entity to get qualifiers from.
+
+    Returns
+    -------
+        The qualifiers in dict format, e.g.
+        [{'Name': 'Presence', 'Value': 'Present', 'is_default': True}, ...],
+        or `None` if no qualifiers are present.
+    """
     qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
     if qualifiers is None:
@@ -36,15 +65,53 @@ Span.set_extension(name=ATTR_QUALIFIERS_DICT, getter=qualifiers_to_dict)
 
 
 def get_qualifiers(entity: Span) -> set["Qualifier"]:
+    """
+    Get the qualifiers for an entity.
+
+    Returns
+    -------
+        The qualifiers.
+    """
     return getattr(entity._, ATTR_QUALIFIERS)
 
 
 def set_qualifiers(entity: Span, qualifiers: set["Qualifier"]) -> None:
+    """
+    Set the qualifiers for an entity.
+
+    Parameters
+    ----------
+    entity
+        The entity to set qualifiers for.
+    qualifiers
+        The qualifiers to set.
+    """
     setattr(entity._, ATTR_QUALIFIERS, qualifiers)
 
 
 @dataclass(frozen=True)
 class Qualifier:
+    """
+    A qualifier for an entity.
+
+    A qualifier is a piece of information that provides additional context to an entity.
+    For example, a `Presence` qualifier with a value of `Present` or `Absent`. A
+    qualifier has a fixed value.
+
+    Parameters
+    ----------
+    name
+        The name of the qualifier.
+    value
+        The value of the qualifier.
+    is_default
+        Whether the value is the default value.
+    priority
+        The priority of the qualifier.
+    prob
+        The probability of the qualifier.
+    """
+
     name: str = field(compare=True)
     value: str = field(compare=True)
     is_default: bool = field(compare=True)
@@ -52,6 +119,13 @@ class Qualifier:
     prob: Optional[float] = field(default=None, compare=False)
 
     def to_dict(self) -> dict:
+        """
+        Convert the qualifier to a dictionary.
+
+        Returns
+        -------
+            The qualifier as a dictionary.
+        """
         return {
             "name": self.name,
             "value": self.value,
@@ -60,10 +134,43 @@ class Qualifier:
         }
 
     def __str__(self) -> str:
+        """
+        Get the string representation of the qualifier.
+
+        Returns
+        -------
+            The string representation of the qualifier.
+        """
         return f"{self.name}.{self.value}"
 
 
 class QualifierClass:
+    """
+    A qualifier class.
+
+    A qualifier class defines the set of possible values a qualifier can take on. For
+    example: `Presence` with values `Present` and `Absent`. The qualifier class creates
+    qualifiers, although they can also be created directly.
+
+    Parameters
+    ----------
+    name
+        The name of the qualifier.
+    values
+        The possible values of the qualifier.
+    default
+        The default value of the qualifier.
+    priorities
+        The priorities of the values. If not provided, the order of the values is used.
+
+    Raises
+    ------
+    ValueError
+        If there are duplicate values.
+    ValueError
+        If the default value is not in the provided values.
+    """
+
     def __init__(
         self,
         name: str,
@@ -85,6 +192,23 @@ class QualifierClass:
             raise ValueError(msg)
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
+        """
+        Create a qualifier.
+
+        Parameters
+        ----------
+        value, optional
+            The value for the qualifier, by default None
+
+        Returns
+        -------
+            The created qualifier.
+
+        Raises
+        ------
+        ValueError
+            If the value is not in the possible values.
+        """
         if value is None:
             value = self.default
 
@@ -113,7 +237,14 @@ _defaults_qualifier_detector = {
 
 
 class QualifierDetector(Pipe):
-    """For usage as a spaCy pipeline component"""
+    """
+    An abstract pipeline component for detecting qualifiers in clinical text.
+
+    Parameters
+    ----------
+    spans_key
+        The key for the spans in the Doc object, by default `ents`
+    """
 
     def __init__(
         self, spans_key: str = _defaults_qualifier_detector["spans_key"]
@@ -123,10 +254,36 @@ class QualifierDetector(Pipe):
     @property
     @abstractmethod
     def qualifier_classes(self) -> dict[str, QualifierClass]:
-        pass
+        """
+        Obtain the qualifier classes that a `QualifierDetector` initializes.
+
+        These are used to initialize the default qualifiers for each entity.
+
+        Returns
+        -------
+            The qualifier classes.
+        """
 
     @staticmethod
     def add_qualifier_to_ent(entity: Span, new_qualifier: Qualifier) -> None:
+        """
+        Add a qualifier to an entity.
+
+        Preferably, qualifiers should not be added in another way than through this
+        method, to ensure consistency.
+
+        Parameters
+        ----------
+        entity
+            The entity to add the qualifier to.
+        new_qualifier
+            The qualifier to add.
+
+        Raises
+        ------
+        RuntimeError
+            If the entity does not have initialized qualifiers.
+        """
         qualifiers = get_qualifiers(entity)
 
         if qualifiers is None:
@@ -139,6 +296,14 @@ class QualifierDetector(Pipe):
         set_qualifiers(entity, qualifiers)
 
     def _initialize_ent_qualifiers(self, entity: Span) -> None:
+        """
+        Initialize the qualifiers for an entity.
+
+        Parameters
+        ----------
+        entity
+            The entity to initialize qualifiers for.
+        """
         if get_qualifiers(entity) is None:
             set_qualifiers(entity, set())
 
@@ -147,9 +312,31 @@ class QualifierDetector(Pipe):
 
     @abstractmethod
     def _detect_qualifiers(self, doc: Doc) -> None:
-        pass
+        """
+        Detect qualifiers in a document.
+
+        This is an abstract method that should be implemented by subclasses. Any
+        detected qualifiers should be added to the entities in the document.
+
+        Parameters
+        ----------
+        doc
+            The document to detect qualifiers in.
+        """
 
     def __call__(self, doc: Doc) -> Doc:
+        """
+        Process a document, by detecting and appending qualifiers to entities.
+
+        Parameters
+        ----------
+        doc
+            The document to process.
+
+        Returns
+        -------
+            The processed document.
+        """
         if self.spans_key not in doc.spans or len(doc.spans[self.spans_key]) == 0:
             return doc
 
