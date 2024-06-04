@@ -1,3 +1,5 @@
+"""Contains the Term class, which are used for rule based entity matching."""
+
 from typing import Optional
 
 import pydantic
@@ -13,6 +15,25 @@ _defaults_term = {
 
 
 class Term(pydantic.BaseModel):
+    """
+    A single term used for rule based entity matching.
+
+    Parameters
+    ----------
+    phrase
+        The literal phrase to match.
+    attr
+        The attribute to match on.
+    proximity
+        The number of tokens to allow between each token in the phrase.
+    fuzzy
+        The threshold for fuzzy matching.
+    fuzzy_min_len
+        The minimum length for fuzzy matching.
+    pseudo
+        Whether this term is a pseudo-term, which is excluded from matches.
+    """
+
     phrase: str
     attr: Optional[str] = None
     proximity: Optional[int] = None
@@ -22,12 +43,23 @@ class Term(pydantic.BaseModel):
 
     model_config = {"extra": "ignore"}
 
+    # ensures Term is accepted as positional argument for readability
     def __init__(self, phrase: str, **kwargs) -> None:
-        """This init makes sure Term accepts phrase as a positional argument,
-        which is more readable in large concept lists."""
         super().__init__(phrase=phrase, **kwargs)
 
     def to_spacy_pattern(self, nlp: Language) -> list[dict]:
+        """
+        Convert the term to a spaCy pattern.
+
+        Parameters
+        ----------
+        nlp
+            The spaCy language model. This is used for tokenizing patterns.
+
+        Returns
+        -------
+            The spaCy pattern.
+        """
         fields = {
             field: getattr(self, field) or _defaults_term[field]
             for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
