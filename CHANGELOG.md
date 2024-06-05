@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 * In `InformationExtractionDataset`, renamed `span_counts`, `label_counts` and `qualifier_counts` to `span_freqs`, `label_freqs` and `qualifier_freqs` respectively.
+* The `clinlp_component` utility now returns the class itself, rather than a helper function for making it
 
 ## 0.8.0 (2024-06-03)
 

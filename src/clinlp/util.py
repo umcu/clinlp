@@ -44,26 +44,19 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     return args, kwargs
 
 
-def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
+def clinlp_component(*args, **kwargs) -> Callable:
     """
-    Denote a class as ``clinlp`` component.
+    Denote a class as ``clinlp`` component, and registers it with ``spaCy``.
 
     Should be used as a decorator on a class. Additionally handles the ``name`` and
     ``nlp`` arguments, and handles inheritance.
 
-    Parameters
-    ----------
-    register
-        Whether to automatically register the class as a ``spaCy`` component, or to only
-        return the make function, by default ``True``. If set to ``False``, should
-        probably be further decorated with ``@Language.factory``.
-
     Returns
     -------
-        The make function for the class.
+        The class init (I think).
     """
 
-    def _clinlp_component(cls: Type) -> Callable:
+    def _clinlp_component(cls: Type) -> Callable[[list, dict], Type]:
         component_args, component_kwargs = get_class_init_signature(cls)
 
         make_component_args = component_args.copy()
@@ -101,8 +94,7 @@ def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
 
             return cls(**cls_kwargs)
 
-        if register:
-            Language.factory(*args, func=make_component, **kwargs)
+        Language.factory(*args, func=make_component, **kwargs)
 
         return cls
 

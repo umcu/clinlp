@@ -78,17 +78,6 @@ def component_5():
     return TestComponent5
 
 
-# Arrange
-@pytest.fixture(scope="session")
-def component_6():
-    @clinlp_component(name="test_component_6", register=False)
-    class TestComponent6:
-        def __init__():
-            pass
-
-    return TestComponent6
-
-
 class TestUnitGetClassInitSignature:
     def test_args_only(self):
         # Arrange
@@ -136,6 +125,7 @@ class TestUnitClinlpComponent:
         component = component_1(nlp="nlp", name="name")
 
         # Assert
+        assert component.nlp == "nlp"
         assert component.name == "name"
 
     @pytest.mark.parametrize(
@@ -173,20 +163,9 @@ class TestUnitClinlpComponent:
     @pytest.mark.parametrize(
         ("kwargs", "attr", "expected_value"),
         [
-            ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
-            ({"nlp": "nlp", "name": "test"}, "setting_2", "max"),
+            ({}, "setting_1", 32),
             ({"setting_1": 64, "setting_2": "min"}, "setting_1", 64),
             ({"setting_1": 64, "setting_2": "min"}, "setting_2", "min"),
-            (
-                {"nlp": "nlp", "name": "test", "setting_1": 64, "setting_2": "min"},
-                "setting_1",
-                64,
-            ),
-            (
-                {"nlp": "nlp", "name": "test", "setting_1": 64, "setting_2": "min"},
-                "setting_2",
-                "min",
-            ),
         ],
     )
     def test_only_kwargs_class(self, component_2, kwargs, attr, expected_value):
@@ -237,8 +216,8 @@ class TestUnitClinlpComponent:
     @pytest.mark.parametrize(
         ("kwargs", "attr", "expected_value"),
         [
-            ({"nlp": "nlp", "name": "test"}, "setting_1", 32),
-            ({"nlp": "nlp", "name": "test"}, "name", "test"),
+            ({"name": "test"}, "setting_1", 32),
+            ({"name": "test"}, "name", "test"),
             ({"name": "test", "setting_1": 64}, "setting_1", 64),
             ({"name": "test", "setting_1": 64}, "name", "test"),
         ],
@@ -352,12 +331,6 @@ class TestUnitClinlpComponent:
 
         # Assert
         assert getattr(component, attr) == expected_value
-
-    def test_without_registering(self, nlp, component_6):  # noqa: ARG002
-        # Assert
-        with pytest.raises(ValueError, match=".*E002.*"):
-            # Act
-            _ = nlp.add_pipe("test_component_6")
 
 
 class TestUnitIntervalDistance:
