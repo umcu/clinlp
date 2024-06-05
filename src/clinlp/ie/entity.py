@@ -61,7 +61,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
 @clinlp_component(name="clinlp_entity_matcher")
 class DeprecatedEntityMatcher(Pipe):
-    """Deprecated, use clinlp_rule_based_entity_matcher instead."""
+    """Deprecated, use ``clinlp_rule_based_entity_matcher`` instead."""
 
     def __init__(self) -> None:
         msg = (
