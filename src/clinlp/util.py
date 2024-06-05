@@ -53,7 +53,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
 
     Returns
     -------
-        The class init (I think).
+        The class.
     """
 
     def _clinlp_component(cls: Type) -> Callable[[list, dict], Type]:
