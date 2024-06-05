@@ -17,7 +17,7 @@ _defaults_sentencizer = {
     default_config=_defaults_sentencizer,
 )
 class Sentencizer(Pipe):
-    r"""
+    """
     A ``spaCy`` pipeline component for sentencizing text.
 
     Uses the following logic for detecting sentence boundaries: any character included
@@ -26,15 +26,6 @@ class Sentencizer(Pipe):
         - Is an alphanumeric token
         - Starts with ``[``
         - Is included in ``sent_start_punct``
-
-    Parameters
-    ----------
-    sent_end_chars
-        A list of characters that can end a sentence,
-        by default ``[".", "!", "?", "\n", "\r"]``.
-    sent_start_punct
-        Any punctuation that is allowed to start a sentence,
-        by default ``["-", "*", "[", "("]``.
     """
 
     def __init__(
@@ -42,6 +33,18 @@ class Sentencizer(Pipe):
         sent_end_chars: list[str] = _defaults_sentencizer["sent_end_chars"],
         sent_start_punct: list[str] = _defaults_sentencizer["sent_start_punct"],
     ) -> None:
+        r"""
+        Create a sentencizer.
+
+        Parameters
+        ----------
+        sent_end_chars
+            A list of characters that can end a sentence,
+            by default ``[".", "!", "?", "\n", "\r"]``.
+        sent_start_punct
+            Any punctuation that is allowed to start a sentence,
+            by default ``["-", "*", "[", "("]``.
+        """
         self.sent_end_chars = set(
             _defaults_sentencizer["sent_end_chars"]
             if sent_end_chars is None

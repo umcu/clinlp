@@ -38,19 +38,8 @@ class QualifierTransformer(QualifierDetector):
     Transformer-based qualifier detector.
 
     Implements some helper methods, but cannot be used directly. Specifically, does not
-    implement the abstract properties ``qualifier_classes``, ``tokenizer`` and 
+    implement the abstract properties ``qualifier_classes``, ``tokenizer`` and
     ``model``, and abstract method ``_detect_qualifiers``.
-
-    Parameters
-    ----------
-    token_window
-        The number of tokens to include before and after an entity.
-    strip_entities
-        Whether to strip whitespaces etc. from entities from the text.
-    placeholder
-        The placeholder to replace the entity with intext.
-    prob_aggregator
-        The function to aggregate the probabilities of the tokens in the entity.
     """
 
     def __init__(
@@ -61,6 +50,20 @@ class QualifierTransformer(QualifierDetector):
         prob_aggregator: Callable = _defaults_qualifier_transformer["prob_aggregator"],
         **kwargs,
     ) -> None:
+        """
+        Create a transformer-based qualifier detector.
+
+        Parameters
+        ----------
+        token_window
+            The number of tokens to include before and after an entity.
+        strip_entities
+            Whether to strip whitespaces etc. from entities from the text.
+        placeholder
+            The placeholder to replace the entity with intext.
+        prob_aggregator
+            The function to aggregate the probabilities of the tokens in the entity.
+        """
         self.token_window = token_window
         self.strip_entities = strip_entities
         self.placeholder = placeholder
@@ -234,20 +237,7 @@ class QualifierTransformer(QualifierDetector):
     default_config=_defaults_negation_transformer,
 )
 class NegationTransformer(QualifierTransformer):
-    """
-    Transformer-based negation detector.
-
-    Parameters
-    ----------
-    nlp
-        The ``spaCy`` language pipeline.
-    absence_threshold
-        The threshold for absence. Will classify qualifier as ``Presence.Absent`` if
-        ``prediction`` < ``absence_threshold``.
-    presence_threshold
-        The threshold for presence. Will classify qualifier as ``Presence.Present`` if
-        ``prediction`` > ``presence_threshold``.
-    """
+    """Transformer-based negation detector."""
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_NegationDetection"
     REVISION = "83068ba132b6ce38e9f668c1e3ab636f79b774d3"
@@ -268,6 +258,20 @@ class NegationTransformer(QualifierTransformer):
         ],
         **kwargs,
     ) -> None:
+        """
+        Create a transformer-based negation detector.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language pipeline.
+        absence_threshold
+            The threshold for absence. Will classify qualifier as ``Presence.Absent``
+            if ``prediction`` < ``absence_threshold``.
+        presence_threshold
+            The threshold for presence. Will classify qualifier as ``Presence.Present``
+            if ``prediction`` > ``presence_threshold``.
+        """
         self.nlp = nlp
         self.absence_threshold = absence_threshold
         self.presence_threshold = presence_threshold
@@ -332,15 +336,6 @@ class ExperiencerTransformer(QualifierTransformer):
 
     Currently, only detects ``Experiencer.Patient`` (default) and ``Experiencer.Family``
     -- ``Experiencer.Other`` is not yet implemented.
-
-    Parameters
-    ----------
-    nlp
-        The ``spaCy`` language pipeline.
-    family_threshold
-        The threshold for family. Will classify qualifier as ``Experiencer.Family`` if
-        ``prediction`` > ``family_threshold``.
-
     """
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_Experiencer"
@@ -359,6 +354,17 @@ class ExperiencerTransformer(QualifierTransformer):
         family_threshold: float = _defaults_experiencer_transformer["family_threshold"],
         **kwargs,
     ) -> None:
+        """
+        Create a transformer-based experiencer detector.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language pipeline.
+        family_threshold
+            The threshold for family. Will classify qualifier as ``Experiencer.Family``
+            if ``prediction`` > ``family_threshold``.
+        """
         self.nlp = nlp
         self.family_threshold = family_threshold
 

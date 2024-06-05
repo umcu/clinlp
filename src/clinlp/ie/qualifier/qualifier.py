@@ -97,26 +97,22 @@ class Qualifier:
     A qualifier is a piece of information that provides additional context to an entity.
     For example, a ``Presence`` qualifier with a value of ``Present`` or ``Absent``. A
     qualifier has a fixed value.
-
-    Parameters
-    ----------
-    name
-        The name of the qualifier.
-    value
-        The value of the qualifier.
-    is_default
-        Whether the value is the default value.
-    priority
-        The priority of the qualifier.
-    prob
-        The probability of the qualifier.
     """
 
     name: str = field(compare=True)
+    """The name of the qualifier."""
+
     value: str = field(compare=True)
+    """The value of the qualifier."""
+
     is_default: bool = field(compare=True)
+    """Whether the value is the default value."""
+
     priority: int = field(default=0, compare=False)
+    """The priority of the qualifier."""
+
     prob: Optional[float] = field(default=None, compare=False)
+    """The probability of the qualifier."""
 
     def to_dict(self) -> dict:
         """

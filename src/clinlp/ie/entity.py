@@ -84,23 +84,6 @@ class RuleBasedEntityMatcher(Pipe):
     This component is used to match entities based on a set of concepts, along with
     synonyms. Note that settings (e.g. ``attr``, ``proximity``, ...) set at the entity
     matcher level are overridden by the settings at the term level.
-
-    Parameters
-    ----------
-    nlp
-        The ``spaCy`` language model.
-    attr
-        The attribute to match on.
-    proximity
-        The number of tokens to allow between each token in the phrase.
-    fuzzy
-        The threshold for fuzzy matching.
-    fuzzy_min_len
-        The minimum length for fuzzy matching.
-    pseudo
-        Whether this term is a pseudo-term, which is excluded from matches.
-    resolve_overlap
-        Whether to resolve overlapping entities.
     """
 
     def __init__(
@@ -113,6 +96,26 @@ class RuleBasedEntityMatcher(Pipe):
         pseudo: bool = _defaults_term["pseudo"],  # noqa: FBT001
         resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
     ) -> None:
+        """
+        Create a rule-based entity matcher.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language model.
+        attr
+            The attribute to match on.
+        proximity
+            The number of tokens to allow between each token in the phrase.
+        fuzzy
+            The threshold for fuzzy matching.
+        fuzzy_min_len
+            The minimum length for fuzzy matching.
+        pseudo
+            Whether this term is a pseudo-term, which is excluded from matches.
+        resolve_overlap
+            Whether to resolve overlapping entities.
+        """
         self.nlp = nlp
         self.attr = attr
 

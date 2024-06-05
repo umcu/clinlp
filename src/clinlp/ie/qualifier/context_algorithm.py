@@ -45,27 +45,25 @@ class ContextRuleDirection(Enum):
 
 @dataclass
 class ContextRule:
-    """
-    A Context rule, as in the original Context Algorithm.
-
-    Parameters
-    ----------
-    pattern
-        The pattern to look for in text. Either a ``string``, or a ``spaCy`` pattern 
-        (``list``).
-    qualifier
-        The qualifier to apply.
-    direction
-        The Context rule direction.
-    max_scope
-        The maximum scope (number of tokens) of the trigger, or ``None`` for using
-        sentence boundaries.
-    """
+    """A Context rule, as in the original Context Algorithm."""
 
     pattern: Union[str, list[dict[str, str]]]
+    """
+    The pattern to look for in text. Either a ``string``, or a ``spaCy`` pattern
+    (``list``).
+    """
+
     qualifier: Qualifier
+    """ The qualifier to apply."""
+
     direction: ContextRuleDirection
+    """ The Context rule direction."""
+
     max_scope: Optional[int] = None
+    """
+    The maximum scope (number of tokens) of the trigger, or ``None`` for using
+    sentence boundaries.
+    """
 
 
 class _MatchedContextPattern:
@@ -142,19 +140,6 @@ class ContextAlgorithm(QualifierDetector):
 
     For more information, see the original paper:
     https://doi.org/10.1016%2Fj.jbi.2009.05.002
-
-    Parameters
-    ----------
-    nlp
-        The ``spaCy`` language object to use.
-    phrase_matcher_attr
-        The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
-    load_rules
-        Whether to parse any rules. Set this to ``False`` to use
-        ``ContextAlgorithm.add_rules`` to add ``ContextRules`` manually.
-    rules
-        A dictionary of rules, or a path to a ``json`` containing the rules. See the
-        ``clinlp.resources`` dir for an example.
     """
 
     def __init__(
@@ -165,6 +150,27 @@ class ContextAlgorithm(QualifierDetector):
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
         **kwargs,
     ) -> None:
+        """
+        Initialize the Context Algorithm.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language object to use.
+        phrase_matcher_attr
+            The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
+        load_rules
+            Whether to parse any rules. Set this to ``False`` to use
+            ``ContextAlgorithm.add_rules`` to add ``ContextRules`` manually.
+        rules
+            A dictionary of rules, or a path to a ``json`` containing the rules. See the
+            ``clinlp.resources`` dir for an example.
+
+        Raises
+        ------
+        ValueError
+            If no rules are provided and ``load_rules`` is set to ``True``.
+        """
         self._nlp = nlp
 
         self._matcher = Matcher(self._nlp.vocab)

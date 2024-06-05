@@ -16,28 +16,22 @@ from clinlp.ie import SPANS_KEY
 
 @dataclass
 class Annotation:
-    """
-    Represents an annotation in a document.
-
-    Parameters
-    ----------
-    text
-        The text/str span of this annotation
-    start
-        The start char
-    end
-        The end char
-    label
-        The label/tag
-    qualifiers
-        The applicable qualifiers, by default ``[]``.
-    """
+    """Represents an annotation in a document."""
 
     text: str
+    """The text/str span of this annotation."""
+
     start: int
+    """The start char."""
+
     end: int
+    """The end char."""
+
     label: str
+    """The label/tag."""
+
     qualifiers: list[dict] = field(default_factory=list)
+    """The applicable qualifiers, by default ``[]``."""
 
     def lstrip(self, chars: str = " ,") -> None:
         """
@@ -129,22 +123,16 @@ class Annotation:
 
 @dataclass
 class Document:
-    """
-    Represents a document with annotations.
-
-    Parameters
-    ----------
-    identifier
-        Any identifier for the document.
-    text
-        The text.
-    annotations
-        A list of annotations.
-    """
+    """Represents a document with annotations."""
 
     identifier: str
+    """Any identifier for the document."""
+
     text: str
+    """The text."""
+
     annotations: list[Annotation]
+    """A list of annotations."""
 
     def to_nervaluate(
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
@@ -204,7 +192,8 @@ class Document:
 
         Returns
         -------
-            The annotation with the provided span, or ``None`` if no such annotation exists.
+            The annotation with the provided span, or ``None`` if no such annotation
+            exists.
         """
         for annotation in self.annotations:
             if (annotation.start == start) and (annotation.end == end):
@@ -215,19 +204,16 @@ class Document:
 
 @dataclass
 class InfoExtractionDataset:
-    """
-    Represents a dataset with annotated documents.
-
-    Parameters
-    ----------
-    docs
-        The annotated documents.
-    default_qualifiers
-        Mapping of qualifiers to their default value, e.g. ``{"Presence": "Present"}``.
-    """
+    """Represents a dataset with annotated documents."""
 
     docs: list[Document]
+    """The annotated documents."""
+
     default_qualifiers: Optional[dict[str, str]] = None
+    """
+    Mapping of qualifiers to their default value, e.g.
+    ``{"Presence": "Present"}``.
+    """
 
     _ALL_STATS: ClassVar[list] = [
         "num_docs",
@@ -579,16 +565,7 @@ class InfoExtractionDataset:
 
 
 class InfoExtractionMetrics:
-    """
-    Compute metrics for information extraction tasks.
-
-    Parameters
-    ----------
-    true
-        The dataset containing true (annotated/gold standard) annotations.
-    pred
-        The dataset containing pred (predicted/inferred) annotations.
-    """
+    """Compute metrics for information extraction tasks."""
 
     _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
@@ -599,6 +576,16 @@ class InfoExtractionMetrics:
     def __init__(
         self, true: InfoExtractionDataset, pred: InfoExtractionDataset
     ) -> None:
+        """
+        Create a new metric computation instance.
+
+        Parameters
+        ----------
+        true
+            The dataset containing true (annotated/gold standard) annotations.
+        pred
+            The dataset containing pred (predicted/inferred) annotations.
+        """
         self.true = true
         self.pred = pred
 
