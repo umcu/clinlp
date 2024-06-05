@@ -31,7 +31,7 @@ class Annotation:
     """The label/tag."""
 
     qualifiers: list[dict] = field(default_factory=list)
-    """The applicable qualifiers, by default ``[]``."""
+    """The applicable qualifiers."""
 
     def lstrip(self, chars: str = " ,") -> None:
         """
@@ -40,7 +40,7 @@ class Annotation:
         Parameters
         ----------
         chars
-            The characters to strip from the beginning, by default " ,".
+            The characters to strip from the beginning.
         """
         self.start += len(self.text) - len(self.text.lstrip(chars))
         self.text = self.text.lstrip(chars)
@@ -52,7 +52,7 @@ class Annotation:
         Parameters
         ----------
         chars
-            The characters to strip from the end, by default " ,".
+            The characters to strip from the end.
         """
         self.end -= len(self.text) - len(self.text.rstrip(chars))
         self.text = self.text.rstrip(chars)
@@ -64,7 +64,7 @@ class Annotation:
         Parameters
         ----------
         chars
-            The characters to strip from the beginning and end, by default " ,".
+            The characters to strip from the beginning and end.
         """
         self.lstrip(chars=chars)
         self.rstrip(chars=chars)
@@ -143,9 +143,8 @@ class Document:
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default ``None``. Should map to
-            annotations to ``True`` if they should be included, ``False`` otherwise,
-            by default ``None``.
+            A filter to apply to annotations. Should map the annotations to ``True``
+            if they should be included, ``False`` otherwise.
 
         Returns
         -------
@@ -286,7 +285,7 @@ class InfoExtractionDataset:
             or a generator from ``nlp.pipe``)
         ids, optional
             An iterable of identifiers, that should have the same length as
-            ``nlp_docs``, by default ``None``. If not provided, will use a counter.
+            ``nlp_docs``. If not provided, will use a counter.
 
         Returns
         -------
@@ -344,8 +343,7 @@ class InfoExtractionDataset:
             the web interface in ``JSON`` format.
         strip_spans
             Whether to remove punctuation and whitespaces from the beginning or end
-            of annotations, by default ``True``. Used to clean up accidental
-            over-annotations.
+            of annotations. Used to clean up accidental over-annotations.
         default_qualifiers
             The default qualifiers (which are not included in the ``MedCATTrainer``
             export), e.g. ``{"Presence": "Absent", "Experiencer": "Patient"}``, by
@@ -419,9 +417,8 @@ class InfoExtractionDataset:
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default ``None``. Should map to
-            annotations to ``True`` if they should be included, ``False`` otherwise,
-            by default ``None``.
+            A filter to apply to annotations. Should map to annotations to ``True``
+            if they should be included, ``False`` otherwise.
 
         Returns
         -------
@@ -462,10 +459,10 @@ class InfoExtractionDataset:
         Parameters
         ----------
         n_spans
-            The ``n`` most frequent text spans to return, by default 25.
+            The ``n`` most frequent text spans to return.
         span_callback
-            A callback applied to each text span, by default ``None``. For instance
-            useful for normalizing text.
+            A callback applied to each text span. For instance useful for normalizing
+            text.
 
         Returns
         -------
@@ -495,10 +492,9 @@ class InfoExtractionDataset:
         Parameters
         ----------
         n_spans
-            The ``n`` most frequent labels to return, by default 25.
+            The ``n`` most frequent labels to return.
         span_callback
-            A callback applied to each label, by default ``None``. For instance
-            useful for normalizing text.
+            A callback applied to each label. For instance useful for normalizing text.
 
         Returns
         -------
@@ -633,13 +629,12 @@ class InfoExtractionMetrics:
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default ``None``. Can for instance be
-            used to exclude annotations with certain labels or qualifiers. Annotations
-            are only included in the metrics computation if the filter maps them to
-            ``True``.
+            A filter to apply to annotations. Can for instance be used to exclude
+            annotations with certain labels or qualifiers. Annotations are only
+            included in the metrics computation if the filter maps them to ``True``.
         per_label
-            Whether to compute metrics per label, by default ``False``. If set to
-            ``True``, will micro-average the metrics across all labels.
+            Whether to compute metrics per label. If set to ``True``, will
+            micro-average the metrics across all labels.
 
         Returns
         -------
@@ -728,8 +723,7 @@ class InfoExtractionMetrics:
         Parameters
         ----------
         misses
-            Whether to include all misses (false positives/negatives) in the results,
-            by default ``True``
+            Whether to include all misses (false positives/negatives) in the results.
 
         Returns
         -------

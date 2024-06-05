@@ -194,7 +194,7 @@ class QualifierClass:
         Parameters
         ----------
         value
-            The value for the qualifier, by default ``None``.
+            The value for the qualifier.
 
         Returns
         -------
@@ -239,7 +239,7 @@ class QualifierDetector(Pipe):
     Parameters
     ----------
     spans_key
-        The key for the spans in the ``Doc`` object, by default ``ents``
+        The key for the spans in the ``Doc`` object.
     """
 
     def __init__(

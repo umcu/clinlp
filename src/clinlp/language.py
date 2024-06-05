@@ -277,11 +277,11 @@ def _get_tokenizer_exceptions(
     abbreviations
         All abbreviatins, which will be added to the tokenizer exceptions.
     abbrev_transforms
-        Any number of callables that transform abbreviations, by default None.
-        The transformed versions will also be added to the tokenizer exceptions.
+        Any number of callables that transform abbreviations. The transformed versions
+        will also be added to the tokenizer exceptions.
     keep_emoticons
-        Wether to keep emoticons as tokenizer exceptions, by default False. Emoticons
-        (e.g. ``:-)`` are normally included in spaCy's base exceptions.
+        Wether to keep emoticons as tokenizer exceptions. Emoticons (e.g. ``:-)`` are
+        normally included in spaCy's base exceptions.
 
     Returns
     -------
@@ -314,9 +314,9 @@ def _get_list(
     base
         The base list, with the initial items.
     add
-        Any items that will be added, by default ``None``.
+        Any items that will be added.
     remove
-        Any items that will be removed, by default ``None``.
+        Any items that will be removed.
 
     Returns
     -------

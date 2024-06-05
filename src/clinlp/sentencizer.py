@@ -39,11 +39,9 @@ class Sentencizer(Pipe):
         Parameters
         ----------
         sent_end_chars
-            A list of characters that can end a sentence,
-            by default ``[".", "!", "?", "\n", "\r"]``.
+            A list of characters that can end a sentence.
         sent_start_punct
-            Any punctuation that is allowed to start a sentence,
-            by default ``["-", "*", "[", "("]``.
+            Any punctuation that is allowed to start a sentence.
         """
         self.sent_end_chars = set(
             _defaults_sentencizer["sent_end_chars"]

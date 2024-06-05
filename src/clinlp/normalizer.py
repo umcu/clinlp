@@ -29,10 +29,9 @@ class Normalizer(Pipe):
         Parameters
         ----------
         lowercase
-            Whether to lowercase text, by default ``True``.
+            Whether to lowercase text.
         map_non_ascii
-            Whether to map non ascii characters to ascii counterparts, by default
-            ``True``.
+            Whether to map non ascii characters to ascii counterparts.
         """
         self.lowercase = lowercase
         self.map_non_ascii = map_non_ascii
