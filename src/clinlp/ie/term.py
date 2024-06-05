@@ -1,4 +1,4 @@
-"""Contains the Term class, which are used for rule based entity matching."""
+"""Contains the ``Term`` class, which is used for rule based entity matching."""
 
 from typing import Optional
 
@@ -49,16 +49,16 @@ class Term(pydantic.BaseModel):
 
     def to_spacy_pattern(self, nlp: Language) -> list[dict]:
         """
-        Convert the term to a spaCy pattern.
+        Convert the term to a ``spaCy`` pattern.
 
         Parameters
         ----------
         nlp
-            The spaCy language model. This is used for tokenizing patterns.
+            The ``spaCy`` language model. This is used for tokenizing patterns.
 
         Returns
         -------
-            The spaCy pattern.
+            The ``spaCy`` pattern.
         """
         fields = {
             field: getattr(self, field) or _defaults_term[field]

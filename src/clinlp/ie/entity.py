@@ -1,4 +1,4 @@
-"""Contains the RuleBasedEntityMatcher class, used for entity matching."""
+"""Contains the ``RuleBasedEntityMatcher`` class, used for entity matching."""
 
 import intervaltree as ivt
 import numpy as np
@@ -24,12 +24,12 @@ _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     """
-    Create a dictionary of concepts and their terms from a csv file.
+    Create a dictionary of concepts and their terms from a ``csv`` file.
 
     Parameters
     ----------
     path
-        The path to the csv file.
+        The path to the ``csv`` file.
     concept_col
         The column containing the concept identifier, by default "concept"
 
@@ -40,7 +40,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     Raises
     ------
     RuntimeError
-        If a value in the input csv cannot be parsed.
+        If a value in the input ``csv`` cannot be parsed.
     """
     df = pd.read_csv(path).replace([np.nan], [None])
 
@@ -82,13 +82,13 @@ class RuleBasedEntityMatcher(Pipe):
     A rule-based entity matcher.
 
     This component is used to match entities based on a set of concepts, along with
-    synonyms. Note that settings (e.g. attr, proximity, ...) set at the entity matcher
-    level  are overridden by the settings at the term level.
+    synonyms. Note that settings (e.g. ``attr``, ``proximity``, ...) set at the entity
+    matcher level are overridden by the settings at the term level.
 
     Parameters
     ----------
     nlp
-        The spaCy language model.
+        The ``spaCy`` language model.
     attr
         The attribute to match on.
     proximity
@@ -135,10 +135,10 @@ class RuleBasedEntityMatcher(Pipe):
     @property
     def _use_phrase_matcher(self) -> bool:
         """
-        Whether the spaCy phrase matcher can be used.
+        Whether the ``spaCy`` phrase matcher can be used.
 
         This is the case if all term arguments are set to their default values, so no
-        complex spaCy patterns are required.
+        complex ``spaCy`` patterns are required.
 
         Returns
         -------
@@ -158,13 +158,13 @@ class RuleBasedEntityMatcher(Pipe):
         ----------
         concepts
             A dictionary of concepts and their terms. Present with concepts as keys,
-            and lists of terms as values. Each term can be a string, a spaCy pattern,
-            or a clinlp.Term.
+            and lists of terms as values. Each term can be a ``string``, a ``spaCy``
+            pattern, or a ``clinlp.Term``.
 
         Raises
         ------
         TypeError
-            If the term type is not str, list or clinlp.Term.
+            If the term type is not ``str``, ``list`` or ``clinlp.Term``.
         """
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
@@ -221,7 +221,7 @@ class RuleBasedEntityMatcher(Pipe):
         Parameters
         ----------
         doc
-            The spaCy document.
+            The ``spaCy`` document.
 
         Returns
         -------
@@ -280,19 +280,19 @@ class RuleBasedEntityMatcher(Pipe):
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Process the spaCy document, by finding entities.
+        Process the ``spaCy`` document, by finding entities.
 
-        The entities are stored in `doc.spans['ents']`. Make sure any subsequent
+        The entities are stored in ``doc.spans['ents']``. Make sure any subsequent
         components expect the entities to be stored there.
 
         Parameters
         ----------
         doc
-            The spaCy document.
+            The ``spaCy`` document.
 
         Returns
         -------
-            The spaCy document with entities.
+            The ``spaCy`` document with entities.
         """
         matches = self._get_matches(doc)
 

@@ -38,8 +38,8 @@ class QualifierTransformer(QualifierDetector):
     Transformer-based qualifier detector.
 
     Implements some helper methods, but cannot be used directly. Specifically, does not
-    implement the abstract properties `qualifier_classes`, `tokenizer` and `model`,
-    and abstract method `_detect_qualifiers`.
+    implement the abstract properties ``qualifier_classes``, ``tokenizer`` and 
+    ``model``, and abstract method ``_detect_qualifiers``.
 
     Parameters
     ----------
@@ -240,13 +240,13 @@ class NegationTransformer(QualifierTransformer):
     Parameters
     ----------
     nlp
-        The spaCy language pipeline.
+        The ``spaCy`` language pipeline.
     absence_threshold
-        The threshold for absence. Will classify qualifier as Presence.Absent if
-        prediction < absence threshold.
+        The threshold for absence. Will classify qualifier as ``Presence.Absent`` if
+        ``prediction`` < ``absence_threshold``.
     presence_threshold
-        The threshold for presence. Will classify qualifier as Presence.Present if
-        prediction > presence threshold.
+        The threshold for presence. Will classify qualifier as ``Presence.Present`` if
+        ``prediction`` > ``presence_threshold``.
     """
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_NegationDetection"
@@ -294,7 +294,7 @@ class NegationTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The Doc object.
+            The ``Doc`` object.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
@@ -330,16 +330,16 @@ class ExperiencerTransformer(QualifierTransformer):
     """
     Transformer-based experiencer detector.
 
-    Currently, only detects Experiencer.Patient (default) and Experiencer.Family --
-    Experiencer.Other is not yet implemented.
+    Currently, only detects ``Experiencer.Patient`` (default) and ``Experiencer.Family``
+    -- ``Experiencer.Other`` is not yet implemented.
 
     Parameters
     ----------
     nlp
-        The spaCy language pipeline.
+        The ``spaCy`` language pipeline.
     family_threshold
-        The threshold for family. Will classify qualifier as Experiencer.Family if
-        prediction > family threshold.
+        The threshold for family. Will classify qualifier as ``Experiencer.Family`` if
+        ``prediction`` > ``family_threshold``.
 
     """
 
@@ -383,7 +383,7 @@ class ExperiencerTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The Doc object.
+            The ``Doc`` object.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)

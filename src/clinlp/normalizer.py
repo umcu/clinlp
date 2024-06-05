@@ -17,14 +17,14 @@ _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
 )
 class Normalizer(Pipe):
     """
-    A spaCy pipeline component for normalizing text.
+    A ``spaCy`` pipeline component for normalizing text.
 
     Parameters
     ----------
-    lowercase, optional
-        Whether to lowercase text, by default `True`.
-    map_non_ascii, optional
-        Whether to map non ascii characters to ascii counterparts, by default `True`.
+    lowercase
+        Whether to lowercase text, by default ``True``.
+    map_non_ascii
+        Whether to map non ascii characters to ascii counterparts, by default ``True``.
     """
 
     def __init__(
@@ -116,7 +116,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
-            The doc with `token.norm_` set to the normalized text.
+            The doc with ``token.norm_`` set to the normalized text.
         """
         if len(doc) == 0:
             return doc

@@ -1,8 +1,8 @@
 """
-Language class for the `clinlp` package.
+Language class for the ``clinlp`` package.
 
-This module contains the custom language class for the `clinlp` package. It is based
-on the spaCy language class, but with custom settings for Dutch Clinical text.
+This module contains the custom language class for the ``clinlp`` package. It is based
+on the ``spaCy`` language class, but with custom settings for Dutch Clinical text.
 """
 
 import importlib.metadata
@@ -247,7 +247,7 @@ ALPHA = "a-zA-Z"
 
 def _get_abbreviations() -> list[str]:
     """
-    Get the list of abbreviations for `clinlp`.
+    Get the list of abbreviations for ``clinlp``.
 
     Returns
     -------
@@ -268,7 +268,7 @@ def _get_tokenizer_exceptions(
     keep_emoticons: bool = False,
 ) -> dict[str, list[dict]]:
     """
-    Get tokenizer exceptions for `clinlp`.
+    Get tokenizer exceptions for ``clinlp``.
 
     Tokenizer exceptions are sequences of characters that should not be split up.
 
@@ -276,12 +276,12 @@ def _get_tokenizer_exceptions(
     ----------
     abbreviations
         All abbreviatins, which will be added to the tokenizer exceptions.
-    abbrev_transforms, optional
+    abbrev_transforms
         Any number of callables that transform abbreviations, by default None.
         The transformed versions will also be added to the tokenizer exceptions.
-    keep_emoticons, optional
+    keep_emoticons
         Wether to keep emoticons as tokenizer exceptions, by default False. Emoticons
-        (e.g. `:-)` are normally included in spaCy's base exceptions.
+        (e.g. ``:-)`` are normally included in spaCy's base exceptions.
 
     Returns
     -------
@@ -313,10 +313,10 @@ def _get_list(
     ----------
     base
         The base list, with the initial items.
-    add, optional
-        Any items that will be added, by default `None`.
-    remove, optional
-        Any items that will be removed, by default `None`.
+    add
+        Any items that will be added, by default ``None``.
+    remove
+        Any items that will be removed, by default ``None``.
 
     Returns
     -------
@@ -337,7 +337,7 @@ def _get_list(
 
 def _get_ellipses() -> list[str]:
     """
-    Get a list of ellipses for `clinlp`.
+    Get a list of ellipses for ``clinlp``.
 
     Returns
     -------
@@ -348,7 +348,7 @@ def _get_ellipses() -> list[str]:
 
 def _get_currencies() -> list[str]:
     """
-    Get a list of currencies (e.g. `$`, `€`) for `clinlp`.
+    Get a list of currencies (e.g. ``$``, ``€``) for ``clinlp``.
 
     Returns
     -------
@@ -363,7 +363,7 @@ def _get_units() -> list[str]:
 
 def _get_tokenizer_prefix_rules() -> list[str]:
     """
-    Get a list of prefix rules for the `clinlp` tokenizer.
+    Get a list of prefix rules for the ``clinlp`` tokenizer.
 
     Prefix rules are regular expressions that match the start of a token. If the
     regular expression matches, the prefix is split into a separate token.
@@ -383,7 +383,7 @@ def _get_tokenizer_prefix_rules() -> list[str]:
 
 def _get_tokenizer_prefixes() -> list[str]:
     """
-    Get a list of prefixes for the `clinlp` tokenizer.
+    Get a list of prefixes for the ``clinlp`` tokenizer.
 
     Prefixes are literal strings/chars that are split of the beginning of a token.
 
@@ -424,7 +424,7 @@ def _get_tokenizer_prefixes() -> list[str]:
 
 def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
     """
-    Get a list of infix rules for the `clinlp` tokenizer.
+    Get a list of infix rules for the ``clinlp`` tokenizer.
 
     Infix rules are regular expressions that match the middle of a token. If the
     regular expression matches, the infix is split into a separate token.
@@ -454,7 +454,7 @@ def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
 
 def _get_tokenizer_infixes() -> list[str]:
     """
-    Get a list of infixes for the `clinlp` tokenizer.
+    Get a list of infixes for the ``clinlp`` tokenizer.
 
     Infixes are literal strings/chars that are split in the middle of a token.
 
@@ -476,7 +476,7 @@ def _get_tokenizer_suffix_rules(
     currencies: list[str], units: list[str], punct: list[str], quotes: list[str]
 ) -> list[str]:
     """
-    Get a list of suffix rules for the `clinlp` tokenizer.
+    Get a list of suffix rules for the ``clinlp`` tokenizer.
 
     Suffix rules are regular expressions that match the end of a token. If the
     regular expression matches, the suffix is split into a separate token.
@@ -516,7 +516,7 @@ def _get_tokenizer_suffix_rules(
 
 def _get_tokenizer_suffixes() -> list[str]:
     """
-    Get a list of suffixes for the `clinlp` tokenizer.
+    Get a list of suffixes for the ``clinlp`` tokenizer.
 
     Suffixes are literal strings/chars that are split at the end of a token.
 
@@ -543,7 +543,7 @@ def _get_tokenizer_suffixes() -> list[str]:
 
 
 class ClinlpDefaults(BaseDefaults):
-    """Default settings for the `clinlp` language class."""
+    """Default settings for the ``clinlp`` language class."""
 
     tokenizer_exceptions = _get_tokenizer_exceptions(
         abbreviations=_get_abbreviations(), abbrev_transforms=CLINLP_ABBREV_TRANSFORMS
@@ -569,7 +569,7 @@ class ClinlpDefaults(BaseDefaults):
 @spacy.registry.languages("clinlp")
 class Clinlp(Language):
     """
-    The `clinlp` language class.
+    The ``clinlp`` language class.
 
     Contains custom settings for Dutch clinical text.
     """

@@ -1,4 +1,4 @@
-"""The Context Algorithm as a spaCy pipeline."""
+"""The Context Algorithm as a ``spaCy`` pipeline."""
 
 import importlib.resources
 import itertools
@@ -29,7 +29,12 @@ _DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
 
 
 class ContextRuleDirection(Enum):
-    """Direction of a Context rule, as in the original Context Algorithm."""
+    """
+    Direction of a rule, as in the original Context Algorithm.
+
+    ``PRECEDING`` means the trigger precedes the entity, while ``FOLLOWING`` means
+    it follows the entity. ``BIDIRECTIONAL`` means the trigger can be on either side.
+    """
 
     PRECEDING = 1
     FOLLOWING = 2
@@ -46,13 +51,14 @@ class ContextRule:
     Parameters
     ----------
     pattern
-        The pattern to look for in text. Either a string, or a spaCy pattern (list).
+        The pattern to look for in text. Either a ``string``, or a ``spaCy`` pattern 
+        (``list``).
     qualifier
         The qualifier to apply.
     direction
         The Context rule direction.
     max_scope
-        The maximum scope (number of tokens) of the trigger, or `None` for using
+        The maximum scope (number of tokens) of the trigger, or ``None`` for using
         sentence boundaries.
     """
 
@@ -90,8 +96,8 @@ class _MatchedContextPattern:
         """
         Set the scope this pattern ranges over, based on the sentence.
 
-        This is either the window determined in the `max_scope` of the rule, or the
-        sentence boundaries if no `max_scope` is set.
+        This is either the window determined in the ``max_scope`` of the rule, or the
+        sentence boundaries if no ``max_scope`` is set.
 
         Parameters
         ----------
@@ -132,7 +138,7 @@ _defaults_context_algorithm = {
 )
 class ContextAlgorithm(QualifierDetector):
     """
-    Implements the Context algorithm as a spaCy pipeline component.
+    Implements the Context algorithm as a ``spaCy`` pipeline component.
 
     For more information, see the original paper:
     https://doi.org/10.1016%2Fj.jbi.2009.05.002
@@ -140,15 +146,15 @@ class ContextAlgorithm(QualifierDetector):
     Parameters
     ----------
     nlp
-        The spaCy language object to use.
+        The ``spaCy`` language object to use.
     phrase_matcher_attr
-        The token attribute to match phrases on (e.g. `TEXT`, `ORTH`, `NORM`).
+        The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
     load_rules
-        Whether to parse any rules. Set this to `False` to use
-        `ContextAlgorithm.add_rules` to add ContextRules manually.
+        Whether to parse any rules. Set this to ``False`` to use
+        ``ContextAlgorithm.add_rules`` to add ``ContextRules`` manually.
     rules
-        A dictionary of rules, or a path to a `json` containing the rules. See the
-        `clinlp.resources` dir for an example.
+        A dictionary of rules, or a path to a ``json`` containing the rules. See the
+        ``clinlp.resources`` dir for an example.
     """
 
     def __init__(
@@ -270,7 +276,7 @@ class ContextAlgorithm(QualifierDetector):
         Raises
         ------
         TypeError
-            If the rule pattern is not a string or a list.
+            If the rule pattern is not a ``string`` or a ``list``.
         """
         rule_key = f"rule_{len(self.rules)}"
         self.rules[rule_key] = rule
@@ -307,7 +313,7 @@ class ContextAlgorithm(QualifierDetector):
         Parameters
         ----------
         doc
-            The spaCy doc to process.
+            The ``spaCy`` doc to process.
 
         Returns
         -------
@@ -324,7 +330,7 @@ class ContextAlgorithm(QualifierDetector):
         """
         Get the rule from a match ID.
 
-        This is a bit specific to spaCy matching internals.
+        This is a bit specific to ``spaCy`` matching internals.
 
         Parameters
         ----------
@@ -501,7 +507,7 @@ class ContextAlgorithm(QualifierDetector):
         Parameters
         ----------
         doc
-            The spaCy doc to process.
+            The ``spaCy`` doc to process.
 
         Raises
         ------

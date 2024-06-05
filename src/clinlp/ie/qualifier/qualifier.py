@@ -25,8 +25,8 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
     Returns
     -------
-        The qualifiers in string format, e.g. `{'Presence.Present', ...}`, or `None` if
-        no qualifiers are present.
+        The qualifiers in string format, e.g. ``{'Presence.Present', ...}``, or ``None``
+        if no qualifiers are present.
     """
     qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
@@ -38,7 +38,7 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
 def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
     """
-    Get qualifier information in dict format.
+    Get qualifier information in ``dict`` format.
 
     Parameters
     ----------
@@ -47,9 +47,9 @@ def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
 
     Returns
     -------
-        The qualifiers in dict format, e.g.
-        [{'Name': 'Presence', 'Value': 'Present', 'is_default': True}, ...],
-        or `None` if no qualifiers are present.
+        The qualifiers in ``dict`` format, e.g.
+        ``[{'Name': 'Presence', 'Value': 'Present', 'is_default': True}, ...]``,
+        or ``None`` if no qualifiers are present.
     """
     qualifiers = getattr(ent._, ATTR_QUALIFIERS)
 
@@ -95,7 +95,7 @@ class Qualifier:
     A qualifier for an entity.
 
     A qualifier is a piece of information that provides additional context to an entity.
-    For example, a `Presence` qualifier with a value of `Present` or `Absent`. A
+    For example, a ``Presence`` qualifier with a value of ``Present`` or ``Absent``. A
     qualifier has a fixed value.
 
     Parameters
@@ -149,8 +149,8 @@ class QualifierClass:
     A qualifier class.
 
     A qualifier class defines the set of possible values a qualifier can take on. For
-    example: `Presence` with values `Present` and `Absent`. The qualifier class creates
-    qualifiers, although they can also be created directly.
+    example: ``Presence`` with values ``Present`` and ``Absent``. The qualifier class
+    creates qualifiers, although they can also be created directly.
 
     Parameters
     ----------
@@ -198,7 +198,7 @@ class QualifierClass:
         Parameters
         ----------
         value
-            The value for the qualifier, by default None
+            The value for the qualifier, by default ``None``.
 
         Returns
         -------
@@ -243,7 +243,7 @@ class QualifierDetector(Pipe):
     Parameters
     ----------
     spans_key
-        The key for the spans in the Doc object, by default `ents`
+        The key for the spans in the ``Doc`` object, by default ``ents``
     """
 
     def __init__(
@@ -255,7 +255,7 @@ class QualifierDetector(Pipe):
     @abstractmethod
     def qualifier_classes(self) -> dict[str, QualifierClass]:
         """
-        Obtain the qualifier classes that a `QualifierDetector` initializes.
+        Obtain the qualifier classes that a ``QualifierDetector`` initializes.
 
         These are used to initialize the default qualifiers for each entity.
 

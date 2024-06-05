@@ -14,7 +14,7 @@ class _UnusedArgument:
 
 def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     """
-    Get the arguments and keyword arguments of a class's __init__ method.
+    Get the arguments and keyword arguments of a class's ``__init__`` method.
 
     Parameters
     ----------
@@ -23,7 +23,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
 
     Returns
     -------
-        The arguments and keyword arguments of the class's __init__ method.
+        The arguments and keyword arguments of the class's ``__init__`` method.
     """
     args = []
     kwargs = {}
@@ -46,17 +46,17 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
 
 def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
     """
-    Denote a class as clinlp component.
+    Denote a class as ``clinlp`` component.
 
-    Should be used as a decorator on a class. Additionally handles the `name` and `nlp`
-    arguments, and handles inheritance.
+    Should be used as a decorator on a class. Additionally handles the ``name`` and
+    ``nlp`` arguments, and handles inheritance.
 
     Parameters
     ----------
-    register, optional
-        Whether to automatically register the class as a spaCy component, or to only
-        return the make function, by default `True`. If set to `False`, should
-        probably be further decorated with `@Language.factory`.
+    register
+        Whether to automatically register the class as a ``spaCy`` component, or to only
+        return the make function, by default ``True``. If set to ``False``, should
+        probably be further decorated with ``@Language.factory``.
 
     Returns
     -------
@@ -104,7 +104,7 @@ def clinlp_component(*args, register: bool = True, **kwargs) -> Callable:
         if register:
             Language.factory(*args, func=make_component, **kwargs)
 
-        return make_component
+        return cls
 
     return _clinlp_component
 

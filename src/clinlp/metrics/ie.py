@@ -30,7 +30,7 @@ class Annotation:
     label
         The label/tag
     qualifiers
-        The applicable qualifiers, by default `[]`.
+        The applicable qualifiers, by default ``[]``.
     """
 
     text: str
@@ -77,11 +77,11 @@ class Annotation:
 
     def to_nervaluate(self) -> dict:
         """
-        Convert to format that nervaluate ingests.
+        Convert to format that ``nervaluate`` ingests.
 
         Returns
         -------
-        A dictionary with the items nervaluate expects.
+            A dictionary with the items ``nervaluate`` expects.
         """
         return {
             "text": self.text,
@@ -97,7 +97,7 @@ class Annotation:
 
         Returns
         -------
-        A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
+            A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
         """
         return {qualifier["name"] for qualifier in self.qualifiers}
 
@@ -150,14 +150,14 @@ class Document:
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[dict]:
         """
-        Convert to format that nervaluate ingests.
+        Convert to format that ``nervaluate`` ingests.
 
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default `None`. Should map to
-            annotations to `True` if they should be included, `False` otherwise,
-            by default `None`.
+            A filter to apply to annotations, by default ``None``. Should map to
+            annotations to ``True`` if they should be included, ``False`` otherwise,
+            by default ``None``.
 
         Returns
         -------
@@ -175,12 +175,13 @@ class Document:
 
         Parameters
         ----------
-        ann_filter: A filter to apply to annotations, should map to annotations to True
-        if they should be included, False otherwise.
+        ann_filter
+            A filter to apply to annotations, should map to annotations to ``True``
+            if they should be included, ``False`` otherwise.
 
         Returns
         -------
-        A set containing all annotation labels for this document.
+            A set containing all annotation labels for this document.
         """
         ann_filter = ann_filter or (lambda _: True)
 
@@ -203,8 +204,7 @@ class Document:
 
         Returns
         -------
-            The annotation with the provided span, or `None` if no such annotation
-            exists.
+            The annotation with the provided span, or ``None`` if no such annotation exists.
         """
         for annotation in self.annotations:
             if (annotation.start == start) and (annotation.end == end):
@@ -223,7 +223,7 @@ class InfoExtractionDataset:
     docs
         The annotated documents.
     default_qualifiers
-        Mapping of qualifiers to their default value, e.g. `{"Presence": "Present"}`.
+        Mapping of qualifiers to their default value, e.g. ``{"Presence": "Present"}``.
     """
 
     docs: list[Document]
@@ -291,20 +291,20 @@ class InfoExtractionDataset:
         nlp_docs: Iterable[Doc], ids: Optional[Iterable[str]] = None
     ) -> "InfoExtractionDataset":
         """
-        Create a new dataset from clinlp documents.
+        Create a new dataset from ``clinlp`` documents.
 
         Parameters
         ----------
         nlp_docs
-            An iterable of docs produced by clinlp (for example a list of `Doc`, or a
-            generator from `nlp.pipe`)
+            An iterable of docs produced by ``clinlp`` (for example a list of ``Doc``,
+            or a generator from ``nlp.pipe``)
         ids, optional
-            An iterable of identifiers, that should have the same length as `nlp_docs`,
-            by default None. If not provided, will use a counter.
+            An iterable of identifiers, that should have the same length as
+            ``nlp_docs``, by default ``None``. If not provided, will use a counter.
 
         Returns
         -------
-            A dataset, corresponding to the provided clinlp documents.
+            A dataset, corresponding to the provided ``clinlp`` documents.
         """
         ids = ids or itertools.count()
 
@@ -349,30 +349,31 @@ class InfoExtractionDataset:
         default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
         """
-        Create a new dataset from a MedCATTrainer export.
+        Create a new dataset from a ``MedCATTrainer`` export.
 
         Parameters
         ----------
         data
-            The data from a MedCATTrainer export as a dictionary, as downloaded from
-            the web interface in JSON format.
-        strip_spans, optional
+            The data from a ``MedCATTrainer`` export as a dictionary, as downloaded from
+            the web interface in ``JSON`` format.
+        strip_spans
             Whether to remove punctuation and whitespaces from the beginning or end
-            of annotations, by default True. Used to clean up accidental
+            of annotations, by default ``True``. Used to clean up accidental
             over-annotations.
-        default_qualifiers, optional
-            THe default qualifiers (which are not included in the MedCATTrainer export),
-             e.g. `{"Presence": "Absent", "Experiencer": "Patient"}`, by default `None`.
-             If `None`, will infer the default qualifiers from the majority class.
+        default_qualifiers
+            The default qualifiers (which are not included in the ``MedCATTrainer``
+            export), e.g. ``{"Presence": "Absent", "Experiencer": "Patient"}``, by
+            default ``None``. If ``None``, will infer the default qualifiers from the
+            majority class.
 
         Returns
         -------
-            A dataset, corresponding to the provided MedCATTrainer export.
+            A dataset, corresponding to the provided ``MedCATTrainer`` export.
 
         Raises
         ------
         ValueError
-            If the MedCATTrainer export contains more than one project.
+            If the ``MedCATTrainer`` export contains more than one project.
         """
         if len(data["projects"]) > 1:
             msg = "Cannot read MedCATTrainer exports with more than 1 project."
@@ -427,14 +428,14 @@ class InfoExtractionDataset:
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[list[dict]]:
         """
-        Convert to format that nervaluate ingests.
+        Convert to format that ``nervaluate`` ingests.
 
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default `None`. Should map to
-            annotations to `True` if they should be included, `False` otherwise,
-            by default `None`.
+            A filter to apply to annotations, by default ``None``. Should map to
+            annotations to ``True`` if they should be included, ``False`` otherwise,
+            by default ``None``.
 
         Returns
         -------
@@ -475,9 +476,9 @@ class InfoExtractionDataset:
         Parameters
         ----------
         n_spans
-            The `n` most frequent text spans to return, by default 25.
+            The ``n`` most frequent text spans to return, by default 25.
         span_callback
-            A callback applied to each text span, by default None. For instance
+            A callback applied to each text span, by default ``None``. For instance
             useful for normalizing text.
 
         Returns
@@ -508,9 +509,9 @@ class InfoExtractionDataset:
         Parameters
         ----------
         n_spans
-            The `n` most frequent labels to return, by default 25.
+            The ``n`` most frequent labels to return, by default 25.
         span_callback
-            A callback applied to each label, by default None. For instance
+            A callback applied to each label, by default ``None``. For instance
             useful for normalizing text.
 
         Returns
@@ -537,7 +538,7 @@ class InfoExtractionDataset:
         Returns
         -------
             The computed frequencies, as a mapping from qualifier names to values to
-            frequencies, e.g. `{"Presence": {"Present": 25, "Absent": 10}, ...}`.
+            frequencies, e.g. ``{"Presence": {"Present": 25, "Absent": 10}, ...}``.
         """
         cntrs = defaultdict(lambda: Counter())
 
@@ -552,14 +553,14 @@ class InfoExtractionDataset:
         """
         Compute all stats for this dataset.
 
-        Combines the return values of all stats functions, defined in the `_ALL_STATS`
+        Combines the return values of all stats functions, defined in the ``_ALL_STATS``
         class variable. Any additional keyword arguments are passed to the respective
         stats functions, if they accept them.
 
         Returns
         -------
             A dictionary containing all computed stats, e.g.
-            `{'num_docs': 384, 'num_annotations': 4353, ...}`.
+            ``{'num_docs': 384, 'num_annotations': 4353, ...}``.
         """
         stats = {}
 
@@ -639,18 +640,19 @@ class InfoExtractionMetrics:
         Compute metrics for entities, including precision, recall and f1-score.
 
         Computes measures for exact, strict, partial, and type matching, using the
-        [nervaluate](https://github.com/MantisAI/nervaluate) implementation of
+        ``[nervaluate](https://github.com/MantisAI/nervaluate)`` implementation of
         the SemEval 2013 9.1 task evaluation.
 
         Parameters
         ----------
         ann_filter
-            A filter to apply to annotations, by default None. Can for instance be used
-            to exclude annotations with certain labels or qualifiers. Annotations are
-            only included in the metrics computation if the filter maps them to `True`.
+            A filter to apply to annotations, by default ``None``. Can for instance be
+            used to exclude annotations with certain labels or qualifiers. Annotations
+            are only included in the metrics computation if the filter maps them to
+            ``True``.
         per_label
-            Whether to compute metrics per label, by default False. If set to `True`,
-            will micro-average the metrics across all labels.
+            Whether to compute metrics per label, by default ``False``. If set to
+            ``True``, will micro-average the metrics across all labels.
 
         Returns
         -------
@@ -740,7 +742,7 @@ class InfoExtractionMetrics:
         ----------
         misses
             Whether to include all misses (false positives/negatives) in the results,
-            by default `True`
+            by default ``True``
 
         Returns
         -------
