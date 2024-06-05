@@ -197,7 +197,7 @@ class QualifierClass:
 
         Parameters
         ----------
-        value, optional
+        value
             The value for the qualifier, by default None
 
         Returns

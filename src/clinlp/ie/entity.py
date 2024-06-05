@@ -30,7 +30,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     ----------
     path
         The path to the csv file.
-    concept_col, optional
+    concept_col
         The column containing the concept identifier, by default "concept"
 
     Returns
