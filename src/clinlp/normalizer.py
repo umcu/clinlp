@@ -39,7 +39,7 @@ class Normalizer(Pipe):
     @staticmethod
     def _lowercase(text: str) -> str:
         """
-        Lowercase the text.
+        Lowercase text.
 
         Parameters
         ----------
@@ -108,16 +108,16 @@ class Normalizer(Pipe):
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Normalize the text in the doc.
+        Normalize text in a document.
 
         Parameters
         ----------
         doc
-            The doc to normalize.
+            The document containing the text to normalize.
 
         Returns
         -------
-            The doc with ``token.norm_`` set to the normalized text.
+            The document, with ``token.norm_`` set to the normalized text.
         """
         if len(doc) == 0:
             return doc

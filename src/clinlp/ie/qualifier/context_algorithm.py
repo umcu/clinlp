@@ -90,9 +90,9 @@ class _MatchedContextPattern:
         self.end = end + offset
         self.scope = None
 
-    def initialize_scope(self, sentence: Span) -> None:
+    def set_initial_scope(self, sentence: Span) -> None:
         """
-        Set the scope this pattern ranges over, based on the sentence.
+        Set the initial scope this pattern ranges over, based on the sentence.
 
         This is either the window determined in the ``max_scope`` of the rule, or the
         sentence boundaries if no ``max_scope`` is set.
@@ -249,6 +249,19 @@ class ContextAlgorithm(QualifierDetector):
         return ContextRuleDirection[direction.upper()]
 
     def _parse_rules(self, rules: Union[str | dict]) -> list[ContextRule]:
+        """
+        Parse context rules from a file or dictionary.
+
+        Parameters
+        ----------
+        rules
+            The rules to parse. Can be presented as a dictionary, or as a ``json``
+            filepath.
+
+        Returns
+        -------
+            The parsed rules.
+        """
         if isinstance(rules, str):
             with Path(rules).open(mode="rb") as file:
                 rules = json.load(file)
@@ -334,7 +347,7 @@ class ContextAlgorithm(QualifierDetector):
 
     def _get_rule_from_match_id(self, match_id: int) -> ContextRule:
         """
-        Get the rule from a match ID.
+        Get the context rule from a match ID.
 
         This is a bit specific to ``spaCy`` matching internals.
 
@@ -379,14 +392,14 @@ class ContextAlgorithm(QualifierDetector):
         scopes: ivt.IntervalTree, terminations: list[_MatchedContextPattern]
     ) -> ivt.IntervalTree:
         """
-        Limit the scopes of matched patterns based on terminations.
+        Limit the scopes of matched patterns based on termination triggers.
 
         Parameters
         ----------
         scopes
             The scopes to limit.
         terminations
-            The terminations to limit the scopes with.
+            The matched termination triggers to limit the scopes with.
 
         Returns
         -------
@@ -467,8 +480,11 @@ class ContextAlgorithm(QualifierDetector):
         """
         Resolve conflicts between matched patterns.
 
-        Works finding the pattern with smallest interval distance to the entity,
-        followed by the one with the highest priority (in case of ties).
+        Conflicts occur when different qualifier values apply to the same entity, for
+        instance when a trigger is found preceding an entity, while another conflicting
+        trigger is found following an entity. Resolves this by finding the pattern with
+        smallest interval distance to the entity, followed by the one with the highest
+        priority in case of ties.
 
         Parameters
         ----------
@@ -508,7 +524,7 @@ class ContextAlgorithm(QualifierDetector):
 
     def _detect_qualifiers(self, doc: Doc) -> None:
         """
-        Detect qualifiers in a document.
+        Detect qualifiers for the entities in a document.
 
         Parameters
         ----------
@@ -549,7 +565,7 @@ class ContextAlgorithm(QualifierDetector):
                     offset=offset,
                 )
 
-                matched_pattern.initialize_scope(sentence)
+                matched_pattern.set_initial_scope(sentence)
                 matched_patterns.append(matched_pattern)
 
             match_scopes = self._compute_match_scopes(matched_patterns)

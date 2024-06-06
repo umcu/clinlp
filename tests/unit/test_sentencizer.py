@@ -57,7 +57,7 @@ class TestUnitClinlpSentencizer:
         )
 
         # Act
-        sentence_starts = s._get_sentence_starts(tokens)
+        sentence_starts = s._compute_sentence_starts(tokens)
 
         # Assert
         assert sentence_starts == [
@@ -79,7 +79,7 @@ class TestUnitClinlpSentencizer:
         )
 
         # Act
-        sentence_starts = s._get_sentence_starts(tokens)
+        sentence_starts = s._compute_sentence_starts(tokens)
 
         # Assert
         assert sentence_starts == [
@@ -99,7 +99,7 @@ class TestUnitClinlpSentencizer:
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "."])
 
         # Act
-        sentence_starts = s._get_sentence_starts(tokens)
+        sentence_starts = s._compute_sentence_starts(tokens)
 
         # Assert
         assert sentence_starts == [
@@ -117,7 +117,7 @@ class TestUnitClinlpSentencizer:
         tokens = get_mock_tokens(["dit", "is", "een", "test", "\n", "*", "opsomming"])
 
         # Act
-        sentence_starts = s._get_sentence_starts(tokens)
+        sentence_starts = s._compute_sentence_starts(tokens)
 
         # Assert
         assert sentence_starts == [

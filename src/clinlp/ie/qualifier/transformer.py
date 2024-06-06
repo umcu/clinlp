@@ -95,6 +95,24 @@ class QualifierTransformer(QualifierDetector):
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
+        """
+        Get the entity window.
+
+        The window includes the tokens of the entity itself, and a number of tokens
+        before and after the entity.
+
+        Parameters
+        ----------
+        ent
+            The entity.
+        token_window
+            The number of tokens to include before and after the entity.
+
+        Returns
+        -------
+            The text span based on the window, and the original entity start and
+            end characters.
+        """
         start_token_i = max(0, ent.start - token_window)
         end_token_i = min(len(ent.doc), ent.end + token_window)
 
@@ -110,7 +128,7 @@ class QualifierTransformer(QualifierDetector):
         text: str, ent_start_char: int, ent_end_char: int
     ) -> Tuple[str, int, int]:
         """
-        Trim the entity boundaries.
+        Trim the boundaries of an entity.
 
         Parameters
         ----------
@@ -137,7 +155,7 @@ class QualifierTransformer(QualifierDetector):
         text: str, ent_start_char: int, ent_end_char: int, placeholder: str
     ) -> Tuple[str, int, int]:
         """
-        Fill the entity placeholder.
+        Replace the entity intext with a placeholder. 
 
         Parameters
         ----------
@@ -288,7 +306,7 @@ class NegationTransformer(QualifierTransformer):
 
     def _detect_qualifiers(self, doc: Doc) -> None:
         """
-        Detect qualifiers.
+        Detect qualifiers for the entities in a document.
 
         Prepares the entity, then predicts the probability of the qualifier. If the
         probability is below the absence threshold, the qualifier is classified as
@@ -298,7 +316,7 @@ class NegationTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The ``Doc`` object.
+            The ``spaCy`` doc to process.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
@@ -380,7 +398,7 @@ class ExperiencerTransformer(QualifierTransformer):
 
     def _detect_qualifiers(self, doc: Doc) -> None:
         """
-        Detect qualifiers.
+        Detect qualifiers for the entities in a document.
 
         Prepares the entity, then predicts the probability of the qualifier. If the
         probability is above the family threshold, the qualifier is classified as
@@ -389,7 +407,7 @@ class ExperiencerTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The ``Doc`` object.
+            The ``spaCy`` doc to process.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)

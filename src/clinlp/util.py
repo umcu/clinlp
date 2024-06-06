@@ -46,7 +46,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
 
 def clinlp_component(*args, **kwargs) -> Callable:
     """
-    Denote a class as ``clinlp`` component, and registers it with ``spaCy``.
+    Register a ``clinlp`` component with ``spaCy``.
 
     Should be used as a decorator on a class. Additionally handles the ``name`` and
     ``nlp`` arguments, and handles inheritance.

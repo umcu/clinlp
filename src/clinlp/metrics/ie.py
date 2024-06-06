@@ -71,7 +71,7 @@ class Annotation:
 
     def to_nervaluate(self) -> dict:
         """
-        Convert to format that ``nervaluate`` ingests.
+        Convert to ``nervaluate`` format.
 
         Returns
         -------
@@ -87,7 +87,7 @@ class Annotation:
     @property
     def qualifier_names(self) -> set[str]:
         """
-        Obtain unique qualifier names for this annotation.
+        Obtain the unique qualifier names for this annotation.
 
         Returns
         -------
@@ -138,7 +138,7 @@ class Document:
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[dict]:
         """
-        Convert to format that ``nervaluate`` ingests.
+        Convert to ``nervaluate`` format.
 
         Parameters
         ----------
@@ -276,7 +276,7 @@ class InfoExtractionDataset:
         nlp_docs: Iterable[Doc], ids: Optional[Iterable[str]] = None
     ) -> "InfoExtractionDataset":
         """
-        Create a new dataset from ``clinlp`` documents.
+        Create a dataset from ``clinlp`` documents.
 
         Parameters
         ----------
@@ -334,7 +334,7 @@ class InfoExtractionDataset:
         default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
         """
-        Create a new dataset from a ``MedCATTrainer`` export.
+        Create a dataset from a ``MedCATTrainer`` export.
 
         Parameters
         ----------
@@ -412,7 +412,7 @@ class InfoExtractionDataset:
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
     ) -> list[list[dict]]:
         """
-        Convert to format that ``nervaluate`` ingests.
+        Convert to ``nervaluate`` format.
 
         Parameters
         ----------
@@ -515,7 +515,7 @@ class InfoExtractionDataset:
 
     def qualifier_freqs(self) -> dict:
         """
-        Compute frequency of all qualifier values in this dataset.
+        Compute the frequency of all qualifier values in this dataset.
 
         Returns
         -------
@@ -533,7 +533,7 @@ class InfoExtractionDataset:
 
     def stats(self, **kwargs) -> dict:
         """
-        Compute all stats for this dataset.
+        Compute all statistics for this dataset.
 
         Combines the return values of all stats functions, defined in the ``_ALL_STATS``
         class variable. Any additional keyword arguments are passed to the respective
@@ -561,7 +561,16 @@ class InfoExtractionDataset:
 
 
 class InfoExtractionMetrics:
-    """Calculator for information extraction task metrics."""
+    """
+    Calculator for information extraction task metrics.
+
+    Parameters
+    ----------
+    true
+        The dataset containing true (annotated/gold standard) annotations.
+    pred
+        The dataset containing pred (predicted/inferred) annotations.
+    """
 
     _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
@@ -572,16 +581,6 @@ class InfoExtractionMetrics:
     def __init__(
         self, true: InfoExtractionDataset, pred: InfoExtractionDataset
     ) -> None:
-        """
-        Create a new metric computation instance.
-
-        Parameters
-        ----------
-        true
-            The dataset containing true (annotated/gold standard) annotations.
-        pred
-            The dataset containing pred (predicted/inferred) annotations.
-        """
         self.true = true
         self.pred = pred
 

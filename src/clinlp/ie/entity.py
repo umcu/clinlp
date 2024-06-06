@@ -138,7 +138,7 @@ class RuleBasedEntityMatcher(Pipe):
     @property
     def _use_phrase_matcher(self) -> bool:
         """
-        Whether the ``spaCy`` phrase matcher can be used.
+        Determine whether the ``spaCy`` phrase matcher can be used.
 
         This is the case if all term arguments are set to their default values, so no
         complex ``spaCy`` patterns are required.
@@ -252,7 +252,7 @@ class RuleBasedEntityMatcher(Pipe):
     @staticmethod
     def _resolve_ents_overlap(ents: list[Span]) -> list[Span]:
         """
-        Resolve overlapping entities.
+        Resolve overlap between entities.
 
         Takes the longest entity in case of overlap.
 
@@ -283,10 +283,10 @@ class RuleBasedEntityMatcher(Pipe):
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Process the ``spaCy`` document, by finding entities.
+        Find entities in a document text.
 
-        The entities are stored in ``doc.spans['ents']``. Make sure any subsequent
-        components expect the entities to be stored there.
+        The entities that are found will be stored in ``doc.spans['ents']``. Make sure
+        any subsequent components expect the entities to be stored there.
 
         Parameters
         ----------

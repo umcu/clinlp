@@ -88,9 +88,9 @@ class Sentencizer(Pipe):
         """
         return token.text in self.sent_end_chars
 
-    def _get_sentence_starts(self, doc: Doc) -> list[bool]:
+    def _compute_sentence_starts(self, doc: Doc) -> list[bool]:
         """
-        Get the sentence starts for a document.
+        Compute which tokens start a sentence.
 
         Parameters
         ----------
@@ -124,22 +124,22 @@ class Sentencizer(Pipe):
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Sentencize the text in the doc.
+        Sentencize the text in the document.
 
         Parameters
         ----------
         doc
-            The doc to sentencize.
+            The document containint the text to sentencize.
 
         Returns
         -------
-            The doc with ``token.is_sent_start`` set to whether the token starts a
-            sentence.
+            The document, with ``token.is_sent_start`` set to whether each token
+            starts a sentence.
         """
         if len(doc) == 0:
             return doc
 
-        sentence_starts = self._get_sentence_starts(doc)
+        sentence_starts = self._compute_sentence_starts(doc)
 
         for is_sent_start, token in zip(sentence_starts, doc):
             token.is_sent_start = is_sent_start

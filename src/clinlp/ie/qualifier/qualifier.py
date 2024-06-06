@@ -38,7 +38,7 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
 def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
     """
-    Get qualifier information in ``dict`` format.
+    Get qualifier information in dictionary format.
 
     Parameters
     ----------
@@ -189,7 +189,7 @@ class QualifierClass:
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
         """
-        Create a qualifier.
+        Create a qualifier in this qualifier class.
 
         Parameters
         ----------
@@ -234,7 +234,7 @@ _defaults_qualifier_detector = {
 
 class QualifierDetector(Pipe):
     """
-    An abstract pipeline component for detecting qualifiers in clinical text.
+    Abstract pipeline component for detecting qualifiers in clinical text.
 
     Parameters
     ----------
@@ -309,20 +309,17 @@ class QualifierDetector(Pipe):
     @abstractmethod
     def _detect_qualifiers(self, doc: Doc) -> None:
         """
-        Detect qualifiers in a document.
-
-        This is an abstract method that should be implemented by subclasses. Any
-        detected qualifiers should be added to the entities in the document.
+        Detect qualifiers for the entities in a document.
 
         Parameters
         ----------
         doc
-            The document to detect qualifiers in.
+            The ``spaCy`` doc to process.
         """
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Process a document, by detecting and appending qualifiers to entities.
+        Intialize default qualifiers and run detection.
 
         Parameters
         ----------

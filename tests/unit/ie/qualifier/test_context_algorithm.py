@@ -126,7 +126,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -145,7 +145,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -164,7 +164,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -186,7 +186,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -208,7 +208,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -230,7 +230,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Act
-        mqp.initialize_scope(sentence=sentence)
+        mqp.set_initial_scope(sentence=sentence)
 
         # Assert
         assert mqp.scope is not None
@@ -252,7 +252,7 @@ class TestUnitMatchedQualifierPattern:
         # Assert
         with pytest.raises(ValueError, match=".*max_scope must be at least 1.*"):
             # Act
-            mqp.initialize_scope(sentence=sentence)
+            mqp.set_initial_scope(sentence=sentence)
 
 
 class TestUnitContextAlgorithm:
