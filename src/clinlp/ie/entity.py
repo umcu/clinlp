@@ -1,4 +1,4 @@
-"""Contains the ``RuleBasedEntityMatcher`` class, used for entity matching."""
+"""Component for rule based entity matching."""
 
 import intervaltree as ivt
 import numpy as np

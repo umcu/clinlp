@@ -1,8 +1,8 @@
 """
 Language class for the ``clinlp`` package.
 
-This module contains the custom language class for the ``clinlp`` package. It is based
-on the ``spaCy`` language class, but with custom settings for Dutch Clinical text.
+It is based on the ``spaCy`` language class, but with custom settings for
+Dutch clinical text.
 """
 
 import importlib.metadata

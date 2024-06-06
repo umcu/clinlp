@@ -1,4 +1,4 @@
-"""Utility functions that are used across the library."""
+"""Utility functions that are used throughout the library."""
 
 import inspect
 from inspect import Parameter, Signature

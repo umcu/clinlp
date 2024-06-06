@@ -1,4 +1,4 @@
-"""Functions and classes for evaluating information extraction tasks."""
+"""Classes and functions for evaluating information extraction tasks."""
 
 import inspect
 import itertools

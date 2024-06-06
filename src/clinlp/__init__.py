@@ -1,4 +1,4 @@
-"""The ``clinlp`` package provides a set of tools for processing Dutch clinical text."""
+"""The ``clinlp`` package, a set of tools for processing Dutch clinical text."""
 
 import importlib.util
 

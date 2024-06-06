@@ -1,4 +1,4 @@
-"""Contains the ``Term`` class, which is used for rule based entity matching."""
+"""``Term`` class, which is used for rule based entity matching."""
 
 from typing import Optional
 

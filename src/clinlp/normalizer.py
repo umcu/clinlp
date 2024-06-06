@@ -1,4 +1,4 @@
-"""Functionality for normalizing text."""
+"""Component for normalizing text."""
 
 import unicodedata
 

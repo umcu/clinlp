@@ -1,4 +1,4 @@
-"""The Context Algorithm as a ``spaCy`` pipeline."""
+"""The Context Algorithm implemented as a ``spaCy`` component."""
 
 import importlib.resources
 import itertools

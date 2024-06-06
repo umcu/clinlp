@@ -1,4 +1,4 @@
-"""Functionality for sentencizing text."""
+"""Component for sentencizing text."""
 
 from spacy.pipeline import Pipe
 from spacy.tokens import Doc, Token
