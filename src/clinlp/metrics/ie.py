@@ -289,7 +289,7 @@ class InfoExtractionDataset:
         ----------
         nlp_docs
             An iterable of docs produced by ``clinlp`` (for example a list of ``Doc``,
-            or a generator from ``nlp.pipe``)
+            or a generator from ``nlp.pipe``).
         ids, optional
             An iterable of identifiers, that should have the same length as
             ``nlp_docs``. If not provided, will use a counter.

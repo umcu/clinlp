@@ -276,7 +276,7 @@ def _get_tokenizer_exceptions(
     Parameters
     ----------
     abbreviations
-        All abbreviatins, which will be added to the tokenizer exceptions.
+        All abbreviations, which will be added to the tokenizer exceptions.
     abbrev_transforms
         Any number of callables that transform abbreviations. The transformed versions
         will also be added to the tokenizer exceptions.

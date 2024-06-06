@@ -132,7 +132,7 @@ class Sentencizer(Pipe):
         Parameters
         ----------
         doc
-            The document containint the text to sentencize.
+            The document containing the text to sentencize.
 
         Returns
         -------

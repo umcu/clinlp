@@ -148,9 +148,9 @@ class QualifierTransformer(QualifierDetector):
         Returns
         -------
         ``str``
-            The modified text text
+            The modified text text.
         ``int``
-            The entity start character
+            The entity start character.
         ``int``
             The entity end character.
         """

@@ -226,7 +226,7 @@ class ContextAlgorithm(QualifierDetector):
         if not re.match(match_regexp, qualifier):
             msg = (
                 f"Cannot parse qualifier {qualifier}, please adhere to format "
-                f"{match_regexp} (e.g. NegationQualifier.NEGATED)"
+                f"{match_regexp} (e.g. NegationQualifier.NEGATED)."
             )
             raise ValueError(msg)
 

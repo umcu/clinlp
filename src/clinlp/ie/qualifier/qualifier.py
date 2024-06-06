@@ -331,7 +331,7 @@ class QualifierDetector(Pipe):
 
     def __call__(self, doc: Doc) -> Doc:
         """
-        Intialize default qualifiers and run detection.
+        Initialize default qualifiers and run detection.
 
         Parameters
         ----------
