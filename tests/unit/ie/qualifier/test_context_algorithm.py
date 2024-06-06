@@ -40,37 +40,37 @@ def mock_qualifier_class():
 
 
 class TestUnitContextRule:
-    def test_create_context_rule_1(self):
+    def test_create_context_rule_string_pattern(self):
         # Arrange
         pattern = "test"
-        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        direction = ContextRuleDirection.PRECEDING
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
-        direction = ContextRuleDirection.PRECEDING
 
         # Act
-        qr = ContextRule(pattern, qualifier_class, direction)
+        qr = ContextRule(pattern, direction, qualifier)
 
         # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
+        assert qr.qualifier == qualifier
 
-    def test_create_context_rule_2(self):
+    def test_create_context_rule_spacy_pattern(self):
         # Arrange
         pattern = [{"LOWER": "test"}]
-        qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
+        direction = ContextRuleDirection.PRECEDING
+        qualifier = QualifierClass("Negation", ["Affirmed", "Negated"]).create(
             "Negated"
         )
-        direction = ContextRuleDirection.PRECEDING
 
         # Act
-        qr = ContextRule(pattern, qualifier_class, direction)
+        qr = ContextRule(pattern, direction, qualifier)
 
         # Assert
         assert qr.pattern == pattern
-        assert qr.qualifier == qualifier_class
         assert qr.direction == direction
+        assert qr.qualifier == qualifier
 
 
 class TestUnitMatchedQualifierPattern:
@@ -78,8 +78,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
         )
         start = 0
         end = 10
@@ -97,8 +97,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
         )
         start = 0
         end = 10
@@ -117,8 +117,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
         )
         start = 1
         end = 2
@@ -136,8 +136,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
         )
         start = 1
         end = 2
@@ -155,8 +155,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
+            qualifier=mock_qualifier_class.create("Mock_1"),
         )
         start = 1
         end = 2
@@ -176,8 +176,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.PRECEDING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
             max_scope=1,
         )
         start = 1
@@ -198,8 +198,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
             max_scope=1,
         )
         start = 2
@@ -220,8 +220,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.BIDIRECTIONAL,
+            qualifier=mock_qualifier_class.create("Mock_1"),
             max_scope=1,
         )
         start = 2
@@ -240,8 +240,8 @@ class TestUnitMatchedQualifierPattern:
         # Arrange
         rule = ContextRule(
             pattern="_",
-            qualifier=mock_qualifier_class.create("Mock_1"),
             direction=ContextRuleDirection.FOLLOWING,
+            qualifier=mock_qualifier_class.create("Mock_1"),
             max_scope=-1,
         )
         start = 1

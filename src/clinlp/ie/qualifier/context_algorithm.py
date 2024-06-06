@@ -53,11 +53,11 @@ class ContextRule:
     (``list``).
     """
 
-    qualifier: Qualifier
-    """ The qualifier to apply."""
-
     direction: ContextRuleDirection
     """ The Context rule direction."""
+
+    qualifier: Qualifier
+    """ The qualifier to apply."""
 
     max_scope: Optional[int] = None
     """
@@ -281,7 +281,7 @@ class ContextAlgorithm(QualifierDetector):
             max_scope = rule.get("max_scope", None)
 
             qualifier_rules += [
-                ContextRule(pattern, qualifier, direction, max_scope)
+                ContextRule(pattern, direction, qualifier, max_scope)
                 for pattern in rule["patterns"]
             ]
 
