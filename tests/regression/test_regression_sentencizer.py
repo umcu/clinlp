@@ -25,7 +25,7 @@ class TestClinlpSentencizerRegression:
         tokens = get_mock_tokens(tokens)
 
         # Act
-        sentence_starts = sentencizer._get_sentence_starts(tokens)
+        sentence_starts = sentencizer._compute_sentence_starts(tokens)
 
         # Assert
         assert sentence_starts == expected_sentence_starts
