@@ -304,7 +304,7 @@ class NegationTransformer(QualifierTransformer):
         Parameters
         ----------
         nlp
-            The ``spaCy`` language pipeline.
+            The ``spaCy`` language model.
         absence_threshold
             The threshold for absence. Will classify qualifier as ``Presence.Absent``
             if ``prediction`` < ``absence_threshold``.
@@ -338,7 +338,7 @@ class NegationTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The ``spaCy`` doc to process.
+            The document to process.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)
@@ -400,7 +400,7 @@ class ExperiencerTransformer(QualifierTransformer):
         Parameters
         ----------
         nlp
-            The ``spaCy`` language pipeline.
+            The ``spaCy`` language model.
         family_threshold
             The threshold for family. Will classify qualifier as ``Experiencer.Family``
             if ``prediction`` > ``family_threshold``.
@@ -429,7 +429,7 @@ class ExperiencerTransformer(QualifierTransformer):
         Parameters
         ----------
         doc
-            The ``spaCy`` doc to process.
+            The document to process.
         """
         for ent in doc.spans[self.spans_key]:
             text, ent_start_char, ent_end_char = self._prepare_ent(ent)

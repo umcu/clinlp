@@ -66,7 +66,7 @@ text = (
 doc = nlp(text)
 ```
 
-Find information in the doc object:
+Find information in the `Doc` object:
 
 ```python
 from spacy import displacy

@@ -326,7 +326,7 @@ class QualifierDetector(Pipe):
         Parameters
         ----------
         doc
-            The ``spaCy`` doc to process.
+            The document to process.
         """
 
     def __call__(self, doc: Doc) -> Doc:

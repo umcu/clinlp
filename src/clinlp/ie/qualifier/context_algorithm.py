@@ -157,7 +157,7 @@ class ContextAlgorithm(QualifierDetector):
         Parameters
         ----------
         nlp
-            The ``spaCy`` language object to use.
+            The ``spaCy`` language model.
         phrase_matcher_attr
             The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
         load_rules
@@ -336,7 +336,7 @@ class ContextAlgorithm(QualifierDetector):
         Parameters
         ----------
         doc
-            The ``spaCy`` doc to process.
+            The document to process.
 
         Returns
         -------
@@ -539,7 +539,7 @@ class ContextAlgorithm(QualifierDetector):
         Parameters
         ----------
         doc
-            The ``spaCy`` doc to process.
+            The document to process.
 
         Raises
         ------

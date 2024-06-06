@@ -226,7 +226,7 @@ class RuleBasedEntityMatcher(Pipe):
         Parameters
         ----------
         doc
-            The ``spaCy`` document.
+            The document.
 
         Returns
         -------
@@ -295,12 +295,12 @@ class RuleBasedEntityMatcher(Pipe):
         Parameters
         ----------
         doc
-            The ``spaCy`` document.
+            The document.
 
         Returns
         -------
         ``Doc``
-            The ``spaCy`` document with entities.
+            The document with entities.
         """
         matches = self._get_matches(doc)
 
