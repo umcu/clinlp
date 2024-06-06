@@ -166,7 +166,7 @@ class ContextAlgorithm(QualifierDetector):
             The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
         load_rules
             Whether to parse any rules. Set this to ``True`` to load the default builtin
-            rules. Set this to ``False`` to use ``ContextAlgorithm.add_rules`` 
+            rules. Set this to ``False`` to use ``ContextAlgorithm.add_rules``
             to add ``ContextRules`` manually.
         rules
             A dictionary of rules, or a path to a ``json`` containing the rules. See the
