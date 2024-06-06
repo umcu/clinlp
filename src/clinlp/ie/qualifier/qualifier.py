@@ -152,24 +152,6 @@ class QualifierClass:
     A qualifier class defines the set of possible values a qualifier can take on. For
     example: ``Presence`` with values ``Present`` and ``Absent``. The qualifier class
     creates qualifiers, although they can also be created directly.
-
-    Parameters
-    ----------
-    name
-        The name of the qualifier.
-    values
-        The possible values of the qualifier.
-    default
-        The default value of the qualifier.
-    priorities
-        The priorities of the values. If not provided, the order of the values is used.
-
-    Raises
-    ------
-    ValueError
-        If there are duplicate values.
-    ValueError
-        If the default value is not in the provided values.
     """
 
     def __init__(
@@ -179,6 +161,27 @@ class QualifierClass:
         default: Optional[str] = None,
         priorities: Optional[dict] = None,
     ) -> None:
+        """
+        Initialize a qualifier class.
+
+        Parameters
+        ----------
+        name
+            The name of the qualifier.
+        values
+            The possible values of the qualifier.
+        default
+            The default value of the qualifier.
+        priorities
+            The priorities of the values. If not provided, the order of the values is used.
+
+        Raises
+        ------
+        ValueError
+            If there are duplicate values.
+        ValueError
+            If the default value is not in the provided values.
+        """
         self.name = name
         self.values = values
         self.default = default or values[0]
@@ -239,18 +242,20 @@ _defaults_qualifier_detector = {
 
 
 class QualifierDetector(Pipe):
-    """
-    Abstract pipeline component for detecting qualifiers in clinical text.
-
-    Parameters
-    ----------
-    spans_key
-        The key for the spans in the ``Doc`` object.
+    """Abstract pipeline component for detecting qualifiers in clinical text.
     """
 
     def __init__(
         self, spans_key: str = _defaults_qualifier_detector["spans_key"]
     ) -> None:
+        """
+        Initialize a qualifier detector.
+
+        Parameters
+        ----------
+        spans_key
+            The key for the spans in the ``Doc`` object.
+        """
         self.spans_key = spans_key
 
     @property

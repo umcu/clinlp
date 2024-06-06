@@ -67,24 +67,25 @@ class ContextRule:
 
 
 class _MatchedContextPattern:
-    """
-    A matched Context pattern, that should be processed further.
-
-    Parameters
-    ----------
-    rule
-        The rule that was matched.
-    start
-        The start index of the match.
-    end
-        The end index of the match.
-    offset
-        The offset to apply to the start and end indices.
-    """
+    """A matched Context pattern, that should be processed further."""
 
     def __init__(
         self, rule: ContextRule, start: int, end: int, offset: int = 0
     ) -> None:
+        """
+        Initialize a matched Context pattern.
+
+        Parameters
+        ----------
+        rule
+            The rule that was matched.
+        start
+            The start index of the match.
+        end
+            The end index of the match.
+        offset
+            The offset to apply to the start and end indices.
+        """
         self.rule = rule
         self.start = start + offset
         self.end = end + offset

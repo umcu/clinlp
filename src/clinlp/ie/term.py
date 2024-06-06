@@ -15,31 +15,25 @@ _defaults_term = {
 
 
 class Term(pydantic.BaseModel):
-    """
-    A single term used for rule based entity matching.
-
-    Parameters
-    ----------
-    phrase
-        The literal phrase to match.
-    attr
-        The attribute to match on.
-    proximity
-        The number of tokens to allow between each token in the phrase.
-    fuzzy
-        The threshold for fuzzy matching.
-    fuzzy_min_len
-        The minimum length for fuzzy matching.
-    pseudo
-        Whether this term is a pseudo-term, which is excluded from matches.
-    """
+    """A single term used for rule based entity matching."""
 
     phrase: str
+    """The literal phrase to match."""
+
     attr: Optional[str] = None
+    """The attribute to match on."""
+
     proximity: Optional[int] = None
+    """ The number of tokens to allow between each token in the phrase."""
+
     fuzzy: Optional[int] = None
+    """The threshold for fuzzy matching."""
+
     fuzzy_min_len: Optional[int] = None
+    """The minimum length for fuzzy matching."""
+
     pseudo: Optional[bool] = None
+    """Whether this term is a pseudo-term, which is excluded from matches."""
 
     model_config = {"extra": "ignore"}
 

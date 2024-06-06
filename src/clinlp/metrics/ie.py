@@ -577,16 +577,7 @@ class InfoExtractionDataset:
 
 
 class InfoExtractionMetrics:
-    """
-    Calculator for information extraction task metrics.
-
-    Parameters
-    ----------
-    true
-        The dataset containing true (annotated/gold standard) annotations.
-    pred
-        The dataset containing pred (predicted/inferred) annotations.
-    """
+    """Calculator for information extraction task metrics."""
 
     _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,
@@ -597,6 +588,16 @@ class InfoExtractionMetrics:
     def __init__(
         self, true: InfoExtractionDataset, pred: InfoExtractionDataset
     ) -> None:
+        """
+        Initialize information extraction metric calculator.
+
+        Parameters
+        ----------
+        true
+            The dataset containing true (annotated/gold standard) annotations.
+        pred
+            The dataset containing pred (predicted/inferred) annotations.
+        """
         self.true = true
         self.pred = pred
 

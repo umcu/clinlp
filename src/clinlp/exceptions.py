@@ -2,4 +2,4 @@
 
 
 class VersionMismatchWarning(Warning):
-    """Warning raised when a model version does not match the expected version."""
+    """Warning raised when a ``clinlp`` model has an unexpected version."""
