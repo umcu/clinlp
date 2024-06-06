@@ -79,6 +79,7 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
+        ``AutoTokenizer``
             The tokenizer.
         """
 
@@ -90,6 +91,7 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
+        ``RobertaForTokenClassification``
             The model.
         """
 
@@ -110,8 +112,12 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
-            The text span based on the window, and the original entity start and
-            end characters.
+        ``str``
+            The text span based on the window.
+        ``int``
+            The original entity start character.
+        ``int``
+            The original entity end character.
         """
         start_token_i = max(0, ent.start - token_window)
         end_token_i = min(len(ent.doc), ent.end + token_window)
@@ -141,7 +147,12 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
-            A new text, entity start character and entity end character.
+        ``str``
+            The modified text text
+        ``int``
+            The entity start character
+        ``int``
+            The entity end character.
         """
         entity = text[ent_start_char:ent_end_char]
 
@@ -170,7 +181,12 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
-            A new text, entity start character and entity end character.
+        ``str``
+            The modified text.
+        ``int``
+            The entity start character.
+        ``int``
+            The entity end character.
         """
         text = text[0:ent_start_char] + placeholder + text[ent_end_char:]
         ent_end_char = ent_start_char + len(placeholder)
@@ -190,7 +206,12 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
-            The modified text, entity start character and entity end character.
+        ``str``
+            The modified text.
+        ``int``
+            The entity start character.
+        ``int``
+            The entity end character.
         """
         text, ent_start_char, ent_end_char = self._get_ent_window(
             ent, token_window=self.token_window
@@ -234,6 +255,7 @@ class QualifierTransformer(QualifierDetector):
 
         Returns
         -------
+        ``float``
             The probability.
         """
         inputs = self.tokenizer(text, return_tensors="pt")

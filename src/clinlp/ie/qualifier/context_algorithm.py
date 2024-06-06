@@ -212,6 +212,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``dict[str, QualifierClass]``
             The qualifier, parsed from the string.
 
         Raises
@@ -244,6 +245,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``ContextRuleDirection``
             The direction, parsed from the string.
         """
         return ContextRuleDirection[direction.upper()]
@@ -260,6 +262,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``list[ContextRule]``
             The parsed rules.
         """
         if isinstance(rules, str):
@@ -336,6 +339,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``dict[Span, list[Span]]``
             A dictionary mapping sentences to entities.
         """
         sents = defaultdict(list)
@@ -358,6 +362,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``ContextRule``
             The rule that was matched.
         """
         return self.rules[self._nlp.vocab.strings[match_id]]
@@ -365,7 +370,7 @@ class ContextAlgorithm(QualifierDetector):
     @staticmethod
     def _group_matched_patterns(
         matched_patterns: list[_MatchedContextPattern],
-    ) -> defaultdict:
+    ) -> dict:
         """
         Group matched patterns by qualifier and direction.
 
@@ -376,6 +381,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``dict``
             A dictionary mapping qualifiers to directions to matched patterns.
         """
         groups = defaultdict(lambda: defaultdict(list))
@@ -403,6 +409,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``ivt.IntervalTree``
             The limited scopes.
         """
         for terminate_match in terminations:
@@ -439,6 +446,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``ivt.IntervalTree``
             The scopes of the matched patterns.
         """
         match_scopes = ivt.IntervalTree()
@@ -495,6 +503,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``list[_MatchedContextPattern]``
             The resolved matched patterns.
         """
         if len(matched_patterns) <= 1:
@@ -592,6 +601,7 @@ class ContextAlgorithm(QualifierDetector):
 
         Returns
         -------
+        ``int``
             The number of rules added.
         """
         return len(self.rules)

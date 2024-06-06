@@ -25,6 +25,7 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
 
     Returns
     -------
+    ``Optional[set[str]]``
         The qualifiers in string format, e.g. ``{'Presence.Present', ...}``, or ``None``
         if no qualifiers are present.
     """
@@ -47,6 +48,7 @@ def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
 
     Returns
     -------
+    ``Optional[list[dict]]``
         The qualifiers in ``dict`` format, e.g.
         ``[{'Name': 'Presence', 'Value': 'Present', 'is_default': True}, ...]``,
         or ``None`` if no qualifiers are present.
@@ -70,6 +72,7 @@ def get_qualifiers(entity: Span) -> set["Qualifier"]:
 
     Returns
     -------
+    ``set[Qualifier]``
         The qualifiers.
     """
     return getattr(entity._, ATTR_QUALIFIERS)
@@ -120,6 +123,7 @@ class Qualifier:
 
         Returns
         -------
+        ``dict``
             The qualifier as a dictionary.
         """
         return {
@@ -135,6 +139,7 @@ class Qualifier:
 
         Returns
         -------
+        ``str``
             The string representation of the qualifier.
         """
         return f"{self.name}.{self.value}"
@@ -198,6 +203,7 @@ class QualifierClass:
 
         Returns
         -------
+        ``Qualifier``
             The created qualifier.
 
         Raises
@@ -257,6 +263,7 @@ class QualifierDetector(Pipe):
 
         Returns
         -------
+        ``dict[str, QualifierClass]``
             The qualifier classes.
         """
 
@@ -328,6 +335,7 @@ class QualifierDetector(Pipe):
 
         Returns
         -------
+        ``Doc``
             The processed document.
         """
         if self.spans_key not in doc.spans or len(doc.spans[self.spans_key]) == 0:

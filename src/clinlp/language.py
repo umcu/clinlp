@@ -251,6 +251,7 @@ def _get_abbreviations() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of abbreviations.
     """
     base = set(spacy.lang.nl.tokenizer_exceptions.abbrevs.copy())
@@ -285,6 +286,7 @@ def _get_tokenizer_exceptions(
 
     Returns
     -------
+    ``dict[str, list[dict]]``
         The tokenizer exceptions.
     """
     tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
@@ -320,6 +322,7 @@ def _get_list(
 
     Returns
     -------
+    ``list[str]``
         A new list (copy of the base list) with the added and removed items.
     """
     _lst = base.copy()
@@ -341,6 +344,7 @@ def _get_ellipses() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of ellipses.
     """
     return spacy.lang.punctuation.LIST_ELLIPSES.copy()
@@ -352,12 +356,21 @@ def _get_currencies() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of currencies.
     """
     return spacy.lang.punctuation.LIST_CURRENCY.copy()
 
 
 def _get_units() -> list[str]:
+    """
+    Get the list of units for ``clinlp``.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of units.
+    """
     return CLINLP_UNITS.copy()
 
 
@@ -370,6 +383,7 @@ def _get_tokenizer_prefix_rules() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of prefix rules.
     """
     return [
@@ -389,6 +403,7 @@ def _get_tokenizer_prefixes() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of prefixes.
     """
     punct = _get_list(
@@ -436,6 +451,7 @@ def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of infix rules.
     """
     return [
@@ -460,6 +476,7 @@ def _get_tokenizer_infixes() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of infixes.
     """
     punct = _get_list(
@@ -494,6 +511,7 @@ def _get_tokenizer_suffix_rules(
 
     Returns
     -------
+    ``list[str]``
         The list of suffix rules.
     """
     return [
@@ -522,6 +540,7 @@ def _get_tokenizer_suffixes() -> list[str]:
 
     Returns
     -------
+    ``list[str]``
         The list of suffixes.
     """
     punct = _get_list(

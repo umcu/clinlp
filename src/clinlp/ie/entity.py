@@ -35,6 +35,7 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
     Returns
     -------
+    ``dict``
         A dictionary of concepts and their terms.
 
     Raises
@@ -145,6 +146,7 @@ class RuleBasedEntityMatcher(Pipe):
 
         Returns
         -------
+        ``bool``
             Whether the phrase matcher can be used.
         """
         return all(
@@ -228,6 +230,7 @@ class RuleBasedEntityMatcher(Pipe):
 
         Returns
         -------
+        ``list[tuple[int, int, int]]``
             The matches.
 
         Raises
@@ -263,6 +266,7 @@ class RuleBasedEntityMatcher(Pipe):
 
         Returns
         -------
+        ``list[Span]``
             The entities, no longer overlapping.
         """
         if len(ents) == 0:
@@ -295,6 +299,7 @@ class RuleBasedEntityMatcher(Pipe):
 
         Returns
         -------
+        ``Doc``
             The ``spaCy`` document with entities.
         """
         matches = self._get_matches(doc)

@@ -65,6 +65,7 @@ class Sentencizer(Pipe):
 
         Returns
         -------
+        ``bool``
             Whether the token can start a sentence.
         """
         return (
@@ -84,6 +85,7 @@ class Sentencizer(Pipe):
 
         Returns
         -------
+        ``bool``
             Whether the token can end a sentence.
         """
         return token.text in self.sent_end_chars
@@ -99,6 +101,7 @@ class Sentencizer(Pipe):
 
         Returns
         -------
+        ``list[bool]``
             A list of booleans indicating whether each token marks the start of a
             sentence.
         """
@@ -133,6 +136,7 @@ class Sentencizer(Pipe):
 
         Returns
         -------
+        ``Doc``
             The document, with ``token.is_sent_start`` set to whether each token
             starts a sentence.
         """

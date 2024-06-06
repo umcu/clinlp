@@ -75,6 +75,7 @@ class Annotation:
 
         Returns
         -------
+        ``dict``
             A dictionary with the items ``nervaluate`` expects.
         """
         return {
@@ -91,6 +92,7 @@ class Annotation:
 
         Returns
         -------
+        ``set[str]``
             A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
         """
         return {qualifier["name"] for qualifier in self.qualifiers}
@@ -106,6 +108,7 @@ class Annotation:
 
         Returns
         -------
+        ``dict``
             The qualifier with the provided name.
 
         Raises
@@ -148,6 +151,7 @@ class Document:
 
         Returns
         -------
+        ``list[dict]``
             A list of dictionaries corresponding to annotations.
         """
         ann_filter = ann_filter or (lambda _: True)
@@ -168,6 +172,7 @@ class Document:
 
         Returns
         -------
+        ``set[str]``
             A set containing all annotation labels for this document.
         """
         ann_filter = ann_filter or (lambda _: True)
@@ -191,6 +196,7 @@ class Document:
 
         Returns
         -------
+        ``Optional[Annotation]``
             The annotation with the provided span, or ``None`` if no such annotation
             exists.
         """
@@ -248,6 +254,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``dict``
             A dictionary mapping qualifier names to their default values.
         """
         default_qualifiers = {
@@ -289,6 +296,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``InfoExtractionDataset``
             A dataset, corresponding to the provided ``clinlp`` documents.
         """
         ids = ids or itertools.count()
@@ -352,6 +360,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``InfoExtractionDataset``
             A dataset, corresponding to the provided ``MedCATTrainer`` export.
 
         Raises
@@ -422,6 +431,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``list[list[dict]]``
             A list of lists of dictionaries corresponding to annotations.
         """
         ann_filter = ann_filter or (lambda _: True)
@@ -434,6 +444,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``int``
             The number of documents in this dataset.
         """
         return len(self.docs)
@@ -444,6 +455,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``int``
             The number of annotations in all documents of this dataset.
         """
         return sum(len(doc.annotations) for doc in self.docs)
@@ -466,6 +478,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``dict``
             A dictionary containing the frequency of the requested text spans.
         """
         cntr = Counter()
@@ -498,6 +511,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``dict``
             A dictionary containing the frequency of the requested labels.
         """
         cntr = Counter()
@@ -519,6 +533,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``dict``
             The computed frequencies, as a mapping from qualifier names to values to
             frequencies, e.g. ``{"Presence": {"Present": 25, "Absent": 10}, ...}``.
         """
@@ -541,6 +556,7 @@ class InfoExtractionDataset:
 
         Returns
         -------
+        ``dict``
             A dictionary containing all computed stats, e.g.
             ``{'num_docs': 384, 'num_annotations': 4353, ...}``.
         """
@@ -637,6 +653,7 @@ class InfoExtractionMetrics:
 
         Returns
         -------
+        ``dict``
             The computed entity metrics.
         """
         ann_filter = ann_filter or (lambda _: True)
@@ -666,6 +683,7 @@ class InfoExtractionMetrics:
 
         Returns
         -------
+        ``dict[str, dict[str, list]]``
             A dictionary containing the aggregated qualifier values, e.g.:
 
             ```
@@ -726,6 +744,7 @@ class InfoExtractionMetrics:
 
         Returns
         -------
+        ``dict``
             The computed qualifier metrics.
 
         Raises

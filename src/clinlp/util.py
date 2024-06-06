@@ -23,7 +23,10 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
 
     Returns
     -------
-        The arguments and keyword arguments of the class's ``__init__`` method.
+    ``list``
+        The arguments of the class's ``__init__`` method.
+    dict
+        and keyword arguments of the  class's ``__init__`` method.
     """
     args = []
     kwargs = {}
@@ -53,6 +56,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
 
     Returns
     -------
+    ``Callable``
         The class.
     """
 
@@ -118,6 +122,7 @@ def interval_dist(start_a: int, end_a: int, start_b: int, end_b: int) -> int:
 
     Returns
     -------
+    ``int``
         The distance between the two intervals.
 
     Raises

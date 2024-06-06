@@ -48,6 +48,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
+        ``str``
             The lowercased text.
         """
         return text.lower()
@@ -69,6 +70,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
+        ``str``
             The mapped character. If the character is not non-ascii, it is returned as
             is.
 
@@ -102,6 +104,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
+        ``str``
             The text with non-ascii characters mapped to their ascii counterparts.
         """
         return "".join(self._map_non_ascii_char(char) for char in text)
@@ -117,6 +120,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
+        `Doc`
             The document, with ``token.norm_`` set to the normalized text.
         """
         if len(doc) == 0:

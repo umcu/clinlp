@@ -58,6 +58,7 @@ class Term(pydantic.BaseModel):
 
         Returns
         -------
+        ``list[dict]``
             The ``spaCy`` pattern.
         """
         fields = {
