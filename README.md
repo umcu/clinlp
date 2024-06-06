@@ -249,7 +249,7 @@ concepts = {
 
 In this case `prematuur` will be matched, but not in the context of `prematuur ademhalingspatroon` (which may indicate prematurity, but is not a definitive diagnosis).
 
-#### Spacy patterns
+#### spaCy patterns
 
 Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
 
