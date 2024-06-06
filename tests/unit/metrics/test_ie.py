@@ -378,74 +378,74 @@ class TestDataset:
         # Assert
         assert num_annotations == 13
 
-    def test_span_counts(self, mctrainer_dataset):
+    def test_span_freqs(self, mctrainer_dataset):
         # Act
-        num_span_counts = len(mctrainer_dataset.span_counts())
+        num_span_freqs = len(mctrainer_dataset.span_freqs())
 
         # Assert
-        assert num_span_counts == 11
+        assert num_span_freqs == 11
 
-    def test_span_counts_n_spans(self, mctrainer_dataset):
+    def test_span_freqs_n_spans(self, mctrainer_dataset):
         # Act
-        span_counts = mctrainer_dataset.span_counts(n_spans=3)
+        span_freqs = mctrainer_dataset.span_freqs(n_spans=3)
 
         # Assert
-        assert span_counts == {
+        assert span_freqs == {
             "anemie": 2,
             "bloeding": 2,
             "prematuriteit": 1,
         }
 
-    def test_span_counts_callback(self, mctrainer_dataset):
+    def test_span_freqs_callback(self, mctrainer_dataset):
         # Act
-        span_counts = mctrainer_dataset.span_counts(
+        span_freqs = mctrainer_dataset.span_freqs(
             n_spans=3, span_callback=lambda x: x.upper()
         )
 
         # Assert
-        assert span_counts == {
+        assert span_freqs == {
             "ANEMIE": 2,
             "BLOEDING": 2,
             "PREMATURITEIT": 1,
         }
 
-    def test_label_counts(self, mctrainer_dataset):
+    def test_label_freqs(self, mctrainer_dataset):
         # Act
-        num_label_counts = len(mctrainer_dataset.label_counts())
+        num_label_freqs = len(mctrainer_dataset.label_freqs())
 
         # Assert
-        assert num_label_counts == 9
+        assert num_label_freqs == 9
 
-    def test_label_counts_n_labels(self, mctrainer_dataset):
+    def test_label_freqs_n_labels(self, mctrainer_dataset):
         # Act
-        label_counts = mctrainer_dataset.label_counts(n_labels=3)
+        label_freqs = mctrainer_dataset.label_freqs(n_labels=3)
 
         # Assert
-        assert label_counts == {
+        assert label_freqs == {
             "C0002871_anemie": 2,
             "C0151526_prematuriteit": 2,
             "C0270191_intraventriculaire_bloeding": 2,
         }
 
-    def test_label_counts_callback(self, mctrainer_dataset):
+    def test_label_freqs_callback(self, mctrainer_dataset):
         # Act
-        label_counts = mctrainer_dataset.label_counts(
+        label_freqs = mctrainer_dataset.label_freqs(
             n_labels=3, label_callback=lambda x: x[x.index("_") + 1 :]
         )
 
         # Assert
-        assert label_counts == {
+        assert label_freqs == {
             "anemie": 2,
             "prematuriteit": 2,
             "intraventriculaire_bloeding": 2,
         }
 
-    def test_qualifier_counts(self, mctrainer_dataset):
+    def test_qualifier_freqs(self, mctrainer_dataset):
         # Act
-        qualifier_counts = mctrainer_dataset.qualifier_counts()
+        qualifier_freqs = mctrainer_dataset.qualifier_freqs()
 
         # Assert
-        assert qualifier_counts == {
+        assert qualifier_freqs == {
             "Experiencer": {"Patient": 12, "Other": 1},
             "Negation": {"Affirmed": 11, "Negated": 2},
             "Plausibility": {"Plausible": 11, "Hypothetical": 2},
@@ -459,9 +459,9 @@ class TestDataset:
         # Assert
         assert stats["num_docs"] == mctrainer_dataset.num_docs()
         assert stats["num_annotations"] == mctrainer_dataset.num_annotations()
-        assert stats["span_counts"] == mctrainer_dataset.span_counts()
-        assert stats["label_counts"] == mctrainer_dataset.label_counts()
-        assert stats["qualifier_counts"] == mctrainer_dataset.qualifier_counts()
+        assert stats["span_freqs"] == mctrainer_dataset.span_freqs()
+        assert stats["label_freqs"] == mctrainer_dataset.label_freqs()
+        assert stats["qualifier_freqs"] == mctrainer_dataset.qualifier_freqs()
 
     def test_stats_with_kwargs(self, mctrainer_dataset):
         # Arrange
@@ -476,13 +476,11 @@ class TestDataset:
         # Assert
         assert stats["num_docs"] == mctrainer_dataset.num_docs()
         assert stats["num_annotations"] == mctrainer_dataset.num_annotations()
-        assert stats["span_counts"] == mctrainer_dataset.span_counts(
+        assert stats["span_freqs"] == mctrainer_dataset.span_freqs(
             span_callback=span_callback
         )
-        assert stats["label_counts"] == mctrainer_dataset.label_counts(
-            n_labels=n_labels
-        )
-        assert stats["qualifier_counts"] == mctrainer_dataset.qualifier_counts()
+        assert stats["label_freqs"] == mctrainer_dataset.label_freqs(n_labels=n_labels)
+        assert stats["qualifier_freqs"] == mctrainer_dataset.qualifier_freqs()
 
 
 @pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
@@ -495,7 +493,7 @@ class TestMetrics:
         # Assert
         with pytest.raises(ValueError, match=".*Datasets with same size.*"):
             # Act
-            iem._validate_self()
+            iem._validate_dataset_compatibility()
 
     def test_create_metrics_unequal_names(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
@@ -505,7 +503,7 @@ class TestMetrics:
         # Assert
         with pytest.raises(ValueError, match=".*non-matching ids.*"):
             # Act
-            iem._validate_self()
+            iem._validate_dataset_compatibility()
 
     def test_entity_metrics(self, mctrainer_dataset, clinlp_dataset):
         # Arrange
@@ -544,7 +542,7 @@ class TestMetrics:
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         # Act
-        metrics = iem.entity_metrics(classes=True)
+        metrics = iem.entity_metrics(per_label=True)
 
         # Assert
         assert len(metrics) == 9

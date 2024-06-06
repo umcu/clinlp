@@ -1,3 +1,5 @@
+"""Component for rule based entity matching."""
+
 import intervaltree as ivt
 import numpy as np
 import pandas as pd
@@ -21,11 +23,29 @@ _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 
 def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
-    """Transforms source concept data to a dictionary that the clinlp
-    entity matcher can read. Takes the path to a csv file where each
-    row is a distinct word or sentence (term) that belongs to a concept.
     """
+    Create a dictionary of concepts and their terms from a ``csv`` file.
 
+    The resulting dictionary can be passed directly into the ``load_concepts`` method
+    of the ``RuleBasedEntityMatcher``.
+
+    Parameters
+    ----------
+    path
+        The path to the ``csv`` file.
+    concept_col
+        The column containing the concept identifier.
+
+    Returns
+    -------
+    ``dict``
+        A dictionary of concepts and their terms.
+
+    Raises
+    ------
+    RuntimeError
+        If a value in the input ``csv`` cannot be parsed.
+    """
     df = pd.read_csv(path).replace([np.nan], [None])
 
     try:
@@ -45,6 +65,8 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
 
 @clinlp_component(name="clinlp_entity_matcher")
 class DeprecatedEntityMatcher(Pipe):
+    """Deprecated, use ``clinlp_rule_based_entity_matcher`` instead."""
+
     def __init__(self) -> None:
         msg = (
             "The clinlp_entity_matcher has been renamed "
@@ -60,6 +82,14 @@ class DeprecatedEntityMatcher(Pipe):
     default_config=_defaults_term | _defaults_entity_matcher,
 )
 class RuleBasedEntityMatcher(Pipe):
+    """
+    ``spaCy`` component for rule-based entity matching.
+
+    This component is used to match entities based on a set of concepts, along with
+    synonyms. Note that settings (e.g. ``attr``, ``proximity``, ...) set at the entity
+    matcher level are overridden by the settings at the term level.
+    """
+
     def __init__(
         self,
         nlp: Language,
@@ -70,6 +100,26 @@ class RuleBasedEntityMatcher(Pipe):
         pseudo: bool = _defaults_term["pseudo"],  # noqa: FBT001
         resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
     ) -> None:
+        """
+        Create a rule-based entity matcher.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language model.
+        attr
+            The attribute to match on.
+        proximity
+            The number of tokens to allow between each token in the phrase.
+        fuzzy
+            The threshold for fuzzy matching.
+        fuzzy_min_len
+            The minimum length for fuzzy matching.
+        pseudo
+            Whether this term is a pseudo-term, which is excluded from matches.
+        resolve_overlap
+            Whether to resolve overlapping entities.
+        """
         self.nlp = nlp
         self.attr = attr
 
@@ -91,6 +141,17 @@ class RuleBasedEntityMatcher(Pipe):
 
     @property
     def _use_phrase_matcher(self) -> bool:
+        """
+        Determine whether the ``spaCy`` phrase matcher can be used.
+
+        This is the case if all term arguments are set to their default values, so no
+        complex ``spaCy`` patterns are required.
+
+        Returns
+        -------
+        ``bool``
+            Whether the phrase matcher can be used.
+        """
         return all(
             self.term_args[field] == _defaults_term[field]
             for field in _non_phrase_matcher_fields
@@ -98,6 +159,21 @@ class RuleBasedEntityMatcher(Pipe):
         )
 
     def load_concepts(self, concepts: dict) -> None:
+        """
+        Load a dictionary of concepts and their terms.
+
+        Parameters
+        ----------
+        concepts
+            A dictionary of concepts and their terms. Present with concepts as keys,
+            and lists of terms as values. Each term can be a ``string``, a ``spaCy``
+            pattern, or a ``clinlp.Term``.
+
+        Raises
+        ------
+        TypeError
+            If the term type is not ``str``, ``list`` or ``clinlp.Term``.
+        """
         for concept, concept_terms in concepts.items():
             for concept_term in concept_terms:
                 identifier = str(len(self._terms))
@@ -142,11 +218,29 @@ class RuleBasedEntityMatcher(Pipe):
                 else:
                     msg = (
                         f"Not sure how to load a term with type {type(concept_term)}, "
-                        f"please provide str, list or clinlp.Term"
+                        f"please provide str, list or clinlp.Term."
                     )
                     raise TypeError(msg)
 
     def _get_matches(self, doc: Doc) -> list[tuple[int, int, int]]:
+        """
+        Get the matches from the matcher and phrase matcher.
+
+        Parameters
+        ----------
+        doc
+            The document.
+
+        Returns
+        -------
+        ``list[tuple[int, int, int]]``
+            The matches.
+
+        Raises
+        ------
+        RuntimeError
+            If no concepts have been added.
+        """
         if len(self._terms) == 0:
             msg = "No concepts added."
             raise RuntimeError(msg)
@@ -164,14 +258,20 @@ class RuleBasedEntityMatcher(Pipe):
     @staticmethod
     def _resolve_ents_overlap(ents: list[Span]) -> list[Span]:
         """
-        Resolves overlap between spans, by taking the longest.
+        Resolve overlap between entities.
 
-        Args:
-            ents: The input Spans, with possible overlap.
+        Takes the longest entity in case of overlap.
 
-        Returns: The Spans without any overlap.
+        Parameters
+        ----------
+        ents
+            The entities.
+
+        Returns
+        -------
+        ``list[Span]``
+            The entities, no longer overlapping.
         """
-
         if len(ents) == 0:
             return ents
 
@@ -189,6 +289,22 @@ class RuleBasedEntityMatcher(Pipe):
         return disjoint_ents
 
     def __call__(self, doc: Doc) -> Doc:
+        """
+        Find entities in a document text.
+
+        The entities that are found will be stored in ``doc.spans['ents']``. Make sure
+        any subsequent components expect the entities to be stored there.
+
+        Parameters
+        ----------
+        doc
+            The document.
+
+        Returns
+        -------
+        ``Doc``
+            The document with entities.
+        """
         matches = self._get_matches(doc)
 
         pos_matches = []

@@ -1,3 +1,5 @@
+"""The Context Algorithm implemented as a ``spaCy`` component."""
+
 import importlib.resources
 import itertools
 import json
@@ -27,61 +29,88 @@ _DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
 
 
 class ContextRuleDirection(Enum):
-    """
-    Direction of a Context rule, as in the original Context Algorithm.
-    """
+    """Direction of a rule, as in the original Context Algorithm."""
 
     PRECEDING = 1
+    """For triggers that precede entities."""
+
     FOLLOWING = 2
+    """For triggers that follow entities."""
+
     BIDIRECTIONAL = 3
+    """For triggers that can both precede and follow entities."""
+
     PSEUDO = 4
+    """For pseudo triggers. """
+
     TERMINATION = 5
+    """ For termination triggers. """
 
 
 @dataclass
 class ContextRule:
-    """
-    A Context rule, as in the original Context Algorithm.
-
-    Args:
-        pattern: The pattern to look for in text. Either a string, or a spacy pattern
-        (list).
-        qualifier: The qualifier to apply.
-        direction: The Context rule direction.
-        max_scope: The maximum scope (number of tokens) of the trigger, or None for
-        using sentence boundaries.
-    """
+    """A Context rule, as in the original Context Algorithm."""
 
     pattern: Union[str, list[dict[str, str]]]
-    qualifier: Qualifier
+    """
+    The pattern to look for in text. Either a ``string``, or a ``spaCy`` pattern
+    (``list``).
+    """
+
     direction: ContextRuleDirection
+    """ The Context rule direction."""
+
+    qualifier: Qualifier
+    """ The qualifier to apply."""
+
     max_scope: Optional[int] = None
+    """
+    The maximum number of tokens a trigger ranges over, or ``None`` for using
+    sentence boundaries.
+    """
 
 
 class _MatchedContextPattern:
-    """
-    A matched Context pattern, that should be processed further.
-    """
+    """A matched Context pattern, that should be processed further."""
 
     def __init__(
         self, rule: ContextRule, start: int, end: int, offset: int = 0
     ) -> None:
+        """
+        Initialize a matched Context pattern.
+
+        Parameters
+        ----------
+        rule
+            The rule that was matched.
+        start
+            The start index of the match.
+        end
+            The end index of the match.
+        offset
+            The offset to apply to the start and end indices.
+        """
         self.rule = rule
         self.start = start + offset
         self.end = end + offset
         self.scope = None
 
-    def initialize_scope(self, sentence: Span) -> None:
+    def set_initial_scope(self, sentence: Span) -> None:
         """
-        Sets the scope this pattern ranges over, based on the sentence. This is either
-        the window determined in the `max_scope` of the rule, or the sentence
-        boundaries if no `max_scope` is set.
-        """
+        Set the initial scope this pattern ranges over, based on the sentence.
 
+        This is either the window determined in the ``max_scope`` of the rule, or the
+        sentence boundaries if no ``max_scope`` is set.
+
+        Parameters
+        ----------
+        sentence
+            The sentence the pattern was matched in.
+        """
         max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
-            msg = f"max_scope must be at least 1, but got {max_scope}"
+            msg = f"max_scope must be at least 1, but got {max_scope}."
             raise ValueError(msg)
 
         scoped_start = max(self.start - max_scope, sentence.start)
@@ -112,17 +141,10 @@ _defaults_context_algorithm = {
 )
 class ContextAlgorithm(QualifierDetector):
     """
-    Implements the Context algorithm (https://doi.org/10.1016%2Fj.jbi.2009.05.002) as
-    a spaCy pipeline component.
+    ``spaCy`` pipeline component that implements the Context Algorithm.
 
-    Args:
-        nlp: The Spacy language object to use
-        phrase_matcher_attr: The token attribute to match phrases on (e.g. TEXT, ORTH,
-        NORM).
-        load_rules: Whether to parse any rules. Set this to `False` to use
-        ContextAlgorithm.add_rules to add ContextRules manually.
-        rules: A dictionary of rules, or a path to a json containing the rules
-        (see clinlp.resources dir for example).
+    For more information, see the original paper:
+    https://doi.org/10.1016%2Fj.jbi.2009.05.002
     """
 
     def __init__(
@@ -133,6 +155,28 @@ class ContextAlgorithm(QualifierDetector):
         rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
         **kwargs,
     ) -> None:
+        """
+        Initialize the Context Algorithm.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language model.
+        phrase_matcher_attr
+            The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
+        load_rules
+            Whether to parse any rules. Set this to ``True`` to load the default builtin
+            rules. Set this to ``False`` to use ``ContextAlgorithm.add_rules``
+            to add ``ContextRules`` manually.
+        rules
+            A dictionary of rules, or a path to a ``json`` containing the rules. See the
+            ``clinlp.resources`` dir for an example.
+
+        Raises
+        ------
+        ValueError
+            If no rules are provided and ``load_rules`` is set to ``True``.
+        """
         self._nlp = nlp
 
         self._matcher = Matcher(self._nlp.vocab)
@@ -144,8 +188,8 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 msg = (
-                    "Did not provide rules. Set `load_rules` to False if you "
-                    "want to add `ContextRule` manually."
+                    "Did not provide rules. Set load_rules to False if you "
+                    "want to add ContextRule manually."
                 )
                 raise ValueError(msg)
 
@@ -155,7 +199,7 @@ class ContextAlgorithm(QualifierDetector):
         super().__init__(**kwargs)
 
     @property
-    def qualifier_classes(self) -> dict[str, QualifierClass]:
+    def qualifier_classes(self) -> dict[str, QualifierClass]:  # noqa D102
         return self._qualifier_classes
 
     @staticmethod
@@ -163,20 +207,31 @@ class ContextAlgorithm(QualifierDetector):
         qualifier: str, qualifier_classes: dict[str, QualifierClass]
     ) -> Qualifier:
         """
-        Parse a Qualifier from string.
+        Parse a qualifier from a string.
 
-        Args:
-            qualifier: The qualifier (e.g. Negation.NEGATED).
+        Parameters
+        ----------
+        qualifier
+            The string to parse.
+        qualifier_classes
+            The available qualifier classes.
 
-        Returns: A qualifier, as specified.
+        Returns
+        -------
+        ``dict[str, QualifierClass]``
+            The qualifier, parsed from the string.
+
+        Raises
+        ------
+        ValueError
+            If the qualifier string cannot be parsed.
         """
-
         match_regexp = r"\w+\.\w+"
 
         if not re.match(match_regexp, qualifier):
             msg = (
                 f"Cannot parse qualifier {qualifier}, please adhere to format "
-                f"{match_regexp} (e.g. NegationQualifier.NEGATED)"
+                f"{match_regexp} (e.g. NegationQualifier.NEGATED)."
             )
             raise ValueError(msg)
 
@@ -187,16 +242,35 @@ class ContextAlgorithm(QualifierDetector):
     @staticmethod
     def _parse_direction(direction: str) -> ContextRuleDirection:
         """
-        Parse a Context direction.
+        Parse a direction from a string.
 
-        Args:
-            direction: The direction (e.g. preceding, following, etc.).
+        Parameters
+        ----------
+        direction
+            The string to parse.
 
-        Returns: THe ContextRuleDirection.
+        Returns
+        -------
+        ``ContextRuleDirection``
+            The direction, parsed from the string.
         """
         return ContextRuleDirection[direction.upper()]
 
     def _parse_rules(self, rules: Union[str | dict]) -> list[ContextRule]:
+        """
+        Parse context rules from a file or dictionary.
+
+        Parameters
+        ----------
+        rules
+            The rules to parse. Can be presented as a dictionary, or as a ``json``
+            filepath.
+
+        Returns
+        -------
+        ``list[ContextRule]``
+            The parsed rules.
+        """
         if isinstance(rules, str):
             with Path(rules).open(mode="rb") as file:
                 rules = json.load(file)
@@ -212,7 +286,7 @@ class ContextAlgorithm(QualifierDetector):
             max_scope = rule.get("max_scope", None)
 
             qualifier_rules += [
-                ContextRule(pattern, qualifier, direction, max_scope)
+                ContextRule(pattern, direction, qualifier, max_scope)
                 for pattern in rule["patterns"]
             ]
 
@@ -220,7 +294,17 @@ class ContextAlgorithm(QualifierDetector):
 
     def add_rule(self, rule: ContextRule) -> None:
         """
-        Add a rule.
+        Add a rule to the Context Algorithm.
+
+        Parameters
+        ----------
+        rule
+            The rule to add.
+
+        Raises
+        ------
+        TypeError
+            If the rule pattern is not a ``string`` or a ``list``.
         """
         rule_key = f"rule_{len(self.rules)}"
         self.rules[rule_key] = rule
@@ -234,22 +318,36 @@ class ContextAlgorithm(QualifierDetector):
         else:
             msg = (
                 f"Don't know how to process ContextRule with pattern of "
-                f"type {type(rule.pattern)}"
+                f"type {type(rule.pattern)}."
             )
             raise TypeError(msg)
 
     def add_rules(self, rules: list[ContextRule]) -> None:
         """
-        Add multiple rules.
+        Add multiple rules to the Context Algorithm.
+
+        Parameters
+        ----------
+        rules
+            The rules to add.
         """
         for rule in rules:
             self.add_rule(rule)
 
     def _get_sentences_with_entities(self, doc: Doc) -> dict[Span, list[Span]]:
         """
-        Return sentences in a doc that have at least one entity, mapped to the entities.
-        """
+        Group entities by sentence.
 
+        Parameters
+        ----------
+        doc
+            The document to process.
+
+        Returns
+        -------
+        ``dict[Span, list[Span]]``
+            A dictionary mapping sentences to entities.
+        """
         sents = defaultdict(list)
 
         for ent in doc.spans[self.spans_key]:
@@ -259,17 +357,38 @@ class ContextAlgorithm(QualifierDetector):
 
     def _get_rule_from_match_id(self, match_id: int) -> ContextRule:
         """
-        Get the rule that was matched, from the match_id (first element of match tuple
-        returned by matcher).
+        Get the context rule from a match ID.
+
+        This is a bit specific to ``spaCy`` matching internals.
+
+        Parameters
+        ----------
+        match_id
+            The match ID to get the rule for.
+
+        Returns
+        -------
+        ``ContextRule``
+            The rule that was matched.
         """
         return self.rules[self._nlp.vocab.strings[match_id]]
 
     @staticmethod
     def _group_matched_patterns(
         matched_patterns: list[_MatchedContextPattern],
-    ) -> defaultdict:
+    ) -> dict:
         """
         Group matched patterns by qualifier and direction.
+
+        Parameters
+        ----------
+        matched_patterns
+            The matched patterns to group.
+
+        Returns
+        -------
+        ``dict``
+            A dictionary mapping qualifiers to directions to matched patterns.
         """
         groups = defaultdict(lambda: defaultdict(list))
 
@@ -285,10 +404,20 @@ class ContextAlgorithm(QualifierDetector):
         scopes: ivt.IntervalTree, terminations: list[_MatchedContextPattern]
     ) -> ivt.IntervalTree:
         """
-        Determine the scope of terminating matched context pattern, return them
-        as IntervalTree.
-        """
+        Limit the scopes of matched patterns based on termination triggers.
 
+        Parameters
+        ----------
+        scopes
+            The scopes to limit.
+        terminations
+            The matched termination triggers to limit the scopes with.
+
+        Returns
+        -------
+        ``ivt.IntervalTree``
+            The limited scopes.
+        """
         for terminate_match in terminations:
             for interval in scopes.overlap(terminate_match.start, terminate_match.end):
                 scopes.remove(interval)
@@ -314,7 +443,17 @@ class ContextAlgorithm(QualifierDetector):
         self, matched_patterns: list[_MatchedContextPattern]
     ) -> ivt.IntervalTree:
         """
-        Compute the scope for each matched pattern, return them as an IntervalTree.
+        Compute the scopes of matched patterns.
+
+        Parameters
+        ----------
+        matched_patterns
+            The matched patterns to compute scopes for.
+
+        Returns
+        -------
+        ``ivt.IntervalTree``
+            The scopes of the matched patterns.
         """
         match_scopes = ivt.IntervalTree()
 
@@ -352,6 +491,27 @@ class ContextAlgorithm(QualifierDetector):
     def _resolve_matched_pattern_conflicts(
         self, entity: Span, matched_patterns: list[_MatchedContextPattern]
     ) -> list[_MatchedContextPattern]:
+        """
+        Resolve conflicts between matched patterns.
+
+        Conflicts occur when different qualifier values apply to the same entity, for
+        instance when a trigger is found preceding an entity, while another conflicting
+        trigger is found following an entity. Resolves this by finding the pattern with
+        smallest interval distance to the entity, followed by the one with the highest
+        priority in case of ties.
+
+        Parameters
+        ----------
+        entity
+            The entity to resolve conflicts for.
+        matched_patterns
+            The matched patterns to resolve conflicts for.
+
+        Returns
+        -------
+        ``list[_MatchedContextPattern]``
+            The resolved matched patterns.
+        """
         if len(matched_patterns) <= 1:
             return matched_patterns
 
@@ -379,9 +539,18 @@ class ContextAlgorithm(QualifierDetector):
 
     def _detect_qualifiers(self, doc: Doc) -> None:
         """
-        Apply the Context Algorithm to a doc.
-        """
+        Detect qualifiers for the entities in a document.
 
+        Parameters
+        ----------
+        doc
+            The document to process.
+
+        Raises
+        ------
+        RuntimeError
+            If no rules are set.
+        """
         if len(self.rules) == 0:
             msg = "Cannot match qualifiers without any ContextRule."
             raise RuntimeError(msg)
@@ -411,7 +580,7 @@ class ContextAlgorithm(QualifierDetector):
                     offset=offset,
                 )
 
-                matched_pattern.initialize_scope(sentence)
+                matched_pattern.set_initial_scope(sentence)
                 matched_patterns.append(matched_pattern)
 
             match_scopes = self._compute_match_scopes(matched_patterns)
@@ -433,4 +602,12 @@ class ContextAlgorithm(QualifierDetector):
                     self.add_qualifier_to_ent(ent, matched_pattern.rule.qualifier)
 
     def __len__(self) -> int:
+        """
+        Return the number of rules added.
+
+        Returns
+        -------
+        ``int``
+            The number of rules added.
+        """
         return len(self.rules)

@@ -1,4 +1,5 @@
 [![test](https://github.com/umcu/clinlp/actions/workflows/test.yml/badge.svg)](https://github.com/umcu/clinlp/actions/workflows/test.yml)
+[![docs](https://readthedocs.org/projects/clinlp/badge/?version=latest)](https://clinlp.readthedocs.io/en/latest/?badge=latest)
 [![pypi version](https://img.shields.io/pypi/v/clinlp?color=blue)](https://pypi.org/project/clinlp/)
 [![pypi python versions](https://img.shields.io/pypi/pyversions/clinlp)](https://pypi.org/project/clinlp/)
 [![license](https://img.shields.io/github/license/umcu/clinlp?color=blue)](https://github.com/umcu/clinlp/blob/main/LICENSE)
@@ -65,7 +66,7 @@ text = (
 doc = nlp(text)
 ```
 
-Find information in the doc object:
+Find information in the `Doc` object:
 
 ```python
 from spacy import displacy
@@ -248,7 +249,7 @@ concepts = {
 
 In this case `prematuur` will be matched, but not in the context of `prematuur ademhalingspatroon` (which may indicate prematurity, but is not a definitive diagnosis).
 
-#### Spacy patterns
+#### spaCy patterns
 
 Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
 

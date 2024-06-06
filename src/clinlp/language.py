@@ -1,3 +1,10 @@
+"""
+Language class for the ``clinlp`` package.
+
+It is based on the ``spaCy`` language class, but with custom settings for
+Dutch clinical text.
+"""
+
 import importlib.metadata
 import warnings
 from typing import Callable, Optional
@@ -239,6 +246,14 @@ ALPHA = "a-zA-Z"
 
 
 def _get_abbreviations() -> list[str]:
+    """
+    Get the list of abbreviations for ``clinlp``.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of abbreviations.
+    """
     base = set(spacy.lang.nl.tokenizer_exceptions.abbrevs.copy())
 
     for abbrev in CLINLP_REMOVE_ABBREVIATIONS:
@@ -253,6 +268,27 @@ def _get_tokenizer_exceptions(
     abbrev_transforms: Optional[list[Callable[[str], str]]] = None,
     keep_emoticons: bool = False,
 ) -> dict[str, list[dict]]:
+    """
+    Get the tokenizer exceptions for ``clinlp``.
+
+    Tokenizer exceptions are sequences of characters that should not be split up.
+
+    Parameters
+    ----------
+    abbreviations
+        All abbreviations, which will be added to the tokenizer exceptions.
+    abbrev_transforms
+        Any number of callables that transform abbreviations. The transformed versions
+        will also be added to the tokenizer exceptions.
+    keep_emoticons
+        Wether to keep emoticons as tokenizer exceptions. Emoticons (e.g. ``:-)`` are
+        normally included in spaCy's base exceptions.
+
+    Returns
+    -------
+    ``dict[str, list[dict]]``
+        The tokenizer exceptions.
+    """
     tokenizer_exceptions = spacy.lang.tokenizer_exceptions.BASE_EXCEPTIONS.copy()
     abbrev_transforms = abbrev_transforms or []
 
@@ -273,7 +309,21 @@ def _get_list(
     base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None
 ) -> list[str]:
     """
-    Create a list, based on a base list, with some additions and removals.
+    Create a list of strings, by copying a base list and adding and/or removing items.
+
+    Parameters
+    ----------
+    base
+        The base list, with the initial items.
+    add
+        Any items that will be added.
+    remove
+        Any items that will be removed.
+
+    Returns
+    -------
+    ``list[str]``
+        A new list (copy of the base list) with the added and removed items.
     """
     _lst = base.copy()
 
@@ -289,18 +339,53 @@ def _get_list(
 
 
 def _get_ellipses() -> list[str]:
+    """
+    Get the list of ellipses for ``clinlp``.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of ellipses.
+    """
     return spacy.lang.punctuation.LIST_ELLIPSES.copy()
 
 
 def _get_currencies() -> list[str]:
+    """
+    Get the list of currencies (e.g. ``$``, ``€``) for ``clinlp``.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of currencies.
+    """
     return spacy.lang.punctuation.LIST_CURRENCY.copy()
 
 
 def _get_units() -> list[str]:
+    """
+    Get the list of units for ``clinlp``.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of units.
+    """
     return CLINLP_UNITS.copy()
 
 
 def _get_tokenizer_prefix_rules() -> list[str]:
+    """
+    Get the list of prefix rules for the ``clinlp`` tokenizer.
+
+    Prefix rules are regular expressions that match the start of a token. If the
+    regular expression matches, the prefix is split into a separate token.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of prefix rules.
+    """
     return [
         r"\[(?![A-Z]{3,}-)",
         r"\S+(?=\[[A-Z]{3,}-)",
@@ -311,6 +396,16 @@ def _get_tokenizer_prefix_rules() -> list[str]:
 
 
 def _get_tokenizer_prefixes() -> list[str]:
+    """
+    Get the list of prefixes for the ``clinlp`` tokenizer.
+
+    Prefixes are literal strings/chars that are split of the beginning of a token.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of prefixes.
+    """
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
         add=[
@@ -343,6 +438,22 @@ def _get_tokenizer_prefixes() -> list[str]:
 
 
 def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
+    """
+    Get the list of infix rules for the ``clinlp`` tokenizer.
+
+    Infix rules are regular expressions that match the middle of a token. If the
+    regular expression matches, the infix is split into a separate token.
+
+    Parameters
+    ----------
+    quotes
+        The list of quotes that are used in the infix rules text.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of infix rules.
+    """
     return [
         rf"(?<=[{ALPHA_LOWER}])\.(?=[{ALPHA_UPPER}])",
         rf"(?<=[{ALPHA}])[,!?](?=[{ALPHA}])",
@@ -358,6 +469,16 @@ def _get_tokenizer_infix_rules(quotes: list[str]) -> list[str]:
 
 
 def _get_tokenizer_infixes() -> list[str]:
+    """
+    Get the list of infixes for the ``clinlp`` tokenizer.
+
+    Infixes are literal strings/chars that are split in the middle of a token.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of infixes.
+    """
     punct = _get_list(
         base=[],
         add=["/", r"\+", "=", ":", "&", ";", r"\*", "<", r"\(", r"\)", r"\s", r"\^"],
@@ -371,6 +492,28 @@ def _get_tokenizer_infixes() -> list[str]:
 def _get_tokenizer_suffix_rules(
     currencies: list[str], units: list[str], punct: list[str], quotes: list[str]
 ) -> list[str]:
+    """
+    Get the list of suffix rules for the ``clinlp`` tokenizer.
+
+    Suffix rules are regular expressions that match the end of a token. If the
+    regular expression matches, the suffix is split into a separate token.
+
+    Parameters
+    ----------
+    currencies
+        A list of currencies.
+    units
+        A list of units.
+    punct
+        A list of punctuation.
+    quotes
+        A list of quotes.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of suffix rules.
+    """
     return [
         r"(?<=[0-9])\+",
         r"(?<=°[FfCcKk])\.",
@@ -390,6 +533,16 @@ def _get_tokenizer_suffix_rules(
 
 
 def _get_tokenizer_suffixes() -> list[str]:
+    """
+    Get a list of suffixes for the ``clinlp`` tokenizer.
+
+    Suffixes are literal strings/chars that are split at the end of a token.
+
+    Returns
+    -------
+    ``list[str]``
+        The list of suffixes.
+    """
     punct = _get_list(
         base=spacy.lang.punctuation.LIST_PUNCT,
         add=["/", "-", "=", "%", r"\+", "~", "''", "—", "–"],  # noqa RUF001
@@ -409,6 +562,8 @@ def _get_tokenizer_suffixes() -> list[str]:
 
 
 class ClinlpDefaults(BaseDefaults):
+    """Default settings for the ``clinlp`` language class."""
+
     tokenizer_exceptions = _get_tokenizer_exceptions(
         abbreviations=_get_abbreviations(), abbrev_transforms=CLINLP_ABBREV_TRANSFORMS
     )
@@ -432,10 +587,17 @@ class ClinlpDefaults(BaseDefaults):
 
 @spacy.registry.languages("clinlp")
 class Clinlp(Language):
+    """
+    ``clinlp`` language class.
+
+    Contains custom settings for Dutch clinical text.
+    """
+
     lang = "clinlp"
     Defaults = ClinlpDefaults
 
     def __init__(self, *args, **kwargs) -> None:
+        """Create a ``clinlp`` language object."""
         meta = dict(kwargs.pop("meta", {}))
         clinlp_version = importlib.metadata.version(__package__ or __name__)
 

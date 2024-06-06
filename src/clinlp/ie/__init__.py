@@ -1,3 +1,5 @@
+"""Information Extraction (IE) module for ``clinlp``."""
+
 from .entity import SPANS_KEY, RuleBasedEntityMatcher, create_concept_dict
 from .term import Term
 

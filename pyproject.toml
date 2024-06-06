@@ -1,3 +1,7 @@
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+
 [tool.poetry]
 name = "clinlp"
 version = "0.8.0"
@@ -26,9 +30,12 @@ pytest = "^8.1.1"
 pytest-cov = "^5.0.0"
 ruff = "^0.4.1"
 
-[build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+[tool.poetry.group.docs.dependencies]
+sphinx = "^7.3.7"
+myst-parser = "^3.0.1"
+emoji = "^2.12.1"
+toml = "^0.10.2"
+furo = "^2024.5.6"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
@@ -39,7 +46,7 @@ src = ["src"]
 
 [tool.ruff.lint]
 select = [
-    "F", "E", "W", "C90", "I", "N", "UP", "ANN", "S",
+    "F", "E", "W", "C90", "I", "N", "D", "UP", "ANN", "S",
     "BLE", "FBT", "B", "C4", "EM", "PIE", "T20",
     "PT", "RSE", "RET", "SIM", "ARG", "PTH", "ERA",
     "TRY", "PERF", "RUF"
@@ -47,6 +54,11 @@ select = [
 ignore = [
     "ANN002", "ANN003", "ANN101", "ANN102"
 ]
+
 [tool.ruff.lint.per-file-ignores]
-"tests/*" = ["S", "ANN"]
-"scripts/*" = ["T20"]
+"docs/*" = ["D"]
+"tests/*" = ["D", "S", "ANN"]
+"scripts/*" = ["D", "T20"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "numpy"
