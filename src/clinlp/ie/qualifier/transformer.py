@@ -166,7 +166,7 @@ class QualifierTransformer(QualifierDetector):
         text: str, ent_start_char: int, ent_end_char: int, placeholder: str
     ) -> Tuple[str, int, int]:
         """
-        Replace the entity intext with a placeholder. 
+        Replace the entity intext with a placeholder.
 
         Parameters
         ----------

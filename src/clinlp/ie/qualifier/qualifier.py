@@ -173,7 +173,8 @@ class QualifierClass:
         default
             The default value of the qualifier.
         priorities
-            The priorities of the values. If not provided, the order of the values is used.
+            The priorities of the values. If not provided, the order of the values is
+            used.
 
         Raises
         ------
@@ -242,8 +243,7 @@ _defaults_qualifier_detector = {
 
 
 class QualifierDetector(Pipe):
-    """Abstract pipeline component for detecting qualifiers in clinical text.
-    """
+    """Abstract pipeline component for detecting qualifiers in clinical text."""
 
     def __init__(
         self, spans_key: str = _defaults_qualifier_detector["spans_key"]
