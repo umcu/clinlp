@@ -15,5 +15,5 @@ Module index <modindex>
 :caption: Development
 :hidden:
 
-API <api/clinlp>
+API <api/api>
 ```

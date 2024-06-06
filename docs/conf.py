@@ -31,10 +31,7 @@ source_suffix = {
     ".md": "markdown",
 }
 
-templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
-
-maximum_signature_line_length = 100
 
 autodoc_default_options = {
     "member-order": "bysource",
