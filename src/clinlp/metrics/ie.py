@@ -16,7 +16,7 @@ from clinlp.ie import SPANS_KEY
 
 @dataclass
 class Annotation:
-    """Represents an annotation in a document."""
+    """An annotation in a document."""
 
     text: str
     """The text/str span of this annotation."""
@@ -123,7 +123,7 @@ class Annotation:
 
 @dataclass
 class Document:
-    """Represents a document with annotations."""
+    """Document (any text) with annotations."""
 
     identifier: str
     """Any identifier for the document."""
@@ -203,7 +203,7 @@ class Document:
 
 @dataclass
 class InfoExtractionDataset:
-    """Represents a dataset with annotated documents."""
+    """A dataset with annotated documents."""
 
     docs: list[Document]
     """The annotated documents."""
@@ -561,7 +561,7 @@ class InfoExtractionDataset:
 
 
 class InfoExtractionMetrics:
-    """Compute metrics for information extraction tasks."""
+    """Calculator for information extraction task metrics."""
 
     _QUALIFIER_METRICS: ClassVar[dict[str, Callable]] = {
         "precision": precision_score,

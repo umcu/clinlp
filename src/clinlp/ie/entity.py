@@ -79,7 +79,7 @@ class DeprecatedEntityMatcher(Pipe):
 )
 class RuleBasedEntityMatcher(Pipe):
     """
-    A rule-based entity matcher.
+    ``spaCy`` component for rule-based entity matching.
 
     This component is used to match entities based on a set of concepts, along with
     synonyms. Note that settings (e.g. ``attr``, ``proximity``, ...) set at the entity

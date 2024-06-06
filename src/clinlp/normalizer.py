@@ -16,7 +16,7 @@ _defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
     default_config=_defaults_normalizer,
 )
 class Normalizer(Pipe):
-    """A ``spaCy`` pipeline component for normalizing text."""
+    """``spaCy`` pipeline component for normalizing text."""
 
     def __init__(
         self,

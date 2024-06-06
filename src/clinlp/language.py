@@ -569,7 +569,7 @@ class ClinlpDefaults(BaseDefaults):
 @spacy.registry.languages("clinlp")
 class Clinlp(Language):
     """
-    The ``clinlp`` language class.
+    ``clinlp`` language class.
 
     Contains custom settings for Dutch clinical text.
     """

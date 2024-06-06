@@ -136,7 +136,7 @@ _defaults_context_algorithm = {
 )
 class ContextAlgorithm(QualifierDetector):
     """
-    Implements the Context algorithm as a ``spaCy`` pipeline component.
+    ``spaCy`` pipeline component that implements the Context algorithm.
 
     For more information, see the original paper:
     https://doi.org/10.1016%2Fj.jbi.2009.05.002

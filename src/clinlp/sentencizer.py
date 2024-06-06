@@ -18,7 +18,7 @@ _defaults_sentencizer = {
 )
 class Sentencizer(Pipe):
     """
-    A ``spaCy`` pipeline component for sentencizing text.
+    ``spaCy`` pipeline component for sentencizing text.
 
     Uses the following logic for detecting sentence boundaries: any character included
     in ``sent_end_chars`` can mark the end of a sentence. The actual sentence boundary
