@@ -25,7 +25,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     -------
     ``list``
         The arguments of the class's ``__init__`` method.
-    dict
+    ``dict``
         and keyword arguments of the  class's ``__init__`` method.
     """
     args = []
@@ -57,7 +57,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
     Returns
     -------
     ``Callable``
-        The class.
+        The decorated class.
     """
 
     def _clinlp_component(cls: Type) -> Callable[[list, dict], Type]:

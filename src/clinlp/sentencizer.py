@@ -23,9 +23,9 @@ class Sentencizer(Pipe):
     Uses the following logic for detecting sentence boundaries: any character included
     in ``sent_end_chars`` can mark the end of a sentence. The actual sentence boundary
     then occurs at the next token that either:
-    - Is an alphanumeric token
-    - Starts with ``[``
-    - Is included in ``sent_start_punct``
+        * Is an alphanumeric token
+        * Starts with ``[``
+        * Is included in ``sent_start_punct``
     """
 
     def __init__(

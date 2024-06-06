@@ -29,18 +29,22 @@ _DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
 
 
 class ContextRuleDirection(Enum):
-    """
-    Direction of a rule, as in the original Context Algorithm.
-
-    ``PRECEDING`` means the trigger precedes the entity, while ``FOLLOWING`` means
-    it follows the entity. ``BIDIRECTIONAL`` means the trigger can be on either side.
-    """
+    """Direction of a rule, as in the original Context Algorithm."""
 
     PRECEDING = 1
+    """For triggers that precede entities."""
+
     FOLLOWING = 2
+    """For triggers that follow entities."""
+
     BIDIRECTIONAL = 3
+    """For triggers that can both precede and follow entities."""
+
     PSEUDO = 4
+    """For pseudo triggers. """
+
     TERMINATION = 5
+    """ For termination triggers. """
 
 
 @dataclass
@@ -61,7 +65,7 @@ class ContextRule:
 
     max_scope: Optional[int] = None
     """
-    The maximum scope (number of tokens) of the trigger, or ``None`` for using
+    The maximum number of tokens a trigger ranges over, or ``None`` for using
     sentence boundaries.
     """
 
@@ -106,7 +110,7 @@ class _MatchedContextPattern:
         max_scope = self.rule.max_scope or len(sentence)
 
         if max_scope < 1:
-            msg = f"max_scope must be at least 1, but got {max_scope}"
+            msg = f"max_scope must be at least 1, but got {max_scope}."
             raise ValueError(msg)
 
         scoped_start = max(self.start - max_scope, sentence.start)
@@ -137,7 +141,7 @@ _defaults_context_algorithm = {
 )
 class ContextAlgorithm(QualifierDetector):
     """
-    ``spaCy`` pipeline component that implements the Context algorithm.
+    ``spaCy`` pipeline component that implements the Context Algorithm.
 
     For more information, see the original paper:
     https://doi.org/10.1016%2Fj.jbi.2009.05.002
@@ -161,8 +165,9 @@ class ContextAlgorithm(QualifierDetector):
         phrase_matcher_attr
             The token attribute to match phrases on (e.g. ``TEXT``, ``ORTH``, ``NORM``).
         load_rules
-            Whether to parse any rules. Set this to ``False`` to use
-            ``ContextAlgorithm.add_rules`` to add ``ContextRules`` manually.
+            Whether to parse any rules. Set this to ``True`` to load the default builtin
+            rules. Set this to ``False`` to use ``ContextAlgorithm.add_rules`` 
+            to add ``ContextRules`` manually.
         rules
             A dictionary of rules, or a path to a ``json`` containing the rules. See the
             ``clinlp.resources`` dir for an example.
@@ -183,8 +188,8 @@ class ContextAlgorithm(QualifierDetector):
         if load_rules:
             if rules is None:
                 msg = (
-                    "Did not provide rules. Set `load_rules` to False if you "
-                    "want to add `ContextRule` manually."
+                    "Did not provide rules. Set load_rules to False if you "
+                    "want to add ContextRule manually."
                 )
                 raise ValueError(msg)
 
@@ -313,7 +318,7 @@ class ContextAlgorithm(QualifierDetector):
         else:
             msg = (
                 f"Don't know how to process ContextRule with pattern of "
-                f"type {type(rule.pattern)}"
+                f"type {type(rule.pattern)}."
             )
             raise TypeError(msg)
 

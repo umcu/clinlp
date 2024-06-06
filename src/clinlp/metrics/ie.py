@@ -615,7 +615,7 @@ class InfoExtractionMetrics:
             If the datasets contain documents with non-matching identifiers.
         """
         if self.true.num_docs() != self.pred.num_docs():
-            msg = "Can only compute metrics for Datasets with same size"
+            msg = "Can only compute metrics for Datasets with same size."
             raise ValueError(msg)
 
         for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
@@ -762,7 +762,7 @@ class InfoExtractionMetrics:
             pred_unique_values = set(values["pred"])
 
             if max(len(true_unique_values), len(pred_unique_values)) > 2:
-                msg = "Can oly compute metrics for binary qualifier values"
+                msg = "Can oly compute metrics for binary qualifier values."
                 raise ValueError(msg)
 
             pos_label = next(

@@ -1,7 +1,7 @@
 API
 ===
 
-This page contains the `clinlp` API, automatically generated.
+This page contains the automatically generated ``API`` for ``clinlp``.
 
 .. toctree::
    :maxdepth: 4

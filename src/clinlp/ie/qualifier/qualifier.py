@@ -189,11 +189,11 @@ class QualifierClass:
         self.priorities = priorities or {value: n for n, value in enumerate(values)}
 
         if len(set(values)) != len(values):
-            msg = f"Please do not provide any duplicate values ({values})"
+            msg = f"Please do not provide any duplicate values ({values})."
             raise ValueError(msg)
 
         if self.default not in values:
-            msg = f"Default {default} not in provided value {values}"
+            msg = f"Default {default} not in provided value {values}."
             raise ValueError(msg)
 
     def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:

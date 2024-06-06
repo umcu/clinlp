@@ -26,6 +26,9 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     """
     Create a dictionary of concepts and their terms from a ``csv`` file.
 
+    The resulting dictionary can be passed directly into the ``load_concepts`` method
+    of the ``RuleBasedEntityMatcher``.
+
     Parameters
     ----------
     path
@@ -215,7 +218,7 @@ class RuleBasedEntityMatcher(Pipe):
                 else:
                     msg = (
                         f"Not sure how to load a term with type {type(concept_term)}, "
-                        f"please provide str, list or clinlp.Term"
+                        f"please provide str, list or clinlp.Term."
                     )
                     raise TypeError(msg)
 

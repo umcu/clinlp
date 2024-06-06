@@ -120,7 +120,7 @@ class Normalizer(Pipe):
 
         Returns
         -------
-        `Doc`
+        ``Doc``
             The document, with ``token.norm_`` set to the normalized text.
         """
         if len(doc) == 0:
