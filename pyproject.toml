@@ -54,6 +54,7 @@ select = [
 ignore = [
     "ANN002", "ANN003", "ANN101", "ANN102"
 ]
+
 [tool.ruff.lint.per-file-ignores]
 "docs/*" = ["D"]
 "tests/*" = ["D", "S", "ANN"]
