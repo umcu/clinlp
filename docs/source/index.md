@@ -16,4 +16,6 @@ Module index <modindex>
 :hidden:
 
 API <api/api>
+Contributing <contributing>
+Changelog <changelog>
 ```

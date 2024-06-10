@@ -240,6 +240,6 @@ poetry version <major|minor|patch>
 
 Please update `CHANGELOG.md` with the version number and date of this release. If everything went well, all changes that were merged to `main` should already be documented. But it's always good to double check.
 
-Next, create a [new release](https://github.com/umcu/clinlp/releases) on GitHub. Please use the version number as the tag, and the version number as the title. You can copy the changelog entry as the description.
+Next, create a [new release](https://github.com/umcu/clinlp/releases) on GitHub. Please use the version number, in the exact format `v0.0.0` as the tag and the title. In the description box, copy the changes from `CHANGELOG.md`.
 
 After creating the release, a [GitHub action](https://github.com/umcu/clinlp/actions) will automatically build and publish the package to PyPI. Please verify that it completed successfully, and the correct version is indeed visible on [PyPI](https://pypi.org/project/clinlp/).
