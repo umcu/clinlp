@@ -11,9 +11,11 @@
   - [Pull requests](#pull-requests)
   - [Roadmap](#roadmap)
   - [Developer environment setup](#developer-environment-setup)
+    - [Repository structure](#repository-structure)
   - [Coding standards](#coding-standards)
     - [General principles](#general-principles)
     - [Formatting and linting](#formatting-and-linting)
+    - [Dependencies](#dependencies)
     - [Tests](#tests)
       - [Arrange, act, assert](#arrange-act-assert)
     - [Type hints](#type-hints)
@@ -114,6 +116,19 @@ Then, you can install the project with dependencies using:
 poetry install -e . --group dev 
 ```
 
+### Repository structure
+
+The repository is structured as follows:
+
+| Directory    | Description                                               |
+| ------------ | --------------------------------------------------------- |
+| `.github`    | GitHub actions and workflows                              |
+| `docs`       | The documentation                                         |
+| `media`      | Media files for the documentation or readme               |
+| `scripts`    | Scripts for simple tasks that are not part of the package |
+| `src/clinlp` | The source code for `clinlp`                              |
+| `tests`      | The tests for `clinlp`                                    |
+
 ## Coding standards
 
 With `clinlp` we aim for code that is production-ready, well tested, scalable, maintainable, etc. We have a few guidelines that we follow to ensure that the codebase maintains a high quality.
@@ -153,6 +168,26 @@ If any issues are found, some can be automatically fixed using the following com
 ruff lint --fix
 ```
 
+### Dependencies
+
+We use `poetry` for managing dependencies. Adding a dependency is as straightforward as:
+
+```bash
+poetry add <package>
+```
+
+To keep `clinlp` lightweight, we only include dependencies that are strictly necessary in the base package, and use optional dependencies for additional functionality (e.g. transformers, metrics). You can add an optional dependency using:
+
+```bash
+poetry add --extras <extra> <package>
+```
+
+If you are specific development dependencies, please add them to a group such as `dev` or `docs` using:
+
+```bash
+poetry add --group <group> <package>
+```
+
 ### Tests
 
 We use the `pytest` framework for testing. New code should preferably be accompanied by tests. We aim for a test coverage of at least 85%.
@@ -168,6 +203,10 @@ We preferably use the following `pytest` best practices:
 - Use fixtures to share setup code
 - Use parametrize to run the same test with different inputs
 - Use marks to skip tests, or to run tests with specific marks
+
+Additionally, we keep separation between unit, regression and integration tests. Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests. Regression tests should test the performance of one or more components. Integration tests should test the interaction between different components.
+
+If any test data is required for your tests, please add it to the `tests/test_data` directory. If possible, use a text-based format such as JSON or CSV, or at least an open format if that's not possible.
 
 #### Arrange, act, assert
 
