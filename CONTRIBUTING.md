@@ -204,7 +204,8 @@ We preferably use the following `pytest` best practices:
 - Use parametrize to run the same test with different inputs
 - Use marks to skip tests, or to run tests with specific marks
 
-Additionally, we keep separation between unit, regression and integration tests. Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests. Regression tests should test the performance of one or more components. Integration tests should test the interaction between different components.
+Additionally, we keep separation between integration, regression and unit tests. Integration tests should test the interaction between different components.
+Regression tests should test the performance of one or more components. Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests.
 
 If any test data is required for your tests, please add it to the `tests/test_data` directory. If possible, use a text-based format such as JSON or CSV, or at least an open format if that's not possible.
 
@@ -254,7 +255,7 @@ We use type hints throughout the codebase, for both functions and classes. This 
 
 ### Documentation
 
-Please ensure that your code is well documented. You can find the documentation in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. 
+Please ensure that your code is well documented. You can find the documentation in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
 
 #### Docstrings
 
