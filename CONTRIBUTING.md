@@ -6,29 +6,40 @@ Thank you for considering contributing to `clinlp`! This project is intended to 
 
 Please keep in mind that this page describes the ideal process and criteria for contributions. We understand that not all contributions will meet these criteria, and that is perfectly fine. We are happy to assist, so please don't hesitate to reach out to us.
 
-### Contact
+## Contact
 
-Our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
+For any questions, issues or feature requests, our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
 
-## Issues
+We will try to respond to your questions, issues or feature requests as soon as possible. Please keep in mind that we are with a small group of maintainers, so we might not always be able to get back to you within a few days.
+
+### Questions
+
+If you have any questions about the project, how to use it, or how to contribute, please [create an issue](https://github.com/umcu/clinlp/issues/new). Make sure to include as much information as possible, such as:
+
+- A clear and descriptive title
+- A detailed description of the question
+- Any other relevant information
 
 ### Bug reports
 
-If you encounter a bug, please create an issue. Make sure to include as much information as possible, such as:
+If you encounter a bug, such as an error or unexpected behavior, please [create an issue](https://github.com/umcu/clinlp/issues/new). Make sure to include as much information as possible, such as:
 
 - A clear and descriptive title
 - A detailed description of the bug
 - Steps to reproduce the bug (if possible, include a minimal code snippet)
 - Expected behavior
 - Actual behavior
-- Screenshots, if applicable
-- Any other relevant information
 - If possible, include the version of `clinlp` you are using
 - If possible, include the version of Python you are using
+- Any other relevant information
 
-### Feature requests
+### Additions
 
-If you have a feature request, please create an issue. Make sure to include as much information as possible, such as:
+We will happily consider requests or contributions concerning new additions. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
+
+#### Feature requests
+
+If you have a feature request, please [create an issue](https://github.com/umcu/clinlp/issues/new). Make sure to include as much information as possible, such as:
 
 - A clear and descriptive title
 - A detailed description of the feature
@@ -37,11 +48,7 @@ If you have a feature request, please create an issue. Make sure to include as m
 
 ### Contributions
 
-If you would like to contribute to the project, please create an issue to discuss your idea. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else.
-
-### Should it be in `clinlp`?
-
-Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If your contribution does not meet those criteria, a separate release might be a better option.
+If you would like to contribute to the project, please [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else.
 
 ## Pull requests
 
@@ -49,9 +56,9 @@ If you would like to contribute to the project by making changes to the codebase
 
 - Fork the repository
 - Create a new branch for your changes
-- Make your changes
-- Check your changes are in line with the project's [coding standards](#coding-standards)
-- Commit your changes
+- Make your changes locally
+  - Check your changes are in line with the project's [Coding Standards](#coding-standards)
+  - Document your changes in `CHANGELOG.md`
 - Push your changes to your fork
 - Create a pull request
 - Wait for feedback
@@ -69,15 +76,15 @@ You can setup a local development environment by cloning the repository:
 
 ```bash
 git clone git@github.com:umcu/clinlp.git
-cd clinlp
 ```
 
-We use poetry for managing dependencies, and building the package. If you do not have it yet, it's recommended to follow the [official installation guide](https://python-poetry.org/docs/#installation).
+We use poetry for managing dependencies, and building the package. If you do not have it yet, installation is covered in the [official Poetry guide](https://python-poetry.org/docs/#installation).
 
-Then, you can install the dependencies by running:
+Then, you can install the project with dependencies by running:
 
 ```bash
-poetry install . --group dev 
+cd clinlp
+poetry install -e . --group dev 
 ```
 
 ## Coding standards
@@ -95,7 +102,7 @@ Please keep the following principles in mind when writing code:
 - Use descriptive names for variables, functions, classes, etc.
 - Apply SOLID principles and design patterns where applicable
 
-We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to help work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are new to software development.
+We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to help work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are working on something cool, but are new to software development.
 
 ### Formatting and linting
 
@@ -121,7 +128,7 @@ ruff lint --fix
 
 ### Tests
 
-We use the `pytest` framework for testing. New code should preferably be accompanied by tests. We aim for a test coverage of at least 80%.
+We use the `pytest` framework for testing. New code should preferably be accompanied by tests. We aim for a test coverage of at least 85%.
 
 You can run the tests locally by running:
 
@@ -177,7 +184,7 @@ def test_some_function(my_fixture):
 
 ### Type hints
 
-We use type hints throughout the codebase, for both functions and classes. This helps with readability and maintainability. We aim to use type hints for all functions and classes. This is also enforced by `ruff`.
+We use type hints throughout the codebase, for both functions and classes. This helps with readability and maintainability. Usage of type hints is enforced by `ruff`.
 
 ### Documentation
 
@@ -185,15 +192,17 @@ Please ensure that your code is well documented. You can find the documentation 
 
 #### Docstrings
 
-Please make sure to include docstrings for all modules, classes and functions. We use the NumPy docstring format. You can find more information about this format [here](https://numpydoc.readthedocs.io/en/latest/format.html).
+Please make sure to include docstrings for all modules, classes and functions. We use the NumPy docstring format. You can find more information about this format [here](https://numpydoc.readthedocs.io/en/latest/format.html). The exact format should become clear from other docstrings in the codebase.
 
 Each docstring should start with a summary line, optionally followed by more explanation. Please make sure that the summary line completes the following sentence:
 
-| Type        | Summary line                            |
-| ----------- | --------------------------------------- |
-| `Modules`   | This module contains...                 |
-| `Classes`   | This class represents (the/a)...        |
-| `Functions` | When you call this function, it will... |
+| Type        | Format                                                 |
+| ----------- | ------------------------------------------------------ |
+| `Modules`   | This module contains... `summary line`                 |
+| `Classes`   | This class represents (the/a)... `summary line`        |
+| `Functions` | When you call this function, it will... `summary line` |
+
+Note that docstrings are used to automatically generate the API, which is also publicly available.
 
 #### Building the documentation
 
@@ -213,13 +222,15 @@ You should find the docs in `html/_build`.
 
 #### Readthedocs.io
 
-On changes to `main`, documentation is automatically built and published on [clinlp.readthedocs.io](https://clinlp.readthedocs.io/). This setup is configured in `docs/.readthedocs.yml`.
+On changes to `main`, documentation is automatically built and published on [https://clinlp.readthedocs.io/](https://clinlp.readthedocs.io/). This setup is configured in `docs/.readthedocs.yml`.
 
 ### Changelog
 
-Please make sure to update the `CHANGELOG.md` file with a description of your changes. This file should be updated with every change that is merged to `main`.
+Please make sure to update the `CHANGELOG.md` file with a description of your changes, at least every time a PR is created. This file should be updated with every change that is merged to `main`.
 
 ## Releasing
+
+> **Note:** Only maintainers can release new versions of `clinlp`.
 
 To prepare a new release, you can increment the version number using the following command.
 
@@ -227,7 +238,7 @@ To prepare a new release, you can increment the version number using the followi
 poetry version <major|minor|patch>
 ```
 
-Please update `CHANGELOG.md` with the version number and date. If everything went well, all changes that were merged to `main` should already be documented. But it's always good to double check.
+Please update `CHANGELOG.md` with the version number and date of this release. If everything went well, all changes that were merged to `main` should already be documented. But it's always good to double check.
 
 Next, create a [new release](https://github.com/umcu/clinlp/releases) on GitHub. Please use the version number as the tag, and the version number as the title. You can copy the changelog entry as the description.
 
