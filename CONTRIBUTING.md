@@ -1,4 +1,5 @@
 # Contributing to `clinlp`
+
 - [Contributing to `clinlp`](#contributing-to-clinlp)
   - [Introduction](#introduction)
   - [Contact](#contact)
@@ -9,7 +10,7 @@
       - [Contributions](#contributions)
   - [Pull requests](#pull-requests)
   - [Roadmap](#roadmap)
-  - [Setting up the developer environment](#setting-up-the-developer-environment)
+  - [Developer environment setup](#developer-environment-setup)
   - [Coding standards](#coding-standards)
     - [General principles](#general-principles)
     - [Formatting and linting](#formatting-and-linting)
@@ -19,7 +20,7 @@
     - [Documentation](#documentation)
       - [Docstrings](#docstrings)
       - [Building the documentation](#building-the-documentation)
-      - [Readthedocs.io](#readthedocsio)
+      - [Publishing the documentation](#publishing-the-documentation)
     - [Changelog](#changelog)
   - [Releasing](#releasing)
 
@@ -60,7 +61,7 @@ If you encounter a bug, such as an error or unexpected behavior, please [create 
 
 ### Additions
 
-We will happily consider requests or contributions concerning new additions. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
+We will happily consider requests or contributions concerning new additions. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
 
 #### Feature requests
 
@@ -69,11 +70,12 @@ If you have a feature request that you would like someone to pick up, please [cr
 - A clear and descriptive title
 - A detailed description of the feature
 - A use case for the feature
+- Your contact information (if you would like to be involved in the development)
 - Any other relevant information
 
 #### Contributions
 
-If you would like to contribute to the project yourself directly, it's advisable to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. If you are unsure about how to implement your idea, we are happy to help you out. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
+If you would like to contribute to the project yourself directly, it's advisable to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
 
 ## Pull requests
 
@@ -95,20 +97,20 @@ Normally, the pull request will be merged by maintainers after all feedback has 
 
 We like to keep the project roadmap open and transparent. You can find the roadmap in the [projects](https://github.com/orgs/umcu/projects/3). All issues are automatically added to the roadmap, so you can see what is being worked on, and what is planned for the future.
 
-## Setting up the developer environment
+## Developer environment setup
 
 You can setup a local development environment by cloning the repository:
 
 ```bash
 git clone git@github.com:umcu/clinlp.git
+cd clinlp
 ```
 
 We use poetry for managing dependencies, and building the package. If you do not have it yet, installation is covered in the [official Poetry guide](https://python-poetry.org/docs/#installation).
 
-Then, you can install the project with dependencies by running:
+Then, you can install the project with dependencies using:
 
 ```bash
-cd clinlp
 poetry install -e . --group dev 
 ```
 
@@ -213,7 +215,7 @@ We use type hints throughout the codebase, for both functions and classes. This 
 
 ### Documentation
 
-Please ensure that your code is well documented. You can find the documentation in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
+Please ensure that your code is well documented. You can find the documentation in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. 
 
 #### Docstrings
 
@@ -227,7 +229,7 @@ Each docstring should start with a summary line, optionally followed by more exp
 | `Classes`   | This class represents (the/a)... `summary line`        |
 | `Functions` | When you call this function, it will... `summary line` |
 
-Note that docstrings are used to automatically generate the API, which is also publicly available.
+Note that docstrings are used to automatically generate the API, which is also publicly available. Only use inline comments if absolutely necessary to clear up unavoidably confusing code.
 
 #### Building the documentation
 
@@ -245,13 +247,13 @@ make build-docs
 
 You should find the docs in `html/_build`.
 
-#### Readthedocs.io
+#### Publishing the documentation
 
 On changes to `main`, documentation is automatically built and published on [https://clinlp.readthedocs.io/](https://clinlp.readthedocs.io/). This setup is configured in `docs/.readthedocs.yml`.
 
 ### Changelog
 
-Please make sure to update the `CHANGELOG.md` file with a description of your changes, at least every time a PR is created. This file should be updated with every change that is merged to `main`.
+Please make sure to update the `CHANGELOG.md` file with a description of your changes, at least every time a PR is created. This file should be updated with every change that is merged to `main`. Instructions on how to format the changelog can be found in the file itself.
 
 ## Releasing
 
