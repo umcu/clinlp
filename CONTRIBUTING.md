@@ -1,4 +1,29 @@
 # Contributing to `clinlp`
+- [Contributing to `clinlp`](#contributing-to-clinlp)
+  - [Introduction](#introduction)
+  - [Contact](#contact)
+    - [Questions](#questions)
+    - [Bug reports](#bug-reports)
+    - [Additions](#additions)
+      - [Feature requests](#feature-requests)
+    - [Contributions](#contributions)
+  - [Pull requests](#pull-requests)
+  - [Roadmap](#roadmap)
+  - [Setting up the developer environment](#setting-up-the-developer-environment)
+  - [Coding standards](#coding-standards)
+    - [General principles](#general-principles)
+    - [Formatting and linting](#formatting-and-linting)
+    - [Tests](#tests)
+      - [Arrange, act, assert](#arrange-act-assert)
+    - [Type hints](#type-hints)
+    - [Documentation](#documentation)
+      - [Docstrings](#docstrings)
+      - [Building the documentation](#building-the-documentation)
+      - [Readthedocs.io](#readthedocsio)
+    - [Changelog](#changelog)
+  - [Releasing](#releasing)
+
+<!-- include_in_docs_from_here -->
 
 ## Introduction
 
