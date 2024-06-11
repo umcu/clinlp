@@ -36,7 +36,7 @@ Please keep in mind that this page describes the ideal process and criteria for 
 
 Our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. We use it for most communication, including questions, bug reports, feature requests, help getting started, etc. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
 
-To create an issue right now, you can use the following link: [Create an issue](https://github.com/umcu/clinlp/issues/new).
+To create an issue right now, you can use the following link: [Create an issue](https://github.com/umcu/clinlp/issues/new/choose).
 
 We will try to respond to you as soon as possible. Please keep in mind that we are with a small group of maintainers, so we might not always be able to get back to you within a few days.
 
@@ -75,7 +75,7 @@ If you have a feature request that you would like someone to pick up, please inc
 
 Keep in mind that a feature request might not be picked up immediately, or at all. We will try to keep the roadmap up to date, so you can see what is being worked on, and what is planned for the future. Furthermore, remember that `clinlp` is a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
 
-If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
+If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new/choose) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
 
 ## Pull requests
 
