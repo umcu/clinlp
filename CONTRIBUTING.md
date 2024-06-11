@@ -5,9 +5,7 @@
   - [Contact](#contact)
     - [Questions](#questions)
     - [Bug reports](#bug-reports)
-    - [Additions](#additions)
-      - [Feature requests](#feature-requests)
-      - [Contributions](#contributions)
+      - [Feature requests and contributions](#feature-requests-and-contributions)
   - [Pull requests](#pull-requests)
   - [Roadmap](#roadmap)
   - [Developer environment setup](#developer-environment-setup)
@@ -30,21 +28,21 @@
 
 ## Introduction
 
-Thank you for considering contributing to `clinlp`! This project is open source and community driven, so it is largely dependent on contributors like you. This document should help you get started with contributing to the project, whether reporting a bug or issue, requesting a feature, making changes to the codebase, or contributing in any other way.
+Thank you for considering contributing to `clinlp`! This project is open source and community driven, so it is largely dependent on contributors like you. This document should help you get involved with the project, whether reporting a bug or issue, requesting a feature, making changes to the codebase, or contributing in any other way.
 
 Please keep in mind that this page describes the ideal process and criteria for contributions. We understand that not all contributions will meet these criteria, and that is perfectly fine. We are happy to assist, so please don't hesitate to reach out to us.
 
 ## Contact
 
-For any questions, issues or feature requests, our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
+Our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. We use it for most communication, including questions, bug reports, feature requests, help getting started, etc. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
 
 To create an issue right now, you can use the following link: [Create an issue](https://github.com/umcu/clinlp/issues/new).
 
-We will try to respond to your questions, issues or feature requests as soon as possible. Please keep in mind that we are with a small group of maintainers, so we might not always be able to get back to you within a few days.
+We will try to respond to you as soon as possible. Please keep in mind that we are with a small group of maintainers, so we might not always be able to get back to you within a few days.
 
 ### Questions
 
-If you have any questions about the project, please include at least the following information in your issue:
+If you have any questions about the project, or need help getting started, please include at least the following information in your issue:
 
 - A clear and descriptive title
 - A description of the question
@@ -63,11 +61,9 @@ If you encounter a bug, such as an error or unexpected behavior, please include 
 - If possible, include the version of Python you are using
 - Any other relevant information
 
-### Additions
+#### Feature requests and contributions
 
-We will happily consider requests or contributions concerning new additions. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
-
-#### Feature requests
+We will happily consider (ideas for) new additions to `clinlp`. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
 
 If you have a feature request that you would like someone to pick up, please include at least the following information in your issue:
 
@@ -77,7 +73,7 @@ If you have a feature request that you would like someone to pick up, please inc
 - Your contact information (if you would like to be involved in the development)
 - Any other relevant information
 
-#### Contributions
+Keep in mind that a feature request might not be picked up immediately, or at all. We will try to keep the roadmap up to date, so you can see what is being worked on, and what is planned for the future.
 
 If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
 
@@ -184,7 +180,7 @@ To keep `clinlp` lightweight, we only include dependencies that are strictly nec
 poetry add --extras <extra> <package>
 ```
 
-If you are specific development dependencies, please add them to a group such as `dev` or `docs` using:
+If you are adding specific development dependencies, please add them to a group such as `dev` or `docs` using:
 
 ```bash
 poetry add --group <group> <package>
@@ -206,14 +202,17 @@ We preferably use the following `pytest` best practices:
 - Use parametrize to run the same test with different inputs
 - Use marks to skip tests, or to run tests with specific marks
 
-Additionally, we keep separation between integration, regression and unit tests. Integration tests should test the interaction between different components.
-Regression tests should test the performance of one or more components. Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests.
+Additionally, we keep separation between integration, regression and unit tests:
 
-If any test data is required for your tests, please add it to the `tests/test_data` directory. If possible, use a text-based format such as JSON or CSV, or at least an open format if that's not possible.
+- Integration tests should test the interaction between different components.
+- Regression tests should test the performance of one or more components on real text examples. It's useful to also include some test cases that don't produce the correct result and mark them as known failure for future improvement.
+- Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests.
+
+If any test data is required for your tests, please add it to the `tests/test_data` directory. If possible, use a text-based format such as JSON or CSV, or if that's not possible at least an open format is preferred.
 
 #### Arrange, act, assert
 
-Try to write your tests according to the arrange, act and assert pattern:
+We use the arrange, act and assert pattern to structure our tests, which helps to make tests more readable and maintainable. In this pattern, each test is divided into three steps:
 
 - The arrange step sets up the conditions for the test
 - The act step performs the action that is being tested
@@ -251,25 +250,27 @@ def test_some_function(my_fixture):
     ...
 ```
 
+If it's not possible to separate these steps, consider refactoring either the code or the test. In some cases, it might be necessary to combine steps, but this should be the exception rather than the rule.
+
 ### Type hints
 
 We use type hints throughout the codebase, for both functions and classes. This helps with readability and maintainability. Usage of type hints is enforced by `ruff`.
 
 ### Documentation
 
-Please ensure that your code is well documented. You can find the documentation in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
+We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
 
 #### Docstrings
 
-Please make sure to include docstrings for all modules, classes and functions. We use the NumPy docstring format. You can find more information about this format [here](https://numpydoc.readthedocs.io/en/latest/format.html). The exact format should become clear from other docstrings in the codebase.
+We include docstrings for all modules, classes and functions, specifically using the NumPy docstring format. You can find more information about this format [here](https://numpydoc.readthedocs.io/en/latest/format.html). The exact format should become clear from other docstrings in the codebase.
 
 Each docstring should start with a summary line, optionally followed by more explanation. Please make sure that the summary line completes the following sentence:
 
 | Type        | Format                                                 |
 | ----------- | ------------------------------------------------------ |
-| `Modules`   | This module contains... `summary line`                 |
-| `Classes`   | This class represents (the/a)... `summary line`        |
-| `Functions` | When you call this function, it will... `summary line` |
+| `Module`    | This module contains... `summary line`                 |
+| `Class`     | This class represents (the/a)... `summary line`        |
+| `Function`  | When you call this function, it will... `summary line` |
 
 Note that docstrings are used to automatically generate the API, which is also publicly available. Only use inline comments if absolutely necessary to clear up unavoidably confusing code.
 
