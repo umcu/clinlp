@@ -5,7 +5,7 @@
   - [Contact](#contact)
     - [Questions](#questions)
     - [Bug reports](#bug-reports)
-      - [Feature requests and contributions](#feature-requests-and-contributions)
+    - [Feature requests and contributions](#feature-requests-and-contributions)
   - [Pull requests](#pull-requests)
   - [Roadmap](#roadmap)
   - [Developer environment setup](#developer-environment-setup)
@@ -61,7 +61,7 @@ If you encounter a bug, such as an error or unexpected behavior, please include 
 - The version of Python you are using
 - Any other relevant information
 
-#### Feature requests and contributions
+### Feature requests and contributions
 
 We will happily consider (ideas for) new additions to `clinlp`.
 
