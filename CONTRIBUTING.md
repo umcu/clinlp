@@ -5,7 +5,7 @@
   - [Contact](#contact)
     - [Questions](#questions)
     - [Bug reports](#bug-reports)
-      - [Feature requests and contributions](#feature-requests-and-contributions)
+    - [Feature requests and contributions](#feature-requests-and-contributions)
   - [Pull requests](#pull-requests)
   - [Roadmap](#roadmap)
   - [Developer environment setup](#developer-environment-setup)
@@ -57,13 +57,13 @@ If you encounter a bug, such as an error or unexpected behavior, please include 
 - Steps to reproduce the bug (if possible, include a minimal code snippet)
 - Expected behavior
 - Actual behavior
-- If possible, include the version of `clinlp` you are using
-- If possible, include the version of Python you are using
+- The version of `clinlp` you are using
+- The version of Python you are using
 - Any other relevant information
 
-#### Feature requests and contributions
+### Feature requests and contributions
 
-We will happily consider (ideas for) new additions to `clinlp`. Please keep in mind that `clinlp` is intended to be a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
+We will happily consider (ideas for) new additions to `clinlp`.
 
 If you have a feature request that you would like someone to pick up, please include at least the following information in your issue:
 
@@ -73,7 +73,7 @@ If you have a feature request that you would like someone to pick up, please inc
 - Your contact information (if you would like to be involved in the development)
 - Any other relevant information
 
-Keep in mind that a feature request might not be picked up immediately, or at all. We will try to keep the roadmap up to date, so you can see what is being worked on, and what is planned for the future.
+Keep in mind that a feature request might not be picked up immediately, or at all. We will try to keep the roadmap up to date, so you can see what is being worked on, and what is planned for the future. Furthermore, remember that `clinlp` is a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
 
 If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
 
@@ -129,20 +129,22 @@ The repository is structured as follows:
 
 ## Coding standards
 
-With `clinlp` we aim for code that is production-ready, well tested, scalable, maintainable, etc. We have a few guidelines that we follow to ensure that the codebase maintains a high quality.
+With `clinlp` we aim for code that is production-ready. We have a few guidelines that we follow to ensure that the codebase maintains a high quality.
 
 ### General principles
 
 Please keep the following principles in mind when writing code:
 
 - Avoid repetitions, but refactor instead
-- Keep it simple, but not simpler
+- Keep it simple
 - Only implement what is needed
 - Keep functions small and focused
 - Use descriptive names for variables, functions, classes, etc.
 - Apply SOLID principles and design patterns where applicable
+- Think about the user of your code, and make it easy to use
+- Consider the maintainability and scalability of your code
 
-We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to help work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are working on something cool, but are new to software development.
+We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are working on something cool, but are new to software development.
 
 ### Formatting and linting
 
@@ -202,11 +204,11 @@ We preferably use the following `pytest` best practices:
 - Use parametrize to run the same test with different inputs
 - Use marks to skip tests, or to run tests with specific marks
 
-Additionally, we keep separation between integration, regression and unit tests:
+Additionally, we keep separation between unit, integration and regression tests:
 
+- Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests.
 - Integration tests should test the interaction between different components.
 - Regression tests should test the performance of one or more components on real text examples. It's useful to also include some test cases that don't produce the correct result and mark them as known failure for future improvement.
-- Unit tests should be fast and test a single unit of code. Each module in the codebase should at least have a corresponding module with unit tests.
 
 If any test data is required for your tests, please add it to the `tests/test_data` directory. If possible, use a text-based format such as JSON or CSV, or if that's not possible at least an open format is preferred.
 
