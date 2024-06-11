@@ -92,11 +92,9 @@ for ent in doc.spans["ents"]:
 
 ## Documentation
 
-The full documentation can be found at [Full documentation at clinlp.readthedocs.io](https://clinlp.readthedocs.io).
+The full documentation can be found at [clinlp.readthedocs.io](https://clinlp.readthedocs.io).
 
 ## Links
-
-Some useful links:
 
 * [Contributing guidelines](https://clinlp.readthedocs.io/en/latest/contributing.html)
 * [`clinlp` development roadmap](https://github.com/orgs/umcu/projects/3)
