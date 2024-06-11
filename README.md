@@ -15,6 +15,10 @@
 * :rocket: Open source, created and maintained by the Dutch Clinical NLP community
 * :triangular_ruler: Useful out of the box, but customization highly recommended
 
+`clinlp` is a Python package that provides a set of tools for processing clinical text written in Dutch. It is built on top of [spaCy](https://spacy.io/) and is designed to be easy to use, fast, and flexible. The package is used, developed and maintained by researchers and developers in the field of Dutch clinical NLP.
+
+If you have questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](https://clinlp.readthedocs.io/en/latest/contributing.html)!
+
 ## Getting started
 
 ### Installation
