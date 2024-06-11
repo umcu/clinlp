@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to this project will be documented in this file.
+All notable changes to this project will be documented in this file. Please add new entries at the top. Use one of the following headings: `Added`, `Changed`, `Deprecated`, `Removed`, `Fixed`, `Security`.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -10,9 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## (unreleased)
 
 ### Added
+
 * Docstrings on all modules, classes, methods and functions
 
 ### Changed
+
 * In `InformationExtractionDataset`, renamed `span_counts`, `label_counts` and `qualifier_counts` to `span_freqs`, `label_freqs` and `qualifier_freqs` respectively.
 * The `clinlp_component` utility now returns the class itself, rather than a helper function for making it
 * Changed order of `direction` and `qualifier` arguments of `ContextRule`
@@ -20,149 +22,165 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.8.0 (2024-06-03)
 
 ### Changed
+
 * :exclamation: Renamed the `clinlp_entity_matcher` to `clinlp_rule_based_entity_matcher`
 * :exclamation: `clinlp` now stores entities in `doc.spans['ents']` rather than `doc.ents`, allowing for overlap
-  * :exclamation: Overlap in entities found by the entity matcher is no longer resolved by default (replacing old behaviour). To remove overlap, pass `resolve_overlap=True`.
+  * :exclamation: Overlap in entities found by the entity matcher is no longer resolved by default (replacing old behavior). To remove overlap, pass `resolve_overlap=True`.
 * Refactored tests to use `pytest` best practices
 * Changed `clinlp_autocomponent` to `clinlp_component`, which automatically registers your component with spaCy
 * Codebase and linting improvements
 * Renamed the `other_threshold` config to `family_threshold` in the `clinlp_experiencer_transformer` component
 
 ### Fixed
+
 * The `clinlp_rule_based_entity_matcher` no longer overwrites entities detected by other components (but appends them)
 
 ## 0.7.0 (2024-05-16)
 
 ### Added
+
 * Integrated the clin_nlp_metrics package in this repository, specifically in `clinlp.metrics.ie`
 * Support for non-binary qualifier in the Context Algorithm (e.g. 'Change', with values Decreasing, Stable and Increasing)
 * Support for bidirectional qualifier patterns
 
 ### Changed
-* :exclamation: Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`).
-* :exclamation: Updated the framework for qualifiers, to now have three qualifier classes: Presence, Temporality and Experiencer. For more details, see docs. 
+
+* :exclamation: Moved all components related to information extraction to `clinlp.ie`. Please update imports accordingly (e.g. `from clinlp.ie import Term`)
+* :exclamation: Updated the framework for qualifiers, to now have three qualifier classes: Presence, Temporality and Experiencer. For more details, see docs
 
 ## 0.6.6 (2024-04-24)
 
 ### Added
+
 * Support for Python 3.12
 
 ## 0.6.5 (2024-02-13)
 
-### Added 
+### Added
+
 * A component for transformer-based detection of Experiencer qualifiers (Patient/Other) (`clinlp_experiencer_transformer`)
 
 ## 0.6.4 (2024-02-13)
 
 ### Added
-* A way to use a csv file as input for a conceptlist, using `create_concept_dict`
+
+* A way to use a csv file as input for a concept list, using `create_concept_dict`
 
 ## 0.6.3 (2024-01-18)
 
 ### Fixed
+
 * Fix a bug with termination trigger directly next to context trigger
 
 ## 0.6.2 (2023-10-06)
 
 ### Fixed
-- replaced call to `importlib.resources.path` which is deprecated from python 3.11 on
+
+* Replaced call to `importlib.resources.path` which is deprecated from python 3.11 on
 
 ## 0.6.1 (2023-10-06)
 
 ### Fixed
-- a bug with adjacent entities, which were accidentally marked as overlapping
+
+* A bug with adjacent entities, which were accidentally marked as overlapping
 
 ## 0.6.0 (2023-10-03)
 
 ### Changed
-- qualifier detectors now add all default qualifiers (e.g. 'Affirmed', for `Negation`)
-- use titlecase for qualifier values
+
+* Qualifier detectors now add all default qualifiers (e.g. 'Affirmed', for `Negation`)
+* Use titlecase for qualifier values
 
 ## 0.5.3 (2023-10-02)
 
 ### Fixed
-- a bug with importlib causing an `AttributeError` on importing `clinlp`
+
+* A bug with importlib causing an `AttributeError` on importing `clinlp`
 
 ## 0.5.2 (2023-09-27)
 
 ### Fixed
-- removed accidental print statement
+
+* Removed accidental print statement
 
 ## 0.5.1 (2023-09-27)
 
 ### Fixed
-- a bug with overlapping entities
+
+* A bug with overlapping entities
 
 ## 0.5.0 (2023-08-17)
 
 ### Added
-- a custom component for entity recognition, with options for proximity, fuzzy and pseudo matching
+
+* A custom component for entity recognition, with options for proximity, fuzzy and pseudo matching
 
 ## 0.4.0 (2023-08-05)
 
 ### Added
-- definition for qualifiers (negation, plausibility, temporality, experiencer)
+
+* Definition for qualifiers (negation, plausibility, temporality, experiencer)
 
 ### Changed
 
-- updated rules for context algorithm to be consistent with definitions
-- added some rules for context algorithm
-- refactored `Qualifier` class from enum to a separate class, that accomodates other fields (like prob)
-- use `entity._.qualifiers` to obtain `Qualifier` classes, `entity._.qualifier_str` for strings, and `entity._.qualifier_dict` for dicts 
+* Updated rules for context algorithm to be consistent with definitions
+* Added some rules for context algorithm
+* Refactored `Qualifier` class from enum to a separate class, that accommodates other fields (like prob)
+* Use `entity._.qualifiers` to obtain `Qualifier` classes, `entity._.qualifier_str` for strings, and `entity._.qualifier_dict` for dicts
 
 ### Fixed
 
-- ambiguity of `dd` for context rules (can mean differential diagnosis, and daily dosage) 
-- importing `clinlp` caused a bug when extras were missing
-
+* Ambiguity of `dd` for context rules (can mean differential diagnosis, and daily dosage)
+* Importing `clinlp` caused a bug when extras were missing
 
 ## 0.3.1 (2023-06-30)
 
 ### Removed
-- support for python 3.9
+
+* Support for python 3.9
 
 ## 0.3.0 (2023-06-30)
 
 ### Added
 
-- remove a default spacy abbreviation (`ts.`)
-- option for max scope on qualifier rules, limiting the number of tokens it applies to
-- a transformer based pipeline for negation detection (`clinlp_negation_transformer`)
-- a base class `QualifierDetector` for qualifier detection
+* Remove a default spacy abbreviation (`ts.`)
+* Option for max scope on qualifier rules, limiting the number of tokens it applies to
+* A transformer based pipeline for negation detection (`clinlp_negation_transformer`)
+* A base class `QualifierDetector` for qualifier detection
 
 ### Fixed
 
-- issue where entity and context trigger were overlapping (e.g. `geen eetlust`)
-- some tests that were not auto-discovered by pytest due to naming
+* Issue where entity and context trigger were overlapping (e.g. `geen eetlust`)
+* Some tests that were not auto-discovered by pytest due to naming
 
 ### Changed
-- refactored context algorithm to allow adding new qualifier detectors
-- the `@clinlp_autocomponent` wrapper as a utility function, which makes creating components with inheritance and arbitrary config a bit easier
-- made default configs a bit simpeler and DRY
-- move qualifier adding for context algorithm to base class
+
+* Refactored context algorithm to allow adding new qualifier detectors
+* The `@clinlp_autocomponent` wrapper as a utility function, which makes creating components with inheritance and arbitrary config a bit easier
+* Made default configs a bit simpler and DRY
+* Move qualifier adding for context algorithm to base class
 
 ## 0.2.0 (2023-06-07)
 
 ### Added
 
-- version info to model meta (warns if installed `clinlp` version does not match model version)
-- a component for normalizing 
+* Version info to model meta (warns if installed `clinlp` version does not match model version)
+* A component for normalizing
 
 ## 0.1.1 (2023-05-23)
 
 ### Fixed
 
-- bug with resource loading
-
+* Bug with resource loading
 
 ## 0.1.0 (2023-05-23)
 
 ### Changed
 
-- initial release
+* Initial release
 
 ## 0.0.1 (2023-12-16)
 
 ### Changed
 
-- placeholder release
+* Placeholder release
