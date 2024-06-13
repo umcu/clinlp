@@ -26,7 +26,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     ``list``
         The arguments of the class's ``__init__`` method.
     ``dict``
-        and keyword arguments of the  class's ``__init__`` method.
+        and keyword arguments of the class's ``__init__`` method.
     """
     args = []
     kwargs = {}
