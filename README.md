@@ -10,12 +10,19 @@
 
 ![clinlp](media/clinlp.png)
 
-* :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp`
-* :star: Performant and production-ready NLP pipelines for clinical text written in Dutch
-* :rocket: Open source, created and maintained by the Dutch Clinical NLP community
-* :triangular_ruler: Useful out of the box, but customization highly recommended
+<!-- start_intro_line_1 -->
+* :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp` 
+<!-- start_intro_line_2 -->
+* :star: NLP tools and algorithms for clinical text written in Dutch
+<!-- start_intro_line_3 -->
+* :triangular_ruler: Organization in a standardized, flexible and highly usable framework using spaCy
+<!-- start_intro_line_4 -->
+* :rocket: Production-ready, performant, well-tested and easy to use
+<!-- start_intro_line_5 -->
+* :bulb: Free, open source, created and maintained by the Dutch Clinical NLP community
+<!-- end_intro_lines -->
 
-`clinlp` is a Python package that provides a set of tools for processing clinical text written in Dutch. It is built on top of [spaCy](https://spacy.io/) and is designed to be easy to use, fast, and flexible. The package is used, developed and maintained by researchers and developers in the field of Dutch clinical NLP.
+## Contact
 
 If you have questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](https://clinlp.readthedocs.io/en/latest/contributing.html)!
 
