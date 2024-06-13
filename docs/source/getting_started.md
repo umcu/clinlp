@@ -113,7 +113,7 @@ The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`,
 If we now process a piece of text, we can see that the entity recognizer has recognized some entities:
 
 ```python
-text = "Preterme neonaat (<p3), bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
+text = "Preterme neonaat (<p3) opgenomen, bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
 
 doc = nlp(text)
 

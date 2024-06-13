@@ -11,7 +11,7 @@
 ![clinlp](media/clinlp.png)
 
 <!-- start_intro_line_1 -->
-* :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp` 
+* :hospital: `clinical` + :netherlands: `nl` + :clipboard: `NLP` = :sparkles: `clinlp`
 <!-- start_intro_line_2 -->
 * :star: NLP tools and algorithms for clinical text written in Dutch
 <!-- start_intro_line_3 -->
@@ -68,7 +68,7 @@ entity_matcher.load_concepts(concepts)
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
 
 text = (
-    "Preterme neonaat (<p3), bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie "
+    "Preterme neonaat (<p3) opgenomen, bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie "
     "bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen "
     "verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
 )
@@ -81,7 +81,7 @@ Find information in the `Doc` object:
 ```python
 from spacy import displacy
 
-displacy.render(doc, style="ent")
+displacy.render(doc, style="span", options={'spans_key': 'ents'})
 ```
 
 ![example_doc_render.png](media/example_doc_render.png)
@@ -110,3 +110,4 @@ The full documentation can be found at [clinlp.readthedocs.io](https://clinlp.re
 * [Contributing guidelines](https://clinlp.readthedocs.io/en/latest/contributing.html)
 * [`clinlp` development roadmap](https://github.com/orgs/umcu/projects/3)
 * [Create an issue](https://github.com/umcu/clinlp/issues/new/choose)
+* TODO...
