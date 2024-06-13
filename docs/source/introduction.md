@@ -90,7 +90,7 @@ We actively maintain the library, and are always looking for ways to improve it.
 
 More detail on our best practices can be found in the [coding standards](https://clinlp.readthedocs.io/en/latest/contributing.html#coding-standards) section of the contributing page.
 
-## Open source collaboration
+## 4. Open source collaboration
 
 ```{include} ../../README.md
 :start-after: <!-- start_intro_line_5 -->
