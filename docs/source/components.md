@@ -92,12 +92,12 @@ entity_matcher.load_concepts(concepts)
 ```
 
 ```{admonition} Spans vs ents
-:tip:
+:class: tip
 `clinlp` stores entities in `doc.spans`, specifically in `doc.spans["ents"]`. The reason for this is that spans can overlap, while the entities in `doc.ents` cannot. If you use other/custom components, make sure they read/write entities from/to the same span key if interoperability is needed.
 ```
 
 ```{admonition} Using spaCy components directly
-:tip:
+:class: tip
 The `clinlp_rule_based_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `SpanRuler` can also be used directly with `clinlp` for those who prefer it. You can configure the `SpanRuler` to write to the same `SpanGroup` as follows:
 
     from clinlp.ie import SPAN_KEY
