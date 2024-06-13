@@ -12,6 +12,7 @@
     - [Repository structure](#repository-structure)
   - [Coding standards](#coding-standards)
     - [General principles](#general-principles)
+    - [Creating a component](#creating-a-component)
     - [Formatting and linting](#formatting-and-linting)
     - [Dependencies](#dependencies)
     - [Tests](#tests)
@@ -146,6 +147,47 @@ Please keep the following principles in mind when writing code:
 
 We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are working on something cool, but are new to software development.
 
+### Creating a component
+
+When creating a new component for `clinlp`, try to:
+
+- Use a class to define the component, and use `__init__` to set the arguments.
+- Inherit from `Pipe` to make it compatible with `spaCy`.
+- Use the `clinlp_component` decorator, to automatically register it in the component library.
+- Use a dictionary to define any defaults, and pass this to `default_config` of `clinlp_component`.
+- Use type hints for all arguments and return values.
+- Use the `requires` and `assigns` arguments to specify which fields the component needs, and which it sets.
+- Implement the actual behavior of the component in the `__call__` method
+
+The following code snippet shows an example of a new component:
+
+```python
+from clinlp.utils import clinlp_component
+from spacy.language import Pipe
+from spacy.tokens import Doc
+
+_defaults = {
+  "arg_1": 1,
+  "arg_2": True
+}
+
+@clinlp_component(
+  name="my_new_component",
+  requires=["input_spacy_field"],
+  assigns=["output_spacy_field"],
+  default_config=_defaults
+)
+
+class MyNewComponent(Pipe):
+
+  def __init__(self, arg_1: Type = _defaults['arg_1'], arg_2: Type = _defaults['arg_2']):
+    ...
+
+  def __call__(doc: Doc) -> Doc:
+    ...
+    return doc
+```
+
 ### Formatting and linting
 
 We use `ruff` for both formatting and linting. It is configured in `pyproject.toml`.
@@ -260,7 +302,7 @@ We use type hints throughout the codebase, for both functions and classes. This 
 
 ### Documentation
 
-We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
+We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. If you are adding new components, please add them to the [component library](TODO), and following the existing structure.
 
 #### Docstrings
 
