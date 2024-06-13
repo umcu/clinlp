@@ -302,7 +302,7 @@ We use type hints throughout the codebase, for both functions and classes. This 
 
 ### Documentation
 
-We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. If you are adding new components, please add them to the [component library](TODO), and following the existing structure.
+We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. If you are adding new components, please add them to the [component library](https://clinlp.readthedocs.io/en/latest/components.html), and following the existing structure.
 
 #### Docstrings
 

@@ -32,7 +32,7 @@ Components can be built by anyone from the Dutch clinical NLP field, typically a
 
 Currently, `clinlp` mainly includes components used for information extraction, such as tokenizing, detecting sentence boundaries, normalizing text, detecting entities, and detecting qualifiers (e.g. negation, uncertainty). We are now extending the library with more components, both for different tasks (e.g. entity linking, summarization) and different methods for solving the tasks (e.g. a transformer-based entity recognizer).
 
-We prefer components to work out of the box, but to be highly customizable. For instance, our implementation of the [Context Algorithm](TODO) has a set of built in rules for for qualifying entities with Presence, Temporality and Experiencer properties. However, both the types of qualifiers and the rules can easily be modified or replaced by the user. This way, the components can be used in a wide variety of use cases, and no user is forced to use a one-size-fits-all solution.
+We prefer components to work out of the box, but to be highly customizable. For instance, our implementation of the [Context Algorithm](components.md#clinlp_context_algorithm) has a set of built in rules for for qualifying entities with Presence, Temporality and Experiencer properties. However, both the types of qualifiers and the rules can easily be modified or replaced by the user. This way, the components can be used in a wide variety of use cases, and no user is forced to use a one-size-fits-all solution.
 
 ```{admonition} Important
 :class: important
