@@ -1,6 +1,19 @@
-# clinlp documentation
+![clinlp logo](../../media/clinlp.png)
 
-Welcome to the documentation pages for `clinlp`.
+Welcome to the documentation pages for `clinlp`, a library for performing NLP on clinical text written in Dutch. In the menu to the left, you should be able to find the information you are looking for. If you have any questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](https://clinlp.readthedocs.io/en/latest/contributing.html)!
+
+```{toctree}
+:caption: Documentation
+:hidden:
+Introduction <introduction>
+Installation <installation>
+Getting started <getting_started>
+Components <components>
+Metrics <metrics>
+Qualifiers <qualifiers>
+Roadmap <roadmap>
+Citing <citing>
+```
 
 ```{toctree}
 :caption: Search & index
