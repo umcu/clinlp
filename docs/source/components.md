@@ -59,7 +59,7 @@ Note that this component only has effect when explicitly configuring successor c
 | assigns | `token.is_sent_start`, `doc.sents` |
 | config options | `sent_end_chars = [".", "!", "?", "\n", "\r"]` <br /> `sent_start_punct = ["-", "*", "[", "("]` |
 
-The sentencizer is a rule-based sentence boundary detector. It is designed to detect sentence boundaries in clinical text, whenever a character that demarks a sentence ending is matched (e.g. newline, period, question mark). The next sentence is started whenever an alpha character or a character in `sent_start_punct` is encountered. This prevents e.g. sentences ending in `...` to be classified as three separate sentences. The sentencizer correctly detects items in enumerations (e.g. starting with `-` or `*`).
+The sentencizer is a rule-based sentence boundary detector. It is designed to detect sentence boundaries in clinical text, whenever a character that marks a sentence ending is matched (e.g. newline, period, question mark). The next sentence is started whenever an alpha character or a character in `sent_start_punct` is encountered. This prevents e.g. sentences ending in `...` to be classified as three separate sentences. The sentencizer correctly detects items in enumerations (e.g. starting with `-` or `*`).
 
 ## Entity Matching
 
@@ -74,7 +74,7 @@ The sentencizer is a rule-based sentence boundary detector. It is designed to de
 | assigns | `doc.spans['ents']` |
 | config options | `attr = "TEXT"` <br /> `proximity = 0` <br /> `fuzzy = 0` <br /> `fuzzy_min_len = 0` <br /> `pseudo = False` |
 
-The `clinlp_rule_based_entity_matcher` component can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and unmatching pseudo/negative terms.
+The `clinlp_rule_based_entity_matcher` component can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and non-matching pseudo/negative terms.
 
 The most basic example would be the following, with further options described below:
 
@@ -164,7 +164,7 @@ entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr"
 entity_matcher.load_concepts(concepts)
 ```
 
-In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled. 
+In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled.
 
 #### Pseudo/negative phrases
 
@@ -210,7 +210,7 @@ concepts = {
 
 #### Concept dictionary from external source
 
-External lists of concepts (e.g. from a medical thesaurus such as UMLS) can also be loaded directly from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
+External lists of concepts (e.g. from a medical thesaurus such as `UMLS`) can also be loaded directly from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
 | **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** | **comment** |
 |--|--|--|--|--|--|--|--|
@@ -247,7 +247,7 @@ Will result in the following concept dictionary:
 | property | value |
 | --- | --- |
 | name | `clinlp_context_algorithm` |
-| class | [[clinlp.ie.qualifier.context_algorithm.ContextAlgorithm](clinlp.ie.qualifier.context_algorithm.ContextAlgorithm) |
+| class | [clinlp.ie.qualifier.context_algorithm.ContextAlgorithm](clinlp.ie.qualifier.context_algorithm.ContextAlgorithm) |
 | example | `nlp.add_pipe('clinlp_context_algorithm')` |
 | requires | `doc.sents`, `doc.spans['ents']` |
 | assigns | `span._.qualifiers` |
@@ -281,7 +281,7 @@ For more extensive documentation on the definitions of the qualifiers we use in 
 | assigns | `span._.qualifiers` |
 | config options | `token_window = 32` <br /> `strip_entities = True` <br /> `placeholder = None` <br /> `prob_aggregator = statistics.mean` <br /> `absence_threshold = 0.1` <br /> `presence_threshold = 0.9` |
 
-The `clinlp_negation_transformer` wraps the the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/). The negation detector is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
+The `clinlp_negation_transformer` wraps the the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [HuggingFace](https://huggingface.co/UMCU/). The negation detector is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
 
 This component requires the following optional dependencies:
 
@@ -297,7 +297,6 @@ The thresholds define where the cutoff for absence and presence are. If the pred
 :class: tip
 For more extensive documentation on the definitions of the qualifiers we use in `clinlp`, see the [Qualifiers](qualifiers.md) page.
 ```
-
 
 ### `clinlp_experiencer_transformer`
 

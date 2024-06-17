@@ -1,6 +1,6 @@
 # Metrics and statistics
 
-`clinlp` contains calculators for some specific metrics and statistics for evaluating NLP tools. You can find some basic information on using them below. 
+`clinlp` contains calculators for some specific metrics and statistics for evaluating NLP tools. You can find some basic information on using them below.
 
 ## Information extraction
 
