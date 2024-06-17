@@ -1,6 +1,6 @@
 # Getting started
 
-This guide contains some code examples to get you started with `clinlp`. Since `clinlp` is built on top of the `spaCY` framework, it's highly recommended to read [spaCy 101: Everything you need to know (~15 minutes)](https://spacy.io/usage/spacy-101) before getting started with `clinlp`. Understanding the basic `spaCy` framework will make working with `clinlp` much easier.
+This guide contains some code examples to get you started with `clinlp`. Since `clinlp` is built on top of the `spaCy` framework, it's highly recommended to read [`spaCy` 101: Everything you need to know (~15 minutes)](https://spacy.io/usage/spacy-101) before getting started with `clinlp`. Understanding the basic `spaCy` framework will make working with `clinlp` much easier.
 
 ## Creating a blank model
 
@@ -48,8 +48,7 @@ Even when using a blank model, the `Doc`, `Token` and `Span` objects already con
 
 ## Adding components
 
-
-The above model is a blank model, which means it does not contain any additional components yet. It's essentially an almost empty pipeline.Adding a component is done using:
+The above model is a blank model, which means it does not contain any additional components yet. It's essentially an almost empty pipeline. Adding a component is done using:
 
 ```python
 nlp.add_pipe('component_name')
@@ -113,7 +112,13 @@ The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`,
 If we now process a piece of text, we can see that the entity recognizer has recognized some entities:
 
 ```python
-text = "Preterme neonaat (<p3) opgenomen, bd enigszins verlaagd, familieanamnese vermeldt eveneens hypotensie bij moeder. Thans geen aanwijzingen voor veneus infarkt wat ook geen verklaring voor de partus prematurus is. Risico op VI blijft aanwezig."
+text = (
+    "Preterme neonaat (<p3) opgenomen, bd enigszins verlaagd, "
+    "familieanamnese vermeldt eveneens hypotensie bij moeder. "
+    "Thans geen aanwijzingen voor veneus infarkt wat ook geen "
+    "verklaring voor de partus prematurus is. Risico op VI "
+    "blijft aanwezig."
+)
 
 doc = nlp(text)
 
@@ -132,7 +137,7 @@ for ent in doc.spans['ents']:
 
 As you can see, the `doc.spans['ents']` property now contains seven `Span` objects, each with the matched text, along with the concept label.
 
-Now, as a final step, let's add the `clinlp_context_algorithm` component to the pipeline, which implements the Context Algorithm. It can detect qualifiers, such as `Presence`, `Temporality` and `Expierencer`, based on triggers like `geen`, `uitgesloten` for matched entities.
+Now, as a final step, let's add the `clinlp_context_algorithm` component to the pipeline, which implements the Context Algorithm. For each matched entity, it can detect qualifiers, such as `Presence`, `Temporality` and `Experiencer`, based on triggers like 'geen', 'uitgesloten', etc.
 
 ```python
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
@@ -162,4 +167,4 @@ In the above example, for readability all default qualifiers have been omitted. 
 
 ## Conclusion
 
-In this guide, we have shown how to create a blank model, add components to it, and process a piece of text. It also shows how to configure individual components and organize them in a specific information extraction pipeline. Note that there are more components available than shown in this example, you can find them in the [components library](components). By now you understand the basics, and are ready to further explore everything `clinlp` can offer!
+In this guide, we have shown how to create a blank model, add components to it, and process a piece of text. It also shows how to configure individual components and organize them in a specific information extraction pipeline. Note that there are more components available than shown in this example, you can find them on the [Components](components) page. By now you understand the basics, and are ready to further explore everything `clinlp` can offer!

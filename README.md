@@ -15,7 +15,7 @@
 <!-- start_intro_line_2 -->
 * :star: NLP tools and algorithms for clinical text written in Dutch
 <!-- start_intro_line_3 -->
-* :triangular_ruler: Organization in a standardized, flexible and highly usable framework using spaCy
+* :triangular_ruler: Organized in a standardized but flexible framework using `spaCy`
 <!-- start_intro_line_4 -->
 * :rocket: Production-ready, performant, well-tested and easy to use
 <!-- start_intro_line_5 -->
@@ -24,7 +24,7 @@
 
 ## Contact
 
-If you have questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](https://clinlp.readthedocs.io/en/latest/contributing.html)!
+If you have questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](https://clinlp.readthedocs.io/en/latest/contributing.html#contact)!
 
 ## Getting started
 
@@ -103,11 +103,14 @@ for ent in doc.spans["ents"]:
 
 ## Documentation
 
-The full documentation can be found at [clinlp.readthedocs.io](https://clinlp.readthedocs.io).
+The full documentation can be found at [https://clinlp.readthedocs.io](https://clinlp.readthedocs.io).
 
 ## Links
 
+* [Documentation](https://clinlp.readthedocs.io)
 * [Contributing guidelines](https://clinlp.readthedocs.io/en/latest/contributing.html)
+* [API](https://clinlp.readthedocs.io/en/latest/api/api.html)
 * [`clinlp` development roadmap](https://github.com/orgs/umcu/projects/3)
 * [Create an issue](https://github.com/umcu/clinlp/issues/new/choose)
-* TODO...
+* [Cite `clinlp`](https://clinlp.readthedocs.io/en/latest/citing.html)
+* [Changelog](https://clinlp.readthedocs.io/en/latest/changelog.html)

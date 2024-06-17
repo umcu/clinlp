@@ -1,6 +1,6 @@
 # Installation
 
-Installing `clinlp` is as easy as running:
+The easiest way to install `clinlp` is by using `pip`:
 
 ```bash
 pip install clinlp

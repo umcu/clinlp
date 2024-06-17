@@ -9,15 +9,20 @@ This page describes the various pipeline components that `clinlp` offers, along 
 | property | value |
 | --- | --- |
 | name | `clinlp` |
-| class | `clinlp.language.Clinlp` |
+| class | [clinlp.language.Clinlp](clinlp.language.Clinlp) |
 | example | `nlp = spacy.blank("clinlp")` |
 | requires | `-` |
 | assigns | `-` |
 | config options | `-` |
 
-The `clinlp` language class is an instantiation of the `spaCy` `Language` class, with some customizations for clinical text. It contains the default settings for Dutch clinical text, such as rules for tokenizing, abbreviations and units.
+The `clinlp` language class is an instantiation of the `spaCy` `Language` class, with some customizations for clinical text. It contains the default settings for Dutch clinical text, such as rules for tokenizing, abbreviations and units. Creating an instance of the `clinlp` language class is usually the first step in setting up a pipeline for clinical text processing.
 
-The tokenizer employs some custom rule based logic, including:
+```{admonition} Note
+:class: tip
+Note that `clinlp` does not start from a pre-trained `spaCy` model, but from a blank model. This is because `spaCy` only provides models and components pre-trained on general Dutch text, which typically perform poorly on the domain-specific language of clinical text. Although, you are always free to to add pre-trained components from a general Dutch model to the pipeline if needed.
+```
+
+The included tokenizer employs some custom rule based logic, including:
 
 - Clinical text-specific logic for splitting punctuation, units, dosages (e.g. `20mg/dag` :arrow_right: `20` `mg` `/` `dag`)
 - Custom lists of abbreviations, units (e.g. `pt.`, `zn.`, `mmHg`)
@@ -30,11 +35,11 @@ The tokenizer employs some custom rule based logic, including:
 | property | value |
 | --- | --- |
 | name | `clinlp_normalizer` |
-| class | `clinlp.normalize.Normalizer` |
+| class | [clinlp.normalizer.Normalizer](clinlp.normalizer.Normalizer) |
 | example | `nlp.add_pipe("clinlp_normalizer")` |
 | requires | `-` |
 | assigns | `token.norm` |
-| config options | `{lowercase=True, map_non_ascii=True}` |
+| config options | `lowercase = True` <br /> `map_non_ascii = True` |
 
 The normalizer sets the `Token.norm` attribute, which can be used by further components (entity matching, qualification). It currently has two options (enabled by default):
 
@@ -48,11 +53,11 @@ Note that this component only has effect when explicitly configuring successor c
 | property | value |
 | --- | --- |
 | name | `clinlp_sentencizer` |
-| class | `clinlp.sentencize.Sentencizer` |
+| class | [clinlp.sentencizer.Sentencizer](clinlp.sentencizer.Sentencizer) |
 | example | `nlp.add_pipe("clinlp_sentencizer")` |
 | requires | `-` |
 | assigns | `token.is_sent_start`, `doc.sents` |
-| config options | `{"sent_end_chars": [".", "!", "?", "\n", "\r"], "sent_start_punct": ["-", "*", "[", "("],}` |
+| config options | `sent_end_chars = [".", "!", "?", "\n", "\r"]` <br /> `sent_start_punct = ["-", "*", "[", "("]` |
 
 The sentencizer is a rule-based sentence boundary detector. It is designed to detect sentence boundaries in clinical text, whenever a character that demarks a sentence ending is matched (e.g. newline, period, question mark). The next sentence is started whenever an alpha character or a character in `sent_start_punct` is encountered. This prevents e.g. sentences ending in `...` to be classified as three separate sentences. The sentencizer correctly detects items in enumerations (e.g. starting with `-` or `*`).
 
@@ -63,11 +68,11 @@ The sentencizer is a rule-based sentence boundary detector. It is designed to de
 | property | value |
 | --- | --- |
 | name | `clinlp_rule_based_entity_matcher` |
-| class | `clinlp.ie.entity.RuleBasedEntityMatcher` |
+| class | [clinlp.ie.entity.RuleBasedEntityMatcher](clinlp.ie.entity.RuleBasedEntityMatcher) |
 | example | `nlp.add_pipe("clinlp_rule_based_entity_matcher")` |
 | requires | `-` |
 | assigns | `doc.spans['ents']` |
-| config options | `{"attr": "TEXT", "proximity": 0, "fuzzy": 0, "fuzzy_min_len": 0, "pseudo": False}` |
+| config options | `attr = "TEXT"` <br /> `proximity = 0` <br /> `fuzzy = 0` <br /> `fuzzy_min_len = 0` <br /> `pseudo = False` |
 
 The `clinlp_rule_based_entity_matcher` component can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and unmatching pseudo/negative terms.
 
@@ -96,9 +101,9 @@ entity_matcher.load_concepts(concepts)
 `clinlp` stores entities in `doc.spans`, specifically in `doc.spans["ents"]`. The reason for this is that spans can overlap, while the entities in `doc.ents` cannot. If you use other/custom components, make sure they read/write entities from/to the same span key if interoperability is needed.
 ```
 
-```{admonition} Using spaCy components directly
+```{admonition} Using `spaCy` components directly
 :class: tip
-The `clinlp_rule_based_entity_matcher` component wraps the spaCy `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `SpanRuler` can also be used directly with `clinlp` for those who prefer it. You can configure the `SpanRuler` to write to the same `SpanGroup` as follows:
+The `clinlp_rule_based_entity_matcher` component wraps the `spaCy` `Matcher` and `PhraseMatcher` components, adding some convenience and configurability. However, the `Matcher`, `PhraseMatcher` or `SpanRuler` can also be used directly with `clinlp` for those who prefer it. You can configure the `SpanRuler` to write to the same `SpanGroup` as follows:
 
     from clinlp.ie import SPAN_KEY
     ruler = nlp.add_pipe('span_ruler', config={'span_key': SPAN_KEY})
@@ -178,7 +183,7 @@ In this case `prematuur` will be matched, but not in the context of `prematuur a
 
 #### `spaCy` patterns
 
-Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [spaCy patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
+Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [`spaCy` patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
 
 ```python
 concepts = {
@@ -205,7 +210,7 @@ concepts = {
 
 #### Concept dictionary from external source
 
-When matching entities, it is possible to load external lists of concepts (e.g. from a medical thesaurus such as UMLS) from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
+External lists of concepts (e.g. from a medical thesaurus such as UMLS) can also be loaded directly from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
 | **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** | **comment** |
 |--|--|--|--|--|--|--|--|
@@ -242,13 +247,13 @@ Will result in the following concept dictionary:
 | property | value |
 | --- | --- |
 | name | `clinlp_context_algorithm` |
-| class | `clinlp.ie.qualifier.context_algorithm.ContextAlgorithm` |
+| class | [[clinlp.ie.qualifier.context_algorithm.ContextAlgorithm](clinlp.ie.qualifier.context_algorithm.ContextAlgorithm) |
 | example | `nlp.add_pipe('clinlp_context_algorithm')` |
 | requires | `doc.sents`, `doc.spans['ents']` |
 | assigns | `span._.qualifiers` |
-| config options | `{'phrase_matcher_attr': "TEXT", "load_rules": True, "rules": "src/clinlp/resources/context_rules.json}` |
+| config options | `phrase_matcher_attr = "TEXT"` <br /> `load_rules = True` <br /> `rules = "src/clinlp/resources/context_rules.json"` |
 
-The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for presence, temporality, and experiencer, is loaded by default:
+The rule-based [Context Algorithm](https://doi.org/10.1016%2Fj.jbi.2009.05.002) is fairly accurate, and quite transparent and fast. A set of rules, that checks for `Presence`, `Temporality`, and `Experiencer`, is loaded by default:
 
 ```python
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
@@ -260,16 +265,21 @@ A custom set of rules, including different types of qualifiers, can easily be de
 cm = nlp.add_pipe("clinlp_context_algorithm", config={"rules": "/path/to/my_own_ruleset.json"})
 ```
 
+```{admonition} Definitions of qualifiers
+:class: tip
+For more extensive documentation on the definitions of the qualifiers we use in `clinlp`, see the [Qualifiers](qualifiers.md) page.
+```
+
 ### `clinlp_negation_transformer`
 
 | property | value |
 | --- | --- |
 | name | `clinlp_negation_transformer` |
-| class | `clinlp.ie.qualifier.transformer.NegationTransformer` |
+| class | [clinlp.ie.qualifier.transformer.NegationTransformer](clinlp.ie.qualifier.transformer.NegationTransformer) |
 | example | `nlp.add_pipe('clinlp_negation_transformer')` |
 | requires | `doc.spans['ents']` |
 | assigns | `span._.qualifiers` |
-| config options | `{"token_window": 32, "strip_entities": True, "placeholder": None, "prob_aggregator": statistics.mean, "absence_threshold": 0.1, "presence_threshold": 0.9}` |
+| config options | `token_window = 32` <br /> `strip_entities = True` <br /> `placeholder = None` <br /> `prob_aggregator = statistics.mean` <br /> `absence_threshold = 0.1` <br /> `presence_threshold = 0.9` |
 
 The `clinlp_negation_transformer` wraps the the negation detector described in [van Es et al, 2022](https://doi.org/10.48550/arxiv.2209.00470). The underlying transformer can be found on [huggingface](https://huggingface.co/UMCU/). The negation detector is reported as more accurate than the rule-based version (see paper for details), at the cost of less transparency and additional computational cost.
 
@@ -283,17 +293,28 @@ The component can be configured to consider a maximum number of tokens as contex
 
 The thresholds define where the cutoff for absence and presence are. If the predicted probability of presence < `absence_threshold`, entities will be qualified as `Presence.Absent`. If the predicted probability of presence > `presence_threshold`, entities will be qualified as `Presence.Present`. If the predicted probability is between these thresholds, the entity will be qualified as `Presence.Uncertain`.
 
+```{admonition} Definitions of qualifiers
+:class: tip
+For more extensive documentation on the definitions of the qualifiers we use in `clinlp`, see the [Qualifiers](qualifiers.md) page.
+```
+
+
 ### `clinlp_experiencer_transformer`
 
 | property | value |
 | --- | --- |
 | name | `clinlp_experiencer_transformer` |
-| class | `clinlp.ie.qualifier.transformer.ExperiencerTransformer` |
+| class | [clinlp.ie.qualifier.transformer.ExperiencerTransformer](clinlp.ie.qualifier.transformer.ExperiencerTransformer) |
 | example | `nlp.add_pipe('clinlp_experiencer_transformer')` |
 | requires | `doc.spans['ents']` |
 | assigns | `span._.qualifiers` |
-| config options | `{"token_window": 32, "strip_entities": True, "placeholder": None, "prob_aggregator": statistics.mean, "family_threshold": 0.5}` |
+| config options | `token_window = 32` <br /> `strip_entities = True` <br /> `placeholder = None` <br /> `prob_aggregator = statistics.mean` <br /> `family_threshold = 0.5` |
 
-The `clinlp_experiencer_transformer` wraps a very similar model as the [`clinlp_negation_transformer`](#clinlp_negation_transformer) component, with which it shares most of its configuration. 
+The `clinlp_experiencer_transformer` wraps a very similar model as the [`clinlp_negation_transformer`](#clinlp_negation_transformer) component, with which it shares most of its configuration.
 
 Additionally, it has a threshold for determining whether an entity is experienced by the patient or by a family member. If the predicted probability < `family_threshold`, the entity will be qualified as `Experiencer.Patient`. If the predicted probability > `family_threshold`, the entity will be qualified as `Experiencer.Family`. The `Experiencer.Other` qualifier is currently not implemented in this component.
+
+```{admonition} Definitions of qualifiers
+:class: tip
+For more extensive documentation on the definitions of the qualifiers we use in `clinlp`, see the [Qualifiers](qualifiers.md) page.
+```
