@@ -6,7 +6,7 @@ The easiest way to install `clinlp` is by using `pip`:
 pip install clinlp
 ```
 
-As a good practice, we recommend installing `clinlp` in a virtual environment. If you are not familiar with virtual environments, you can find more information [here](https://docs.python.org/3/library/venv.html).
+As good practice, we recommend installing `clinlp` in a virtual environment. If you are not familiar with virtual environments, you can find more information [here](https://docs.python.org/3/library/venv.html).
 
 ## Optional dependencies
 

@@ -102,7 +102,7 @@ More detail on the `clinlp` development practices can be found in the [Coding St
 
 In order to be transparent, we prefer to communicate through means that are open to everyone. This includes using GitHub for issue tracking, pull requests and discussions, and using the `clinlp` documentation for explaining the library's principles and functionality. We keep our [Roadmap](roadmap) and [Changelog](changelog) up to date, so you can see what we are working on and what has changed in the library.
 
-Finally, by working together in `clinlp`, we hope to strengthen the connections in our specific field of Dutch clinical NLP across organizations and institutions. By committing to making algorithms and implementations available in this package, and to collaboratively further standardize algorithms and protocols, we can ensure that the research is reproducible and that the algorithms can be used by others. This way, we can build on each other's work, and make the field of Dutch clinical NLP stronger.
+Finally, by working together in `clinlp`, we hope to strengthen the connections in our specific field of Dutch clinical NLP across organizations and institutions. By committing to making algorithms and implementations available in this package, and to collaboratively further standardize algorithms and protocols, we can ensure that research is reproducible and that the algorithms can be used by others. This way, we can build on each other's work, and make the field of Dutch clinical NLP stronger.
 
 ## About
 
