@@ -36,6 +36,7 @@ myst-parser = "^3.0.1"
 emoji = "^2.12.1"
 toml = "^0.10.2"
 furo = "^2024.5.6"
+sphinx-new-tab-link = "^0.4.0"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

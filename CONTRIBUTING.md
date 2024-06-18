@@ -12,6 +12,7 @@
     - [Repository structure](#repository-structure)
   - [Coding standards](#coding-standards)
     - [General principles](#general-principles)
+    - [Creating a component](#creating-a-component)
     - [Formatting and linting](#formatting-and-linting)
     - [Dependencies](#dependencies)
     - [Tests](#tests)
@@ -36,7 +37,7 @@ Please keep in mind that this page describes the ideal process and criteria for 
 
 Our preferred way of communication is through [issues](https://github.com/umcu/clinlp/issues), GitHubs built-in issue tracker. We use it for most communication, including questions, bug reports, feature requests, help getting started, etc. This way, the entire community can benefit from the discussion. If this is not an option, you can also reach out to us by e-mail: [analytics@umcutrecht.nl](mailto:analytics@umcutrecht.nl).
 
-To create an issue right now, you can use the following link: [Create an issue](https://github.com/umcu/clinlp/issues/new).
+To create an issue right now, you can use the following link: [Create an issue](https://github.com/umcu/clinlp/issues/new/choose).
 
 We will try to respond to you as soon as possible. Please keep in mind that we are with a small group of maintainers, so we might not always be able to get back to you within a few days.
 
@@ -75,7 +76,7 @@ If you have a feature request that you would like someone to pick up, please inc
 
 Keep in mind that a feature request might not be picked up immediately, or at all. We will try to keep the roadmap up to date, so you can see what is being worked on, and what is planned for the future. Furthermore, remember that `clinlp` is a collection of generic components that process clinical text written in Dutch. If the proposed addition does not meet those criteria, a separate release might be a better option. We typically also don't include preprocessing components (e.g. fixing encodings, de-identification, etc.), as those should preferably be handled at the source.
 
-If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
+If you would like to contribute to the project yourself directly, it's recommended to [create an issue](https://github.com/umcu/clinlp/issues/new/choose) to discuss your idea beforehand. This way, we can make sure that your contribution is in line with the project's goals and that it is not already being worked on by someone else. Of course, for small changes that only touch a couple of lines of code, you can also directly create a pull request. When you are ready to start working on your contribution, please follow the steps outlined in the [Pull requests](#pull-requests) section.
 
 ## Pull requests
 
@@ -145,6 +146,47 @@ Please keep the following principles in mind when writing code:
 - Consider the maintainability and scalability of your code
 
 We fully acknowledge that writing production ready code is a skill that takes time to develop. We are happy to work together, so please don't hesitate to reach out to us. This is especially true for scientific researchers who are working on something cool, but are new to software development.
+
+### Creating a component
+
+When creating a new component for `clinlp`, try to:
+
+- Use a class to define the component, and use `__init__` to set the arguments.
+- Inherit from `Pipe` to make it compatible with `spaCy`.
+- Use the `clinlp_component` decorator, to automatically register it in the component library.
+- Use a dictionary to define any defaults, and pass this to `default_config` of `clinlp_component`.
+- Use type hints for all arguments and return values.
+- Use the `requires` and `assigns` arguments to specify which fields the component needs, and which it sets.
+- Implement the actual behavior of the component in the `__call__` method
+
+The following code snippet shows an example of a new component:
+
+```python
+from clinlp.utils import clinlp_component
+from spacy.language import Pipe
+from spacy.tokens import Doc
+
+_defaults = {
+  "arg_1": 1,
+  "arg_2": True
+}
+
+@clinlp_component(
+  name="my_new_component",
+  requires=["input_spacy_field"],
+  assigns=["output_spacy_field"],
+  default_config=_defaults
+)
+
+class MyNewComponent(Pipe):
+
+  def __init__(self, arg_1: Type = _defaults['arg_1'], arg_2: Type = _defaults['arg_2']):
+    ...
+
+  def __call__(doc: Doc) -> Doc:
+    ...
+    return doc
+```
 
 ### Formatting and linting
 
@@ -260,7 +302,7 @@ We use type hints throughout the codebase, for both functions and classes. This 
 
 ### Documentation
 
-We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly.
+We like our code to be well documented. The documentation can be found in the `docs` directory. If you are making changes to the codebase, please make sure to update the documentation accordingly. If you are adding new components, please add them to the [component library](https://clinlp.readthedocs.io/en/latest/components.html), and following the existing structure.
 
 #### Docstrings
 

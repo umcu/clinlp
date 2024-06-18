@@ -24,7 +24,12 @@ copyright = f"{datetime.datetime.now().year}, clinlp"
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration
 
-extensions = ["sphinx.ext.autodoc", "sphinx.ext.napoleon", "myst_parser"]
+extensions = [
+    "sphinx.ext.autodoc",
+    "sphinx.ext.napoleon",
+    "myst_parser",
+    "sphinx_new_tab_link",
+]
 
 source_suffix = {
     ".rst": "restructuredtext",
