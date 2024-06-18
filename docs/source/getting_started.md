@@ -78,6 +78,22 @@ print(str(sent) for sent in doc.sents)
 ```
 Other components can use these newly set properties `Token.norm_` and `Doc.sents`. For example, an entity recognizer can use the normalized text to recognize entities, and a negation detector can use the sentence boundaries to determine the range of a negation.
 
+You can always inspect the current model's pipeline using:
+
+```python
+print(nlp.pipe_names)
+
+> ['clinlp_normalizer', 'clinlp_sentencizer']
+```
+
+This shows the current components in the pipeline, in the order they are executed. The order of the components is important, as the output of one component is the input of the next component. The order of the components can be changed by using the `nlp.add_pipe` method with the `before` or `after` parameter. For example, to add a component before the `clinlp_sentencizer`:
+
+```python
+nlp.add_pipe('component_name', before='clinlp_sentencizer')
+```
+
+This will add the component before the `clinlp_sentencizer` in the pipeline.
+
 ## Information extraction example
 
 Now that we understand the basics of a blank model and adding components, let's add two more components to create a basic information extraction pipeline.
@@ -107,7 +123,7 @@ entity_matcher = nlp.add_pipe(
 entity_matcher.load_concepts(concepts)
 ```
 
-The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`, and `veneus_infarct`), along with synonyms to match. Additionally, it configures the entity matcher on how to perform the matching. We have here configured the entity matcher to matches against the `NORM` attribute by default, which it finds in the `Token.norm_` property the `clinlp_normalizer` set earlier. The `fuzzy` parameter specifies how much the the concept text and the real text can differ (based on the edit distance). Some settings are overruled at the `Term` level. For instance, the `proximity=1` parameter for `bd verlaagd` specifies that at most one token may skipped between the words `bd` and `verlaagd`.
+The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`, and `veneus_infarct`), along with synonyms to match. Additionally, it configures the entity matcher on how to perform the matching. We have here configured the entity matcher to match against the `NORM` attribute by default, which it finds in the `Token.norm_` property the `clinlp_normalizer` set earlier. The `fuzzy` parameter specifies how much the concept text and the real text can differ (based on the edit distance). Some settings are overruled at the `Term` level. For instance, the `proximity=1` parameter for `bd verlaagd` specifies that at most one token may skipped between the words `bd` and `verlaagd`.
 
 If we now process a piece of text, we can see that the entity recognizer has recognized some entities:
 
@@ -163,7 +179,7 @@ for ent in doc.spans['ents']:
 > 'VI' {'Temporality.Future'}
 ```
 
-In the above example, for readability all default qualifiers have been omitted. You can see that three out of seven entities have correctly been qualified, either as `Absent`, related to `Family`, or potentially occurring in the `Future`. Of course, your specific use case determines how the output of this pipeline will further be handled.
+In the above example, for readability all default qualifier values (`Presence.Present`, `Temporality.Current`, `Experiencer.Patient`) have been omitted. You can see that three out of seven entities have correctly been qualified, either as `Absent`, related to `Family`, or potentially occurring in the `Future`. Of course, your specific use case determines how the output of this pipeline will further be handled.
 
 ## Conclusion
 
