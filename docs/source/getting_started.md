@@ -107,7 +107,7 @@ entity_matcher = nlp.add_pipe(
 entity_matcher.load_concepts(concepts)
 ```
 
-The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`, and `veneus_infarct`), along with synonyms to match. Additionally, it configures the entity matcher on how to perform the matching. We have here configured the entity matcher to match against the `NORM` attribute by default, which it finds in the `Token.norm_` property that the `clinlp_normalizer` set earlier. The `fuzzy` parameter specifies how much the concept text and the real text can differ (based on the edit distance). Some settings are overruled at the `Term` level. For instance, the `proximity=1` parameter for `bd verlaagd` specifies that at most one token may be skipped between the words `bd` and `verlaagd`.
+The above code adds three concepts to be matched (`prematuriteit`, `hypotensie`, and `veneus_infarct`), along with synonyms to match. Additionally, it configures the entity matcher on how to perform the matching. We have here configured the entity matcher to matches against the `NORM` attribute by default, which it finds in the `Token.norm_` property the `clinlp_normalizer` set earlier. The `fuzzy` parameter specifies how much the the concept text and the real text can differ (based on the edit distance). Some settings are overruled at the `Term` level. For instance, the `proximity=1` parameter for `bd verlaagd` specifies that at most one token may skipped between the words `bd` and `verlaagd`.
 
 If we now process a piece of text, we can see that the entity recognizer has recognized some entities:
 

@@ -1,6 +1,6 @@
 # Definition of qualifier classes used in `clinlp`
 
-This page describes the definitions of qualifier classes for Dutch clinical text that are used in `clinlp`.
+This page describes the definitions of qualifier classes for Dutch clinical text we use in `clinlp`.
 
 ## Introduction
 
