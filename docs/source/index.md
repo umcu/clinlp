@@ -2,6 +2,10 @@
 
 Welcome to the documentation pages for `clinlp`, a Python library for performing NLP on clinical text written in Dutch. In the menu to the left, you should be able to find the information you are looking for. If you have any questions, need help getting started, found a bug, or have a feature request, please don't hesitate to [contact us](contributing.md#contact)!
 
+## Links
+
+- [GitHub repository](https://github.com/umcu/clinlp)
+
 ```{toctree}
 :caption: clinlp
 :hidden:
