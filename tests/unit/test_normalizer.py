@@ -18,6 +18,8 @@ class TestNormalizer:
             ("test", "test"),
             ("Test", "test"),
             ("TEST", "test"),
+            ("ß", "ss"),
+            ("µg", "μg")
         ],
     )
     def test_lowercase(self, input_text, expected_lowercased_text):
@@ -92,7 +94,7 @@ class TestNormalizer:
 
     def test_call_normalizer_default(self, mock_doc):
         # Arange
-        expected_norms = ["patient", "250", "µg", "toedienen"]
+        expected_norms = ["patient", "250", "μg", "toedienen"]
         n = Normalizer()
 
         # Act
@@ -118,7 +120,7 @@ class TestNormalizer:
 
     def test_call_normalizer_disable_map_non_ascii(self, mock_doc):
         # Arange
-        expected_norms = ["patiënt", "250", "µg", "toedienen"]
+        expected_norms = ["patiënt", "250", "μg", "toedienen"]
         n = Normalizer(map_non_ascii=False)
 
         # Act

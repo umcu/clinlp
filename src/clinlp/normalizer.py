@@ -49,7 +49,7 @@ class Normalizer(Pipe):
         ``str``
             The lowercased text.
         """
-        return text.lower()
+        return text.casefold()
 
     @staticmethod
     def _map_non_ascii_char(char: str) -> str:
