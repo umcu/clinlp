@@ -1,12 +1,3 @@
----
-name: Pull Request
-about: Create a pull request to make a change to the code
-title: ''
-labels: bug
-assignees: ''
-
----
-
 **Describe the change**
 Please provide a clear and concise description and motivation of the proposed change.
 
