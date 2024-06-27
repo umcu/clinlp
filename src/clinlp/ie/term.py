@@ -5,13 +5,7 @@ from typing import Optional
 import pydantic
 from spacy.language import Language
 
-_defaults_term = {
-    "attr": "TEXT",
-    "proximity": 0,
-    "fuzzy": 0,
-    "fuzzy_min_len": 0,
-    "pseudo": False,
-}
+from clinlp.util import get_class_init_signature
 
 
 class Term(pydantic.BaseModel):
@@ -20,19 +14,19 @@ class Term(pydantic.BaseModel):
     phrase: str
     """The literal phrase to match."""
 
-    attr: Optional[str] = None
+    attr: Optional[str] = "TEXT"
     """The attribute to match on."""
 
-    proximity: Optional[int] = None
+    proximity: Optional[int] = 0
     """ The number of tokens to allow between each token in the phrase."""
 
-    fuzzy: Optional[int] = None
+    fuzzy: Optional[int] = 0
     """The threshold for fuzzy matching."""
 
-    fuzzy_min_len: Optional[int] = None
+    fuzzy_min_len: Optional[int] = 0
     """The minimum length for fuzzy matching."""
 
-    pseudo: Optional[bool] = None
+    pseudo: Optional[bool] = False
     """Whether this term is a pseudo-term, which is excluded from matches."""
 
     model_config = {"extra": "ignore"}
@@ -40,6 +34,32 @@ class Term(pydantic.BaseModel):
     # ensures Term is accepted as positional argument for readability
     def __init__(self, phrase: str, **kwargs) -> None:
         super().__init__(phrase=phrase, **kwargs)
+
+    @classmethod
+    def defaults(cls) -> dict:
+        """
+        Get the default values for each term attribute, if any.
+
+        Returns
+        -------
+        ``dict``
+            The default values for each attribute, if any.
+        """
+        _, defaults = get_class_init_signature(cls)
+
+        return defaults
+
+    @property
+    def fields_set(self) -> set[str]:
+        """
+        Get the fields set for this term.
+
+        Returns
+        -------
+        ``set[str]``
+            The fields set for this term.
+        """
+        return self.__pydantic_fields_set__
 
     def to_spacy_pattern(self, nlp: Language) -> list[dict]:
         """
@@ -55,25 +75,19 @@ class Term(pydantic.BaseModel):
         ``list[dict]``
             The ``spaCy`` pattern.
         """
-        fields = {
-            field: getattr(self, field) or _defaults_term[field]
-            for field in ["attr", "proximity", "fuzzy", "fuzzy_min_len", "pseudo"]
-        }
-
         spacy_pattern = []
 
         phrase_tokens = [token.text for token in nlp.tokenizer(self.phrase)]
 
         for i, token in enumerate(phrase_tokens):
-            if (fields["fuzzy"] > 0) and (len(token) >= fields["fuzzy_min_len"]):
-                token_pattern = {f"FUZZY{fields['fuzzy']}": token}
+            if (self.fuzzy > 0) and (len(token) >= self.fuzzy_min_len):
+                token_pattern = {f"FUZZY{self.fuzzy}": token}
             else:
                 token_pattern = token
 
-            spacy_pattern.append({fields["attr"]: token_pattern})
+            spacy_pattern.append({self.attr: token_pattern})
 
             if i != len(phrase_tokens) - 1:
-                for _ in range(fields["proximity"]):
-                    spacy_pattern.append({"OP": "?"})  # noqa: PERF401
+                spacy_pattern += [{"OP": "?"}] * self.proximity
 
         return spacy_pattern

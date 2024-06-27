@@ -36,6 +36,29 @@ class TestTerm:
         with pytest.raises(AttributeError):
             _ = t.comment
 
+    def test_defaults(self):
+        # Act
+        defaults = Term.defaults()
+
+        # Assert
+        assert defaults == {
+            "attr": "TEXT",
+            "proximity": 0,
+            "fuzzy": 0,
+            "fuzzy_min_len": 0,
+            "pseudo": False,
+        }
+
+    def test_fields_set(self):
+        # Arrange
+        term = Term(phrase="Diabetes", fuzzy=1)
+
+        # Act
+        fields_set = term.fields_set
+
+        # Assert
+        assert fields_set == {"phrase", "fuzzy"}
+
     def test_spacy_pattern(self, nlp):
         # Arrange
         t = Term(phrase="diabetes", attr="NORM")
