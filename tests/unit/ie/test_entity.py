@@ -396,3 +396,15 @@ class TestClinlpNer:
             ("oesophagus atresie", 2, 4, "slokdarmatresie"),
             ("atresie", 3, 4, "slokdarmatresie"),
         ]
+
+    def test_spans_key(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp, spans_key="custom_key")
+        rbem.load_concepts({"delier": ["delier"]})
+        text = "patient heeft delier"
+
+        # Act
+        doc = rbem(nlp(text))
+
+        # Assert
+        assert doc.spans["custom_key"][0].label_ == "delier"

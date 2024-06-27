@@ -389,3 +389,20 @@ class TestUnitQualifierDetector:
         assert mock_qualifier_class.create("test2") not in get_qualifiers(entity)
         assert mock_qualifier_class_2.create() in get_qualifiers(entity)
         assert mock_qualifier_class_2.create("def") not in get_qualifiers(entity)
+
+    def test_add_qualifiers_spans_key(self, nlp, mock_qualifier_class):
+        # Arrange
+        qd = QualifierDetector(spans_key="test")
+        doc = nlp("dit is een test")
+        doc.spans["test"] = [doc[2:3]]
+        qualifier_classes = {"test1": mock_qualifier_class}
+
+        # Act
+        with patch(
+            "clinlp.ie.qualifier.qualifier.QualifierDetector.qualifier_classes",
+            qualifier_classes,
+        ):
+            qd(doc)
+
+        # Assert
+        assert get_qualifiers(doc[2:3]) == {mock_qualifier_class.create()}

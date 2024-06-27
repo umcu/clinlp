@@ -280,7 +280,9 @@ class InfoExtractionDataset:
 
     @staticmethod
     def from_clinlp_docs(
-        nlp_docs: Iterable[Doc], ids: Optional[Iterable[str]] = None
+        nlp_docs: Iterable[Doc],
+        ids: Optional[Iterable[str]] = None,
+        spans_key: str = SPANS_KEY,
     ) -> "InfoExtractionDataset":
         """
         Create a dataset from ``clinlp`` documents.
@@ -293,6 +295,9 @@ class InfoExtractionDataset:
         ids, optional
             An iterable of identifiers, that should have the same length as
             ``nlp_docs``. If not provided, will use a counter.
+        spans_key
+            The key in the ``Doc``'s ``.spans`` attribute where the annotations are
+            stored.
 
         Returns
         -------
@@ -306,7 +311,7 @@ class InfoExtractionDataset:
         for doc, identifier in zip(nlp_docs, ids):
             annotations = []
 
-            for ent in doc.spans[SPANS_KEY]:
+            for ent in doc.spans[spans_key]:
                 qualifiers = [
                     {
                         "name": qualifier.name.title(),

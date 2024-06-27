@@ -237,17 +237,10 @@ class QualifierClass:
         )
 
 
-_defaults_qualifier_detector = {
-    "spans_key": SPANS_KEY,
-}
-
-
 class QualifierDetector(Pipe):
     """Abstract pipeline component for detecting qualifiers in clinical text."""
 
-    def __init__(
-        self, spans_key: str = _defaults_qualifier_detector["spans_key"]
-    ) -> None:
+    def __init__(self, spans_key: str = SPANS_KEY) -> None:
         """
         Initialize a qualifier detector.
 

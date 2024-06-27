@@ -96,6 +96,7 @@ class RuleBasedEntityMatcher(Pipe):
         fuzzy_min_len: int = 0,
         pseudo: bool = False,
         resolve_overlap: bool = False,
+        spans_key: str = SPANS_KEY,
     ) -> None:
         """
         Create a rule-based entity matcher.
@@ -116,10 +117,10 @@ class RuleBasedEntityMatcher(Pipe):
             Whether this term is a pseudo-term, which is excluded from matches.
         resolve_overlap
             Whether to resolve overlapping entities.
+        spans_key
+            The key to store the entities in the document.
         """
         self.nlp = nlp
-
-        self.resolve_overlap = resolve_overlap
 
         self.term_args = {
             "attr": attr,
@@ -128,6 +129,9 @@ class RuleBasedEntityMatcher(Pipe):
             "fuzzy_min_len": fuzzy_min_len,
             "pseudo": pseudo,
         }
+
+        self.resolve_overlap = resolve_overlap
+        self.spans_key = spans_key
 
         self._matcher = Matcher(self.nlp.vocab)
         self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
@@ -330,6 +334,6 @@ class RuleBasedEntityMatcher(Pipe):
         if self.resolve_overlap:
             ents = self._resolve_ents_overlap(ents)
 
-        doc.spans[SPANS_KEY] = ents
+        doc.spans[self.spans_key] = ents
 
         return doc
