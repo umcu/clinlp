@@ -25,7 +25,7 @@ from clinlp.ie.qualifier.qualifier import (
 from clinlp.util import clinlp_component, interval_dist
 
 _RESOURCES_DIR = importlib.resources.files("clinlp.resources")
-_DEFAULT_CONTEXT_RULES_FILE = "context_rules.json"
+_DEFAULT_CONTEXT_RULES_PATH = str(_RESOURCES_DIR.joinpath("context_rules.json"))
 
 
 class ContextRuleDirection(Enum):
@@ -126,18 +126,10 @@ class _MatchedContextPattern:
             self.scope = (scoped_start, scoped_end)
 
 
-_defaults_context_algorithm = {
-    "phrase_matcher_attr": "TEXT",
-    "load_rules": True,
-    "rules": str(_RESOURCES_DIR.joinpath(_DEFAULT_CONTEXT_RULES_FILE)),
-}
-
-
 @clinlp_component(
     name="clinlp_context_algorithm",
     requires=["doc.sents", "doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
-    default_config=_defaults_context_algorithm,
 )
 class ContextAlgorithm(QualifierDetector):
     """
@@ -150,9 +142,10 @@ class ContextAlgorithm(QualifierDetector):
     def __init__(
         self,
         nlp: Language,
-        phrase_matcher_attr: str = _defaults_context_algorithm["phrase_matcher_attr"],
-        load_rules: bool = _defaults_context_algorithm["load_rules"],  # noqa FBT001
-        rules: Optional[Union[str | dict]] = _defaults_context_algorithm["rules"],
+        *,
+        phrase_matcher_attr: str = "TEXT",
+        load_rules: bool = True,
+        rules: Optional[Union[str | dict]] = _DEFAULT_CONTEXT_RULES_PATH,
         **kwargs,
     ) -> None:
         """

@@ -2,7 +2,7 @@
 
 import statistics
 from abc import abstractmethod
-from typing import Callable, Tuple
+from typing import Callable, Optional, Tuple
 
 import torch
 from spacy import Language
@@ -16,22 +16,6 @@ from clinlp.ie.qualifier.qualifier import (
 )
 from clinlp.util import clinlp_component
 
-_defaults_qualifier_transformer = {
-    "token_window": 32,
-    "strip_entities": True,
-    "placeholder": None,
-    "prob_aggregator": statistics.mean,
-}
-
-_defaults_negation_transformer = {
-    "absence_threshold": 0.1,
-    "presence_threshold": 0.9,
-}
-_defaults_experiencer_transformer = {
-    "token_window": 64,
-    "family_threshold": 0.5,
-}
-
 
 class QualifierTransformer(QualifierDetector):
     """
@@ -44,10 +28,11 @@ class QualifierTransformer(QualifierDetector):
 
     def __init__(
         self,
-        token_window: int = _defaults_qualifier_transformer["token_window"],
-        strip_entities: bool = _defaults_qualifier_transformer["strip_entities"],  # noqa: FBT001
-        placeholder: str = _defaults_qualifier_transformer["placeholder"],
-        prob_aggregator: Callable = _defaults_qualifier_transformer["prob_aggregator"],
+        *,
+        token_window: int = 32,
+        strip_entities: bool = True,
+        placeholder: Optional[str] = None,
+        prob_aggregator: Callable = statistics.mean,
         **kwargs,
     ) -> None:
         """
@@ -274,7 +259,6 @@ class QualifierTransformer(QualifierDetector):
     name="clinlp_negation_transformer",
     requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
-    default_config=_defaults_negation_transformer,
 )
 class NegationTransformer(QualifierTransformer):
     """Transformer-based negation detector."""
@@ -292,10 +276,9 @@ class NegationTransformer(QualifierTransformer):
     def __init__(
         self,
         nlp: Language,
-        absence_threshold: float = _defaults_negation_transformer["absence_threshold"],
-        presence_threshold: float = _defaults_negation_transformer[
-            "presence_threshold"
-        ],
+        *,
+        absence_threshold: float = 0.9,
+        presence_threshold: float = 0.1,
         **kwargs,
     ) -> None:
         """
@@ -368,7 +351,6 @@ class NegationTransformer(QualifierTransformer):
     name="clinlp_experiencer_transformer",
     requires=["doc.spans"],
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
-    default_config=_defaults_experiencer_transformer,
 )
 class ExperiencerTransformer(QualifierTransformer):
     """
@@ -391,7 +373,8 @@ class ExperiencerTransformer(QualifierTransformer):
     def __init__(
         self,
         nlp: Language,
-        family_threshold: float = _defaults_experiencer_transformer["family_threshold"],
+        *,
+        family_threshold: float = 0.5,
         **kwargs,
     ) -> None:
         """

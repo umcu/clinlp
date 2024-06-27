@@ -14,10 +14,6 @@ from clinlp.util import clinlp_component
 
 SPANS_KEY = "ents"
 
-_defaults_entity_matcher = {
-    "resolve_overlap": False,
-}
-
 
 _non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
@@ -79,7 +75,6 @@ class DeprecatedEntityMatcher(Pipe):
 @clinlp_component(
     name="clinlp_rule_based_entity_matcher",
     assigns=["doc.spans"],
-    default_config=_defaults_term | _defaults_entity_matcher,
 )
 class RuleBasedEntityMatcher(Pipe):
     """
@@ -93,12 +88,13 @@ class RuleBasedEntityMatcher(Pipe):
     def __init__(
         self,
         nlp: Language,
-        attr: str = _defaults_term["attr"],
-        proximity: int = _defaults_term["proximity"],
-        fuzzy: int = _defaults_term["fuzzy"],
-        fuzzy_min_len: int = _defaults_term["fuzzy_min_len"],
-        pseudo: bool = _defaults_term["pseudo"],  # noqa: FBT001
-        resolve_overlap: bool = _defaults_entity_matcher["resolve_overlap"],  # noqa: FBT001
+        *,
+        attr: str = "TEXT",
+        proximity: int = 0,
+        fuzzy: int = 0,
+        fuzzy_min_len: int = 0,
+        pseudo: bool = False,
+        resolve_overlap: bool = False,
     ) -> None:
         """
         Create a rule-based entity matcher.
