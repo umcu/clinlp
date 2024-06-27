@@ -1,7 +1,6 @@
 """Component for rule based entity matching."""
 
 import intervaltree as ivt
-import numpy as np
 import pandas as pd
 import pydantic
 from spacy.language import Doc, Language
@@ -9,13 +8,10 @@ from spacy.matcher import Matcher, PhraseMatcher
 from spacy.pipeline import Pipe
 from spacy.tokens import Span
 
-from clinlp.ie.term import Term, _defaults_term
+from clinlp.ie.term import Term
 from clinlp.util import clinlp_component
 
 SPANS_KEY = "ents"
-
-
-_non_phrase_matcher_fields = ["proximity", "fuzzy", "fuzzy_min_len"]
 
 
 def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
@@ -42,10 +38,13 @@ def create_concept_dict(path: str, concept_col: str = "concept") -> dict:
     RuntimeError
         If a value in the input ``csv`` cannot be parsed.
     """
-    df = pd.read_csv(path).replace([np.nan], [None])
+    df = pd.read_csv(path)
 
     try:
-        df["term"] = df.apply(lambda x: Term(**x.to_dict()), axis=1)
+        df["term"] = df.apply(
+            lambda x: Term(**{k: v for k, v in x.to_dict().items() if not pd.isna(v)}),
+            axis=1,
+        )
     except pydantic.ValidationError as e:
         msg = (
             "There is a value in your input csv which cannot be"
@@ -85,6 +84,8 @@ class RuleBasedEntityMatcher(Pipe):
     matcher level are overridden by the settings at the term level.
     """
 
+    _non_phrase_matcher_fields = ("proximity", "fuzzy", "fuzzy_min_len")
+
     def __init__(
         self,
         nlp: Language,
@@ -117,7 +118,6 @@ class RuleBasedEntityMatcher(Pipe):
             Whether to resolve overlapping entities.
         """
         self.nlp = nlp
-        self.attr = attr
 
         self.resolve_overlap = resolve_overlap
 
@@ -130,7 +130,7 @@ class RuleBasedEntityMatcher(Pipe):
         }
 
         self._matcher = Matcher(self.nlp.vocab)
-        self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=self.attr)
+        self._phrase_matcher = PhraseMatcher(self.nlp.vocab, attr=attr)
 
         self._terms = {}
         self._concepts = {}
@@ -148,10 +148,11 @@ class RuleBasedEntityMatcher(Pipe):
         ``bool``
             Whether the phrase matcher can be used.
         """
+        term_defaults = Term.defaults()
+
         return all(
-            self.term_args[field] == _defaults_term[field]
-            for field in _non_phrase_matcher_fields
-            if field in self.term_args
+            self.term_args[field] == term_defaults[field]
+            for field in self._non_phrase_matcher_fields
         )
 
     def load_concepts(self, concepts: dict) -> None:
@@ -195,7 +196,7 @@ class RuleBasedEntityMatcher(Pipe):
                     term_args_with_override = {}
 
                     for field, value in self.term_args.items():
-                        if getattr(concept_term, field) is not None:
+                        if field in concept_term.fields_set:
                             term_args_with_override[field] = getattr(
                                 concept_term, field
                             )
@@ -214,7 +215,7 @@ class RuleBasedEntityMatcher(Pipe):
                 else:
                     msg = (
                         f"Not sure how to load a term with type {type(concept_term)}, "
-                        f"please provide str, list or clinlp.Term."
+                        f"please provide str, list or clinlp.ie.Term."
                     )
                     raise TypeError(msg)
 
