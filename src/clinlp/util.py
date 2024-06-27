@@ -26,7 +26,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     ``list``
         The arguments of the class's ``__init__`` method.
     ``dict``
-        The keyword arguments of the class's ``__init__`` method.
+        A mapping of arguments to their defaults, for those arguments that have one.
     """
     args = []
     defaults = {}
@@ -36,7 +36,6 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
             argspec = inspect.getfullargspec(mro_class)
             init_defaults = argspec.defaults or []
 
-            # Args
             args += argspec.args[1:]
             defaults |= dict(
                 zip(
@@ -45,7 +44,6 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
                 )
             )
 
-            # Keyword-only args
             if argspec.kwonlyargs is not None:
                 args += argspec.kwonlyargs
 
