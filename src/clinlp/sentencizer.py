@@ -5,16 +5,9 @@ from spacy.tokens import Doc, Token
 
 from clinlp.util import clinlp_component
 
-_defaults_sentencizer = {
-    "sent_end_chars": [".", "!", "?", "\n", "\r"],
-    "sent_start_punct": ["-", "*", "[", "("],
-}
-
 
 @clinlp_component(
-    name="clinlp_sentencizer",
-    assigns=["token.is_sent_start", "doc.sents"],
-    default_config=_defaults_sentencizer,
+    name="clinlp_sentencizer", assigns=["token.is_sent_start", "doc.sents"]
 )
 class Sentencizer(Pipe):
     """
@@ -30,8 +23,9 @@ class Sentencizer(Pipe):
 
     def __init__(
         self,
-        sent_end_chars: list[str] = _defaults_sentencizer["sent_end_chars"],
-        sent_start_punct: list[str] = _defaults_sentencizer["sent_start_punct"],
+        *,
+        sent_end_chars: tuple[str] = (".", "!", "?", "\n", "\r"),
+        sent_start_punct: tuple[str] = ("-", "*", "[", "("),
     ) -> None:
         r"""
         Create a sentencizer.
@@ -39,20 +33,12 @@ class Sentencizer(Pipe):
         Parameters
         ----------
         sent_end_chars
-            A list of characters that can end a sentence.
+            Any character that can end a sentence.
         sent_start_punct
             Any punctuation that is allowed to start a sentence.
         """
-        self.sent_end_chars = set(
-            _defaults_sentencizer["sent_end_chars"]
-            if sent_end_chars is None
-            else sent_end_chars
-        )
-        self.sent_start_punct = set(
-            _defaults_sentencizer["sent_start_punct"]
-            if sent_start_punct is None
-            else sent_start_punct
-        )
+        self.sent_end_chars = set(sent_end_chars)
+        self.sent_start_punct = set(sent_start_punct)
 
     def _token_can_start_sent(self, token: Token) -> bool:
         """

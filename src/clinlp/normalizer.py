@@ -7,21 +7,19 @@ from spacy.tokens import Doc
 
 from clinlp.util import clinlp_component
 
-_defaults_normalizer = {"lowercase": True, "map_non_ascii": True}
-
 
 @clinlp_component(
     name="clinlp_normalizer",
     assigns=["token.norm"],
-    default_config=_defaults_normalizer,
 )
 class Normalizer(Pipe):
     """``spaCy`` pipeline component for normalizing text."""
 
     def __init__(
         self,
-        lowercase: bool = _defaults_normalizer["lowercase"],  # noqa FBT001
-        map_non_ascii: bool = _defaults_normalizer["map_non_ascii"],  # noqa FBT001
+        *,
+        lowercase: bool = True,
+        map_non_ascii: bool = True,
     ) -> None:
         """
         Create a normalizer.

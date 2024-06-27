@@ -47,11 +47,9 @@ def component_3():
 # Arrange
 @pytest.fixture(scope="session")
 def component_4():
-    _defaults = {"setting_1": 1024}
-
-    @clinlp_component(name="test_component_4", default_config=_defaults)
+    @clinlp_component(name="test_component_4")
     class TestComponent4:
-        def __init__(self, setting_1=_defaults["setting_1"]):
+        def __init__(self, setting_1=1024):
             self.setting_1 = setting_1
 
     return TestComponent4
@@ -60,63 +58,110 @@ def component_4():
 # Arrange
 @pytest.fixture(scope="session")
 def component_5():
-    _base_defaults = {"base_arg": 1}
-    _sub_defaults = {"sub_arg": 2}
-
     class TestComponent5Base:
-        def __init__(self, base_arg=_base_defaults["base_arg"]):
+        def __init__(self, base_arg=1):
             self.base_arg = base_arg
 
-    @clinlp_component(
-        name="test_component_5", default_config=_sub_defaults | _base_defaults
-    )
+    @clinlp_component(name="test_component_5")
     class TestComponent5(TestComponent5Base):
-        def __init__(self, sub_arg=_sub_defaults["sub_arg"], **kwargs):
+        def __init__(self, sub_arg=2, **kwargs):
             self.sub_arg = sub_arg
             super().__init__(**kwargs)
 
     return TestComponent5
 
 
+# Arrange
+@pytest.fixture(scope="session")
+def component_6():
+    @clinlp_component(name="test_component_6")
+    class TestComponent6:
+        def __init__(self, setting_1, *, setting_2=11024, setting_3="max"):
+            self.setting_1 = setting_1
+            self.setting_2 = setting_2
+            self.setting_3 = setting_3
+
+    return TestComponent6
+
+
 class TestUnitGetClassInitSignature:
-    def test_args_only(self):
+    def test_no_default(self):
         # Arrange
         class MyClass:
             def __init__(self, a, b, c):
                 pass
 
         # Act
-        args, kwargs = get_class_init_signature(MyClass)
+        args, defaults = get_class_init_signature(MyClass)
 
         # Assert
         assert args == ["a", "b", "c"]
-        assert kwargs == {}
+        assert defaults == {}
 
-    def test_kwargs_only(self):
+    def test_all_default(self):
         # Arrange
         class MyClass:
             def __init__(self, a=1, b=2, c=3):
                 pass
 
         # Act
-        args, kwargs = get_class_init_signature(MyClass)
+        args, defaults = get_class_init_signature(MyClass)
 
         # Assert
-        assert args == []
-        assert kwargs == {"a": 1, "b": 2, "c": 3}
+        assert args == ["a", "b", "c"]
+        assert defaults == {"a": 1, "b": 2, "c": 3}
 
-    def test_mixed(self):
+    def test_mixed_default(self):
         # Arrange
         class MyClass:
             def __init__(self, a, b="test"):
                 pass
 
         # Act
-        args, kwargs = get_class_init_signature(MyClass)
+        args, defaults = get_class_init_signature(MyClass)
 
         # Assert
-        assert args == ["a"]
-        assert kwargs == {"b": "test"}
+        assert args == ["a", "b"]
+        assert defaults == {"b": "test"}
+
+    def test_kwonlyargs_no_default(self):
+        # Arrange
+        class MyClass:
+            def __init__(self, a, *, b, c):
+                pass
+
+        # Act
+        args, defaults = get_class_init_signature(MyClass)
+
+        # Assert
+        assert args == ["a", "b", "c"]
+        assert defaults == {}
+
+    def test_kwonlyargs_all_default(self):
+        # Arrange
+        class MyClass:
+            def __init__(self, a=0, *, b=1, c=2):
+                pass
+
+        # Act
+        args, defaults = get_class_init_signature(MyClass)
+
+        # Assert
+        assert args == ["a", "b", "c"]
+        assert defaults == {"a": 0, "b": 1, "c": 2}
+
+    def test_kwonlyargs_mixed_default(self):
+        # Arrange
+        class MyClass:
+            def __init__(self, a, *, b="test"):
+                pass
+
+        # Act
+        args, defaults = get_class_init_signature(MyClass)
+
+        # Assert
+        assert args == ["a", "b"]
+        assert defaults == {"b": "test"}
 
 
 class TestUnitClinlpComponent:
@@ -328,6 +373,57 @@ class TestUnitClinlpComponent:
     ):
         # Act
         component = nlp.add_pipe("test_component_5", config=config)
+
+        # Assert
+        assert getattr(component, attr) == expected_value
+
+    @pytest.mark.parametrize(
+        ("kwargs", "attr", "expected_value"),
+        [
+            ({"setting_1": 1024}, "setting_1", 1024),
+            ({"setting_1": 1024, "setting_2": 2048}, "setting_2", 2048),
+            (
+                {"setting_1": 1024, "setting_2": 2048, "setting_3": "min"},
+                "setting_3",
+                "min",
+            ),
+        ],
+    )
+    def test_with_kwonly_args_class(
+        self,
+        component_6,
+        kwargs,
+        attr,
+        expected_value,
+    ):
+        # Act
+        component = component_6(**kwargs)
+
+        # Assert
+        assert getattr(component, attr) == expected_value
+
+    @pytest.mark.parametrize(
+        ("config", "attr", "expected_value"),
+        [
+            ({"setting_1": 1024}, "setting_1", 1024),
+            ({"setting_1": 1024, "setting_2": 2048}, "setting_2", 2048),
+            (
+                {"setting_1": 1024, "setting_2": 2048, "setting_3": "min"},
+                "setting_3",
+                "min",
+            ),
+        ],
+    )
+    def test_with_kwonly_args_pipe(
+        self,
+        nlp,
+        component_6,  # noqa: ARG002
+        config,
+        attr,
+        expected_value,
+    ):
+        # Act
+        component = nlp.add_pipe("test_component_6", config=config)
 
         # Assert
         assert getattr(component, attr) == expected_value

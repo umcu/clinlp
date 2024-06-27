@@ -26,25 +26,31 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     ``list``
         The arguments of the class's ``__init__`` method.
     ``dict``
-        and keyword arguments of the class's ``__init__`` method.
+        A mapping of arguments to their defaults, for those arguments that have one.
     """
     args = []
-    kwargs = {}
+    defaults = {}
 
     for mro_class in cls.__mro__:
         if "__init__" in mro_class.__dict__:
             argspec = inspect.getfullargspec(mro_class)
+            init_defaults = argspec.defaults or []
 
-            if argspec.defaults is None:
-                args += argspec.args[1:]
-            else:
-                first_arg_wit_default = len(argspec.args) - len(argspec.defaults)
-                args += argspec.args[1:first_arg_wit_default]
-                kwargs |= dict(
-                    zip(argspec.args[first_arg_wit_default:], argspec.defaults)
+            args += argspec.args[1:]
+            defaults |= dict(
+                zip(
+                    argspec.args[len(argspec.args) - len(init_defaults) :],
+                    init_defaults,
                 )
+            )
 
-    return args, kwargs
+            if argspec.kwonlyargs is not None:
+                args += argspec.kwonlyargs
+
+            if argspec.kwonlydefaults is not None:
+                defaults |= argspec.kwonlydefaults
+
+    return args, defaults
 
 
 def clinlp_component(*args, **kwargs) -> Callable:
@@ -61,7 +67,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
     """
 
     def _clinlp_component(cls: Type) -> Callable[[list, dict], Type]:
-        component_args, component_kwargs = get_class_init_signature(cls)
+        component_args, component_defaults = get_class_init_signature(cls)
 
         make_component_args = component_args.copy()
 
@@ -73,15 +79,12 @@ def clinlp_component(*args, **kwargs) -> Callable:
 
         params = [
             Parameter(
-                arg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=_UnusedArgument()
+                arg,
+                kind=Parameter.POSITIONAL_OR_KEYWORD,
+                default=component_defaults.get(arg, _UnusedArgument()),
             )
             for arg in make_component_args
         ]
-
-        for kwarg, default in component_kwargs.items():
-            params.append(
-                Parameter(kwarg, kind=Parameter.POSITIONAL_OR_KEYWORD, default=default)
-            )
 
         @with_signature(Signature(params), func_name="make_component")
         def make_component(*args, **kwargs) -> Type:
@@ -92,13 +95,14 @@ def clinlp_component(*args, **kwargs) -> Callable:
             cls_kwargs = {
                 k: v
                 for k, v in kwargs.items()
-                if (k in component_args or k in component_kwargs)
-                and (not isinstance(v, _UnusedArgument))
+                if (k in component_args) and (not isinstance(v, _UnusedArgument))
             }
 
             return cls(**cls_kwargs)
 
-        Language.factory(*args, func=make_component, **kwargs)
+        Language.factory(
+            *args, func=make_component, default_config=component_defaults, **kwargs
+        )
 
         return cls
 
