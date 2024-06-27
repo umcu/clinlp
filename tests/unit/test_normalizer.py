@@ -18,6 +18,7 @@ class TestNormalizer:
             ("test", "test"),
             ("Test", "test"),
             ("TEST", "test"),
+            ("ß", "ss"),
         ],
     )
     def test_lowercase(self, input_text, expected_lowercased_text):

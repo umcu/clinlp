@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * The `clinlp_component` utility now returns the class itself, rather than a helper function for making it
 * Changed order of `direction` and `qualifier` arguments of `ContextRule`
 * Simplified default settings for `clinlp` components and `Term` class
+* Normalizer uses casefold rather than lower for normalizing text
 
 ## 0.8.0 (2024-06-03)
 
