@@ -4,6 +4,8 @@ from typing import Collection
 
 import pytest
 
+from clinlp.metrics import InfoExtractionDataset
+
 
 def load_examples(filename: str) -> list[dict]:
     with Path(filename).open("rb") as file:
@@ -13,18 +15,18 @@ def load_examples(filename: str) -> list[dict]:
 def load_qualifier_examples(
     filename: str, failures=Collection[int]
 ) -> list["pytest.param"]:
-    examples = load_examples(filename)
+    ied = InfoExtractionDataset.read_json(filename)
 
     examples_as_param = []
 
-    for example in examples:
-        marks = pytest.mark.xfail if example["example_id"] in failures else []
+    for doc in ied.docs:
+        marks = pytest.mark.xfail if doc.identifier in failures else []
 
         examples_as_param.append(
             pytest.param(
-                example["text"],
-                example["ent"],
-                id=f"qualifier_case_{example['example_id']}",
+                doc.text,
+                doc.annotations[0],
+                id=f"qualifier_case_{doc.identifier}",
                 marks=marks,
             )
         )
