@@ -108,7 +108,7 @@ class Qualifier:
     value: str = field(compare=True)
     """The value of the qualifier."""
 
-    is_default: Optional[bool] = field(default=None, compare=True)
+    is_default: Optional[bool] = field(default=None, compare=False)
     """Whether the value is the default value."""
 
     priority: int = field(default=0, compare=False)
