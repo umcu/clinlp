@@ -6,7 +6,7 @@ from tests.regression import load_examples
 
 sentencizer_cases = [
     pytest.param(example["tokens"], example["sentence_starts"], id="sentencizer_case_")
-    for example in load_examples("sentencizer_cases.json")
+    for example in load_examples("data/sentencizer_cases.json")
 ]
 
 

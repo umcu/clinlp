@@ -27,7 +27,7 @@ KNOWN_FAILURES = {
 }
 
 examples = {
-    tr: load_qualifier_examples("qualifier_cases.json", KNOWN_FAILURES[tr])
+    tr: load_qualifier_examples("data/qualifier_cases.json", KNOWN_FAILURES[tr])
     for tr in KNOWN_FAILURES
 }
 

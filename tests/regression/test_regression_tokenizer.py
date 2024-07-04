@@ -5,7 +5,7 @@ from tests.regression import load_examples
 
 tokenizer_cases = [
     pytest.param(example["text"], example["tokens"], id="tokenizer_case_")
-    for example in load_examples("tokenizer_cases.json")
+    for example in load_examples("data/tokenizer_cases.json")
 ]
 
 

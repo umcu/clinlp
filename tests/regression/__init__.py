@@ -4,11 +4,9 @@ from typing import Collection
 
 import pytest
 
-from tests.conftest import TEST_DATA_DIR
-
 
 def load_examples(filename: str) -> list[dict]:
-    with Path.open(TEST_DATA_DIR / filename, "rb") as file:
+    with Path(filename).open("rb") as file:
         return json.load(file)["examples"]
 
 

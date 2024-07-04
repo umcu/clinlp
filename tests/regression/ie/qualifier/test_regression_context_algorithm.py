@@ -7,7 +7,7 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 KNOWN_FAILURES = {9, 11, 12, 32}
 
-examples = load_qualifier_examples("qualifier_cases.json", KNOWN_FAILURES)
+examples = load_qualifier_examples("data/qualifier_cases.json", KNOWN_FAILURES)
 
 
 # Arrange
