@@ -71,7 +71,7 @@ def get_model() -> Language:
     nlp.add_pipe(
         "clinlp_context_algorithm",
         config={
-            "rules": "scripts/test_data/mock_context_rules.json",
+            "rules": "scripts/mock_context_rules.json",
             "phrase_matcher_attr": "NORM",
         },
     )
