@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## (unreleased)
+
+### Added
+
+* Loading and exporting `InfoExtractionDataset` as dictionaries or JSON files
+* Metric support for multi-class qualifiers
+
+### Changed
+
+* Made the `default` field for `Qualifier` optional
+* `InfoExtractionDataset` and `InfoExtractionMetrics` use `Qualifier` objects for qualifiers rather than `dict`
+* `InfoExtractionDataset` and `InfoExtractionMetrics` no longer track or use qualifier defaults
+
 ## 0.8.1 (2024-06-27)
 
 ### Added

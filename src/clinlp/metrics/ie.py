@@ -2,7 +2,8 @@
 
 import inspect
 import itertools
-import warnings
+import json
+import pathlib
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
 from typing import Callable, ClassVar, Iterable, Optional
@@ -12,6 +13,7 @@ from sklearn.metrics import f1_score, precision_score, recall_score
 from spacy.language import Doc
 
 from clinlp.ie import SPANS_KEY
+from clinlp.ie.qualifier import Qualifier
 
 
 @dataclass
@@ -30,7 +32,7 @@ class Annotation:
     label: str
     """The label/tag."""
 
-    qualifiers: list[dict] = field(default_factory=list)
+    qualifiers: list[Qualifier] = field(default_factory=list)
     """The applicable qualifiers."""
 
     def lstrip(self, chars: str = " ,") -> None:
@@ -85,6 +87,23 @@ class Annotation:
             "label": self.label,
         }
 
+    def to_dict(self) -> dict:
+        """
+        Convert to dictionary format.
+
+        Returns
+        -------
+        ``dict``
+            A dictionary with the items of this annotation.
+        """
+        return {
+            "text": self.text,
+            "start": self.start,
+            "end": self.end,
+            "label": self.label,
+            "qualifiers": [{"name": q.name, "value": q.value} for q in self.qualifiers],
+        }
+
     @property
     def qualifier_names(self) -> set[str]:
         """
@@ -95,9 +114,9 @@ class Annotation:
         ``set[str]``
             A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
         """
-        return {qualifier["name"] for qualifier in self.qualifiers}
+        return {qualifier.name for qualifier in self.qualifiers}
 
-    def get_qualifier_by_name(self, qualifier_name: str) -> dict:
+    def get_qualifier_by_name(self, qualifier_name: str) -> Qualifier:
         """
         Get a qualifier by name.
 
@@ -108,7 +127,7 @@ class Annotation:
 
         Returns
         -------
-        ``dict``
+        ``Qualifier``
             The qualifier with the provided name.
 
         Raises
@@ -117,7 +136,7 @@ class Annotation:
             If no qualifier with the provided name exists.
         """
         for qualifier in self.qualifiers:
-            if qualifier["name"] == qualifier_name:
+            if qualifier.name == qualifier_name:
                 return qualifier
 
         msg = f"No qualifier with name {qualifier_name}."
@@ -157,6 +176,21 @@ class Document:
         ann_filter = ann_filter or (lambda _: True)
 
         return [ann.to_nervaluate() for ann in self.annotations if ann_filter(ann)]
+
+    def to_dict(self) -> dict:
+        """
+        Convert to dictionary format.
+
+        Returns
+        -------
+        ``dict``
+            A dictionary with the items of this document.
+        """
+        return {
+            "identifier": self.identifier,
+            "text": self.text,
+            "annotations": [ann.to_dict() for ann in self.annotations],
+        }
 
     def labels(
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
@@ -214,12 +248,6 @@ class InfoExtractionDataset:
     docs: list[Document]
     """The annotated documents."""
 
-    default_qualifiers: Optional[dict[str, str]] = None
-    """
-    Mapping of qualifiers to their default value, e.g.
-    ``{"Presence": "Present"}``.
-    """
-
     _ALL_STATS: ClassVar[list] = [
         "num_docs",
         "num_annotations",
@@ -228,58 +256,9 @@ class InfoExtractionDataset:
         "qualifier_freqs",
     ]
 
-    def __post_init__(self) -> None:
-        """
-        Initialize the dataset.
-
-        Initializes the default qualifiers, from the annotations (if available) or
-        infers them from the majority class.
-        """
-        self.default_qualifiers = {}
-
-        try:
-            for doc in self.docs:
-                for annotation in doc.annotations:
-                    for qualifier in annotation.qualifiers:
-                        if qualifier["is_default"]:
-                            self.default_qualifiers[qualifier["name"]] = qualifier[
-                                "value"
-                            ]
-        except KeyError:
-            self.default_qualifiers = self.infer_default_qualifiers()
-
-    def infer_default_qualifiers(self) -> dict:
-        """
-        Infer and set Annotations' default qualifiers from majority classes.
-
-        Returns
-        -------
-        ``dict``
-            A dictionary mapping qualifier names to their default values.
-        """
-        default_qualifiers = {
-            name: max(counts, key=lambda item: counts[item])
-            for name, counts in self.qualifier_freqs().items()
-        }
-
-        warnings.warn(
-            f"Inferred the following qualifier defaults from the majority "
-            f"classes: {default_qualifiers}. ",
-            UserWarning,
-            stacklevel=2,
-        )
-
-        for doc in self.docs:
-            for annotation in doc.annotations:
-                for qualifier in annotation.qualifiers:
-                    qualifier["is_default"] = (
-                        default_qualifiers[qualifier["name"]] == qualifier["value"]
-                    )
-
-        return default_qualifiers
-
-    @staticmethod
+    @classmethod
     def from_clinlp_docs(
+        cls,
         nlp_docs: Iterable[Doc],
         ids: Optional[Iterable[str]] = None,
         spans_key: str = SPANS_KEY,
@@ -309,27 +288,16 @@ class InfoExtractionDataset:
         docs = []
 
         for doc, identifier in zip(nlp_docs, ids):
-            annotations = []
-
-            for ent in doc.spans[spans_key]:
-                qualifiers = [
-                    {
-                        "name": qualifier.name.title(),
-                        "value": qualifier.value.title(),
-                        "is_default": qualifier.is_default,
-                    }
-                    for qualifier in ent._.qualifiers
-                ]
-
-                annotations.append(
-                    Annotation(
-                        text=str(ent),
-                        start=ent.start_char,
-                        end=ent.end_char,
-                        label=ent.label_,
-                        qualifiers=qualifiers,
-                    )
+            annotations = [
+                Annotation(
+                    text=str(ent),
+                    start=ent.start_char,
+                    end=ent.end_char,
+                    label=ent.label_,
+                    qualifiers=ent._.qualifiers,
                 )
+                for ent in doc.spans[spans_key]
+            ]
 
             docs.append(
                 Document(
@@ -337,14 +305,14 @@ class InfoExtractionDataset:
                 )
             )
 
-        return InfoExtractionDataset(docs=docs)
+        return cls(docs=docs)
 
-    @staticmethod
+    @classmethod
     def from_medcattrainer(
+        cls,
         data: dict,
         *,
         strip_spans: bool = True,
-        default_qualifiers: Optional[dict[str, str]] = None,
     ) -> "InfoExtractionDataset":
         """
         Create a dataset from a ``MedCATTrainer`` export.
@@ -357,11 +325,6 @@ class InfoExtractionDataset:
         strip_spans
             Whether to remove punctuation and whitespaces from the beginning or end
             of annotations. Used to clean up accidental over-annotations.
-        default_qualifiers
-            The default qualifiers (which are not included in the ``MedCATTrainer``
-            export), e.g. ``{"Presence": "Absent", "Experiencer": "Patient"}``, by
-            default ``None``. If ``None``, will infer the default qualifiers from the
-            majority class.
 
         Returns
         -------
@@ -378,6 +341,7 @@ class InfoExtractionDataset:
             raise ValueError(msg)
 
         data = data["projects"][0]
+
         docs = []
 
         for doc in data["documents"]:
@@ -385,21 +349,13 @@ class InfoExtractionDataset:
 
             for annotation in doc["annotations"]:
                 if not annotation["deleted"]:
-                    qualifiers = []
-
-                    for qualifier in annotation["meta_anns"].values():
-                        qualifier = {
-                            "name": qualifier["name"].title(),
-                            "value": qualifier["value"].title(),
-                        }
-
-                        if default_qualifiers is not None:
-                            qualifier["is_default"] = (
-                                default_qualifiers[qualifier["name"]]
-                                == qualifier["value"]
-                            )
-
-                        qualifiers.append(qualifier)
+                    qualifiers = [
+                        Qualifier(
+                            name=qualifier["name"].title(),
+                            value=qualifier["value"].title(),
+                        )
+                        for qualifier in annotation["meta_anns"].values()
+                    ]
 
                     annotation = Annotation(
                         text=annotation["value"],
@@ -420,7 +376,55 @@ class InfoExtractionDataset:
                 )
             )
 
-        return InfoExtractionDataset(docs)
+        return cls(docs)
+
+    @classmethod
+    def from_dict(cls, data: dict) -> "InfoExtractionDataset":
+        """
+        Create a dataset from dictionary.
+
+        Parameters
+        ----------
+        data
+            The data in dictionary format.
+
+        Returns
+        -------
+        ``InfoExtractionDataset``
+            A dataset, corresponding to the provided dictionary data.
+        """
+        data = data.copy()
+
+        for doc in data["docs"]:
+            for ann in doc["annotations"]:
+                ann["qualifiers"] = [
+                    Qualifier(**qualifier) for qualifier in ann.get("qualifiers", [])
+                ]
+                doc["annotations"] = [Annotation(**ann) for ann in doc["annotations"]]
+
+        docs = [Document(**doc) for doc in data["docs"]]
+
+        return cls(docs=docs)
+
+    @classmethod
+    def read_json(cls, file: str) -> "InfoExtractionDataset":
+        """
+        Read a dataset from a ``JSON`` file.
+
+        Parameters
+        ----------
+        file
+            The path to the file.
+
+        Returns
+        -------
+        ``InfoExtractionDataset``
+            A dataset, corresponding to the data in the provided file.
+        """
+        with pathlib.Path(file).open() as f:
+            data = json.load(f)
+
+        return cls.from_dict(data)
 
     def to_nervaluate(
         self, ann_filter: Optional[Callable[[Annotation], bool]] = None
@@ -442,6 +446,29 @@ class InfoExtractionDataset:
         ann_filter = ann_filter or (lambda _: True)
 
         return [doc.to_nervaluate(ann_filter) for doc in self.docs]
+
+    def to_dict(self) -> dict:
+        """
+        Convert to dictionary format.
+
+        Returns
+        -------
+        ``dict``
+            A dictionary with the items of this dataset.
+        """
+        return {"docs": [doc.to_dict() for doc in self.docs]}
+
+    def write_json(self, file: str) -> None:
+        """
+        Write the dataset to a ``JSON`` file.
+
+        Parameters
+        ----------
+        file
+            The path to the file.
+        """
+        with pathlib.Path(file).open("w") as f:
+            json.dump(self.to_dict(), f)
 
     def num_docs(self) -> int:
         """
@@ -547,7 +574,7 @@ class InfoExtractionDataset:
         for doc in self.docs:
             for annotation in doc.annotations:
                 for qualifier in annotation.qualifiers:
-                    cntrs[qualifier["name"]].update([qualifier["value"]])
+                    cntrs[qualifier.name].update([qualifier.value])
 
         return {name: dict(counts) for name, counts in cntrs.items()}
 
@@ -699,7 +726,8 @@ class InfoExtractionMetrics:
                     "pred": ["Present", "Absent", "Absent"],
                     "misses": [
                         {"doc.identifier": 1, annotation: {"start": 0, "end": 5, "text":
-                        "test"}, true_label: "Present", pred_label: "Absent"}, ...]
+                        "test"}, true_qualifier: "Present", pred_qualifier: "Absent"},
+                        ...]
                 },
                 ...
             }
@@ -721,19 +749,19 @@ class InfoExtractionMetrics:
                 )
 
                 for name in qualifier_names:
-                    true_val = true_annotation.get_qualifier_by_name(name)["value"]
-                    pred_val = pred_annotation.get_qualifier_by_name(name)["value"]
+                    true_value = true_annotation.get_qualifier_by_name(name).value
+                    pred_value = pred_annotation.get_qualifier_by_name(name).value
 
-                    aggregation[name]["true"].append(true_val)
-                    aggregation[name]["pred"].append(pred_val)
+                    aggregation[name]["true"].append(true_value)
+                    aggregation[name]["pred"].append(pred_value)
 
-                    if true_val != pred_val:
+                    if true_value != pred_value:
                         aggregation[name]["misses"].append(
                             {
                                 "doc.identifier": true_doc.identifier,
                                 "annotation": true_annotation.to_nervaluate(),
-                                "true_qualifier": true_val,
-                                "pred_qualifier": pred_val,
+                                "true_qualifier": true_value,
+                                "pred_qualifier": pred_value,
                             }
                         )
 
@@ -763,36 +791,18 @@ class InfoExtractionMetrics:
         result = {}
 
         for name, values in aggregation.items():
-            true_unique_values = set(values["true"])
-            pred_unique_values = set(values["pred"])
-
-            if max(len(true_unique_values), len(pred_unique_values)) > 2:
-                msg = "Can oly compute metrics for binary qualifier values."
-                raise ValueError(msg)
-
-            pos_label = next(
-                val
-                for val in true_unique_values
-                if val != self.true.default_qualifiers[name]
-            )
-
-            result[name] = {
-                "metrics": {
-                    "n": len(values["true"]),
-                    "n_pos_true": sum(1 for v in values["true"] if v == pos_label),
-                    "n_pos_pred": sum(1 for v in values["pred"] if v == pos_label),
-                },
-            }
+            result[name] = {"metrics": {"n": len(values["true"])}}
 
             if misses:
                 result[name]["misses"] = values["misses"]
 
-            for (
-                metric_name,
-                metric_func,
-            ) in InfoExtractionMetrics._QUALIFIER_METRICS.items():
-                result[name]["metrics"][metric_name] = metric_func(
-                    values["true"], values["pred"], pos_label=pos_label
+            metrics = InfoExtractionMetrics._QUALIFIER_METRICS
+
+            for metric_name, metric_func in metrics.items():
+                metric_result = metric_func(
+                    values["true"], values["pred"], average="micro"
                 )
+
+                result[name]["metrics"][metric_name] = metric_result
 
         return result

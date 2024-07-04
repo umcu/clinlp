@@ -5,6 +5,7 @@ from pathlib import Path
 import pytest
 from tests.conftest import TEST_DATA_DIR
 
+from clinlp.ie.qualifier import Qualifier
 from clinlp.metrics.ie import (
     Annotation,
     Document,
@@ -72,7 +73,7 @@ class TestAnnotation:
         # Assert
         assert ann == Annotation(text="test", start=1, end=5, label="test")
 
-    def test_annotation_nervaluate(self):
+    def test_annotation_to_nervaluate(self):
         # Arrange
         ann = Annotation(text="test", start=0, end=5, label="test")
 
@@ -87,6 +88,34 @@ class TestAnnotation:
             "label": "test",
         }
 
+    def test_annotation_to_dict(self):
+        # Arrange
+        ann = Annotation(
+            text="test",
+            start=0,
+            end=4,
+            label="test",
+            qualifiers=[
+                Qualifier(name="Negation", value="Affirmed"),
+                Qualifier(name="Experiencer", value="Other"),
+            ],
+        )
+
+        # Act
+        ann_dict = ann.to_dict()
+
+        # Assert
+        assert ann_dict == {
+            "text": "test",
+            "start": 0,
+            "end": 4,
+            "label": "test",
+            "qualifiers": [
+                {"name": "Negation", "value": "Affirmed"},
+                {"name": "Experiencer", "value": "Other"},
+            ],
+        }
+
     def test_annotation_qualifier_names(self):
         # Arrange
         ann = Annotation(
@@ -95,8 +124,8 @@ class TestAnnotation:
             end=4,
             label="test",
             qualifiers=[
-                {"name": "Negation", "value": "Affirmed"},
-                {"name": "Experiencer", "value": "Other"},
+                Qualifier(name="Negation", value="Affirmed"),
+                Qualifier(name="Experiencer", value="Other"),
             ],
         )
 
@@ -108,26 +137,19 @@ class TestAnnotation:
 
     def test_annotation_get_qualifier_by_name(self):
         # Arrange
-        ann = Annotation(
-            text="test",
-            start=0,
-            end=4,
-            label="test",
-            qualifiers=[
-                {"name": "Negation", "value": "Affirmed"},
-                {"name": "Experiencer", "value": "Other"},
-            ],
-        )
+        q1 = Qualifier(name="Negation", value="Affirmed")
+        q2 = Qualifier(name="Experiencer", value="Other")
+        ann = Annotation(text="test", start=0, end=4, label="test", qualifiers=[q1, q2])
 
         # Act
         qualifier = ann.get_qualifier_by_name(qualifier_name="Experiencer")
 
         # Assert
-        assert qualifier == {"name": "Experiencer", "value": "Other"}
+        assert qualifier == q2
 
 
 class TestDocument:
-    def test_document_nervaluate(self):
+    def test_document_to_nervaluate(self):
         # Arrange
         doc = Document(
             identifier="1",
@@ -146,6 +168,42 @@ class TestDocument:
             {"text": "test1", "start": 0, "end": 5, "label": "test1"},
             {"text": "test2", "start": 10, "end": 15, "label": "test2"},
         ]
+
+    def test_document_to_dict(self):
+        # Arrange
+        doc = Document(
+            identifier="1",
+            text="test1 and test2",
+            annotations=[
+                Annotation(text="test1", start=0, end=5, label="test1"),
+                Annotation(text="test2", start=10, end=15, label="test2"),
+            ],
+        )
+
+        # Act
+        doc_dict = doc.to_dict()
+
+        # Assert
+        assert doc_dict == {
+            "identifier": "1",
+            "text": "test1 and test2",
+            "annotations": [
+                {
+                    "text": "test1",
+                    "start": 0,
+                    "end": 5,
+                    "label": "test1",
+                    "qualifiers": [],
+                },
+                {
+                    "text": "test2",
+                    "start": 10,
+                    "end": 15,
+                    "label": "test2",
+                    "qualifiers": [],
+                },
+            ],
+        }
 
     def test_document_labels(self):
         # Arrange
@@ -210,18 +268,6 @@ class TestDocument:
 
 @pytest.mark.filterwarnings("ignore:Inferred.*:UserWarning")
 class TestDataset:
-    def test_infer_default_qualifiers(self, mctrainer_dataset):
-        # Act
-        default_qualifiers = mctrainer_dataset.infer_default_qualifiers()
-
-        # Assert
-        assert default_qualifiers == {
-            "Negation": "Affirmed",
-            "Experiencer": "Patient",
-            "Temporality": "Current",
-            "Plausibility": "Plausible",
-        }
-
     def test_dataset_from_clinlp_docs(self, clinlp_docs):
         # Act
         ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
@@ -254,16 +300,14 @@ class TestDataset:
         ied = InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs)
 
         # Act
-        qualifiers = sorted(
-            ied.docs[0].annotations[0].qualifiers, key=lambda q: q["name"]
-        )
+        qualifiers = sorted(ied.docs[0].annotations[0].qualifiers, key=lambda q: q.name)
 
         # Assert
         assert qualifiers == [
-            {"name": "Experiencer", "value": "Patient", "is_default": True},
-            {"name": "Negation", "value": "Negated", "is_default": False},
-            {"name": "Plausibility", "value": "Plausible", "is_default": True},
-            {"name": "Temporality", "value": "Current", "is_default": True},
+            Qualifier(name="Experiencer", value="Patient", is_default=True),
+            Qualifier(name="Negation", value="Negated", is_default=False),
+            Qualifier(name="Plausibility", value="Plausible", is_default=True),
+            Qualifier(name="Temporality", value="Current", is_default=True),
         ]
 
     def test_dataset_from_medcattrainer_docs(self, mctrainer_data):
@@ -302,13 +346,73 @@ class TestDataset:
 
         # Assert
         assert qualifiers == [
-            {"name": "Temporality", "value": "Current", "is_default": True},
-            {"name": "Plausibility", "value": "Plausible", "is_default": True},
-            {"name": "Experiencer", "value": "Patient", "is_default": True},
-            {"name": "Negation", "value": "Negated", "is_default": False},
+            Qualifier(name="Temporality", value="Current"),
+            Qualifier(name="Plausibility", value="Plausible"),
+            Qualifier(name="Experiencer", value="Patient"),
+            Qualifier(name="Negation", value="Negated"),
         ]
 
-    def test_dataset_nervaluate(self):
+    def test_dataset_from_dict(self):
+        # Arrange
+        data = {
+            "docs": [
+                {
+                    "identifier": "1",
+                    "text": "test1",
+                    "annotations": [
+                        {
+                            "text": "test1",
+                            "start": 0,
+                            "end": 5,
+                            "label": "test1",
+                            "qualifiers": [
+                                {"name": "Negation", "value": "Negated"},
+                            ],
+                        },
+                    ],
+                },
+                {
+                    "identifier": "2",
+                    "text": "test2",
+                    "annotations": [
+                        {
+                            "text": "test2",
+                            "start": 0,
+                            "end": 5,
+                            "label": "test2",
+                        },
+                    ],
+                },
+            ]
+        }
+
+        # Act
+        ied = InfoExtractionDataset.from_dict(data)
+
+        # Assert
+        assert len(ied.docs) == 2
+        assert ied.docs[0].text == "test1"
+        assert len(ied.docs[0].annotations) == 1
+        assert ied.docs[0].annotations[0] == Annotation(
+            text="test1",
+            start=0,
+            end=5,
+            label="test1",
+            qualifiers=[
+                Qualifier(name="Negation", value="Negated"),
+            ],
+        )
+        assert ied.docs[1].text == "test2"
+        assert len(ied.docs[1].annotations) == 1
+        assert ied.docs[1].annotations[0] == Annotation(
+            text="test2",
+            start=0,
+            end=5,
+            label="test2",
+            qualifiers=[],
+        )
+
+    def test_dataset_to_nervaluate(self):
         # Arrange
         ied = InfoExtractionDataset(
             docs=[
@@ -322,11 +426,7 @@ class TestDataset:
                             end=5,
                             label="test1",
                             qualifiers=[
-                                {
-                                    "name": "Negation",
-                                    "value": "Negated",
-                                    "is_default": False,
-                                }
+                                Qualifier(name="Negation", value="Negated"),
                             ],
                         ),
                     ],
@@ -342,10 +442,10 @@ class TestDataset:
         )
 
         # Act
-        nervaluate = ied.to_nervaluate()
+        to_nervaluate = ied.to_nervaluate()
 
         # Assert
-        assert nervaluate == [
+        assert to_nervaluate == [
             [{"text": "test1", "start": 0, "end": 5, "label": "test1"}],
             [{"text": "test2", "start": 0, "end": 5, "label": "test2"}],
         ]
@@ -353,7 +453,7 @@ class TestDataset:
     def test_dataset_to_nervaluate_with_filter(self, mctrainer_dataset):
         # Arrange
         def ann_filter(ann):
-            return any(not qualifier["is_default"] for qualifier in ann.qualifiers)
+            return any(qualifier.value == "Negated" for qualifier in ann.qualifiers)
 
         # Act
         to_nervaluate = mctrainer_dataset.to_nervaluate(ann_filter=ann_filter)
@@ -363,6 +463,28 @@ class TestDataset:
             {"end": 23, "label": "C0002871_anemie", "start": 17, "text": "anemie"}
         ]
         assert to_nervaluate[1] == []
+
+    def test_dataset_to_dict(self, mctrainer_dataset):
+        # Act
+        ied_docs = mctrainer_dataset.to_dict()["docs"]
+
+        # Assert
+        assert len(ied_docs) == 14
+        assert ied_docs[0]["identifier"] == "doc_0"
+        assert ied_docs[0]["text"] == "patient had geen anemie"
+        assert len(ied_docs[0]["annotations"]) == 1
+        assert ied_docs[0]["annotations"][0] == {
+            "text": "anemie",
+            "start": 17,
+            "end": 23,
+            "label": "C0002871_anemie",
+            "qualifiers": [
+                {"name": "Temporality", "value": "Current"},
+                {"name": "Plausibility", "value": "Plausible"},
+                {"name": "Experiencer", "value": "Patient"},
+                {"name": "Negation", "value": "Negated"},
+            ],
+        }
 
     def test_num_docs(self, mctrainer_dataset):
         # Act
@@ -525,7 +647,8 @@ class TestMetrics:
         iem = InfoExtractionMetrics(mctrainer_dataset, clinlp_dataset)
 
         def filter_default(ann):
-            return all(qualifier["is_default"] for qualifier in ann.qualifiers)
+            defaults = {"Affirmed", "Patient", "Current", "Plausible"}
+            return all(qualifier.value in defaults for qualifier in ann.qualifiers)
 
         # Act
         metrics = iem.entity_metrics(ann_filter=filter_default)
@@ -562,35 +685,27 @@ class TestMetrics:
         # Assert
         assert metrics["Negation"]["metrics"] == {
             "n": 10,
-            "n_pos_pred": 2,
-            "n_pos_true": 2,
             "precision": 1.0,
             "recall": 1.0,
             "f1": 1.0,
         }
         assert metrics["Experiencer"]["metrics"] == {
             "n": 10,
-            "n_pos_pred": 1,
-            "n_pos_true": 1,
             "precision": 1.0,
             "recall": 1.0,
             "f1": 1.0,
         }
         assert metrics["Plausibility"]["metrics"] == {
             "n": 10,
-            "n_pos_pred": 3,
-            "n_pos_true": 2,
-            "precision": 0.6666666666666666,
-            "recall": 1.0,
-            "f1": 0.8,
+            "precision": 0.9,
+            "recall": 0.9,
+            "f1": 0.9,
         }
         assert metrics["Temporality"]["metrics"] == {
             "n": 10,
-            "n_pos_pred": 1,
-            "n_pos_true": 2,
-            "precision": 1.0,
-            "recall": 0.5,
-            "f1": 0.6666666666666666,
+            "precision": 0.9,
+            "recall": 0.9,
+            "f1": 0.9,
         }
 
     def test_qualifier_metrics_misses(self, mctrainer_dataset, clinlp_dataset):
