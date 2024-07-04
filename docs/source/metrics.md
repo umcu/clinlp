@@ -43,6 +43,43 @@ clinlp_dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs)
 
 ```
 
+#### From `dict`
+
+```python
+from clinlp.metrics import InfoExtractionDataset
+
+dataset_dict = {
+    "documents": [
+        {
+            "identifier": "...",
+            "text": "...",
+            "annotations": 
+            {
+                "text": "...",
+                "start": 0, 
+                "end": 10,
+                "label": "...",
+                "qualifiers": {
+                    "...": "...",
+                    ...
+                }
+            }, ...
+        },
+        ...
+    ]
+}
+```
+
+#### From `json`
+
+```python
+from clinlp.metrics import InfoExtractionDataset
+
+json_dataset = InfoExtractionDataset.read_json("dataset.json")
+```
+
+Note that this method assumes the JSON file has been written by `InfoExtractionDataset.write_json`. We use a simple custom `json` format with all the information present, but please inform us if you know a more open format or standard to use here.
+
 #### From other
 
 If your data is in a different format, you can manually convert it by creating `Annotation` and `Document` objects, and add those to a `InfoExtractionDataset`. Below are some pointers on how to create the appropriate objects:
