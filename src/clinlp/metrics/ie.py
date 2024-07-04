@@ -468,7 +468,7 @@ class InfoExtractionDataset:
             The path to the file.
         """
         with pathlib.Path(file).open("w") as f:
-            json.dump(self.to_dict(), f)
+            json.dump(self.to_dict(), f, indent=4)
 
     def num_docs(self) -> int:
         """
