@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 * Made the `default` field for `Qualifier` optional
 * `InfoExtractionDataset` and `InfoExtractionMetrics` use `Qualifier` objects for qualifiers rather than `dict`
 * `InfoExtractionDataset` and `InfoExtractionMetrics` no longer track or use qualifier defaults
+* Moved test cases to data directory in more open format, so they can be used by others
 
 ## 0.8.1 (2024-06-27)
 
