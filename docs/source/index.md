@@ -13,6 +13,7 @@ Introduction <introduction>
 Installation <installation>
 Getting started <getting_started>
 Roadmap <roadmap>
+Data <data>
 Citing <citing>
 ```
 

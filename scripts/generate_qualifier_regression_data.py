@@ -60,16 +60,25 @@ if __name__ == "__main__":
 
         ent = ents[0]
 
+        qualifiers = []
+
+        for qualifier in ent._.qualifiers:
+            name, value = qualifier.split(".", 1)
+            qualifiers.append({"name": name, "value": value})
+
         data.append(
             {
+                "identifier": start_example_id + next(cntr),
                 "text": text,
-                "example_id": start_example_id + next(cntr),
-                "ent": {
-                    "start": ent.start,
-                    "end": ent.end,
-                    "text": str(ent),
-                    "qualifiers": list(ent._.qualifiers_str),
-                },
+                "annotations": [
+                    {
+                        "text": str(ent),
+                        "start": ent.start,
+                        "end": ent.end,
+                        "label": "entity",
+                        "qualifiers": qualifiers,
+                    }
+                ],
             }
         )
 

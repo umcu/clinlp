@@ -5,35 +5,35 @@
     {
       "name": "Experiencer",
       "values": [
-        "PATIENT",
-        "OTHER"
+        "Patient",
+        "Other"
       ]
     },
     {
       "name": "Negation",
       "values": [
-        "AFFIRMED",
-        "NEGATED"
+        "Affirmed",
+        "Negated"
       ]
     },
     {
       "name": "Plausibility",
       "values": [
-        "PLAUSIBLE",
-        "HYPOTHETICAL"
+        "Plausible",
+        "Hypothetical"
       ]
     },
     {
       "name": "Temporality",
       "values": [
-        "CURRENT",
-        "HISTORICAL"
+        "Current",
+        "Historical"
       ]
     }
   ],
   "rules": [
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -214,7 +214,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "following",
       "max_scope": 5,
       "patterns": [
@@ -277,7 +277,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "pseudo",
       "patterns": [
         "door familie",
@@ -485,7 +485,7 @@
       ]
     },
     {
-      "qualifier": "Experiencer.OTHER",
+      "qualifier": "Experiencer.Other",
       "direction": "termination",
       "patterns": [
         "beslist",
@@ -511,7 +511,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -581,7 +581,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "following",
       "max_scope": 5,
       "patterns": [
@@ -620,7 +620,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "pseudo",
       "patterns": [
         "geen afname",
@@ -654,7 +654,7 @@
       ]
     },
     {
-      "qualifier": "Negation.NEGATED",
+      "qualifier": "Negation.Negated",
       "direction": "termination",
       "patterns": [
         "aangezien er",
@@ -742,7 +742,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -807,7 +807,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "following",
       "max_scope": 4,
       "patterns": [
@@ -841,7 +841,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "pseudo",
       "patterns": [
         "als baby",
@@ -882,7 +882,7 @@
       ]
     },
     {
-      "qualifier": "Plausibility.HYPOTHETICAL",
+      "qualifier": "Plausibility.Hypothetical",
       "direction": "termination",
       "patterns": [
         "als gevolg van",
@@ -895,7 +895,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "preceding",
       "max_scope": 5,
       "patterns": [
@@ -937,7 +937,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "following",
       "max_scope": 5,
       "patterns": [
@@ -1044,7 +1044,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "pseudo",
       "patterns": [
         "blanco psychiatrische vg",
@@ -1156,7 +1156,7 @@
       ]
     },
     {
-      "qualifier": "Temporality.HISTORICAL",
+      "qualifier": "Temporality.Historical",
       "direction": "termination",
       "patterns": [
         "actueel",
