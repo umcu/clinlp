@@ -2,7 +2,7 @@
 
 The `clinlp` repository contains some open data files with real (or semi-real) examples. Some of these are used by `clinlp` (for example in the tests), but they are also available for others to use.
 
-The files are located at: https://github.com/umcu/clinlp/tree/main/data
+The files are located at the [Data directory in the GitHub repo](https://github.com/umcu/clinlp/tree/main/data).
 
 ## `tokenizer_cases.json`
 
