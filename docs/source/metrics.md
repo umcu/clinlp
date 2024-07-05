@@ -14,6 +14,19 @@ pip install clinlp[metrics]
 
 An `InfoExtractionDataset` contains a collection of annotated documents, regardless of whether the annotations were collected manually, or from an NLP tool.
 
+#### From `clinlp`
+
+```python
+from clinlp.metrics import InfoExtractionDataset
+import clinlp
+import spacy
+
+# assumes a model (nlp) and iterable of texts (texts) exists
+nlp_docs = nlp.pipe(texts)
+
+clinlp_dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs)
+```
+
 #### From `MedCATTrainer`
 
 The `MedCATTrainer` interface allows exporting annotated data in a `JSON` format. It can be converted to a `InfoExtractionDataset` as follows:
@@ -29,26 +42,12 @@ with Path('medcattrainer_export.json').open('rb') as f:
 mct_dataset = InfoExtractionDataset.from_medcattrainer(mctrainer_data)
 ```
 
-#### From `clinlp`
-
-```python
-from clinlp.metrics import InfoExtractionDataset
-import clinlp
-import spacy
-
-# assumes a model (nlp) and iterable of texts (texts) exists
-nlp_docs = nlp.pipe(texts)
-
-clinlp_dataset = InfoExtractionDataset.from_clinlp_docs(nlp_docs)
-
-```
-
 #### From `dict`
 
 ```python
 from clinlp.metrics import InfoExtractionDataset
 
-dataset_dict = {
+data = {
     "documents": [
         {
             "identifier": "...",
@@ -56,8 +55,8 @@ dataset_dict = {
             "annotations": 
             {
                 "text": "...",
-                "start": 0, 
-                "end": 10,
+                "start": ..., 
+                "end": ...,
                 "label": "...",
                 "qualifiers": {
                     "...": "...",
@@ -68,6 +67,8 @@ dataset_dict = {
         ...
     ]
 }
+
+dict_dataset = InfoExtractionDataset.from_dict(data)
 ```
 
 #### From `json`
@@ -78,7 +79,7 @@ from clinlp.metrics import InfoExtractionDataset
 json_dataset = InfoExtractionDataset.read_json("dataset.json")
 ```
 
-Note that this method assumes the JSON file has been written by `InfoExtractionDataset.write_json`. We use a simple custom `json` format with all the information present, but please inform us if you know a more open format or standard to use here.
+Note that this method assumes a JSON file has been written by `InfoExtractionDataset.write_json`. We use a simple custom `json` format with all the information present, but please inform us if you know a more open format or standard to use here.
 
 #### From other
 
