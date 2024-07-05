@@ -96,13 +96,19 @@ class Annotation:
         ``dict``
             A dictionary with the items of this annotation.
         """
-        return {
+        output = {
             "text": self.text,
             "start": self.start,
             "end": self.end,
             "label": self.label,
-            "qualifiers": [{"name": q.name, "value": q.value} for q in self.qualifiers],
         }
+
+        if self.qualifiers is not None:
+            output["qualifiers"] = [
+                {"name": q.name, "value": q.value} for q in self.qualifiers
+            ]
+
+        return output
 
     @property
     def qualifier_names(self) -> set[str]:

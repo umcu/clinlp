@@ -175,7 +175,13 @@ class TestDocument:
             identifier="1",
             text="test1 and test2",
             annotations=[
-                Annotation(text="test1", start=0, end=5, label="test1"),
+                Annotation(
+                    text="test1",
+                    start=0,
+                    end=5,
+                    label="test1",
+                    qualifiers=[Qualifier(name="Negation", value="Negated")],
+                ),
                 Annotation(text="test2", start=10, end=15, label="test2"),
             ],
         )
@@ -193,14 +199,13 @@ class TestDocument:
                     "start": 0,
                     "end": 5,
                     "label": "test1",
-                    "qualifiers": [],
+                    "qualifiers": [{"name": "Negation", "value": "Negated"}],
                 },
                 {
                     "text": "test2",
                     "start": 10,
                     "end": 15,
                     "label": "test2",
-                    "qualifiers": [],
                 },
             ],
         }
@@ -409,7 +414,6 @@ class TestDataset:
             start=0,
             end=5,
             label="test2",
-            qualifiers=[],
         )
 
     def test_dataset_to_nervaluate(self):
