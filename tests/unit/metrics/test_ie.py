@@ -16,19 +16,6 @@ from clinlp.metrics.ie import (
 
 # Arrange
 @pytest.fixture()
-def mctrainer_data():
-    with Path.open(TEST_DATA_DIR / "medcattrainer_export.json", "rb") as f:
-        return json.load(f)
-
-
-# Arrange
-@pytest.fixture()
-def mctrainer_dataset(mctrainer_data):
-    return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
-
-
-# Arrange
-@pytest.fixture()
 def clinlp_docs():
     with Path.open(TEST_DATA_DIR / "clinlp_docs.pickle", "rb") as f:
         return pickle.load(f)
@@ -40,6 +27,19 @@ def clinlp_dataset(clinlp_docs):
     ids = [f"doc_{x}" for x in range(15)]
 
     return InfoExtractionDataset.from_clinlp_docs(nlp_docs=clinlp_docs, ids=ids)
+
+
+# Arrange
+@pytest.fixture()
+def mctrainer_data():
+    with Path.open(TEST_DATA_DIR / "medcattrainer_export.json", "rb") as f:
+        return json.load(f)
+
+
+# Arrange
+@pytest.fixture()
+def mctrainer_dataset(mctrainer_data):
+    return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
 
 class TestAnnotation:
