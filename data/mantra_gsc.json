@@ -1,0 +1,4859 @@
+{
+    "description": "A re-release of the Dutch part of Mantra GSC, that can be used for evaluating UMLS linking algorithms. For more detail on the original dataset, see: https://doi.org/10.1093/jamia/ocv037.",
+    "docs": [
+        {
+            "identifier": "d2126935",
+            "text": "De macht van de verbeelding.",
+            "annotations": [
+                {
+                    "text": "verbeelding",
+                    "start": 16,
+                    "end": 27,
+                    "label": "C0020913"
+                },
+                {
+                    "text": "macht",
+                    "start": 3,
+                    "end": 8,
+                    "label": "C0032863"
+                }
+            ]
+        },
+        {
+            "identifier": "d13622835",
+            "text": "De betekenis van de elektro-encefalografie voor de diagnose en de lokalisatie van hersengezwellen.",
+            "annotations": [
+                {
+                    "text": "elektro-encefalografie",
+                    "start": 20,
+                    "end": 42,
+                    "label": "C0013819"
+                },
+                {
+                    "text": "diagnose",
+                    "start": 51,
+                    "end": 59,
+                    "label": "C0011900"
+                },
+                {
+                    "text": "hersengezwellen",
+                    "start": 82,
+                    "end": 97,
+                    "label": "C0006118"
+                }
+            ]
+        },
+        {
+            "identifier": "d10923162",
+            "text": "De ziekte van Von Hippel-Lindau.",
+            "annotations": [
+                {
+                    "text": "ziekte van Von Hippel-Lindau",
+                    "start": 3,
+                    "end": 31,
+                    "label": "C0019562"
+                }
+            ]
+        },
+        {
+            "identifier": "d9485962",
+            "text": "Het benchmarken.",
+            "annotations": []
+        },
+        {
+            "identifier": "d3217970",
+            "text": "Advies van de NRV en het CvZ over de geriatrische afdelingen in algemene ziekenhuizen.",
+            "annotations": [
+                {
+                    "text": "geriatrische",
+                    "start": 37,
+                    "end": 49,
+                    "label": "C1999167"
+                },
+                {
+                    "text": "algemene ziekenhuizen",
+                    "start": 64,
+                    "end": 85,
+                    "label": "C0020008"
+                }
+            ]
+        },
+        {
+            "identifier": "d2300232",
+            "text": "Chirurgie bij kinderen. De noodzaak van concentratie; een advies van de Gezondheidsraad.",
+            "annotations": [
+                {
+                    "text": "Chirurgie",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0543467"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 14,
+                    "end": 22,
+                    "label": "C0008059"
+                }
+            ]
+        },
+        {
+            "identifier": "d11819870",
+            "text": "Automutilatie.",
+            "annotations": [
+                {
+                    "text": "Automutilatie",
+                    "start": 0,
+                    "end": 13,
+                    "label": "C0036601"
+                }
+            ]
+        },
+        {
+            "identifier": "d3574541",
+            "text": "Klinisch-genetische aspecten, vroegtijdige opsporing en neurochirurgische behandeling van familiaire intracrani\u00eble aneurysmata.",
+            "annotations": [
+                {
+                    "text": "genetische aspecten",
+                    "start": 9,
+                    "end": 28,
+                    "label": "C0017399"
+                },
+                {
+                    "text": "vroegtijdige opsporing",
+                    "start": 30,
+                    "end": 52,
+                    "label": "C0596473"
+                },
+                {
+                    "text": "intracrani\u00eble aneurysmata",
+                    "start": 101,
+                    "end": 126,
+                    "label": "C0007766"
+                },
+                {
+                    "text": "familiaire",
+                    "start": 90,
+                    "end": 100,
+                    "label": "C0015576"
+                },
+                {
+                    "text": "neurochirurgische behandeling",
+                    "start": 56,
+                    "end": 85,
+                    "label": "C0524850"
+                }
+            ]
+        },
+        {
+            "identifier": "d287879",
+            "text": "Maatregelen tegen de schadelijke invloed van ultraviolette straling in de tandheelkunde.",
+            "annotations": [
+                {
+                    "text": "ultraviolette straling",
+                    "start": 45,
+                    "end": 67,
+                    "label": "C0041625"
+                }
+            ]
+        },
+        {
+            "identifier": "d3824336",
+            "text": "Specialisatie in de diergeneeskunde van de landbouwhuisdieren?",
+            "annotations": [
+                {
+                    "text": "landbouwhuisdieren",
+                    "start": 43,
+                    "end": 61,
+                    "label": "C0162318"
+                }
+            ]
+        },
+        {
+            "identifier": "d9036354",
+            "text": "Kosteneffectiviteit van influenzavaccinatie in Nederland.",
+            "annotations": [
+                {
+                    "text": "Nederland",
+                    "start": 47,
+                    "end": 56,
+                    "label": "C0027778"
+                },
+                {
+                    "text": "influenzavaccinatie",
+                    "start": 24,
+                    "end": 43,
+                    "label": "C0042200"
+                }
+            ]
+        },
+        {
+            "identifier": "d12811973",
+            "text": "Intensivecaregeneeskunde in Nederland, 1997-2001. I. Pati\u00ebntenpopulatie en resultaten van behandeling.",
+            "annotations": [
+                {
+                    "text": "Nederland",
+                    "start": 28,
+                    "end": 37,
+                    "label": "C0027778"
+                },
+                {
+                    "text": "Pati\u00ebnten",
+                    "start": 53,
+                    "end": 62,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "populatie",
+                    "start": 62,
+                    "end": 71,
+                    "label": "C1257890"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 90,
+                    "end": 101,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "Intensivecare",
+                    "start": 0,
+                    "end": 13,
+                    "label": "C0085559"
+                }
+            ]
+        },
+        {
+            "identifier": "d11103260",
+            "text": "Indirecte traumatisering bij partners van oorlogsgetroffenen.",
+            "annotations": [
+                {
+                    "text": "partners",
+                    "start": 29,
+                    "end": 37,
+                    "label": "C0162409"
+                }
+            ]
+        },
+        {
+            "identifier": "d4842683",
+            "text": "De radiologische evaluatie van het velofaryngeaal mechanisme fij neusspraak door middel van 70 mm--camera",
+            "annotations": [
+                {
+                    "text": "evaluatie",
+                    "start": 17,
+                    "end": 26,
+                    "label": "C1261322"
+                },
+                {
+                    "text": "neus",
+                    "start": 65,
+                    "end": 69,
+                    "label": "C0028429"
+                },
+                {
+                    "text": "spraak",
+                    "start": 69,
+                    "end": 75,
+                    "label": "C0037817"
+                },
+                {
+                    "text": "camera",
+                    "start": 99,
+                    "end": 105,
+                    "label": "C0179533"
+                }
+            ]
+        },
+        {
+            "identifier": "d17874635",
+            "text": "Pyelonefritis in de zwangerschap: een bedreiging voor moeder en kind.",
+            "annotations": [
+                {
+                    "text": "Pyelonefritis",
+                    "start": 0,
+                    "end": 13,
+                    "label": "C0034186"
+                },
+                {
+                    "text": "zwangerschap",
+                    "start": 20,
+                    "end": 32,
+                    "label": "C0032961"
+                },
+                {
+                    "text": "moeder",
+                    "start": 54,
+                    "end": 60,
+                    "label": "C0026591"
+                },
+                {
+                    "text": "kind",
+                    "start": 64,
+                    "end": 68,
+                    "label": "C0008059"
+                }
+            ]
+        },
+        {
+            "identifier": "d7992305",
+            "text": "Immunotherapie van tumoren bij landbouwhuisdieren.",
+            "annotations": [
+                {
+                    "text": "Immunotherapie",
+                    "start": 0,
+                    "end": 14,
+                    "label": "C0021083"
+                },
+                {
+                    "text": "tumoren",
+                    "start": 19,
+                    "end": 26,
+                    "label": "C0027651"
+                },
+                {
+                    "text": "landbouwhuisdieren",
+                    "start": 31,
+                    "end": 49,
+                    "label": "C0162318"
+                }
+            ]
+        },
+        {
+            "identifier": "d246627",
+            "text": "En klinische les over \"de klinische les\".",
+            "annotations": []
+        },
+        {
+            "identifier": "d2950329",
+            "text": "Claudicatio intermittens.",
+            "annotations": [
+                {
+                    "text": "Claudicatio intermittens",
+                    "start": 0,
+                    "end": 24,
+                    "label": "C0021775"
+                }
+            ]
+        },
+        {
+            "identifier": "d2716896",
+            "text": "De cel in het organisme; over leven en dood.",
+            "annotations": [
+                {
+                    "text": "organisme",
+                    "start": 14,
+                    "end": 23,
+                    "label": "C0029235"
+                },
+                {
+                    "text": "dood",
+                    "start": 39,
+                    "end": 43,
+                    "label": "C0011065"
+                },
+                {
+                    "text": "cel",
+                    "start": 3,
+                    "end": 6,
+                    "label": "C0007634"
+                },
+                {
+                    "text": "cel",
+                    "start": 3,
+                    "end": 6,
+                    "label": "C1269647"
+                }
+            ]
+        },
+        {
+            "identifier": "d2768178",
+            "text": "Osteoid osteoma van de wervelzuil.",
+            "annotations": [
+                {
+                    "text": "Osteoid osteoma",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0029441"
+                },
+                {
+                    "text": "wervelzuil",
+                    "start": 23,
+                    "end": 33,
+                    "label": "C0037949"
+                },
+                {
+                    "text": "wervelzuil",
+                    "start": 23,
+                    "end": 33,
+                    "label": "C1267072"
+                },
+                {
+                    "text": "wervelzuil",
+                    "start": 23,
+                    "end": 33,
+                    "label": "C1280065"
+                }
+            ]
+        },
+        {
+            "identifier": "d8649533",
+            "text": "Verontrustende toename van intoxicaties door deptropine.",
+            "annotations": [
+                {
+                    "text": "intoxicaties",
+                    "start": 27,
+                    "end": 39,
+                    "label": "C0728899"
+                },
+                {
+                    "text": "deptropine",
+                    "start": 45,
+                    "end": 55,
+                    "label": "C0057763"
+                }
+            ]
+        },
+        {
+            "identifier": "d12268700",
+            "text": "Door huwelijkssluiting gewettigde kinderen, 1977-1986.",
+            "annotations": [
+                {
+                    "text": "huwelijkssluiting",
+                    "start": 5,
+                    "end": 22,
+                    "label": "C0024841"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 34,
+                    "end": 42,
+                    "label": "C0008059"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 34,
+                    "end": 42,
+                    "label": "C0680063"
+                }
+            ]
+        },
+        {
+            "identifier": "d8121516",
+            "text": "Foliumzuur voor alle vrouwen die een kind wensen: een onjuist advies.",
+            "annotations": [
+                {
+                    "text": "vrouwen",
+                    "start": 21,
+                    "end": 28,
+                    "label": "C0043210"
+                },
+                {
+                    "text": "Foliumzuur",
+                    "start": 0,
+                    "end": 10,
+                    "label": "C0016410"
+                },
+                {
+                    "text": "kind",
+                    "start": 37,
+                    "end": 41,
+                    "label": "C0008059"
+                },
+                {
+                    "text": "advies",
+                    "start": 62,
+                    "end": 68,
+                    "label": "C0150600"
+                }
+            ]
+        },
+        {
+            "identifier": "d7191949",
+            "text": "Perforatie van de uteruswand door koperhoudende IUD's.",
+            "annotations": [
+                {
+                    "text": "koper",
+                    "start": 34,
+                    "end": 39,
+                    "label": "C0009968"
+                },
+                {
+                    "text": "IUD's",
+                    "start": 48,
+                    "end": 53,
+                    "label": "C0021900"
+                },
+                {
+                    "text": "Perforatie van de uteruswand",
+                    "start": 0,
+                    "end": 28,
+                    "label": "C0042139"
+                }
+            ]
+        },
+        {
+            "identifier": "d7158187",
+            "text": "Chirurgische ervaringen met traumatische diafragmaruptuur.",
+            "annotations": [
+                {
+                    "text": "Chirurgische",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0543467"
+                },
+                {
+                    "text": "traumatische diafragmaruptuur",
+                    "start": 28,
+                    "end": 57,
+                    "label": "C0340166"
+                }
+            ]
+        },
+        {
+            "identifier": "d14181264",
+            "text": "INFECTIEUZE HEPATITIS: BESMETTELIJKHEID EN GEWONE IMMUNITEIT.",
+            "annotations": [
+                {
+                    "text": "GEWONE IMMUNITEIT",
+                    "start": 43,
+                    "end": 60,
+                    "label": "C0678209"
+                },
+                {
+                    "text": "INFECTIEUZE HEPATITIS",
+                    "start": 0,
+                    "end": 21,
+                    "label": "C0400894"
+                }
+            ]
+        },
+        {
+            "identifier": "d7830823",
+            "text": "Prijzen en waarden.",
+            "annotations": []
+        },
+        {
+            "identifier": "d6064785",
+            "text": "Immunologische en genetische aspecten van pernicieuze anemie.",
+            "annotations": [
+                {
+                    "text": "pernicieuze anemie",
+                    "start": 42,
+                    "end": 60,
+                    "label": "C0002892"
+                },
+                {
+                    "text": "genetische aspecten",
+                    "start": 18,
+                    "end": 37,
+                    "label": "C0017399"
+                }
+            ]
+        },
+        {
+            "identifier": "d5688680",
+            "text": "De tijdelijk vergrote nier bij de pasgeborene. De acute niervenetrombose.",
+            "annotations": [
+                {
+                    "text": "pasgeborene",
+                    "start": 34,
+                    "end": 45,
+                    "label": "C0021289"
+                },
+                {
+                    "text": "vergrote nier",
+                    "start": 13,
+                    "end": 26,
+                    "label": "C0542518"
+                },
+                {
+                    "text": "niervenetrombose",
+                    "start": 56,
+                    "end": 72,
+                    "label": "C0238457"
+                }
+            ]
+        },
+        {
+            "identifier": "d7935925",
+            "text": "Gebruik van sumatriptan (Imigran) bij een pati\u00ebnte met coronaire spasmus.",
+            "annotations": [
+                {
+                    "text": "sumatriptan",
+                    "start": 12,
+                    "end": 23,
+                    "label": "C0075632"
+                },
+                {
+                    "text": "Imigran",
+                    "start": 25,
+                    "end": 32,
+                    "label": "C0678150"
+                },
+                {
+                    "text": "pati\u00ebnte",
+                    "start": 42,
+                    "end": 50,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "coronaire spasmus",
+                    "start": 55,
+                    "end": 72,
+                    "label": "C0010073"
+                }
+            ]
+        },
+        {
+            "identifier": "d4889692",
+            "text": "Harttransplantatie.",
+            "annotations": [
+                {
+                    "text": "Harttransplantatie",
+                    "start": 0,
+                    "end": 18,
+                    "label": "C0018823"
+                }
+            ]
+        },
+        {
+            "identifier": "d7477488",
+            "text": "De standaard 'Allergische en hyperreactieve rinitis' van het Nederlands Huisartsen Genootschap; reactie vanuit de huisartsgeneeskunde.",
+            "annotations": [
+                {
+                    "text": "Huisartsen",
+                    "start": 72,
+                    "end": 82,
+                    "label": "C0017319"
+                },
+                {
+                    "text": "Huisartsen",
+                    "start": 72,
+                    "end": 82,
+                    "label": "C0033131"
+                },
+                {
+                    "text": "Allergische rinitis",
+                    "start": 14,
+                    "end": 25,
+                    "label": "C2607914"
+                },
+                {
+                    "text": "Huisartsen",
+                    "start": 72,
+                    "end": 82,
+                    "label": "C1704221"
+                }
+            ]
+        },
+        {
+            "identifier": "d1902691",
+            "text": "Omgaan met su\u00efcidepogers en hun familieleden. Een cursus voor Intensive Care verpleegkundigen.",
+            "annotations": [
+                {
+                    "text": "familieleden",
+                    "start": 32,
+                    "end": 44,
+                    "label": "C0080103"
+                },
+                {
+                    "text": "Intensive Care verpleegkundigen",
+                    "start": 62,
+                    "end": 93,
+                    "label": "C0586960"
+                },
+                {
+                    "text": "su\u00efcide",
+                    "start": 11,
+                    "end": 18,
+                    "label": "C0038661"
+                }
+            ]
+        },
+        {
+            "identifier": "d14261937",
+            "text": "EEN PATIUENTE MET EEN GRANULOSACEL-CARCINOOM, DIE GEDURENDE ZESTIEN JAREN WERD GEOBSERVEERD",
+            "annotations": [
+                {
+                    "text": "GRANULOSACEL-CARCINOOM",
+                    "start": 22,
+                    "end": 44,
+                    "label": "C1567257"
+                },
+                {
+                    "text": "PATIUENTE",
+                    "start": 4,
+                    "end": 13,
+                    "label": "C0030705"
+                }
+            ]
+        },
+        {
+            "identifier": "d5197994",
+            "text": "Onderzoek naar hoe softenon-kinderen zichzelf zien.",
+            "annotations": [
+                {
+                    "text": "Onderzoek",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0035168"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 28,
+                    "end": 36,
+                    "label": "C0680063"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 28,
+                    "end": 36,
+                    "label": "C0008059"
+                }
+            ]
+        },
+        {
+            "identifier": "d4875782",
+            "text": "Ragnar Granit, Haldan Keffer Hartline, George Wald, winnaars Nobelprijs fysiologie en geneeskunde.",
+            "annotations": [
+                {
+                    "text": "Nobelprijs",
+                    "start": 61,
+                    "end": 71,
+                    "label": "C0028236"
+                }
+            ]
+        },
+        {
+            "identifier": "d11982209",
+            "text": "Dubbeltanden.",
+            "annotations": [
+                {
+                    "text": "Dubbeltanden",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0016873"
+                }
+            ]
+        },
+        {
+            "identifier": "d11921942",
+            "text": "Mondgezondheid van risicogroepen in Rotterdam en Amsterdam.",
+            "annotations": [
+                {
+                    "text": "risicogroepen",
+                    "start": 19,
+                    "end": 32,
+                    "label": "C0242444"
+                }
+            ]
+        },
+        {
+            "identifier": "d17966325",
+            "text": "Diergezondheidsbeoordeling melkveehouderij en EU-levensmiddelenhygi\u00ebnevoorschriften.",
+            "annotations": [
+                {
+                    "text": "Dier",
+                    "start": 0,
+                    "end": 4,
+                    "label": "C0003062"
+                },
+                {
+                    "text": "gezondheidsbeoordeling",
+                    "start": 4,
+                    "end": 26,
+                    "label": "C0175637"
+                },
+                {
+                    "text": "levensmiddelen",
+                    "start": 49,
+                    "end": 63,
+                    "label": "C0016452"
+                }
+            ]
+        },
+        {
+            "identifier": "d1476639",
+            "text": "Polio en het post-poliosyndroom.",
+            "annotations": [
+                {
+                    "text": "Polio",
+                    "start": 0,
+                    "end": 5,
+                    "label": "C0032371"
+                },
+                {
+                    "text": "post-poliosyndroom",
+                    "start": 13,
+                    "end": 31,
+                    "label": "C0080040"
+                }
+            ]
+        },
+        {
+            "identifier": "d13578026",
+            "text": "Histologische verschillen tussen snelle en langzame spiervezels bij de kakkerlak.",
+            "annotations": [
+                {
+                    "text": "kakkerlak",
+                    "start": 71,
+                    "end": 80,
+                    "label": "C0009208"
+                },
+                {
+                    "text": "langzame spiervezels",
+                    "start": 43,
+                    "end": 63,
+                    "label": "C0242874"
+                },
+                {
+                    "text": "snelle spiervezels",
+                    "start": 33,
+                    "end": 39,
+                    "label": "C0242873"
+                }
+            ]
+        },
+        {
+            "identifier": "d15909396",
+            "text": "Chronische depersonalisatie na cannabisgebruik.",
+            "annotations": [
+                {
+                    "text": "depersonalisatie",
+                    "start": 11,
+                    "end": 27,
+                    "label": "C0011551"
+                },
+                {
+                    "text": "cannabis",
+                    "start": 31,
+                    "end": 39,
+                    "label": "C0678449"
+                },
+                {
+                    "text": "cannabis",
+                    "start": 31,
+                    "end": 39,
+                    "label": "C0024808"
+                }
+            ]
+        },
+        {
+            "identifier": "d12452130",
+            "text": "Te jong voor een pijnlijke scheve rug.",
+            "annotations": [
+                {
+                    "text": "scheve",
+                    "start": 27,
+                    "end": 33,
+                    "label": "C0040480"
+                },
+                {
+                    "text": "pijnlijke rug",
+                    "start": 17,
+                    "end": 26,
+                    "label": "C0004604"
+                }
+            ]
+        },
+        {
+            "identifier": "d11836816",
+            "text": "De rol van expertise bij de interpretatie van tandheelkundige r\u00f6ntgenfoto's.",
+            "annotations": [
+                {
+                    "text": "r\u00f6ntgenfoto's",
+                    "start": 62,
+                    "end": 75,
+                    "label": "C1306645"
+                }
+            ]
+        },
+        {
+            "identifier": "d7054733",
+            "text": "Koolmonoxydevergiftiging.",
+            "annotations": [
+                {
+                    "text": "Koolmonoxydevergiftiging",
+                    "start": 0,
+                    "end": 24,
+                    "label": "C0007020"
+                }
+            ]
+        },
+        {
+            "identifier": "d8065469",
+            "text": "Neurologische complicaties van de HIV-infectie: diagnostiek en therapie.",
+            "annotations": [
+                {
+                    "text": "HIV-infectie",
+                    "start": 34,
+                    "end": 46,
+                    "label": "C0019693"
+                },
+                {
+                    "text": "diagnostiek",
+                    "start": 48,
+                    "end": 59,
+                    "label": "C0011900"
+                },
+                {
+                    "text": "complicaties",
+                    "start": 14,
+                    "end": 26,
+                    "label": "C0009566"
+                },
+                {
+                    "text": "diagnostiek",
+                    "start": 48,
+                    "end": 59,
+                    "label": "C0430022"
+                },
+                {
+                    "text": "therapie",
+                    "start": 63,
+                    "end": 71,
+                    "label": "C0087111"
+                }
+            ]
+        },
+        {
+            "identifier": "d14343965",
+            "text": "ONDERZOEK NAAR HET VERBAND TUSSEN HET SOMATOTYPE EN DE RORSCHACH-TEST.",
+            "annotations": [
+                {
+                    "text": "SOMATOTYPE",
+                    "start": 38,
+                    "end": 48,
+                    "label": "C0037669"
+                },
+                {
+                    "text": "ONDERZOEK",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0008972"
+                },
+                {
+                    "text": "RORSCHACH-TEST",
+                    "start": 55,
+                    "end": 69,
+                    "label": "C0035852"
+                }
+            ]
+        },
+        {
+            "identifier": "d11837060",
+            "text": "'Prothetische conditie' en tevredenheid met gebitsprothesen.",
+            "annotations": [
+                {
+                    "text": "tevredenheid",
+                    "start": 27,
+                    "end": 39,
+                    "label": "C0242428"
+                },
+                {
+                    "text": "gebitsprothesen",
+                    "start": 44,
+                    "end": 59,
+                    "label": "C0011394"
+                }
+            ]
+        },
+        {
+            "identifier": "d818738",
+            "text": "Gezondheidszorg ieders zorg (economische aspecten)",
+            "annotations": [
+                {
+                    "text": "Gezondheidszorg",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0086388"
+                }
+            ]
+        },
+        {
+            "identifier": "d2321238",
+            "text": "Marketing in de dierenartsenpraktijk; een theoretisch kader.",
+            "annotations": []
+        },
+        {
+            "identifier": "d10418080",
+            "text": "Voeding van paarden: vertering, energie- en eiwitwaardering en voedernormen.",
+            "annotations": [
+                {
+                    "text": "paarden",
+                    "start": 12,
+                    "end": 19,
+                    "label": "C0019944"
+                },
+                {
+                    "text": "Voeding",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C1442959"
+                },
+                {
+                    "text": "Voeding",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C0600072"
+                },
+                {
+                    "text": "paarden",
+                    "start": 12,
+                    "end": 19,
+                    "label": "C0242616"
+                },
+                {
+                    "text": "paarden",
+                    "start": 12,
+                    "end": 19,
+                    "label": "C1265527"
+                },
+                {
+                    "text": "vertering",
+                    "start": 21,
+                    "end": 30,
+                    "label": "C0012238"
+                },
+                {
+                    "text": "eiwit",
+                    "start": 44,
+                    "end": 49,
+                    "label": "C0033684"
+                },
+                {
+                    "text": "waardering",
+                    "start": 49,
+                    "end": 59,
+                    "label": "C1261322"
+                }
+            ]
+        },
+        {
+            "identifier": "d8160174",
+            "text": "Druppeltjes in de nek.",
+            "annotations": [
+                {
+                    "text": "Druppeltjes",
+                    "start": 0,
+                    "end": 11,
+                    "label": "C0991568"
+                },
+                {
+                    "text": "nek",
+                    "start": 18,
+                    "end": 21,
+                    "label": "C0027530"
+                },
+                {
+                    "text": "nek",
+                    "start": 18,
+                    "end": 21,
+                    "label": "C1281592"
+                }
+            ]
+        },
+        {
+            "identifier": "d6888594",
+            "text": "Tunga penetrans: een tropische verrassing in een Hollandse teen.",
+            "annotations": [
+                {
+                    "text": "Tunga penetrans",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0323216"
+                },
+                {
+                    "text": "teen",
+                    "start": 59,
+                    "end": 63,
+                    "label": "C0040357"
+                },
+                {
+                    "text": "teen",
+                    "start": 59,
+                    "end": 63,
+                    "label": "C1281589"
+                }
+            ]
+        },
+        {
+            "identifier": "d10850105",
+            "text": "Vijftig jaar plastische chirurgie in Nederland. VI. Microchirurgie.",
+            "annotations": [
+                {
+                    "text": "plastische chirurgie",
+                    "start": 13,
+                    "end": 33,
+                    "label": "C0677616"
+                },
+                {
+                    "text": "Nederland",
+                    "start": 37,
+                    "end": 46,
+                    "label": "C0027778"
+                },
+                {
+                    "text": "Microchirurgie",
+                    "start": 52,
+                    "end": 66,
+                    "label": "C0026035"
+                }
+            ]
+        },
+        {
+            "identifier": "d15301391",
+            "text": "Genetisch onderzoek met opgeslagen lichaamsmateriaal: een coderingsprocedure met optimaal gebruik van informatie bij behoud van privacy.",
+            "annotations": [
+                {
+                    "text": "Genetisch onderzoek",
+                    "start": 0,
+                    "end": 19,
+                    "label": "C0243064"
+                },
+                {
+                    "text": "lichaamsmateriaal",
+                    "start": 35,
+                    "end": 52,
+                    "label": "C0440744"
+                }
+            ]
+        },
+        {
+            "identifier": "d6483049",
+            "text": "Adjuvante chemotherapie bij mammacarcinoom.",
+            "annotations": [
+                {
+                    "text": "Adjuvante chemotherapie",
+                    "start": 0,
+                    "end": 23,
+                    "label": "C0085533"
+                },
+                {
+                    "text": "mammacarcinoom",
+                    "start": 28,
+                    "end": 42,
+                    "label": "C0678222"
+                }
+            ]
+        },
+        {
+            "identifier": "d5332789",
+            "text": "Kogels in ivoor.",
+            "annotations": [
+                {
+                    "text": "Kogels",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C0336699"
+                }
+            ]
+        },
+        {
+            "identifier": "d6044047",
+            "text": "De diagnostiek van cysticercose bij de mens.",
+            "annotations": [
+                {
+                    "text": "cysticercose",
+                    "start": 19,
+                    "end": 31,
+                    "label": "C0010678"
+                },
+                {
+                    "text": "mens",
+                    "start": 39,
+                    "end": 43,
+                    "label": "C0086418"
+                },
+                {
+                    "text": "diagnostiek",
+                    "start": 3,
+                    "end": 14,
+                    "label": "C0011900"
+                }
+            ]
+        },
+        {
+            "identifier": "d12224478",
+            "text": "Mogelijkheden en beperkingen van genetisch onderzoek; een advies van de raad voor Gezondheidsonderzoek.",
+            "annotations": [
+                {
+                    "text": "genetisch onderzoek",
+                    "start": 33,
+                    "end": 52,
+                    "label": "C0243064"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 93,
+                    "end": 102,
+                    "label": "C0035168"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 93,
+                    "end": 102,
+                    "label": "C0242481"
+                }
+            ]
+        },
+        {
+            "identifier": "d17515182",
+            "text": "Het nut van kostprijsbepalingen II.",
+            "annotations": []
+        },
+        {
+            "identifier": "d6089008",
+            "text": "Serodiagnose van kinkhoest.",
+            "annotations": [
+                {
+                    "text": "kinkhoest",
+                    "start": 17,
+                    "end": 26,
+                    "label": "C0043168"
+                },
+                {
+                    "text": "Serodiagnose",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0600324"
+                },
+                {
+                    "text": "kinkhoest",
+                    "start": 17,
+                    "end": 26,
+                    "label": "C0043167"
+                }
+            ]
+        },
+        {
+            "identifier": "d4863777",
+            "text": "75 jaar zuigelingensterfte, 1892-1967.",
+            "annotations": [
+                {
+                    "text": "zuigelingen",
+                    "start": 8,
+                    "end": 19,
+                    "label": "C0021270"
+                }
+            ]
+        },
+        {
+            "identifier": "d14261943",
+            "text": "BIJNIER EN ONTSTEKING.",
+            "annotations": [
+                {
+                    "text": "BIJNIER",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C1268989"
+                },
+                {
+                    "text": "BIJNIER",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C0001625"
+                },
+                {
+                    "text": "ONTSTEKING",
+                    "start": 11,
+                    "end": 21,
+                    "label": "C0021311"
+                },
+                {
+                    "text": "ONTSTEKING",
+                    "start": 11,
+                    "end": 21,
+                    "label": "C0009450"
+                }
+            ]
+        },
+        {
+            "identifier": "d4569839",
+            "text": "Combinatie van geneesmiddelen; mogelijkheden en beperkingen.",
+            "annotations": [
+                {
+                    "text": "Combinatie van geneesmiddelen",
+                    "start": 0,
+                    "end": 29,
+                    "label": "C0013162"
+                }
+            ]
+        },
+        {
+            "identifier": "d13309487",
+            "text": "Verdubbeling van de baarmoeder met atypische uitmonding van \u00e9\u00e9n helft in de vagina.",
+            "annotations": [
+                {
+                    "text": "vagina",
+                    "start": 76,
+                    "end": 82,
+                    "label": "C0042232"
+                },
+                {
+                    "text": "Verdubbeling van de baarmoeder",
+                    "start": 0,
+                    "end": 30,
+                    "label": "C0152240"
+                },
+                {
+                    "text": "vagina",
+                    "start": 76,
+                    "end": 82,
+                    "label": "C1278985"
+                }
+            ]
+        },
+        {
+            "identifier": "d1407130",
+            "text": "Is het risico van longembolie a.g.v. atriumfibrilleren te verkleinen door een trombocytenaggregatieremmer toe te voegen aan een oraal anticoagulans?",
+            "annotations": [
+                {
+                    "text": "longembolie",
+                    "start": 18,
+                    "end": 29,
+                    "label": "C0034065"
+                },
+                {
+                    "text": "atriumfibrilleren",
+                    "start": 37,
+                    "end": 54,
+                    "label": "C0004238"
+                },
+                {
+                    "text": "trombocytenaggregatieremmer",
+                    "start": 78,
+                    "end": 105,
+                    "label": "C0032177"
+                },
+                {
+                    "text": "anticoagulans",
+                    "start": 134,
+                    "end": 147,
+                    "label": "C0003280"
+                }
+            ]
+        },
+        {
+            "identifier": "d12448968",
+            "text": "Toename van resistentie tegen fusidinezuur van Staphylococcus aureus-isolaten bij opgenomen pati\u00ebnten met constitutioneel eczeem.",
+            "annotations": [
+                {
+                    "text": "Staphylococcus aureus",
+                    "start": 47,
+                    "end": 68,
+                    "label": "C0038172"
+                },
+                {
+                    "text": "constitutioneel eczeem",
+                    "start": 106,
+                    "end": 128,
+                    "label": "C0011615"
+                },
+                {
+                    "text": "fusidinezuur",
+                    "start": 30,
+                    "end": 42,
+                    "label": "C0016875"
+                },
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 92,
+                    "end": 101,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "opgenomen",
+                    "start": 82,
+                    "end": 91,
+                    "label": "C0184666"
+                }
+            ]
+        },
+        {
+            "identifier": "d1944652",
+            "text": "De 'Phadiatop Paediatric': een bruikbare in vitro-test op een atopische immuunrespons bij zuigelingen en kleuters.",
+            "annotations": [
+                {
+                    "text": "atopische",
+                    "start": 62,
+                    "end": 71,
+                    "label": "C0392707"
+                },
+                {
+                    "text": "immuunrespons",
+                    "start": 72,
+                    "end": 85,
+                    "label": "C0301872"
+                },
+                {
+                    "text": "zuigelingen",
+                    "start": 90,
+                    "end": 101,
+                    "label": "C0021270"
+                },
+                {
+                    "text": "kleuters",
+                    "start": 105,
+                    "end": 113,
+                    "label": "C0008100"
+                },
+                {
+                    "text": "in vitro-test",
+                    "start": 41,
+                    "end": 54,
+                    "label": "C0680063"
+                }
+            ]
+        },
+        {
+            "identifier": "d295428",
+            "text": "Micro-organismen en parodontaal verval.",
+            "annotations": [
+                {
+                    "text": "Micro-organismen",
+                    "start": 0,
+                    "end": 16,
+                    "label": "C0445623"
+                }
+            ]
+        },
+        {
+            "identifier": "d11257810",
+            "text": "Operatie van een recentelijk symptomatisch geworden ernstige carotisstenose of niet? 'Evidence-based' geneeskunde in de praktijk.",
+            "annotations": [
+                {
+                    "text": "carotisstenose",
+                    "start": 61,
+                    "end": 75,
+                    "label": "C0007282"
+                },
+                {
+                    "text": "Operatie",
+                    "start": 0,
+                    "end": 8,
+                    "label": "C0543467"
+                }
+            ]
+        },
+        {
+            "identifier": "d5362037",
+            "text": "De classificatie van blaastumoren en de behandeling van de oppervlakkig infiltrerende tumoren.",
+            "annotations": [
+                {
+                    "text": "blaastumoren",
+                    "start": 21,
+                    "end": 33,
+                    "label": "C0005695"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 40,
+                    "end": 51,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "infiltrerende",
+                    "start": 72,
+                    "end": 85,
+                    "label": "C0332448"
+                },
+                {
+                    "text": "tumoren",
+                    "start": 86,
+                    "end": 93,
+                    "label": "C0027651"
+                }
+            ]
+        },
+        {
+            "identifier": "d431744",
+            "text": "De prognostische betekenis op langere termijn van complicaties tijdens de herstelfase van het acute hartinfarct.",
+            "annotations": [
+                {
+                    "text": "complicaties",
+                    "start": 50,
+                    "end": 62,
+                    "label": "C1171258"
+                },
+                {
+                    "text": "complicaties",
+                    "start": 50,
+                    "end": 62,
+                    "label": "C0009566"
+                },
+                {
+                    "text": "acute hartinfarct",
+                    "start": 94,
+                    "end": 111,
+                    "label": "C0155626"
+                }
+            ]
+        },
+        {
+            "identifier": "d2933851",
+            "text": "Dagopvang in het Jozefhuis.",
+            "annotations": [
+                {
+                    "text": "Dagopvang",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0011017"
+                },
+                {
+                    "text": "huis",
+                    "start": 22,
+                    "end": 26,
+                    "label": "C2003847"
+                }
+            ]
+        },
+        {
+            "identifier": "d14161728",
+            "text": "PSEUDO-REUMATISCHE COXITIS.",
+            "annotations": [
+                {
+                    "text": "COXITIS",
+                    "start": 19,
+                    "end": 26,
+                    "label": "C0263776"
+                },
+                {
+                    "text": "REUMATISCHE",
+                    "start": 7,
+                    "end": 18,
+                    "label": "C0035435"
+                }
+            ]
+        },
+        {
+            "identifier": "d6923657",
+            "text": "Verpleegkundige beroepsstructuur in het buitenland.",
+            "annotations": []
+        },
+        {
+            "identifier": "d6955619",
+            "text": "\"Articulitis\" of pure noodzaak?",
+            "annotations": []
+        },
+        {
+            "identifier": "d5947216",
+            "text": "Leverbeschadiging door carbamazepine.",
+            "annotations": [
+                {
+                    "text": "Leverbeschadiging",
+                    "start": 0,
+                    "end": 17,
+                    "label": "C0151763"
+                },
+                {
+                    "text": "carbamazepine",
+                    "start": 23,
+                    "end": 36,
+                    "label": "C0006949"
+                }
+            ]
+        },
+        {
+            "identifier": "d14983578",
+            "text": "Onnodig lange intraveneuze antibioticatherapie voorkomen door actieve implementatie van switchrichtlijnen.",
+            "annotations": [
+                {
+                    "text": "intraveneuze antibioticatherapie",
+                    "start": 14,
+                    "end": 46,
+                    "label": "C0559680"
+                }
+            ]
+        },
+        {
+            "identifier": "d6910299",
+            "text": "De betekenis van de spondylodese methode van Dwyer bij de behandeling van ernstige wervelkolom deformaties.",
+            "annotations": [
+                {
+                    "text": "spondylodese",
+                    "start": 20,
+                    "end": 32,
+                    "label": "C0936239"
+                },
+                {
+                    "text": "spondylodese",
+                    "start": 20,
+                    "end": 32,
+                    "label": "C1704329"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 58,
+                    "end": 69,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "spondylodese",
+                    "start": 20,
+                    "end": 32,
+                    "label": "C0037935"
+                },
+                {
+                    "text": "wervelkolom deformaties",
+                    "start": 83,
+                    "end": 106,
+                    "label": "C0575157"
+                }
+            ]
+        },
+        {
+            "identifier": "d6922644",
+            "text": "De Ondernemingsraad in de gezondheidszorg. Heeft dit instituut nog zin?",
+            "annotations": [
+                {
+                    "text": "gezondheidszorg",
+                    "start": 26,
+                    "end": 41,
+                    "label": "C0086388"
+                },
+                {
+                    "text": "gezondheidszorg",
+                    "start": 26,
+                    "end": 41,
+                    "label": "C0699943"
+                }
+            ]
+        },
+        {
+            "identifier": "d3148213",
+            "text": "Standaardisatie en verpleegkundige diagnoses.",
+            "annotations": [
+                {
+                    "text": "Standaardisatie",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0038136"
+                },
+                {
+                    "text": "verpleegkundige diagnoses",
+                    "start": 19,
+                    "end": 44,
+                    "label": "C0028684"
+                }
+            ]
+        },
+        {
+            "identifier": "d14293918",
+            "text": "ROTATIO DENTIS.",
+            "annotations": [
+                {
+                    "text": "ROTATIO DENTIS",
+                    "start": 0,
+                    "end": 14,
+                    "label": "C0266071"
+                }
+            ]
+        },
+        {
+            "identifier": "d12092306",
+            "text": "Het syndroom van Parinaud als teken van acute obstructieve hydrocefalus: herstel na acute ventriculostomie.",
+            "annotations": [
+                {
+                    "text": "obstructieve hydrocefalus",
+                    "start": 46,
+                    "end": 71,
+                    "label": "C0549423"
+                },
+                {
+                    "text": "ventriculostomie",
+                    "start": 90,
+                    "end": 106,
+                    "label": "C0042517"
+                },
+                {
+                    "text": "syndroom van Parinaud",
+                    "start": 4,
+                    "end": 25,
+                    "label": "C0152222"
+                },
+                {
+                    "text": "teken",
+                    "start": 30,
+                    "end": 35,
+                    "label": "C0311392"
+                }
+            ]
+        },
+        {
+            "identifier": "d4487112",
+            "text": "Enqu\u00eate 'Continu\u00efteit van zorg.",
+            "annotations": [
+                {
+                    "text": "Enqu\u00eate",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C0035168"
+                },
+                {
+                    "text": "Continu\u00efteit van zorg",
+                    "start": 9,
+                    "end": 30,
+                    "label": "C0009853"
+                }
+            ]
+        },
+        {
+            "identifier": "d9173302",
+            "text": "Endoscopische retroperitoneale adrenalectomie: een chirurgische aanwinst.",
+            "annotations": [
+                {
+                    "text": "Endoscopische adrenalectomie",
+                    "start": 0,
+                    "end": 13,
+                    "label": "C0521267"
+                },
+                {
+                    "text": "retroperitoneale",
+                    "start": 14,
+                    "end": 30,
+                    "label": "C0035359"
+                },
+                {
+                    "text": "chirurgische",
+                    "start": 51,
+                    "end": 63,
+                    "label": "C0543467"
+                }
+            ]
+        },
+        {
+            "identifier": "d11534379",
+            "text": "Aneurysma van de V. magna cerebri (Galeni); oorzaak van decompensatio cordis bij 5 pasgeborenen.",
+            "annotations": [
+                {
+                    "text": "Aneurysma",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0002940"
+                },
+                {
+                    "text": "decompensatio cordis",
+                    "start": 56,
+                    "end": 76,
+                    "label": "C0018801"
+                },
+                {
+                    "text": "V. magna cerebri",
+                    "start": 17,
+                    "end": 33,
+                    "label": "C0042448"
+                },
+                {
+                    "text": "Galeni",
+                    "start": 35,
+                    "end": 41,
+                    "label": "C0042448"
+                },
+                {
+                    "text": "pasgeborenen",
+                    "start": 83,
+                    "end": 95,
+                    "label": "C0021289"
+                }
+            ]
+        },
+        {
+            "identifier": "d10028147",
+            "text": "Wie controleert het Tuchtcollege?",
+            "annotations": []
+        },
+        {
+            "identifier": "d12838755",
+            "text": "Het dopingonderzoek bij paarden en de rol van de behandelend dierenarts.",
+            "annotations": [
+                {
+                    "text": "paarden",
+                    "start": 24,
+                    "end": 31,
+                    "label": "C0019944"
+                },
+                {
+                    "text": "dierenarts",
+                    "start": 61,
+                    "end": 71,
+                    "label": "C0242856"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 10,
+                    "end": 19,
+                    "label": "C1261322"
+                },
+                {
+                    "text": "paarden",
+                    "start": 24,
+                    "end": 31,
+                    "label": "C0242616"
+                },
+                {
+                    "text": "paarden",
+                    "start": 24,
+                    "end": 31,
+                    "label": "C1265527"
+                }
+            ]
+        },
+        {
+            "identifier": "d5195259",
+            "text": "Gezondheid, ziekte, ziekteverzuim, arbeidsverzuim, arbeid. X.",
+            "annotations": [
+                {
+                    "text": "ziekte",
+                    "start": 12,
+                    "end": 18,
+                    "label": "C0012634"
+                },
+                {
+                    "text": "ziekte",
+                    "start": 12,
+                    "end": 18,
+                    "label": "C0221423"
+                },
+                {
+                    "text": "ziekte",
+                    "start": 20,
+                    "end": 26,
+                    "label": "C0221423"
+                },
+                {
+                    "text": "ziekte",
+                    "start": 20,
+                    "end": 26,
+                    "label": "C0221423"
+                }
+            ]
+        },
+        {
+            "identifier": "d8684500",
+            "text": "Pulmonale infectie met Coccidioides immitis.",
+            "annotations": [
+                {
+                    "text": "Coccidioides immitis",
+                    "start": 23,
+                    "end": 43,
+                    "label": "C0009184"
+                },
+                {
+                    "text": "Pulmonale infectie",
+                    "start": 0,
+                    "end": 18,
+                    "label": "C0876973"
+                }
+            ]
+        },
+        {
+            "identifier": "d8848063",
+            "text": "Heeft afplatting van de schedel blijvende gevolgen voor de ontwikkeling van de hersenen?",
+            "annotations": [
+                {
+                    "text": "schedel",
+                    "start": 24,
+                    "end": 31,
+                    "label": "C0037303"
+                },
+                {
+                    "text": "hersenen",
+                    "start": 79,
+                    "end": 87,
+                    "label": "C0006104"
+                },
+                {
+                    "text": "gevolgen",
+                    "start": 42,
+                    "end": 50,
+                    "label": "C0543419"
+                },
+                {
+                    "text": "gevolgen",
+                    "start": 42,
+                    "end": 50,
+                    "label": "C0243088"
+                },
+                {
+                    "text": "ontwikkeling",
+                    "start": 59,
+                    "end": 71,
+                    "label": "C0243107"
+                },
+                {
+                    "text": "hersenen",
+                    "start": 79,
+                    "end": 87,
+                    "label": "C1269537"
+                }
+            ]
+        },
+        {
+            "identifier": "d17263025",
+            "text": "Pas afgestudeerde dierenartsen.",
+            "annotations": [
+                {
+                    "text": "dierenartsen",
+                    "start": 18,
+                    "end": 30,
+                    "label": "C0242856"
+                },
+                {
+                    "text": "afgestudeerde",
+                    "start": 4,
+                    "end": 17,
+                    "label": "C0588053"
+                }
+            ]
+        },
+        {
+            "identifier": "d1214916",
+            "text": "Reflux-gastritis",
+            "annotations": [
+                {
+                    "text": "Reflux-gastritis",
+                    "start": 0,
+                    "end": 16,
+                    "label": "C0267158"
+                }
+            ]
+        },
+        {
+            "identifier": "d532318",
+            "text": "Metabolisme van nitromethaqualon.",
+            "annotations": [
+                {
+                    "text": "Metabolisme",
+                    "start": 0,
+                    "end": 11,
+                    "label": "C0025519"
+                },
+                {
+                    "text": "nitromethaqualon",
+                    "start": 16,
+                    "end": 32,
+                    "label": "C0068850"
+                }
+            ]
+        },
+        {
+            "identifier": "d12291420",
+            "text": "Condoomgebruik door heteroseksuelen. Een vergelijking van de theorie van gepland gedrag, het health belief model en de protectie-motivatie theorie.",
+            "annotations": [
+                {
+                    "text": "Condoom",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C0009653"
+                },
+                {
+                    "text": "heteroseksuelen",
+                    "start": 20,
+                    "end": 35,
+                    "label": "C1527360"
+                },
+                {
+                    "text": "gepland",
+                    "start": 73,
+                    "end": 80,
+                    "label": "C0032074"
+                },
+                {
+                    "text": "motivatie",
+                    "start": 129,
+                    "end": 138,
+                    "label": "C0026605"
+                },
+                {
+                    "text": "health belief",
+                    "start": 93,
+                    "end": 106,
+                    "label": "C0814098"
+                }
+            ]
+        },
+        {
+            "identifier": "d15717445",
+            "text": "Lijden aan leven.",
+            "annotations": [
+                {
+                    "text": "Lijden",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C0683278"
+                }
+            ]
+        },
+        {
+            "identifier": "d9221619",
+            "text": "Juveniele hormonen, realiteit of mythe.",
+            "annotations": [
+                {
+                    "text": "Juveniele hormonen",
+                    "start": 0,
+                    "end": 18,
+                    "label": "C0022439"
+                }
+            ]
+        },
+        {
+            "identifier": "d5664972",
+            "text": "Moderne opvattingen over de werking van digitalisglycosiden op moleculair niveau.",
+            "annotations": [
+                {
+                    "text": "digitalisglycosiden",
+                    "start": 40,
+                    "end": 59,
+                    "label": "C0012253"
+                }
+            ]
+        },
+        {
+            "identifier": "d2046796",
+            "text": "Beleid bij een aanval van apnoe bij een pasgeborene.",
+            "annotations": [
+                {
+                    "text": "apnoe",
+                    "start": 26,
+                    "end": 31,
+                    "label": "C0003578"
+                },
+                {
+                    "text": "pasgeborene",
+                    "start": 40,
+                    "end": 51,
+                    "label": "C0021289"
+                },
+                {
+                    "text": "Beleid",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C0376636"
+                },
+                {
+                    "text": "aanval",
+                    "start": 15,
+                    "end": 21,
+                    "label": "C1304680"
+                }
+            ]
+        },
+        {
+            "identifier": "d15301394",
+            "text": "Diabetes mellitus, maar welk type?",
+            "annotations": [
+                {
+                    "text": "Diabetes mellitus",
+                    "start": 0,
+                    "end": 17,
+                    "label": "C0011849"
+                }
+            ]
+        },
+        {
+            "identifier": "d327",
+            "text": "Daarom moet bij voorkeur tussen het innemen van PROTELOS en genoemde producten ten minste twee uur liggen (zie rubriek 5.2).",
+            "annotations": [
+                {
+                    "text": "PROTELOS",
+                    "start": 48,
+                    "end": 56,
+                    "label": "C1721214"
+                },
+                {
+                    "text": "het innemen",
+                    "start": 32,
+                    "end": 43,
+                    "label": "C0232478"
+                }
+            ]
+        },
+        {
+            "identifier": "d230",
+            "text": "Voor pati\u00ebnten jonger dan 16 jaar.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 5,
+                    "end": 14,
+                    "label": "C0030705"
+                }
+            ]
+        },
+        {
+            "identifier": "d109",
+            "text": "De houder van deze vergunning voorzien aan alle voorschrijvers, die eventueel betrokken zijn bij het behandelen van pati\u00ebnten met prasugrel, van voorlichtingsmateriaal.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 116,
+                    "end": 125,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "prasugrel",
+                    "start": 130,
+                    "end": 139,
+                    "label": "C1620287"
+                },
+                {
+                    "text": "het behandelen",
+                    "start": 97,
+                    "end": 111,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "voorzien van voorlichtingsmateriaal",
+                    "start": 30,
+                    "end": 38,
+                    "label": "C2919937"
+                }
+            ]
+        },
+        {
+            "identifier": "d264",
+            "text": "Neupro 4 mg/24 h pleister voor transdermaal gebruik Elke pleister geeft 4 mg rotigotine per 24 uur af.",
+            "annotations": [
+                {
+                    "text": "Neupro",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C1949346"
+                },
+                {
+                    "text": "rotigotine",
+                    "start": 77,
+                    "end": 87,
+                    "label": "C1700683"
+                },
+                {
+                    "text": "pleister voor transdermaal gebruik",
+                    "start": 17,
+                    "end": 51,
+                    "label": "C0991556"
+                },
+                {
+                    "text": "pleister",
+                    "start": 57,
+                    "end": 65,
+                    "label": "C0991556"
+                },
+                {
+                    "text": "geeft af",
+                    "start": 66,
+                    "end": 71,
+                    "label": "C1963578"
+                }
+            ]
+        },
+        {
+            "identifier": "d349",
+            "text": "Renagel 800 mg sevelamer",
+            "annotations": [
+                {
+                    "text": "Renagel",
+                    "start": 0,
+                    "end": 7,
+                    "label": "C0526563"
+                },
+                {
+                    "text": "sevelamer",
+                    "start": 15,
+                    "end": 24,
+                    "label": "C0718050"
+                }
+            ]
+        },
+        {
+            "identifier": "d42",
+            "text": "Door behandeling met Avonex kan worden voorkomen dat de ziekte erger wordt, hoewel MS er niet door zal genezen.",
+            "annotations": [
+                {
+                    "text": "Avonex",
+                    "start": 21,
+                    "end": 27,
+                    "label": "C0594372"
+                },
+                {
+                    "text": "ziekte",
+                    "start": 56,
+                    "end": 62,
+                    "label": "C0012634"
+                },
+                {
+                    "text": "MS",
+                    "start": 83,
+                    "end": 85,
+                    "label": "C0026769"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 5,
+                    "end": 16,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "erger",
+                    "start": 63,
+                    "end": 68,
+                    "label": "C1279889"
+                }
+            ]
+        },
+        {
+            "identifier": "d262",
+            "text": "\u2022 van plan bent om zwanger te worden.",
+            "annotations": [
+                {
+                    "text": "plan",
+                    "start": 6,
+                    "end": 10,
+                    "label": "C0032074"
+                },
+                {
+                    "text": "zwanger",
+                    "start": 19,
+                    "end": 26,
+                    "label": "C0549206"
+                },
+                {
+                    "text": "zwanger",
+                    "start": 19,
+                    "end": 26,
+                    "label": "C0032961"
+                }
+            ]
+        },
+        {
+            "identifier": "d335",
+            "text": "Elke tablet bevat 500 mg ranolazine.",
+            "annotations": [
+                {
+                    "text": "ranolazine",
+                    "start": 25,
+                    "end": 35,
+                    "label": "C0073633"
+                },
+                {
+                    "text": "tablet",
+                    "start": 5,
+                    "end": 11,
+                    "label": "C0039225"
+                }
+            ]
+        },
+        {
+            "identifier": "d376",
+            "text": "Dasatinib was in vitro clastogeen voor delende ovariumcellen van de Chinese hamster (CHO).",
+            "annotations": [
+                {
+                    "text": "Dasatinib",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C1455147"
+                },
+                {
+                    "text": "clastogeen",
+                    "start": 23,
+                    "end": 33,
+                    "label": "C0008904"
+                },
+                {
+                    "text": "ovariumcellen van de Chinese hamster",
+                    "start": 47,
+                    "end": 83,
+                    "label": "C0085080"
+                }
+            ]
+        },
+        {
+            "identifier": "d348",
+            "text": "De Europese Commissie heeft op 13 augustus 1999 een in de hele Europese Unie geldige vergunning voor het in handel brengen van Remicade verleend aan Centocor B.V.",
+            "annotations": [
+                {
+                    "text": "Remicade",
+                    "start": 127,
+                    "end": 135,
+                    "label": "C0723012"
+                }
+            ]
+        },
+        {
+            "identifier": "d74",
+            "text": "Dit resulteert in relaxatie van glad spierweefsel en instroom van bloed in de weefsels van de penis waardoor een erectie wordt verkregen.",
+            "annotations": [
+                {
+                    "text": "bloed",
+                    "start": 66,
+                    "end": 71,
+                    "label": "C0005767"
+                },
+                {
+                    "text": "weefsels",
+                    "start": 78,
+                    "end": 86,
+                    "label": "C0040300"
+                },
+                {
+                    "text": "penis",
+                    "start": 94,
+                    "end": 99,
+                    "label": "C0030851"
+                },
+                {
+                    "text": "erectie",
+                    "start": 113,
+                    "end": 120,
+                    "label": "C0030847"
+                },
+                {
+                    "text": "glad spierweefsel",
+                    "start": 32,
+                    "end": 49,
+                    "label": "C1267092"
+                },
+                {
+                    "text": "relaxatie van spierweefsel",
+                    "start": 18,
+                    "end": 31,
+                    "label": "C0026836"
+                },
+                {
+                    "text": "bloed",
+                    "start": 66,
+                    "end": 71,
+                    "label": "C0229664"
+                },
+                {
+                    "text": "penis",
+                    "start": 94,
+                    "end": 99,
+                    "label": "C1280739"
+                }
+            ]
+        },
+        {
+            "identifier": "d344",
+            "text": "De noodzaak voor een relatief hogere dosis dan die gebruikt wordt bij volwassenen en oudere kinderen dient van te voren te worden overwogen wanneer jongere kinderen met ReFacto AF behandeld worden.",
+            "annotations": [
+                {
+                    "text": "ReFacto",
+                    "start": 169,
+                    "end": 176,
+                    "label": "C0971600"
+                },
+                {
+                    "text": "volwassenen",
+                    "start": 70,
+                    "end": 81,
+                    "label": "C0001675"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 92,
+                    "end": 100,
+                    "label": "C0008059"
+                },
+                {
+                    "text": "kinderen",
+                    "start": 156,
+                    "end": 164,
+                    "label": "C0008059"
+                },
+                {
+                    "text": "behandeld",
+                    "start": 180,
+                    "end": 189,
+                    "label": "C0332293"
+                }
+            ]
+        },
+        {
+            "identifier": "d81",
+            "text": "De tabletten zijn verpakt in blisterverpakkingen van 14, 28, 30, 50, 56, 60, 90, 98 of 180 tabletten.",
+            "annotations": [
+                {
+                    "text": "tabletten",
+                    "start": 3,
+                    "end": 12,
+                    "label": "C0039225"
+                },
+                {
+                    "text": "tabletten",
+                    "start": 91,
+                    "end": 100,
+                    "label": "C0039225"
+                },
+                {
+                    "text": "blister",
+                    "start": 29,
+                    "end": 36,
+                    "label": "C1319688"
+                }
+            ]
+        },
+        {
+            "identifier": "d103",
+            "text": "1 ml oplossing bevat 40 microgram travoprost en 5 mg timolol (als timololmaleaat)",
+            "annotations": [
+                {
+                    "text": "timololmaleaat",
+                    "start": 66,
+                    "end": 80,
+                    "label": "C0087093"
+                },
+                {
+                    "text": "oplossing",
+                    "start": 5,
+                    "end": 14,
+                    "label": "C0525069"
+                },
+                {
+                    "text": "travoprost en timolol",
+                    "start": 34,
+                    "end": 47,
+                    "label": "C1828363"
+                }
+            ]
+        },
+        {
+            "identifier": "d388",
+            "text": "Welke risico\u2019 s houdt het gebruik van Tamiflu in?",
+            "annotations": [
+                {
+                    "text": "Tamiflu",
+                    "start": 38,
+                    "end": 45,
+                    "label": "C0876173"
+                }
+            ]
+        },
+        {
+            "identifier": "d219",
+            "text": "Een verhoging van het serumcreatinineniveau en/of acuut nierfalen zijn waargenomen.",
+            "annotations": [
+                {
+                    "text": "acuut nierfalen",
+                    "start": 50,
+                    "end": 65,
+                    "label": "C0022660"
+                },
+                {
+                    "text": "verhoging van het serumcreatinineniveau",
+                    "start": 4,
+                    "end": 43,
+                    "label": "C0235431"
+                },
+                {
+                    "text": "acuut nierfalen",
+                    "start": 50,
+                    "end": 65,
+                    "label": "C1565662"
+                }
+            ]
+        },
+        {
+            "identifier": "d84",
+            "text": "Behandeling Als de inname recent is, kan inductie van braken of een maagspoeling worden overwogen.",
+            "annotations": [
+                {
+                    "text": "maagspoeling",
+                    "start": 68,
+                    "end": 80,
+                    "label": "C0017134"
+                },
+                {
+                    "text": "inductie van braken",
+                    "start": 41,
+                    "end": 60,
+                    "label": "C0455040"
+                },
+                {
+                    "text": "inname",
+                    "start": 19,
+                    "end": 25,
+                    "label": "C0232478"
+                },
+                {
+                    "text": "Behandeling",
+                    "start": 0,
+                    "end": 11,
+                    "label": "C0087111"
+                }
+            ]
+        },
+        {
+            "identifier": "d660",
+            "text": "In het geval van verslechtering van de nierfunctie dient gestopt te worden met het gebruik van Lisonorm en dient dit vervangen te worden door de adequaat aangepaste individuele componenten.",
+            "annotations": [
+                {
+                    "text": "verslechtering van de nierfunctie",
+                    "start": 17,
+                    "end": 50,
+                    "label": "C1278220"
+                },
+                {
+                    "text": "dient gestopt te worden met het gebruik",
+                    "start": 51,
+                    "end": 90,
+                    "label": "C0584668"
+                },
+                {
+                    "text": "componenten",
+                    "start": 177,
+                    "end": 188,
+                    "label": "C0729650"
+                }
+            ]
+        },
+        {
+            "identifier": "d461",
+            "text": "Hoewel er geen duidelijk bewijs van optreden van verslaving is bij pati\u00ebnten die natriumoxybaat in therapeutische doses nemen, kan deze mogelijkheid niet worden uitgesloten.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 67,
+                    "end": 76,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "natriumoxybaat",
+                    "start": 81,
+                    "end": 95,
+                    "label": "C0037537"
+                },
+                {
+                    "text": "verslaving",
+                    "start": 49,
+                    "end": 59,
+                    "label": "C1510472"
+                }
+            ]
+        },
+        {
+            "identifier": "d232",
+            "text": "Als een overdosering optreedt, moet de intraoculaire druk worden gecontroleerd en behandeld, indien de aanwezige oogarts dit noodzakelijk acht.",
+            "annotations": [
+                {
+                    "text": "intraoculaire druk",
+                    "start": 39,
+                    "end": 57,
+                    "label": "C0021888"
+                },
+                {
+                    "text": "behandeld",
+                    "start": 82,
+                    "end": 91,
+                    "label": "C0332293"
+                },
+                {
+                    "text": "overdosering",
+                    "start": 8,
+                    "end": 20,
+                    "label": "C0029944"
+                },
+                {
+                    "text": "oogarts",
+                    "start": 113,
+                    "end": 120,
+                    "label": "C1704292"
+                }
+            ]
+        },
+        {
+            "identifier": "d101",
+            "text": "Bij pati\u00ebnten met een kortdurende maag- of darmaandoening of met koorts moet het gebruik van het middel worden uitgesteld.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 4,
+                    "end": 13,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "koorts",
+                    "start": 65,
+                    "end": 71,
+                    "label": "C0015967"
+                },
+                {
+                    "text": "maag aandoening",
+                    "start": 34,
+                    "end": 38,
+                    "label": "C0038354"
+                },
+                {
+                    "text": "darmaandoening",
+                    "start": 43,
+                    "end": 57,
+                    "label": "C0021831"
+                }
+            ]
+        },
+        {
+            "identifier": "d61",
+            "text": "Mogelijke door histamine veroorzaakte verschijnselen zijn gemeld waaronder meldingen van uitslag, zwelling van gelaat en/ of lippen, jeuk, gevoel van warmte, of moeilijk ademen.",
+            "annotations": [
+                {
+                    "text": "uitslag",
+                    "start": 89,
+                    "end": 96,
+                    "label": "C0015230"
+                },
+                {
+                    "text": "jeuk",
+                    "start": 133,
+                    "end": 137,
+                    "label": "C0033774"
+                },
+                {
+                    "text": "moeilijk ademen",
+                    "start": 161,
+                    "end": 176,
+                    "label": "C0013404"
+                },
+                {
+                    "text": "histamine",
+                    "start": 15,
+                    "end": 24,
+                    "label": "C0019588"
+                },
+                {
+                    "text": "gemeld",
+                    "start": 58,
+                    "end": 64,
+                    "label": "C0700287"
+                },
+                {
+                    "text": "meldingen",
+                    "start": 75,
+                    "end": 84,
+                    "label": "C0700287"
+                },
+                {
+                    "text": "gevoel van warmte",
+                    "start": 139,
+                    "end": 156,
+                    "label": "C0549386"
+                },
+                {
+                    "text": "zwelling van lippen",
+                    "start": 98,
+                    "end": 110,
+                    "label": "C0240211"
+                },
+                {
+                    "text": "zwelling van gelaat",
+                    "start": 98,
+                    "end": 117,
+                    "label": "C0151602"
+                }
+            ]
+        },
+        {
+            "identifier": "d179",
+            "text": "Wanneer de resultaten van de vier onderzoeken samen werden bekeken, lag de gemiddelde groei voor de behandeling bij 2,8 cm per jaar.",
+            "annotations": [
+                {
+                    "text": "groei",
+                    "start": 86,
+                    "end": 91,
+                    "label": "C0018270"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 100,
+                    "end": 111,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "onderzoeken",
+                    "start": 34,
+                    "end": 45,
+                    "label": "C0008972"
+                }
+            ]
+        },
+        {
+            "identifier": "d354",
+            "text": "Pneumonie *, infectie van de onderste luchtwegen, herpes zoster, herpes simplex, infectie van de urinewegen, infectie van de bovenste luchtwegen, sinusitis, orale candidiasis, orale schimmelinfectie Soms:",
+            "annotations": [
+                {
+                    "text": "Pneumonie",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0032285"
+                },
+                {
+                    "text": "herpes simplex",
+                    "start": 65,
+                    "end": 79,
+                    "label": "C0019348"
+                },
+                {
+                    "text": "infectie van de urinewegen",
+                    "start": 81,
+                    "end": 107,
+                    "label": "C0042029"
+                },
+                {
+                    "text": "sinusitis",
+                    "start": 146,
+                    "end": 155,
+                    "label": "C0037199"
+                },
+                {
+                    "text": "orale schimmelinfectie",
+                    "start": 176,
+                    "end": 198,
+                    "label": "C0877048"
+                },
+                {
+                    "text": "infectie van de onderste luchtwegen",
+                    "start": 13,
+                    "end": 48,
+                    "label": "C0149725"
+                },
+                {
+                    "text": "herpes zoster",
+                    "start": 50,
+                    "end": 63,
+                    "label": "C0019360"
+                },
+                {
+                    "text": "infectie van de bovenste luchtwegen",
+                    "start": 109,
+                    "end": 144,
+                    "label": "C0041912"
+                },
+                {
+                    "text": "orale candidiasis",
+                    "start": 157,
+                    "end": 174,
+                    "label": "C0006849"
+                }
+            ]
+        },
+        {
+            "identifier": "d321",
+            "text": "Bij gebruik van humaan normaal immunoglobuline voor intraveneuze toediening kunnen soms bijwerkingen optreden zoals rillingen, hoofdpijn, koorts, braken, allergische reacties, misselijkheid, gewrichtspijn, lage bloeddruk en matig-ernstige lage rugpijn.",
+            "annotations": [
+                {
+                    "text": "rillingen",
+                    "start": 116,
+                    "end": 125,
+                    "label": "C0036973"
+                },
+                {
+                    "text": "hoofdpijn",
+                    "start": 127,
+                    "end": 136,
+                    "label": "C0018681"
+                },
+                {
+                    "text": "koorts",
+                    "start": 138,
+                    "end": 144,
+                    "label": "C0015967"
+                },
+                {
+                    "text": "braken",
+                    "start": 146,
+                    "end": 152,
+                    "label": "C0042963"
+                },
+                {
+                    "text": "misselijkheid",
+                    "start": 176,
+                    "end": 189,
+                    "label": "C0027497"
+                },
+                {
+                    "text": "gewrichtspijn",
+                    "start": 191,
+                    "end": 204,
+                    "label": "C0003862"
+                },
+                {
+                    "text": "lage bloeddruk",
+                    "start": 206,
+                    "end": 220,
+                    "label": "C0020649"
+                },
+                {
+                    "text": "lage rugpijn",
+                    "start": 239,
+                    "end": 251,
+                    "label": "C0024031"
+                },
+                {
+                    "text": "intraveneuze toediening",
+                    "start": 52,
+                    "end": 75,
+                    "label": "C0021440"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 88,
+                    "end": 100,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "allergische reacties",
+                    "start": 154,
+                    "end": 174,
+                    "label": "C1527304"
+                },
+                {
+                    "text": "rillingen",
+                    "start": 116,
+                    "end": 125,
+                    "label": "C0085593"
+                },
+                {
+                    "text": "koorts",
+                    "start": 138,
+                    "end": 144,
+                    "label": "C0424755"
+                },
+                {
+                    "text": "allergische reacties",
+                    "start": 154,
+                    "end": 174,
+                    "label": "C0020517"
+                },
+                {
+                    "text": "immunoglobuline",
+                    "start": 31,
+                    "end": 46,
+                    "label": "C0021027"
+                }
+            ]
+        },
+        {
+            "identifier": "d408",
+            "text": "Elk filmomhulde tablet bevat 62,5 mg bosentan (als monohydraat).",
+            "annotations": [
+                {
+                    "text": "filmomhulde tablet",
+                    "start": 4,
+                    "end": 22,
+                    "label": "C1273643"
+                },
+                {
+                    "text": "bosentan",
+                    "start": 37,
+                    "end": 45,
+                    "label": "C0252643"
+                }
+            ]
+        },
+        {
+            "identifier": "d838",
+            "text": "De reactie met bariumhydroxide resulteert in een hogere productie van Compound A dan bij de reactie met natronkalk.",
+            "annotations": [
+                {
+                    "text": "bariumhydroxide",
+                    "start": 15,
+                    "end": 30,
+                    "label": "C0052976"
+                },
+                {
+                    "text": "Compound A",
+                    "start": 70,
+                    "end": 80,
+                    "label": "C0044729"
+                },
+                {
+                    "text": "natronkalk",
+                    "start": 104,
+                    "end": 114,
+                    "label": "C0074716"
+                }
+            ]
+        },
+        {
+            "identifier": "d66",
+            "text": "Wissel steeds van plaats die u voor de injectie gebruikt.",
+            "annotations": [
+                {
+                    "text": "injectie",
+                    "start": 39,
+                    "end": 47,
+                    "label": "C1533685"
+                }
+            ]
+        },
+        {
+            "identifier": "d227",
+            "text": "Zoals bij alle insulines dient bij oudere pati\u00ebnten en pati\u00ebnten met nier- of leveraandoeningen het bloedglucosegehalte intensief te worden gecontroleerd en dient de insuline detemir dosering aangepast te worden op basis van de behoefte van de pati\u00ebnt.",
+            "annotations": [
+                {
+                    "text": "insulines",
+                    "start": 15,
+                    "end": 24,
+                    "label": "C1579433"
+                },
+                {
+                    "text": "insulines",
+                    "start": 15,
+                    "end": 24,
+                    "label": "C0021641"
+                },
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 42,
+                    "end": 51,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 55,
+                    "end": 64,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "pati\u00ebnt",
+                    "start": 244,
+                    "end": 251,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "oudere",
+                    "start": 35,
+                    "end": 41,
+                    "label": "C1999167"
+                },
+                {
+                    "text": "insuline detemir",
+                    "start": 166,
+                    "end": 182,
+                    "label": "C0537270"
+                },
+                {
+                    "text": "leveraandoeningen",
+                    "start": 78,
+                    "end": 95,
+                    "label": "C0023895"
+                },
+                {
+                    "text": "nier aandoeningen",
+                    "start": 69,
+                    "end": 73,
+                    "label": "C0022658"
+                },
+                {
+                    "text": "bloedglucosegehalte",
+                    "start": 100,
+                    "end": 119,
+                    "label": "C0428554"
+                },
+                {
+                    "text": "oudere",
+                    "start": 35,
+                    "end": 41,
+                    "label": "C0001792"
+                }
+            ]
+        },
+        {
+            "identifier": "d272",
+            "text": "1 injectieflacon bevat 10 ml equivalent aan 1.000 E.",
+            "annotations": []
+        },
+        {
+            "identifier": "d18",
+            "text": "Welke voordelen bleek Aldurazyme tijdens de studies te hebben?",
+            "annotations": [
+                {
+                    "text": "studies",
+                    "start": 44,
+                    "end": 51,
+                    "label": "C0008972"
+                }
+            ]
+        },
+        {
+            "identifier": "d110",
+            "text": "Een percutane coronaire ingreep is een operatie waarbij vernauwde kransaders (bloedvaten in het hart) worden verwijd.",
+            "annotations": [
+                {
+                    "text": "bloedvaten",
+                    "start": 78,
+                    "end": 88,
+                    "label": "C0005847"
+                },
+                {
+                    "text": "hart",
+                    "start": 96,
+                    "end": 100,
+                    "label": "C0018787"
+                },
+                {
+                    "text": "percutane coronaire ingreep",
+                    "start": 4,
+                    "end": 31,
+                    "label": "C1532338"
+                },
+                {
+                    "text": "operatie",
+                    "start": 39,
+                    "end": 47,
+                    "label": "C0543467"
+                },
+                {
+                    "text": "vernauwde kransaders",
+                    "start": 56,
+                    "end": 76,
+                    "label": "C0242231"
+                },
+                {
+                    "text": "bloedvaten",
+                    "start": 78,
+                    "end": 88,
+                    "label": "C1283786"
+                },
+                {
+                    "text": "hart",
+                    "start": 96,
+                    "end": 100,
+                    "label": "C1281570"
+                }
+            ]
+        },
+        {
+            "identifier": "d100",
+            "text": "De farmacokinetiek van doripenem is lineair over een dosisbereik van 500 mg tot 1 g, als het infuus in 1 uur of in 4 uur wordt toegediend.",
+            "annotations": [
+                {
+                    "text": "farmacokinetiek",
+                    "start": 3,
+                    "end": 18,
+                    "label": "C0031327"
+                },
+                {
+                    "text": "doripenem",
+                    "start": 23,
+                    "end": 32,
+                    "label": "C0389169"
+                },
+                {
+                    "text": "infuus toegediend",
+                    "start": 93,
+                    "end": 99,
+                    "label": "C0021440"
+                }
+            ]
+        },
+        {
+            "identifier": "d347",
+            "text": "In een onderzoek bij gezonde vrijwilligers werd orthostatische hypotensie waargenomen in relatie tot een intraveneus toegediende bolusdosis van 0,64 mg/kg.",
+            "annotations": [
+                {
+                    "text": "orthostatische hypotensie",
+                    "start": 48,
+                    "end": 73,
+                    "label": "C0020651"
+                },
+                {
+                    "text": "vrijwilligers",
+                    "start": 29,
+                    "end": 42,
+                    "label": "C1997894"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 7,
+                    "end": 16,
+                    "label": "C0008972"
+                },
+                {
+                    "text": "intraveneus toegediende bolus",
+                    "start": 105,
+                    "end": 134,
+                    "label": "C2317227"
+                },
+                {
+                    "text": "vrijwilligers",
+                    "start": 29,
+                    "end": 42,
+                    "label": "C0020155"
+                }
+            ]
+        },
+        {
+            "identifier": "d766",
+            "text": "Runderen, Schapen",
+            "annotations": [
+                {
+                    "text": "Schapen",
+                    "start": 10,
+                    "end": 17,
+                    "label": "C0036945"
+                },
+                {
+                    "text": "Schapen",
+                    "start": 10,
+                    "end": 17,
+                    "label": "C1123019"
+                },
+                {
+                    "text": "Runderen",
+                    "start": 0,
+                    "end": 8,
+                    "label": "C0007452"
+                }
+            ]
+        },
+        {
+            "identifier": "d6",
+            "text": "Insulinesuspensies mogen niet in insuline-infuuspompen worden gebruikt.",
+            "annotations": [
+                {
+                    "text": "insuline-infuuspompen",
+                    "start": 33,
+                    "end": 54,
+                    "label": "C1140609"
+                },
+                {
+                    "text": "Insuline",
+                    "start": 0,
+                    "end": 8,
+                    "label": "C0021641"
+                },
+                {
+                    "text": "suspensies",
+                    "start": 8,
+                    "end": 18,
+                    "label": "C1382107"
+                },
+                {
+                    "text": "suspensies",
+                    "start": 8,
+                    "end": 18,
+                    "label": "C0038960"
+                },
+                {
+                    "text": "Insuline",
+                    "start": 0,
+                    "end": 8,
+                    "label": "C1579433"
+                }
+            ]
+        },
+        {
+            "identifier": "d379",
+            "text": "Pati\u00ebnten met een lichaamsgewicht van meer dan 100 kg vertoonden een betere respons op de dosis van 90 mg.",
+            "annotations": [
+                {
+                    "text": "Pati\u00ebnten",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "lichaamsgewicht",
+                    "start": 18,
+                    "end": 33,
+                    "label": "C0005910"
+                }
+            ]
+        },
+        {
+            "identifier": "d120",
+            "text": "Bij pati\u00ebnten met gemetastaseerde colorectale kanker wordt cetuximab in combinatie met chemotherapie of als monotherapie gebruikt (zie rubriek 5.1).",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 4,
+                    "end": 13,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "cetuximab",
+                    "start": 59,
+                    "end": 68,
+                    "label": "C0995188"
+                },
+                {
+                    "text": "chemotherapie",
+                    "start": 87,
+                    "end": 100,
+                    "label": "C0013216"
+                },
+                {
+                    "text": "chemotherapie",
+                    "start": 87,
+                    "end": 100,
+                    "label": "C0392920"
+                },
+                {
+                    "text": "gemetastaseerde colorectale kanker",
+                    "start": 18,
+                    "end": 52,
+                    "label": "C0948380"
+                }
+            ]
+        },
+        {
+            "identifier": "d394",
+            "text": "De toevoeging van TAXOTERE aan andere kankerbehandelingen resulteerde in een stijging van de responspercentages, een afremming van de progressie van de ziekte en een verlenging van de overlevingsduur voor alle vijf kankersoorten (borstkanker, niet-kleincellige longkanker, prostaatkanker, maagdarmkanker en hoofd-halskanker).",
+            "annotations": [
+                {
+                    "text": "TAXOTERE",
+                    "start": 18,
+                    "end": 26,
+                    "label": "C0699967"
+                },
+                {
+                    "text": "afremming",
+                    "start": 117,
+                    "end": 126,
+                    "label": "C0011100"
+                },
+                {
+                    "text": "borstkanker",
+                    "start": 230,
+                    "end": 241,
+                    "label": "C0006142"
+                },
+                {
+                    "text": "niet-kleincellige longkanker",
+                    "start": 243,
+                    "end": 271,
+                    "label": "C0007131"
+                },
+                {
+                    "text": "progressie van de ziekte",
+                    "start": 134,
+                    "end": 158,
+                    "label": "C0242656"
+                },
+                {
+                    "text": "maagdarmkanker",
+                    "start": 289,
+                    "end": 303,
+                    "label": "C0278701"
+                },
+                {
+                    "text": "hoofd-halskanker",
+                    "start": 307,
+                    "end": 323,
+                    "label": "C0278996"
+                },
+                {
+                    "text": "behandelingen",
+                    "start": 44,
+                    "end": 57,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "kanker",
+                    "start": 38,
+                    "end": 44,
+                    "label": "C0006826"
+                },
+                {
+                    "text": "kanker",
+                    "start": 38,
+                    "end": 44,
+                    "label": "C1306459"
+                },
+                {
+                    "text": "kanker",
+                    "start": 215,
+                    "end": 221,
+                    "label": "C1306459"
+                },
+                {
+                    "text": "kanker",
+                    "start": 215,
+                    "end": 221,
+                    "label": "C0006826"
+                },
+                {
+                    "text": "borstkanker",
+                    "start": 230,
+                    "end": 241,
+                    "label": "C0678222"
+                },
+                {
+                    "text": "prostaatkanker",
+                    "start": 273,
+                    "end": 287,
+                    "label": "C0376358"
+                },
+                {
+                    "text": "prostaatkanker",
+                    "start": 273,
+                    "end": 287,
+                    "label": "C0600139"
+                },
+                {
+                    "text": "overlevingsduur",
+                    "start": 184,
+                    "end": 199,
+                    "label": "C2919552"
+                }
+            ]
+        },
+        {
+            "identifier": "d351",
+            "text": "Retacrit was even werkzaam als EPREX/ERYPO voor het verhogen en het op peil houden van het gehalte aan rode bloedcellen.",
+            "annotations": [
+                {
+                    "text": "EPREX",
+                    "start": 31,
+                    "end": 36,
+                    "label": "C0376539"
+                },
+                {
+                    "text": "gehalte aan rode bloedcellen",
+                    "start": 91,
+                    "end": 119,
+                    "label": "C1287262"
+                },
+                {
+                    "text": "gehalte aan rode bloedcellen",
+                    "start": 91,
+                    "end": 119,
+                    "label": "C0014772"
+                }
+            ]
+        },
+        {
+            "identifier": "d214",
+            "text": "3 Aanpassing dosering bij volwassen pati\u00ebnten met een nierfunctiestoornis",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 36,
+                    "end": 45,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "volwassen",
+                    "start": 26,
+                    "end": 35,
+                    "label": "C0001675"
+                },
+                {
+                    "text": "nierfunctiestoornis",
+                    "start": 54,
+                    "end": 73,
+                    "label": "C0341697"
+                }
+            ]
+        },
+        {
+            "identifier": "d311",
+            "text": "Vervolgens wordt de behandeling voortgezet met twee capsules van 110 mg (220 mg) eenmaal daags gedurende 28 tot 35 dagen na een heupvervangende operatie en gedurende 10 dagen na een knievervangende operatie.",
+            "annotations": [
+                {
+                    "text": "capsules",
+                    "start": 52,
+                    "end": 60,
+                    "label": "C0006935"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 20,
+                    "end": 31,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "heupvervangende operatie",
+                    "start": 128,
+                    "end": 152,
+                    "label": "C0392806"
+                },
+                {
+                    "text": "knievervangende operatie",
+                    "start": 182,
+                    "end": 206,
+                    "label": "C0086511"
+                }
+            ]
+        },
+        {
+            "identifier": "d818",
+            "text": "Wat is Poulvac FluFend H5N3 RG?",
+            "annotations": []
+        },
+        {
+            "identifier": "d16",
+            "text": "Pati\u00ebnten van 4 jaar en ouder die niet in staat zijn capsules Agenerase te slikken: de aanbevolen dosis Agenerase drank is 17 mg (1,1 ml) / kg lichaamsgewicht driemaal daags in combinatie met andere antiretrovirale middelen tot een maximale dosering van 2.800 mg per dag (zie rubriek 5.1).",
+            "annotations": [
+                {
+                    "text": "Pati\u00ebnten",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "capsules",
+                    "start": 53,
+                    "end": 61,
+                    "label": "C0006935"
+                },
+                {
+                    "text": "Agenerase",
+                    "start": 62,
+                    "end": 71,
+                    "label": "C0754187"
+                },
+                {
+                    "text": "Agenerase",
+                    "start": 104,
+                    "end": 113,
+                    "label": "C0754187"
+                },
+                {
+                    "text": "lichaamsgewicht",
+                    "start": 143,
+                    "end": 158,
+                    "label": "C0005910"
+                },
+                {
+                    "text": "drank",
+                    "start": 114,
+                    "end": 119,
+                    "label": "C0991536"
+                },
+                {
+                    "text": "antiretrovirale middelen",
+                    "start": 199,
+                    "end": 223,
+                    "label": "C0599685"
+                },
+                {
+                    "text": "niet in staat zijn te slikken",
+                    "start": 34,
+                    "end": 52,
+                    "label": "C0221470"
+                }
+            ]
+        },
+        {
+            "identifier": "d312",
+            "text": "U mag geen Pramipexol Teva gebruiken als u borstvoeding geeft.",
+            "annotations": [
+                {
+                    "text": "borstvoeding",
+                    "start": 43,
+                    "end": 55,
+                    "label": "C0006147"
+                },
+                {
+                    "text": "Pramipexol",
+                    "start": 11,
+                    "end": 21,
+                    "label": "C0074710"
+                },
+                {
+                    "text": "borstvoeding",
+                    "start": 43,
+                    "end": 55,
+                    "label": "C1623040"
+                }
+            ]
+        },
+        {
+            "identifier": "d469",
+            "text": "Een behandeling met Zeffix kan de hoeveelheid hepatitis B virus in uw lichaam verlagen.",
+            "annotations": [
+                {
+                    "text": "hepatitis B virus",
+                    "start": 46,
+                    "end": 63,
+                    "label": "C0019169"
+                },
+                {
+                    "text": "lichaam",
+                    "start": 70,
+                    "end": 77,
+                    "label": "C0460148"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 4,
+                    "end": 15,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "lichaam",
+                    "start": 70,
+                    "end": 77,
+                    "label": "C1268086"
+                }
+            ]
+        },
+        {
+            "identifier": "d198",
+            "text": "Hoe is Irbesartan BMS onderzocht?",
+            "annotations": [
+                {
+                    "text": "Irbesartan",
+                    "start": 7,
+                    "end": 17,
+                    "label": "C0288171"
+                }
+            ]
+        },
+        {
+            "identifier": "d457",
+            "text": "Wat is XERISTAR en waarvoor wordt het gebruikt 2.",
+            "annotations": []
+        },
+        {
+            "identifier": "d73",
+            "text": "De voor Cholestagel gebruikelijke dosis is tweemaal daags 3 tabletten bij de maaltijd of 6 tabletten per dag bij een maaltijd.",
+            "annotations": [
+                {
+                    "text": "Cholestagel",
+                    "start": 8,
+                    "end": 19,
+                    "label": "C1160749"
+                },
+                {
+                    "text": "tabletten",
+                    "start": 60,
+                    "end": 69,
+                    "label": "C0039225"
+                },
+                {
+                    "text": "tabletten",
+                    "start": 91,
+                    "end": 100,
+                    "label": "C0039225"
+                }
+            ]
+        },
+        {
+            "identifier": "d429",
+            "text": "Welke voordelen bleek Valdoxan tijdens de studies te hebben?",
+            "annotations": [
+                {
+                    "text": "Valdoxan",
+                    "start": 22,
+                    "end": 30,
+                    "label": "C2930530"
+                },
+                {
+                    "text": "studies",
+                    "start": 42,
+                    "end": 49,
+                    "label": "C0008972"
+                }
+            ]
+        },
+        {
+            "identifier": "d824",
+            "text": "De Europese Commissie heeft de firma Fort Dodge Animal Health op 19.12.2006een in de hele Europese Unie geldende vergunning voor het in de handel brengen van ProMeris verleend.",
+            "annotations": []
+        },
+        {
+            "identifier": "d265",
+            "text": "NeuroBloc 5000 E/ml bevat minder dan 1 mmol natrium per ml.",
+            "annotations": [
+                {
+                    "text": "NeuroBloc",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0939393"
+                },
+                {
+                    "text": "natrium",
+                    "start": 44,
+                    "end": 51,
+                    "label": "C0037473"
+                },
+                {
+                    "text": "natrium",
+                    "start": 44,
+                    "end": 51,
+                    "label": "C0037570"
+                }
+            ]
+        },
+        {
+            "identifier": "d121",
+            "text": "U wordt geadviseerd de adviezen voor huid- en voetverzorging op te volgen die u van uw arts of verpleegkundige heeft ontvangen.",
+            "annotations": [
+                {
+                    "text": "arts",
+                    "start": 87,
+                    "end": 91,
+                    "label": "C0031831"
+                },
+                {
+                    "text": "verpleegkundige",
+                    "start": 95,
+                    "end": 110,
+                    "label": "C0028661"
+                },
+                {
+                    "text": "huid verzorging",
+                    "start": 37,
+                    "end": 41,
+                    "label": "C0150773"
+                },
+                {
+                    "text": "voetverzorging",
+                    "start": 46,
+                    "end": 60,
+                    "label": "C0150240"
+                },
+                {
+                    "text": "adviezen",
+                    "start": 23,
+                    "end": 31,
+                    "label": "C1136220"
+                },
+                {
+                    "text": "adviezen",
+                    "start": 23,
+                    "end": 31,
+                    "label": "C0150600"
+                }
+            ]
+        },
+        {
+            "identifier": "d220",
+            "text": "Als de productie van rode bloedcellen verminderd is, kunt u last hebben van vermoeidheid of kortademigheid.",
+            "annotations": [
+                {
+                    "text": "vermoeidheid",
+                    "start": 76,
+                    "end": 88,
+                    "label": "C0015672"
+                },
+                {
+                    "text": "kortademigheid",
+                    "start": 92,
+                    "end": 106,
+                    "label": "C0013404"
+                },
+                {
+                    "text": "productie van rode bloedcellen verminderd",
+                    "start": 7,
+                    "end": 48,
+                    "label": "C0302085"
+                }
+            ]
+        },
+        {
+            "identifier": "d14",
+            "text": "Aerius 5 mg filmomhulde tabletten worden verpakt in een blisterverpakking met enkelvoudige dosis van 1, 2, 3, 5, 7, 10, 14, 15, 20, 21, 30, 50, 90 of 100 tabletten.",
+            "annotations": [
+                {
+                    "text": "Aerius",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C1101146"
+                },
+                {
+                    "text": "filmomhulde tabletten",
+                    "start": 12,
+                    "end": 33,
+                    "label": "C1273643"
+                },
+                {
+                    "text": "tabletten",
+                    "start": 154,
+                    "end": 163,
+                    "label": "C0039225"
+                },
+                {
+                    "text": "blister",
+                    "start": 56,
+                    "end": 63,
+                    "label": "C1319688"
+                }
+            ]
+        },
+        {
+            "identifier": "d322",
+            "text": "Andere veelvoorkomende bijwerkingen zijn koorts, anorexie (verlies van eetlust), braken, diarree, prikkelbaarheid, slaperigheid, huilen (waaronder op ongewoon hoge toon en langdurig huilen) en otitis media (middenoorinfectie).",
+            "annotations": [
+                {
+                    "text": "koorts",
+                    "start": 41,
+                    "end": 47,
+                    "label": "C0015967"
+                },
+                {
+                    "text": "anorexie",
+                    "start": 49,
+                    "end": 57,
+                    "label": "C0003123"
+                },
+                {
+                    "text": "prikkelbaarheid",
+                    "start": 98,
+                    "end": 113,
+                    "label": "C0022107"
+                },
+                {
+                    "text": "slaperigheid",
+                    "start": 115,
+                    "end": 127,
+                    "label": "C0013144"
+                },
+                {
+                    "text": "huilen",
+                    "start": 129,
+                    "end": 135,
+                    "label": "C0424109"
+                },
+                {
+                    "text": "otitis media",
+                    "start": 193,
+                    "end": 205,
+                    "label": "C0029882"
+                },
+                {
+                    "text": "otitis media",
+                    "start": 193,
+                    "end": 205,
+                    "label": "C2827407"
+                },
+                {
+                    "text": "middenoorinfectie",
+                    "start": 207,
+                    "end": 224,
+                    "label": "C2827407"
+                },
+                {
+                    "text": "verlies van eetlust",
+                    "start": 59,
+                    "end": 78,
+                    "label": "C1971624"
+                },
+                {
+                    "text": "braken",
+                    "start": 81,
+                    "end": 87,
+                    "label": "C0042963"
+                },
+                {
+                    "text": "diarree",
+                    "start": 89,
+                    "end": 96,
+                    "label": "C0011991"
+                },
+                {
+                    "text": "slaperigheid",
+                    "start": 115,
+                    "end": 127,
+                    "label": "C2830004"
+                },
+                {
+                    "text": "koorts",
+                    "start": 41,
+                    "end": 47,
+                    "label": "C0424755"
+                },
+                {
+                    "text": "verlies van eetlust",
+                    "start": 59,
+                    "end": 78,
+                    "label": "C0426579"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 23,
+                    "end": 35,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 23,
+                    "end": 35,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 23,
+                    "end": 35,
+                    "label": "C0877248"
+                },
+                {
+                    "text": "middenoorinfectie",
+                    "start": 207,
+                    "end": 224,
+                    "label": "C0029882"
+                },
+                {
+                    "text": "op hoge toon huilen",
+                    "start": 147,
+                    "end": 149,
+                    "label": "C0239154"
+                }
+            ]
+        },
+        {
+            "identifier": "d157",
+            "text": "Bijwerkingen Bijwerkingen die vaker gemeld zijn dan een enkel ge\u00efsoleerd geval worden hieronder opgesomd volgens de systeem orgaan klasse en volgens frequentie.",
+            "annotations": [
+                {
+                    "text": "Bijwerkingen",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "Bijwerkingen",
+                    "start": 13,
+                    "end": 25,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "gemeld",
+                    "start": 36,
+                    "end": 42,
+                    "label": "C0700287"
+                },
+                {
+                    "text": "systeem orgaan",
+                    "start": 116,
+                    "end": 130,
+                    "label": "C0460002"
+                },
+                {
+                    "text": "Bijwerkingen",
+                    "start": 13,
+                    "end": 25,
+                    "label": "C0877248"
+                },
+                {
+                    "text": "Bijwerkingen",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0877248"
+                },
+                {
+                    "text": "Bijwerkingen",
+                    "start": 0,
+                    "end": 12,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "Bijwerkingen",
+                    "start": 13,
+                    "end": 25,
+                    "label": "C0041755"
+                }
+            ]
+        },
+        {
+            "identifier": "d129",
+            "text": "Na meervoudige doses nam de blootstelling toe met een accumulatiefactor van 1,3 tot 2,3.",
+            "annotations": [
+                {
+                    "text": "blootstelling",
+                    "start": 28,
+                    "end": 41,
+                    "label": "C0332157"
+                }
+            ]
+        },
+        {
+            "identifier": "d209",
+            "text": "De oplossing is lichtgeel tot goud van kleur",
+            "annotations": [
+                {
+                    "text": "kleur",
+                    "start": 39,
+                    "end": 44,
+                    "label": "C0009393"
+                },
+                {
+                    "text": "oplossing",
+                    "start": 3,
+                    "end": 12,
+                    "label": "C0037633"
+                },
+                {
+                    "text": "oplossing",
+                    "start": 3,
+                    "end": 12,
+                    "label": "C0525069"
+                }
+            ]
+        },
+        {
+            "identifier": "d476",
+            "text": "Zoledroninezuur is een stof die deel uitmaakt van een groep van stoffen die bisfosfonaten worden genoemd.",
+            "annotations": [
+                {
+                    "text": "Zoledroninezuur",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0257685"
+                },
+                {
+                    "text": "stof",
+                    "start": 23,
+                    "end": 27,
+                    "label": "C0439861"
+                },
+                {
+                    "text": "stoffen",
+                    "start": 64,
+                    "end": 71,
+                    "label": "C0439861"
+                },
+                {
+                    "text": "bisfosfonaten",
+                    "start": 76,
+                    "end": 89,
+                    "label": "C0012544"
+                }
+            ]
+        },
+        {
+            "identifier": "d270",
+            "text": "NovoMix 50 mag maar door \u00e9\u00e9n persoon worden gebruikt.",
+            "annotations": [
+                {
+                    "text": "persoon",
+                    "start": 29,
+                    "end": 36,
+                    "label": "C0027361"
+                }
+            ]
+        },
+        {
+            "identifier": "d405",
+            "text": "Bij pati\u00ebnten met kanker van de schildklier zijn diverse gevallen van toegenomen tumorgroei gemeld tijdens de fase waarin, om diagnostische redenen, geen schildklierhormonen werden toegediend, die zijn toegeschreven aan de daaruit voortvloeiende langdurige verhoging van de TSH-spiegel.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 4,
+                    "end": 13,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "kanker van de schildklier",
+                    "start": 18,
+                    "end": 43,
+                    "label": "C0007115"
+                },
+                {
+                    "text": "kanker van de schildklier",
+                    "start": 18,
+                    "end": 43,
+                    "label": "C0549473"
+                },
+                {
+                    "text": "gemeld",
+                    "start": 92,
+                    "end": 98,
+                    "label": "C0700287"
+                },
+                {
+                    "text": "schildklierhormonen",
+                    "start": 154,
+                    "end": 173,
+                    "label": "C0040135"
+                },
+                {
+                    "text": "tumor",
+                    "start": 81,
+                    "end": 86,
+                    "label": "C0027651"
+                },
+                {
+                    "text": "verhoging van de TSH-spiegel",
+                    "start": 257,
+                    "end": 285,
+                    "label": "C0586553"
+                },
+                {
+                    "text": "toegenomen groei",
+                    "start": 70,
+                    "end": 80,
+                    "label": "C0333957"
+                }
+            ]
+        },
+        {
+            "identifier": "d144",
+            "text": "Uit voortplantingsonderzoek onder dieren is gebleken dat degarelix mannetjesdieren onvruchtbaar maakt.",
+            "annotations": [
+                {
+                    "text": "dieren",
+                    "start": 34,
+                    "end": 40,
+                    "label": "C0003062"
+                },
+                {
+                    "text": "dieren",
+                    "start": 76,
+                    "end": 82,
+                    "label": "C0003062"
+                },
+                {
+                    "text": "voortplanting",
+                    "start": 4,
+                    "end": 17,
+                    "label": "C0035150"
+                },
+                {
+                    "text": "degarelix",
+                    "start": 57,
+                    "end": 66,
+                    "label": "C1455035"
+                },
+                {
+                    "text": "onvruchtbaar",
+                    "start": 83,
+                    "end": 95,
+                    "label": "C0021359"
+                },
+                {
+                    "text": "mannetjes",
+                    "start": 67,
+                    "end": 76,
+                    "label": "C0024554"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 18,
+                    "end": 27,
+                    "label": "C0035168"
+                },
+                {
+                    "text": "onvruchtbaar",
+                    "start": 83,
+                    "end": 95,
+                    "label": "C0678108"
+                }
+            ]
+        },
+        {
+            "identifier": "d31",
+            "text": "Leflunomide heeft het beste beschermende effect in diermodellen van auto-immuunziekten wanneer het gegeven wordt in de vroege fase van de progressie van de ziekte.",
+            "annotations": [
+                {
+                    "text": "diermodellen",
+                    "start": 51,
+                    "end": 63,
+                    "label": "C0599779"
+                },
+                {
+                    "text": "auto-immuunziekten",
+                    "start": 68,
+                    "end": 86,
+                    "label": "C0004364"
+                },
+                {
+                    "text": "Leflunomide",
+                    "start": 0,
+                    "end": 11,
+                    "label": "C0063041"
+                },
+                {
+                    "text": "progressie van de ziekte",
+                    "start": 138,
+                    "end": 162,
+                    "label": "C0242656"
+                }
+            ]
+        },
+        {
+            "identifier": "d340",
+            "text": "Dergelijke aandoeningen moeten worden gecorrigeerd voordat Rasilez HCT wordt toegediend.",
+            "annotations": [
+                {
+                    "text": "toegediend",
+                    "start": 77,
+                    "end": 87,
+                    "label": "C1533734"
+                },
+                {
+                    "text": "aandoeningen",
+                    "start": 11,
+                    "end": 23,
+                    "label": "C0012634"
+                }
+            ]
+        },
+        {
+            "identifier": "d287",
+            "text": "21 De volgende bijwerkingen zijn waargenomen in klinische studies:",
+            "annotations": [
+                {
+                    "text": "klinische studies",
+                    "start": 48,
+                    "end": 65,
+                    "label": "C0008976"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 15,
+                    "end": 27,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 15,
+                    "end": 27,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 15,
+                    "end": 27,
+                    "label": "C0877248"
+                }
+            ]
+        },
+        {
+            "identifier": "d416",
+            "text": "U dient echter rekening te houden met uw gezondheidstoestand en mogelijke bijwerkingen van Trizivir voordat u wilt gaan rijden of machines gaat bedienen.",
+            "annotations": [
+                {
+                    "text": "Trizivir",
+                    "start": 91,
+                    "end": 99,
+                    "label": "C0939514"
+                },
+                {
+                    "text": "machines",
+                    "start": 130,
+                    "end": 138,
+                    "label": "C0336779"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 74,
+                    "end": 86,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 74,
+                    "end": 86,
+                    "label": "C0559546"
+                }
+            ]
+        },
+        {
+            "identifier": "d241",
+            "text": "Deze geneesmiddelen helpen bloedproppen op te lossen.",
+            "annotations": [
+                {
+                    "text": "geneesmiddelen",
+                    "start": 5,
+                    "end": 19,
+                    "label": "C0013227"
+                },
+                {
+                    "text": "bloedproppen",
+                    "start": 27,
+                    "end": 39,
+                    "label": "C0302148"
+                },
+                {
+                    "text": "bloedproppen",
+                    "start": 27,
+                    "end": 39,
+                    "label": "C0087086"
+                },
+                {
+                    "text": "geneesmiddelen",
+                    "start": 5,
+                    "end": 19,
+                    "label": "C0456386"
+                }
+            ]
+        },
+        {
+            "identifier": "d203",
+            "text": "Als u zwanger bent of denkt zwanger te zijn, dient u uw arts of apotheker hiervan op de hoogte te stellen voordat u Iscover inneemt.",
+            "annotations": [
+                {
+                    "text": "zwanger",
+                    "start": 6,
+                    "end": 13,
+                    "label": "C0549206"
+                },
+                {
+                    "text": "zwanger",
+                    "start": 28,
+                    "end": 35,
+                    "label": "C0549206"
+                },
+                {
+                    "text": "arts",
+                    "start": 56,
+                    "end": 60,
+                    "label": "C0031831"
+                },
+                {
+                    "text": "apotheker",
+                    "start": 64,
+                    "end": 73,
+                    "label": "C0031323"
+                },
+                {
+                    "text": "Iscover",
+                    "start": 116,
+                    "end": 123,
+                    "label": "C1174747"
+                },
+                {
+                    "text": "zwanger",
+                    "start": 6,
+                    "end": 13,
+                    "label": "C0032961"
+                },
+                {
+                    "text": "zwanger",
+                    "start": 28,
+                    "end": 35,
+                    "label": "C0032961"
+                }
+            ]
+        },
+        {
+            "identifier": "d770",
+            "text": "Lichaamsgewicht (hond en kat) 2,5 kg 5 kg 10 kg 20 kg 40 kg 60 kg",
+            "annotations": [
+                {
+                    "text": "Lichaamsgewicht",
+                    "start": 0,
+                    "end": 15,
+                    "label": "C0005910"
+                },
+                {
+                    "text": "hond",
+                    "start": 17,
+                    "end": 21,
+                    "label": "C0012984"
+                },
+                {
+                    "text": "kat",
+                    "start": 25,
+                    "end": 28,
+                    "label": "C0007450"
+                }
+            ]
+        },
+        {
+            "identifier": "d244",
+            "text": "Wanneer bij met Mimpara behandelde pati\u00ebnten de PTH-concentraties dalen tot onder het aanbevolen streefbereik, dient de dosis Mimpara en/of vitamine-D-sterolen te worden verlaagd of de therapie gestaakt.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 35,
+                    "end": 44,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "sterolen",
+                    "start": 151,
+                    "end": 159,
+                    "label": "C0038323"
+                },
+                {
+                    "text": "met behandelde",
+                    "start": 12,
+                    "end": 15,
+                    "label": "C0332293"
+                },
+                {
+                    "text": "PTH-concentraties",
+                    "start": 48,
+                    "end": 65,
+                    "label": "C0202159"
+                },
+                {
+                    "text": "therapie gestaakt",
+                    "start": 185,
+                    "end": 202,
+                    "label": "C0558681"
+                },
+                {
+                    "text": "vitamine-D",
+                    "start": 140,
+                    "end": 150,
+                    "label": "C0042866"
+                }
+            ]
+        },
+        {
+            "identifier": "d150",
+            "text": "Fracturen komen meestal voor in de heup, wervelkolom of pols en kunnen niet alleen leiden tot pijn maar ook tot aanzienlijke misvorming en invaliditeit zoals voorovergebogen houding (bochel) en verminderde beweeglijkheid.",
+            "annotations": [
+                {
+                    "text": "heup",
+                    "start": 35,
+                    "end": 39,
+                    "label": "C0019552"
+                },
+                {
+                    "text": "wervelkolom",
+                    "start": 41,
+                    "end": 52,
+                    "label": "C0037949"
+                },
+                {
+                    "text": "pols",
+                    "start": 56,
+                    "end": 60,
+                    "label": "C0043262"
+                },
+                {
+                    "text": "pijn",
+                    "start": 94,
+                    "end": 98,
+                    "label": "C0030193"
+                },
+                {
+                    "text": "misvorming",
+                    "start": 125,
+                    "end": 135,
+                    "label": "C0302142"
+                },
+                {
+                    "text": "invaliditeit",
+                    "start": 139,
+                    "end": 151,
+                    "label": "C0231170"
+                },
+                {
+                    "text": "pols",
+                    "start": 56,
+                    "end": 60,
+                    "label": "C1283836"
+                },
+                {
+                    "text": "wervelkolom",
+                    "start": 41,
+                    "end": 52,
+                    "label": "C1267072"
+                },
+                {
+                    "text": "wervelkolom",
+                    "start": 41,
+                    "end": 52,
+                    "label": "C1280065"
+                },
+                {
+                    "text": "beweeglijkheid",
+                    "start": 206,
+                    "end": 220,
+                    "label": "C0425245"
+                },
+                {
+                    "text": "Fracturen",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C0016658"
+                },
+                {
+                    "text": "pols",
+                    "start": 56,
+                    "end": 60,
+                    "label": "C1322271"
+                },
+                {
+                    "text": "voorovergebogen houding",
+                    "start": 158,
+                    "end": 181,
+                    "label": "C0231478"
+                },
+                {
+                    "text": "bochel",
+                    "start": 183,
+                    "end": 189,
+                    "label": "C0022821"
+                }
+            ]
+        },
+        {
+            "identifier": "d48",
+            "text": "Neem Baraclude zo lang in als uw arts heeft gezegd.",
+            "annotations": [
+                {
+                    "text": "Baraclude",
+                    "start": 5,
+                    "end": 14,
+                    "label": "C1568876"
+                },
+                {
+                    "text": "arts",
+                    "start": 33,
+                    "end": 37,
+                    "label": "C0031831"
+                }
+            ]
+        },
+        {
+            "identifier": "d406",
+            "text": "TOVIAZ 4 mg tabletten met verlengde afgifte",
+            "annotations": [
+                {
+                    "text": "TOVIAZ",
+                    "start": 0,
+                    "end": 6,
+                    "label": "C2370090"
+                },
+                {
+                    "text": "tabletten met verlengde afgifte",
+                    "start": 12,
+                    "end": 43,
+                    "label": "C0991507"
+                }
+            ]
+        },
+        {
+            "identifier": "d789",
+            "text": "De eenheid is steriel en wordt geleverd in een gesealde, lichtbestendige, aluminiumfolie laminaat sachet, verpakt in een individuele kartonnen doos.",
+            "annotations": [
+                {
+                    "text": "sachet",
+                    "start": 98,
+                    "end": 104,
+                    "label": "C1319685"
+                },
+                {
+                    "text": "aluminium",
+                    "start": 74,
+                    "end": 83,
+                    "label": "C0002367"
+                },
+                {
+                    "text": "licht",
+                    "start": 57,
+                    "end": 62,
+                    "label": "C0023693"
+                }
+            ]
+        },
+        {
+            "identifier": "d773",
+            "text": "Het is aan te bevelen om fluoroquinolonen te reserveren voor de behandeling van aandoeningen, welke slecht hebben gereageerd, of van welke verwacht wordt dat ze slecht zullen gaan reageren op andere antibioticaklassen.",
+            "annotations": [
+                {
+                    "text": "fluoroquinolonen",
+                    "start": 25,
+                    "end": 41,
+                    "label": "C0949665"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 64,
+                    "end": 75,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "aandoeningen",
+                    "start": 80,
+                    "end": 92,
+                    "label": "C0012634"
+                },
+                {
+                    "text": "antibiotica",
+                    "start": 199,
+                    "end": 210,
+                    "label": "C0003232"
+                }
+            ]
+        },
+        {
+            "identifier": "d96",
+            "text": "Een gekwalificeerd en ervaren arts of specialist in het behandelen van kanker, zal DepoCyte in de ruggenmergvloeistof of de lumbaalzak injecteren.",
+            "annotations": [
+                {
+                    "text": "arts",
+                    "start": 30,
+                    "end": 34,
+                    "label": "C0031831"
+                },
+                {
+                    "text": "kanker",
+                    "start": 71,
+                    "end": 77,
+                    "label": "C0006826"
+                },
+                {
+                    "text": "behandelen",
+                    "start": 56,
+                    "end": 66,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "ruggenmergvloeistof",
+                    "start": 98,
+                    "end": 117,
+                    "label": "C0007806"
+                },
+                {
+                    "text": "kanker",
+                    "start": 71,
+                    "end": 77,
+                    "label": "C1306459"
+                },
+                {
+                    "text": "lumbaal",
+                    "start": 124,
+                    "end": 131,
+                    "label": "C0024090"
+                }
+            ]
+        },
+        {
+            "identifier": "d47",
+            "text": "AZOPT is een sulfonamideremmer van koolzuuranhydrase en, hoewel topisch toegediend, wordt het systemisch geabsorbeerd.",
+            "annotations": [
+                {
+                    "text": "AZOPT",
+                    "start": 0,
+                    "end": 5,
+                    "label": "C0673967"
+                },
+                {
+                    "text": "sulfonamide",
+                    "start": 13,
+                    "end": 24,
+                    "label": "C0038760"
+                },
+                {
+                    "text": "koolzuuranhydrase",
+                    "start": 35,
+                    "end": 52,
+                    "label": "C0007028"
+                },
+                {
+                    "text": "remmer",
+                    "start": 24,
+                    "end": 30,
+                    "label": "C0243077"
+                }
+            ]
+        },
+        {
+            "identifier": "d414",
+            "text": "Er bestaat geen ervaring met het effect van TRISENOX op de APL- variant die de chromosomale translocaties t(11; 17) en t(5; 17) bevat.",
+            "annotations": [
+                {
+                    "text": "TRISENOX",
+                    "start": 44,
+                    "end": 52,
+                    "label": "C1096917"
+                },
+                {
+                    "text": "APL",
+                    "start": 59,
+                    "end": 62,
+                    "label": "C0023487"
+                },
+                {
+                    "text": "chromosomale translocaties",
+                    "start": 79,
+                    "end": 105,
+                    "label": "C0040715"
+                }
+            ]
+        },
+        {
+            "identifier": "d239",
+            "text": "Het blijft onbekend of vroege detectie van PML en onderbreking van MabThera behandeling kan leiden tot stabilisatie of verbetering.",
+            "annotations": [
+                {
+                    "text": "MabThera",
+                    "start": 67,
+                    "end": 75,
+                    "label": "C1314901"
+                },
+                {
+                    "text": "behandeling",
+                    "start": 76,
+                    "end": 87,
+                    "label": "C0087111"
+                },
+                {
+                    "text": "PML",
+                    "start": 43,
+                    "end": 46,
+                    "label": "C0023524"
+                },
+                {
+                    "text": "vroege detectie",
+                    "start": 23,
+                    "end": 38,
+                    "label": "C0596473"
+                }
+            ]
+        },
+        {
+            "identifier": "d426",
+            "text": "In het onderzoek werd de werkzaamheid van Tyverb in combinatie met capecitabine vergeleken met die van alleen capecitabine.",
+            "annotations": [
+                {
+                    "text": "onderzoek",
+                    "start": 7,
+                    "end": 16,
+                    "label": "C0035168"
+                },
+                {
+                    "text": "capecitabine",
+                    "start": 67,
+                    "end": 79,
+                    "label": "C0671970"
+                },
+                {
+                    "text": "capecitabine",
+                    "start": 110,
+                    "end": 122,
+                    "label": "C0671970"
+                },
+                {
+                    "text": "onderzoek",
+                    "start": 7,
+                    "end": 16,
+                    "label": "C0008972"
+                }
+            ]
+        },
+        {
+            "identifier": "d307",
+            "text": "Omdat er bij ernstige nierinsuffici\u00ebntie geen effect is waargenomen, wordt bij pati\u00ebnten met lichte of matige nierinsuffici\u00ebntie geen effect verwacht; maar de effecten van nierfalen in het eindstadium en dialyse op de farmacokinetiek van laropiprant kunnen niet ingeschat worden.",
+            "annotations": [
+                {
+                    "text": "pati\u00ebnten",
+                    "start": 79,
+                    "end": 88,
+                    "label": "C0030705"
+                },
+                {
+                    "text": "dialyse",
+                    "start": 204,
+                    "end": 211,
+                    "label": "C0011946"
+                },
+                {
+                    "text": "farmacokinetiek",
+                    "start": 218,
+                    "end": 233,
+                    "label": "C0031327"
+                },
+                {
+                    "text": "laropiprant",
+                    "start": 238,
+                    "end": 249,
+                    "label": "C1956497"
+                },
+                {
+                    "text": "nierinsuffici\u00ebntie",
+                    "start": 22,
+                    "end": 40,
+                    "label": "C1565489"
+                },
+                {
+                    "text": "nierinsuffici\u00ebntie",
+                    "start": 110,
+                    "end": 128,
+                    "label": "C1565489"
+                },
+                {
+                    "text": "nierfalen in het eindstadium",
+                    "start": 172,
+                    "end": 200,
+                    "label": "C0022661"
+                }
+            ]
+        },
+        {
+            "identifier": "d156",
+            "text": "Vermijd binnen 24 uur na gebruik van Gliolan het gebruik van andere geneesmiddelen die de lever kunnen beschadigen.",
+            "annotations": [
+                {
+                    "text": "lever",
+                    "start": 90,
+                    "end": 95,
+                    "label": "C0023884"
+                },
+                {
+                    "text": "lever",
+                    "start": 90,
+                    "end": 95,
+                    "label": "C1278929"
+                },
+                {
+                    "text": "geneesmiddelen",
+                    "start": 68,
+                    "end": 82,
+                    "label": "C0456386"
+                },
+                {
+                    "text": "geneesmiddelen",
+                    "start": 68,
+                    "end": 82,
+                    "label": "C0013227"
+                }
+            ]
+        },
+        {
+            "identifier": "d93",
+            "text": "Zoals alle geneesmiddelen kan DaTSCAN bijwerkingen veroorzaken, hoewel niet iedereen deze bijwerkingen krijgt.",
+            "annotations": [
+                {
+                    "text": "geneesmiddelen",
+                    "start": 11,
+                    "end": 25,
+                    "label": "C0013227"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 38,
+                    "end": 50,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "geneesmiddelen",
+                    "start": 11,
+                    "end": 25,
+                    "label": "C0456386"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 38,
+                    "end": 50,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 90,
+                    "end": 102,
+                    "label": "C0559546"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 90,
+                    "end": 102,
+                    "label": "C0041755"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 38,
+                    "end": 50,
+                    "label": "C0877248"
+                },
+                {
+                    "text": "bijwerkingen",
+                    "start": 90,
+                    "end": 102,
+                    "label": "C0877248"
+                }
+            ]
+        },
+        {
+            "identifier": "d164",
+            "text": "Levensbedreigende bloedingen zoals intracrani\u00eble bloedingen, bloedingen in de keel of ernstige abdominale bloedingen Operaties",
+            "annotations": [
+                {
+                    "text": "bloedingen",
+                    "start": 18,
+                    "end": 28,
+                    "label": "C0019080"
+                },
+                {
+                    "text": "bloedingen in de keel",
+                    "start": 61,
+                    "end": 82,
+                    "label": "C0576995"
+                },
+                {
+                    "text": "intracrani\u00eble bloedingen",
+                    "start": 35,
+                    "end": 59,
+                    "label": "C0151699"
+                },
+                {
+                    "text": "abdominale bloedingen",
+                    "start": 95,
+                    "end": 116,
+                    "label": "C0236178"
+                },
+                {
+                    "text": "Operaties",
+                    "start": 117,
+                    "end": 126,
+                    "label": "C0543467"
+                }
+            ]
+        },
+        {
+            "identifier": "d257",
+            "text": "Naglazyme mag niet gebruikt worden bij mensen die mogelijk overgevoelig (allergisch) zijn voor galsulfase of voor enig ander bestanddeel van het middel.",
+            "annotations": [
+                {
+                    "text": "Naglazyme",
+                    "start": 0,
+                    "end": 9,
+                    "label": "C1614702"
+                },
+                {
+                    "text": "galsulfase",
+                    "start": 95,
+                    "end": 105,
+                    "label": "C1615657"
+                },
+                {
+                    "text": "overgevoelig",
+                    "start": 59,
+                    "end": 71,
+                    "label": "C0020517"
+                },
+                {
+                    "text": "allergisch",
+                    "start": 73,
+                    "end": 83,
+                    "label": "C0020517"
+                },
+                {
+                    "text": "overgevoelig",
+                    "start": 59,
+                    "end": 71,
+                    "label": "C0013182"
+                },
+                {
+                    "text": "allergisch",
+                    "start": 73,
+                    "end": 83,
+                    "label": "C0013182"
+                },
+                {
+                    "text": "mensen",
+                    "start": 39,
+                    "end": 45,
+                    "label": "C0027361"
+                },
+                {
+                    "text": "bestanddeel",
+                    "start": 125,
+                    "end": 136,
+                    "label": "C0729650"
+                },
+                {
+                    "text": "middel",
+                    "start": 145,
+                    "end": 151,
+                    "label": "C0013227"
+                },
+                {
+                    "text": "middel",
+                    "start": 145,
+                    "end": 151,
+                    "label": "C0456386"
+                }
+            ]
+        }
+    ]
+}

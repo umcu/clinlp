@@ -5,7 +5,7 @@ import itertools
 import json
 import pathlib
 from collections import Counter, defaultdict
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing import Callable, ClassVar, Iterable, Optional
 
 import nervaluate
@@ -32,7 +32,7 @@ class Annotation:
     label: str
     """The label/tag."""
 
-    qualifiers: list[Qualifier] = field(default_factory=list)
+    qualifiers: Optional[list[Qualifier]] = None
     """The applicable qualifiers."""
 
     def lstrip(self, chars: str = " ,") -> None:
@@ -96,13 +96,19 @@ class Annotation:
         ``dict``
             A dictionary with the items of this annotation.
         """
-        return {
+        output = {
             "text": self.text,
             "start": self.start,
             "end": self.end,
             "label": self.label,
-            "qualifiers": [{"name": q.name, "value": q.value} for q in self.qualifiers],
         }
+
+        if self.qualifiers is not None:
+            output["qualifiers"] = [
+                {"name": q.name, "value": q.value} for q in self.qualifiers
+            ]
+
+        return output
 
     @property
     def qualifier_names(self) -> set[str]:
@@ -114,6 +120,9 @@ class Annotation:
         ``set[str]``
             A set of unique qualifier names, e.g. {"Presence", "Experiencer"}.
         """
+        if self.qualifiers is None:
+            return {}
+
         return {qualifier.name for qualifier in self.qualifiers}
 
     def get_qualifier_by_name(self, qualifier_name: str) -> Qualifier:
@@ -397,10 +406,12 @@ class InfoExtractionDataset:
 
         for doc in data["docs"]:
             for ann in doc["annotations"]:
-                ann["qualifiers"] = [
-                    Qualifier(**qualifier) for qualifier in ann.get("qualifiers", [])
-                ]
-                doc["annotations"] = [Annotation(**ann) for ann in doc["annotations"]]
+                if "qualifiers" in ann:
+                    ann["qualifiers"] = [
+                        Qualifier(**qualifier) for qualifier in ann.get("qualifiers")
+                    ]
+
+            doc["annotations"] = [Annotation(**ann) for ann in doc.get("annotations")]
 
         docs = [Document(**doc) for doc in data["docs"]]
 
@@ -573,8 +584,9 @@ class InfoExtractionDataset:
 
         for doc in self.docs:
             for annotation in doc.annotations:
-                for qualifier in annotation.qualifiers:
-                    cntrs[qualifier.name].update([qualifier.value])
+                if annotation.qualifiers is not None:
+                    for qualifier in annotation.qualifiers:
+                        cntrs[qualifier.name].update([qualifier.value])
 
         return {name: dict(counts) for name, counts in cntrs.items()}
 
