@@ -1,4 +1,5 @@
 {
+    "description": "A re-release of the Dutch part of Mantra GSC, that can be used for evaluating UMLS linking algorithms. For more detail on the original dataset, see: https://doi.org/10.1093/jamia/ocv037.",
     "docs": [
         {
             "identifier": "d2126935",
