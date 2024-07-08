@@ -16,15 +16,23 @@ Some cases for testing sentencizers, collected during development of clinlp, oft
 
 Some cases for testing qualifier detectors, collected during development of clinlp, often based on real examples. Each doc contains exactly one entity, which makes it easier for our regression tests to mark skips.
 
-## `mantra_gsc.json`
-
-A re-release of the Dutch part of the Mantra GSC corpus, which can be used for evaluating algorithms that match and link to UMLS. For more information, see: [Kors et al., 2015](https://doi.org/10.1093/jamia/ocv037).
-
-You can load the files with annotations to an `InfoExtractionDataset` for further evaluation using:
+You can load the dataset to an `InfoExtractionDataset` for further evaluation using:
 
 ```python
 from clinlp.data import InfoExtractionDataset
 
 dataset = InfoExtractionDataset.from_json("data/qualifier_cases.json")
+```
+
+
+## `mantra_gsc.json`
+
+A re-release of the Dutch part of the Mantra GSC corpus, which can be used for evaluating algorithms that match and link to UMLS. For more information, see: [Kors et al., 2015](https://doi.org/10.1093/jamia/ocv037).
+
+You can load the dataset to an `InfoExtractionDataset` for further evaluation using:
+
+```python
+from clinlp.data import InfoExtractionDataset
+
 dataset = InfoExtractionDataset.from_json("data/mantra_gsc.json")
 ```
