@@ -107,6 +107,28 @@ class Normalizer(Pipe):
         """
         return "".join(self._map_non_ascii_char(char) for char in text)
 
+    def normalize(self, text: str) -> str:
+        """
+        Normalize text, based on the component's settings.
+
+        Parameters
+        ----------
+        text
+            The text to normalize.
+
+        Returns
+        -------
+        ``str``
+            The normalized text.
+        """
+        if self.lowercase:
+            text = self._lowercase(text)
+
+        if self.map_non_ascii:
+            text = self._map_non_ascii_string(text)
+
+        return text
+
     def __call__(self, doc: Doc) -> Doc:
         """
         Normalize text in a document.
@@ -125,14 +147,6 @@ class Normalizer(Pipe):
             return doc
 
         for token in doc:
-            normalized_text = token.text
-
-            if self.lowercase:
-                normalized_text = self._lowercase(normalized_text)
-
-            if self.map_non_ascii:
-                normalized_text = self._map_non_ascii_string(normalized_text)
-
-            token.norm_ = normalized_text
+            token.norm_ = self.normalize(token.text)
 
         return doc
