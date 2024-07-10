@@ -79,7 +79,7 @@ The `clinlp_rule_based_entity_matcher` component can be used for matching entiti
 The most basic example would be the following, with further options described below:
 
 ```python
-concepts = {
+terms = {
     "sepsis": [
         "sepsis",
         "lijnsepsis",
@@ -93,7 +93,7 @@ concepts = {
 }
 
 entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-entity_matcher.add_terms_from_dict(concepts)
+entity_matcher.add_terms_from_dict(terms)
 ```
 
 ```{admonition} Spans vs ents
@@ -149,7 +149,7 @@ The settings above are described at the matcher level, but can all be overridden
 ```python
 from clinlp.ie import Term
 
-concepts = {
+terms = {
     "sepsis": [
         "sepsis",
         "lijnsepsis",
@@ -161,7 +161,7 @@ concepts = {
 }
 
 entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
-entity_matcher.add_terms_from_dict(concepts)
+entity_matcher.add_terms_from_dict(terms)
 ```
 
 In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled.
@@ -171,7 +171,7 @@ In the above example, by default the `NORM` attribute is used, and `fuzzy` is se
 On the term level, it is possible to add pseudo or negative patterns, for those phrases that need to be excluded. For example:
 
 ```python
-concepts = {
+terms = {
     "prematuriteit": [
         "prematuur",
         Term("prematuur ademhalingspatroon", pseudo=True),
@@ -186,7 +186,7 @@ In this case `prematuur` will be matched, but not in the context of `prematuur a
 Finally, if you need more control than literal phrases and terms as explained above, the entity matcher also accepts [`spaCy` patterns](https://spacy.io/usage/rule-based-matching#adding-patterns). These patterns do not respect any other configurations (like attribute, fuzzy, proximity, etc.):
 
 ```python
-concepts = {
+terms = {
     "delier": [
         Term("delier", attr="NORM"),
         Term("DOS", attr="TEXT"),
@@ -238,7 +238,7 @@ Terms from `JSON` can be added by using `add_terms_from_json`. Your json should 
 }
 ```
 
-Each term can be presented as a `str` (direct phrase), `dict` (directly passed to `clinlp.ie.Term`, or `list` (a `spaCy` pattern). Any other top level keys than `terms` are ignored, so metadata can be added (e.g. a description, authors, etc.).
+Each term can be presented as a `str` (direct phrase), `dict` (arguments directly passed to `clinlp.ie.Term`), or `list` (a `spaCy` pattern). Any other top level keys than `terms` are ignored, so metadata can be added (e.g. a description, authors, etc.).
 
 #### Adding terms from csv
 
