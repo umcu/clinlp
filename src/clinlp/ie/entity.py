@@ -88,21 +88,22 @@ class RuleBasedEntityMatcher(Pipe):
         self._terms = {}
         self._concepts = {}
 
-    def add_term(self, term: Union[str, dict, list, Term], concept: str) -> None:
+    def add_term(self, concept: str, term: Union[str, dict, list, Term]) -> None:
         """
         Add a term for matching, along with a concept identifier.
 
-        Multiple terms can be added with the same concept identifier (terms will be
+        Note that concepts do not need to be added separately. It's is also possible to
+        call `add_term` multiple with the same concept identifier (terms will be
         appended, not overwritten).
 
         Parameters
         ----------
+        concept
+            The concept identifier.
         term
             The term that should be matched. Can be a string (i.e. a phrase), a dict
             (that is passed directly to the ``clinlp.ie.Term`` constructor), a list
             comprising a ``spaCy`` pattern, or a ``clinlp.ie.Term`` object.
-        concept
-            The concept identifier.
 
         Raises
         ------
@@ -168,17 +169,17 @@ class RuleBasedEntityMatcher(Pipe):
         raise RuntimeError(msg)
 
     def add_terms(
-        self, terms: Iterable[Union[str, dict, list, Term]], concept: str
+        self, concept: str, terms: Iterable[Union[str, dict, list, Term]]
     ) -> None:
         """
         Add multiple terms with the same concept identifier.
 
         Parameters
         ----------
-        terms
-            An iterable of terms to add.
         concept
             A concept identifier, applicable to all terms.
+        terms
+            An iterable of terms to add.
         """
         for term in terms:
             self.add_term(concept=concept, term=term)
@@ -267,7 +268,7 @@ class RuleBasedEntityMatcher(Pipe):
 
                 raise RuntimeError(msg) from e
 
-            self.add_term(term=term, concept=row[concept_col])
+            self.add_term(concept=row[concept_col], term=term)
 
     def _get_matches(self, doc: Doc) -> list[tuple[int, int, int]]:
         """

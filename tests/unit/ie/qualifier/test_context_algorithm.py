@@ -964,7 +964,7 @@ class TestUnitContextAlgorithm:
         # Arrange
         nlp.add_pipe("clinlp_sentencizer")
         ruler = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-        ruler.add_term(term="geen eetlust", concept="entity")
+        ruler.add_term(concept="entity", term="geen eetlust")
 
         rules = {
             "qualifiers": [
