@@ -1,0 +1,17 @@
+{
+    "terms": {
+        "delier": [
+            {
+                "phrase": "delier",
+                "attr": "NORM"
+            },
+            {
+                "phrase": "delier",
+                "pseudo": true
+            }
+        ],
+        "anemie": [
+            "anemie"
+        ]
+    }
+}
