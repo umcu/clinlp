@@ -1,108 +1,133 @@
 import pytest
+from spacy.tokens import Span
 from tests.conftest import TEST_DATA_DIR
 
-from clinlp.ie import SPANS_KEY, RuleBasedEntityMatcher, Term, create_concept_dict
+from clinlp.ie import RuleBasedEntityMatcher, Term
 
 
-def ents(doc):
-    return [(str(ent), ent.start, ent.end, ent.label_) for ent in doc.spans[SPANS_KEY]]
+def ent_tuples(ents: list[Span]):
+    return [(str(ent), ent.start, ent.end, ent.label_) for ent in ents]
 
 
-class TestCreateConceptDict:
-    def test_create_concept_dict(self):
-        # Act
-        concepts = create_concept_dict(TEST_DATA_DIR / "concept_examples.csv")
-
-        # Assert
-        assert concepts == {
-            "hypotensie": [
-                Term("hypotensie"),
-                Term(
-                    phrase="bd verlaagd",
-                    proximity=1,
-                ),
-            ],
-            "prematuriteit": [
-                Term("prematuriteit"),
-                Term(
-                    phrase="<p3",
-                    attr="TEXT",
-                    proximity=1,
-                    fuzzy=1,
-                    fuzzy_min_len=2,
-                    pseudo=False,
-                ),
-            ],
-            "veneus_infarct": [
-                Term("veneus infarct"),
-                Term(
-                    phrase="VI",
-                    attr="TEXT",
-                ),
-            ],
-        }
-
-
-class TestClinlpNer:
-    @pytest.mark.parametrize(
-        ("rbem_kwargs", "expected_use_phrase_matcher"),
-        [
-            ({}, True),
-            ({"attr": "NORM"}, True),
-            ({"proximity": 1}, False),
-            ({"fuzzy": 1}, False),
-            ({"fuzzy_min_len": 1}, False),
-            ({"pseudo": 1}, True),
-        ],
-    )
-    def test_use_phrase_matcher(self, nlp, rbem_kwargs, expected_use_phrase_matcher):
-        # Arrange
-        rbem = RuleBasedEntityMatcher(nlp=nlp, **rbem_kwargs)
-
-        # Act
-        use_phrase_matcher = rbem._use_phrase_matcher
-
-        # Assert
-        assert use_phrase_matcher == expected_use_phrase_matcher
-
-    def test_load_concepts(self, nlp):
+class TestRuleBasedEntityMatcher:
+    def test_add_term_str(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
 
         # Act
-        rbem.load_concepts(
-            {
-                "concept_1": [
-                    Term("term1", fuzzy=1),
-                    "term2",
-                    [{"TEXT": {"FUZZY1": "term3"}}],
-                ],
-                "concept_2": ["term4", Term("term5"), [{"NORM": "term6"}]],
-            }
-        )
+        rbem.add_term(term="delier", concept="delier")
 
         # Assert
-        assert len(rbem._phrase_matcher) + len(rbem._matcher) == 6
-        assert len(rbem._terms) == 6
+        assert len(rbem._phrase_matcher) == 1
+        assert len(rbem._matcher) == 0
 
-    def test_load_concepts_nondefault(self, nlp):
+    def test_add_term_dict(self, nlp):
         # Arrange
-        rbem = RuleBasedEntityMatcher(nlp=nlp, attr="NORM", fuzzy=1, fuzzy_min_len=10)
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
 
         # Act
-        rbem.load_concepts(
+        rbem.add_term(term={"phrase": "delier", "attr": "NORM"}, concept="delier")
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 0
+        assert len(rbem._matcher) == 1
+
+    def test_add_term_list(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_term(term=[{"TEXT": "delier"}], concept="delier")
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 0
+        assert len(rbem._matcher) == 1
+
+    def test_add_term_term(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_term(term=Term("delier"), concept="delier")
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 1
+        assert len(rbem._matcher) == 0
+
+    def test_add_term_non_allowed_type(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act & Assert
+        with pytest.raises(TypeError):
+            rbem.add_term(term=1, concept="delier")
+
+    def test_add_terms(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_terms(
+            terms=[
+                "delier",
+                {"phrase": "delier", "attr": "NORM"},
+                [{"TEXT": "delier"}],
+                Term("delier", pseudo=True),
+            ],
+            concept="delier",
+        )
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 2
+        assert len(rbem._matcher) == 2
+        assert len(rbem._concepts) == 4
+        assert len(rbem._terms) == 4
+
+    def test_add_terms_from_dict(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_terms_from_dict(
             {
-                "concept_1": [
-                    Term("term1", fuzzy=1),
-                    "term2",
-                    [{"TEXT": {"FUZZY1": "term3"}}],
+                "delier": [
+                    {"phrase": "delier", "attr": "NORM"},
+                    {"phrase": "delier", "pseudo": True},
                 ],
-                "concept_2": ["term4", Term("term5"), [{"NORM": "term6"}]],
+                "anemie": ["anemie"],
             }
         )
 
         # Assert
-        assert len(rbem._phrase_matcher) + len(rbem._matcher) == 6
+        assert len(rbem._phrase_matcher) == 2
+        assert len(rbem._matcher) == 1
+        assert len(rbem._concepts) == 3
+        assert len(rbem._terms) == 3
+
+    def test_add_terms_from_json(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_terms_from_json(TEST_DATA_DIR / "rbem_terms.json")
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 2
+        assert len(rbem._matcher) == 1
+        assert len(rbem._concepts) == 3
+        assert len(rbem._terms) == 3
+
+    def test_add_terms_from_csv(self, nlp):
+        # Arrange
+        rbem = RuleBasedEntityMatcher(nlp=nlp)
+
+        # Act
+        rbem.add_terms_from_csv(TEST_DATA_DIR / "rbem_terms.csv")
+
+        # Assert
+        assert len(rbem._phrase_matcher) == 4
+        assert len(rbem._matcher) == 2
+        assert len(rbem._concepts) == 6
         assert len(rbem._terms) == 6
 
     @pytest.mark.parametrize(
@@ -116,10 +141,10 @@ class TestClinlpNer:
     def test_match_simple(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts({"delier": ["delier", "delirant"]})
+        rbem.add_terms(terms=["delier", "delirant"], concept="delier")
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -135,17 +160,16 @@ class TestClinlpNer:
     def test_match_attr(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {
-                "delier": [
-                    Term("delier", attr="LOWER"),
-                    Term("delirant", attr="LOWER"),
-                ]
-            }
+        rbem.add_terms(
+            terms=[
+                Term("delier", attr="LOWER"),
+                Term("delirant", attr="LOWER"),
+            ],
+            concept="delier",
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -161,12 +185,13 @@ class TestClinlpNer:
     def test_match_proximity(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {"delier": [Term("delier"), Term("kluts kwijt", proximity=1)]}
+        rbem.add_terms(
+            terms=[Term("delier"), Term("kluts kwijt", proximity=1)],
+            concept="delier",
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -182,10 +207,12 @@ class TestClinlpNer:
     def test_match_fuzzy(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts({"delier": [Term("delier"), Term("delirant", fuzzy=1)]})
+        rbem.add_terms(
+            terms=[Term("delier"), Term("delirant", fuzzy=1)], concept="delier"
+        )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -203,16 +230,12 @@ class TestClinlpNer:
     def test_match_fuzzy_min_len(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {
-                "bloeding": [
-                    Term("bloeding graad ii", fuzzy=1, fuzzy_min_len=6),
-                ]
-            }
+        rbem.add_term(
+            term=Term("bloeding graad ii", fuzzy=1, fuzzy_min_len=6), concept="bloeding"
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -227,12 +250,13 @@ class TestClinlpNer:
     def test_match_pseudo(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {"delier": ["onrustige", Term("onrustige benen", pseudo=True)]}
+        rbem.add_terms(
+            terms=["onrustige", Term("onrustige benen", pseudo=True)],
+            concept="delier",
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -247,15 +271,11 @@ class TestClinlpNer:
     def test_match_pseudo_different_concepts(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {
-                "delier": ["onrustige"],
-                "geen_delier": [Term("onrustige benen", pseudo=True)],
-            }
-        )
+        rbem.add_term(term="onrustige", concept="delier")
+        rbem.add_term(term=Term("onrustige benen", pseudo=True), concept="geen_delier")
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -275,12 +295,13 @@ class TestClinlpNer:
         rbem = RuleBasedEntityMatcher(
             nlp=nlp, attr="LOWER", proximity=1, fuzzy=1, fuzzy_min_len=5
         )
-        rbem.load_concepts(
-            {"delier": ["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)]}
+        rbem.add_terms(
+            terms=["delier", "delirant", "kluts kwijt", Term("onrustig", fuzzy=0)],
+            concept="delier",
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -302,12 +323,13 @@ class TestClinlpNer:
     def test_rbem_level_term_settings_overwrite(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, attr="LOWER", fuzzy=1)
-        rbem.load_concepts(
-            {"delier": ["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")]}
+        rbem.add_terms(
+            terms=["delier", Term("delirant", fuzzy=0), Term("DOS", attr="TEXT")],
+            concept="delier",
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -323,12 +345,12 @@ class TestClinlpNer:
     def test_match_mixed_patterns(self, nlp, text, expected_entities):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {"delier": ["delier", Term("delirant"), [{"TEXT": "delirium"}]]}
+        rbem.add_terms(
+            terms=["delier", Term("delirant"), [{"TEXT": "delirium"}]], concept="delier"
         )
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == expected_entities
@@ -336,18 +358,12 @@ class TestClinlpNer:
     def test_match_mixed_concepts(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp)
-        rbem.load_concepts(
-            {
-                "bloeding": [
-                    "bloeding",
-                ],
-                "prematuriteit": ["prematuur"],
-            }
-        )
+        rbem.add_term(term="bloeding", concept="bloeding")
+        rbem.add_term(term="prematuur", concept="prematuriteit")
         text = "complicaties door bloeding bij prematuur"
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == [
@@ -358,11 +374,13 @@ class TestClinlpNer:
     def test_resolve_overlap(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
-        rbem.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
+        rbem.add_terms(
+            terms=["atresie", "oesophagus atresie"], concept="slokdarmatresie"
+        )
         text = "patient heeft oesophagus atresie"
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == [("oesophagus atresie", 2, 4, "slokdarmatresie")]
@@ -370,11 +388,11 @@ class TestClinlpNer:
     def test_resolve_overlap_adjacent(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=True)
-        rbem.load_concepts({"anemie": ["erytrocyten", "transfusie"]})
+        rbem.add_terms(terms=["erytrocyten", "transfusie"], concept="anemie")
         text = "patient kreeg erytrocyten transfusie"
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == [
@@ -385,11 +403,13 @@ class TestClinlpNer:
     def test_resolve_overlap_disabled(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, resolve_overlap=False)
-        rbem.load_concepts({"slokdarmatresie": ["atresie", "oesophagus atresie"]})
+        rbem.add_terms(
+            terms=["atresie", "oesophagus atresie"], concept="slokdarmatresie"
+        )
         text = "patient heeft oesophagus atresie"
 
         # Act
-        entities = ents(rbem(nlp(text)))
+        entities = ent_tuples(rbem.match_entities(nlp(text)))
 
         # Assert
         assert entities == [
@@ -400,7 +420,7 @@ class TestClinlpNer:
     def test_spans_key(self, nlp):
         # Arrange
         rbem = RuleBasedEntityMatcher(nlp=nlp, spans_key="custom_key")
-        rbem.load_concepts({"delier": ["delier"]})
+        rbem.add_term(term="delier", concept="delier")
         text = "patient heeft delier"
 
         # Act
