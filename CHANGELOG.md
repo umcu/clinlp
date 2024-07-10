@@ -7,23 +7,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
-## (unreleased)
+## 0.9.0 (2024-07-10)
 
 ### Added
 
+* Mantra GSC corpus for evaluation
 * Loading and exporting `InfoExtractionDataset` as dictionaries or JSON files
 * Metric support for multi-class qualifiers
-* Mantra GSC corpus for evaluation
 * In the `RuleBasedEntityMatcher`, option to add terms as a `dict` (in addition to `str`, `list` and `Term`)
 * In the `RuleBasedEntityMatcher`, option to add terms from dict (`add_terms_from_dict`), json (`add_terms_from_json`) or csv (`add_terms_from_csv`)
 * In the `Term` class, an option to override arguments that were not set
 
 ### Changed
 
+* Moved regression test cases to data directory in more open format, so they are re-usable
 * Made the `default` field for `Qualifier` optional
 * `InfoExtractionDataset` and `InfoExtractionMetrics` use `Qualifier` objects for qualifiers rather than `dict`
 * :exclamation: `InfoExtractionDataset` and `InfoExtractionMetrics` no longer track or use qualifier defaults
-* Moved test cases to data directory in more open format, so they can be used by others
 * Made qualifiers optional for metrics in `Annotation`
 * Added a `normalize` method to `Normalizer`, so it can be used/tested directly
 * The logic for determining whether the `RuleBasedEntityMatcher` should internally use the phrase matcher or the matcher is simplified
