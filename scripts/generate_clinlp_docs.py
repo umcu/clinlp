@@ -66,7 +66,7 @@ def get_model() -> Language:
         config={"attr": "NORM", "fuzzy": 1, "fuzzy_min_len": 8},
     )
 
-    entity_matcher.load_concepts(concepts)
+    entity_matcher.add_terms_from_dict(concepts)
 
     nlp.add_pipe(
         "clinlp_context_algorithm",

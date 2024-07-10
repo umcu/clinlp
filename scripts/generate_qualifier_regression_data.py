@@ -28,7 +28,7 @@ def get_model() -> Language:
     entity_matcher = nlp.add_pipe(
         "clinlp_rule_based_entity_matcher", config={"attr": "NORM"}
     )
-    entity_matcher.load_concepts(concepts)
+    entity_matcher.add_terms_from_dict(concepts)
 
     # Qualifiers
     nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})
