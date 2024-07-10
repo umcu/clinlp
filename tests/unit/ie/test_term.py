@@ -59,7 +59,20 @@ class TestTerm:
         # Assert
         assert fields_set == {"phrase", "fuzzy"}
 
-    def test_spacy_pattern(self, nlp):
+    def test_override_non_set_fields(self):
+        # Arrange
+        term = Term(phrase="Diabetes", fuzzy=1)
+        override_args = {"fuzzy": 2, "fuzzy_min_len": 5}
+
+        # Act
+        term = term.override_non_set_fields(override_args)
+
+        # Assert
+        assert term.phrase == "Diabetes"
+        assert term.fuzzy == 1
+        assert term.fuzzy_min_len == 5
+
+    def test_to_spacy_pattern(self, nlp):
         # Arrange
         t = Term(phrase="diabetes", attr="NORM")
 
@@ -69,7 +82,7 @@ class TestTerm:
         # Assert
         assert spacy_pattern == [{"NORM": "diabetes"}]
 
-    def test_spacy_pattern_proximity(self, nlp):
+    def test_to_spacy_pattern_proximity(self, nlp):
         # Arrange
         t = Term("kluts kwijt", proximity=1)
 
@@ -83,7 +96,7 @@ class TestTerm:
             {"TEXT": "kwijt"},
         ]
 
-    def test_spacy_pattern_fuzzy(self, nlp):
+    def test_to_spacy_pattern_fuzzy(self, nlp):
         # Arrange
         t = Term(phrase="diabetes", fuzzy=3)
 
@@ -93,7 +106,7 @@ class TestTerm:
         # Assert
         assert spacy_pattern == [{"TEXT": {"FUZZY3": "diabetes"}}]
 
-    def test_spacy_pattern_fuzzy_min_len(self, nlp):
+    def test_to_spacy_pattern_fuzzy_min_len(self, nlp):
         # Arrange
         t = Term(phrase="bloeding graad iv", fuzzy=1, fuzzy_min_len=6)
 
@@ -107,7 +120,7 @@ class TestTerm:
             {"TEXT": "iv"},
         ]
 
-    def test_spacy_pattern_pseudo(self, nlp):
+    def test_to_spacy_pattern_pseudo(self, nlp):
         # Arrange
         t = Term(phrase="diabetes", pseudo=True)
 
