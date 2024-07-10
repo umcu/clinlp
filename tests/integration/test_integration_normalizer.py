@@ -14,7 +14,9 @@ class TestNormalizerIntegration:
         terms = {"symptomen": ["caries"]}
 
         for concept, concept_terms in terms.items():
-            ruler.add_patterns([{"label": concept, "pattern": term} for term in concept_terms])
+            ruler.add_patterns(
+                [{"label": concept, "pattern": term} for term in concept_terms]
+            )
 
         # Act
         doc = nlp("patient heeft veel last van cariës")
