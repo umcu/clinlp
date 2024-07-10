@@ -72,7 +72,7 @@ The sentencizer is a rule-based sentence boundary detector. It is designed to de
 | example | `nlp.add_pipe("clinlp_rule_based_entity_matcher")` |
 | requires | `-` |
 | assigns | `doc.spans['ents']` |
-| config options | `attr = "TEXT"` <br /> `proximity = 0` <br /> `fuzzy = 0` <br /> `fuzzy_min_len = 0` <br /> `pseudo = False` |
+| config options | `attr = "TEXT"` <br /> `proximity = 0` <br /> `fuzzy = 0` <br /> `fuzzy_min_len = 0` <br /> `pseudo = False` <br /> `resolve_overlap = False` <br /> `spans_key = 'ents'` |
 
 The `clinlp_rule_based_entity_matcher` component can be used for matching entities in text, based on a dictionary of known concepts and their terms/synonyms. It includes options for matching on different token attributes, proximity matching, fuzzy matching and non-matching pseudo/negative terms.
 
@@ -93,7 +93,7 @@ concepts = {
 }
 
 entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-entity_matcher.load_concepts(concepts)
+entity_matcher.add_terms_from_dict(concepts)
 ```
 
 ```{admonition} Spans vs ents
@@ -161,7 +161,7 @@ concepts = {
 }
 
 entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
-entity_matcher.load_concepts(concepts)
+entity_matcher.add_terms_from_dict(concepts)
 ```
 
 In the above example, by default the `NORM` attribute is used, and `fuzzy` is set to `1`. In addition, for the terms `early onset` and `late onset` proximity matching is set to `1`, in addition to matcher-level config of matching the `NORM` attribute and fuzzy matching. For the `EOS` and `LOS` abbreviations the `TEXT` attribute is used (so the matching is case sensitive), and fuzzy matching is disabled.
@@ -208,9 +208,41 @@ concepts = {
 }
 ```
 
-#### Concept dictionary from external source
+#### Adding concept sets
 
-External lists of concepts (e.g. from a medical thesaurus such as `UMLS`) can also be loaded directly from `csv` through the `create_concept_dict` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
+External lists of concepts (e.g. from a medical thesaurus such as `UMLS`) can also be loaded directly from `JSON` or `csv`.
+
+#### Adding terms from json
+
+Terms from `JSON` can be added by using `add_terms_from_json`. Your json should have the following format:
+
+```json
+{
+    "terms": {
+        "concept_identifier": [
+            "term",
+            {
+                "phrase": "term",
+                "attr": "some_attr"
+            },
+            [
+                {
+                    "NORM": "term"
+                }
+            ]
+        ],
+        "next_concept_identifier": [
+            "other_term"
+        ]
+    }
+}
+```
+
+Each term can be presented as a `str` (direct phrase), `dict` (directly passed to `clinlp.ie.Term`, or `list` (a `spaCy` pattern). Any other top level keys than `terms` are ignored, so metadata can be added (e.g. a description, authors, etc.).
+
+#### Adding terms from csv
+
+ Terms from `csv` can be added through the `add_terms_from_csv` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
 | **concept** | **phrase** | **attr** | **proximity** | **fuzzy** | **fuzzy_min_len** | **pseudo** | **comment** |
 |--|--|--|--|--|--|--|--|
@@ -220,25 +252,6 @@ External lists of concepts (e.g. from a medical thesaurus such as `UMLS`) can al
 | hypotensie | bd verlaagd | | 1 | | | | |
 | veneus_infarct | veneus infarct | | | | | | |
 | veneus_infarct | VI | TEXT | | | | | |
-
-Will result in the following concept dictionary:
-
-```python
-{
-    "prematuriteit": [
-        "prematuriteit",
-        Term("<p3", proximity=1, fuzzy=1, fuzzy_min_len=2),
-    ],
-    "hypotensie": [
-        "hypotensie",
-        Term("bd verlaagd", proximity=1)
-    ],
-    "veneus_infarct": [
-        "veneus infarct",
-        Term("VI", attr="TEXT")
-    ]
-}
-```
 
 ## Qualification
 
