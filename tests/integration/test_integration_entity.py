@@ -8,7 +8,7 @@ class TestIntegrationEntity:
         ruler.add_patterns([{"label": "delier", "pattern": "delier"}])
 
         rbem = nlp.add_pipe("clinlp_rule_based_entity_matcher")
-        rbem.load_concepts({"diabetes": ["diabetes"]})
+        rbem.add_term(term="diabetes", concept="diabetes")
 
         # Act
         doc = nlp("De patient heeft diabetes en delier.")
