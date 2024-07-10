@@ -61,6 +61,26 @@ class Term(pydantic.BaseModel):
         """
         return self.__pydantic_fields_set__
 
+    def override_non_set_fields(self, override_args: dict) -> "Term":
+        """
+        Override the non-set fields in this term.
+
+        Parameters
+        ----------
+        override_args
+            The arguments to override.
+
+        Returns
+        -------
+        ``Term``
+            The term with the overridden fields.
+        """
+        for field, value in override_args.items():
+            if field not in self.fields_set:
+                setattr(self, field, value)
+
+        return self
+
     def to_spacy_pattern(self, nlp: Language) -> list[dict]:
         """
         Convert the term to a ``spaCy`` pattern.

@@ -23,7 +23,7 @@ def nlp_qualifier():
     nlp_qualifier.add_pipe("clinlp_sentencizer")
 
     rbem = nlp_qualifier.add_pipe("clinlp_rule_based_entity_matcher")
-    rbem.load_concepts({"diabetes": ["diabetes"]})
+    rbem.add_term(concept="diabetes", term="diabetes")
 
     return nlp_qualifier
 
