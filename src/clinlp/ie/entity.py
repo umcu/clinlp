@@ -26,9 +26,11 @@ class RuleBasedEntityMatcher(Pipe):
     """
     ``spaCy`` component for rule-based entity matching.
 
-    This component is used to match entities based on a set of concepts, along with
-    synonyms. Note that settings (e.g. ``attr``, ``proximity``, ...) set at the entity
-    matcher level are overridden by the settings at the term level.
+    This component can be used to match entities based on known concepts, along with
+    terms/synonyms to match (per concept). It can do literal string matching, but also
+    has some additional configuration options like fuzzy matching and proximity
+    matching. Note that configuration (e.g. ``attr``, ``proximity``, ...) set at the
+    entity matcher level is overridden by the configuration at the term level.
     """
 
     _non_phrase_matcher_fields = ("proximity", "fuzzy", "fuzzy_min_len")
