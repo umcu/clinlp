@@ -212,7 +212,7 @@ terms = {
 
 External lists of concepts (e.g. from a medical thesaurus such as `UMLS`) can also be loaded directly from `JSON` or `csv`.
 
-#### Adding terms from json
+##### Adding terms from json
 
 Terms from `JSON` can be added by using `add_terms_from_json`. Your json should have the following format:
 
@@ -240,7 +240,7 @@ Terms from `JSON` can be added by using `add_terms_from_json`. Your json should 
 
 Each term can be presented as a `str` (direct phrase), `dict` (arguments directly passed to `clinlp.ie.Term`), or `list` (a `spaCy` pattern). Any other top level keys than `terms` are ignored, so metadata can be added (e.g. a description, authors, etc.).
 
-#### Adding terms from csv
+##### Adding terms from csv
 
  Terms from `csv` can be added through the `add_terms_from_csv` function. Your `csv` should contain a combination of concept and phrase on each line, with optional columns to configure the `Term`-options described above (e.g. `attribute`, `proximity`, `fuzzy`). You may present the columns in any order, but make sure the names match the `Term` attributes. Any other columns are ignored. For example:
 
