@@ -89,7 +89,7 @@ class TestRuleBasedEntityMatcher:
 
         # Act
         rbem.add_terms_from_dict(
-            {
+            terms={
                 "delier": [
                     {"phrase": "delier", "attr": "NORM"},
                     {"phrase": "delier", "pseudo": True},

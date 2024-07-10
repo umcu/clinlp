@@ -49,7 +49,7 @@ nlp.add_pipe("clinlp_normalizer")
 nlp.add_pipe("clinlp_sentencizer")
 
 # Entities
-concepts = {
+terms = {
     "prematuriteit": [
         "preterm", "<p3", "prematuriteit", "partus praematurus"
     ],
@@ -62,7 +62,7 @@ concepts = {
 }
 
 entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
-entity_matcher.add_terms_from_dict(concepts)
+entity_matcher.add_terms_from_dict(terms)
 
 # Qualifiers
 nlp.add_pipe("clinlp_context_algorithm", config={"phrase_matcher_attr": "NORM"})

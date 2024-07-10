@@ -138,12 +138,9 @@ class RuleBasedEntityMatcher(Pipe):
             term.override_non_set_fields(self.term_args)
             term_defaults = Term.defaults()
 
-            if (
-                all(
-                    getattr(term, field) == term_defaults[field]
-                    for field in self._non_phrase_matcher_fields
-                )
-                and term.attr == self.term_args["attr"]
+            if term.attr == self.term_args["attr"] and all(
+                getattr(term, field) == term_defaults[field]
+                for field in self._non_phrase_matcher_fields
             ):
                 doc = self.nlp(term.phrase)
                 self._phrase_matcher.add(key=matcher_key, docs=[doc])
@@ -151,22 +148,6 @@ class RuleBasedEntityMatcher(Pipe):
             else:
                 pattern = term.to_spacy_pattern(self.nlp)
                 self._matcher.add(key=matcher_key, patterns=[pattern])
-
-    def load_concepts(self) -> None:
-        """
-        Load concepts. Deprecated, use add_terms_from_dict instead.
-
-        Raises
-        ------
-        RuntimeError
-            When called, because this method is deprecated.
-        """
-        msg = (
-            "This method is deprecated. Please use the add_terms_from_dict "
-            "method instead."
-        )
-
-        raise RuntimeError(msg)
 
     def add_terms(
         self, concept: str, terms: Iterable[Union[str, dict, list, Term]]
@@ -402,6 +383,22 @@ class RuleBasedEntityMatcher(Pipe):
         doc.spans[self.spans_key] = ents
 
         return doc
+
+    def load_concepts(self) -> None:
+        """
+        Load concepts. Deprecated, use add_terms_from_dict instead.
+
+        Raises
+        ------
+        RuntimeError
+            When called, because this method is deprecated.
+        """
+        msg = (
+            "This method is deprecated. Please use the add_terms_from_dict "
+            "method instead."
+        )
+
+        raise RuntimeError(msg)
 
 
 def create_concept_dict() -> None:

@@ -11,10 +11,10 @@ class TestNormalizerIntegration:
             config={"phrase_matcher_attr": "NORM", "spans_key": SPANS_KEY},
         )
 
-        concepts = {"symptomen": ["caries"]}
+        terms = {"symptomen": ["caries"]}
 
-        for concept, terms in concepts.items():
-            ruler.add_patterns([{"label": concept, "pattern": term} for term in terms])
+        for concept, concept_terms in terms.items():
+            ruler.add_patterns([{"label": concept, "pattern": term} for term in concept_terms])
 
         # Act
         doc = nlp("patient heeft veel last van cariës")
