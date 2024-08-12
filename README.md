@@ -61,7 +61,7 @@ terms = {
     ]
 }
 
-entity_matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
+entity_matcher = nlp.add_pipe("clinlp_entity_matcher", config={"attr": "NORM", "fuzzy": 1})
 entity_matcher.add_terms_from_dict(terms)
 
 # Qualifiers
