@@ -1,6 +1,6 @@
 import json
+from collections.abc import Collection
 from pathlib import Path
-from typing import Collection
 
 import pytest
 

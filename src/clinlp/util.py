@@ -1,8 +1,8 @@
 """Utility functions that are used throughout the library."""
 
 import inspect
+from collections.abc import Callable
 from inspect import Parameter, Signature
-from typing import Callable, Tuple, Type
 
 from makefun import with_signature
 from spacy.language import Language
@@ -12,7 +12,7 @@ class _UnusedArgument:
     """Placeholder for unused arguments in the signature of a function."""
 
 
-def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
+def get_class_init_signature(cls: type) -> tuple[list, dict]:
     """
     Get the arguments and defaults of a class's ``__init__`` method.
 
@@ -43,6 +43,7 @@ def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
                 zip(
                     argspec.args[len(argspec.args) - len(init_defaults) :],
                     init_defaults,
+                    strict=False,
                 )
             )
 
@@ -68,7 +69,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
         The decorated class.
     """
 
-    def _clinlp_component(cls: Type) -> Callable[[list, dict], Type]:
+    def _clinlp_component(cls: type) -> Callable[[list, dict], type]:
         component_args, component_defaults = get_class_init_signature(cls)
 
         make_component_args = component_args.copy()
@@ -89,7 +90,7 @@ def clinlp_component(*args, **kwargs) -> Callable:
         ]
 
         @with_signature(Signature(params), func_name="make_component")
-        def make_component(*args, **kwargs) -> Type:
+        def make_component(*args, **kwargs) -> type:
             if len(args) > 0:
                 msg = "Please pass all arguments as keywords."
                 raise RuntimeError(msg)

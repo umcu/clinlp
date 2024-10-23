@@ -2,7 +2,7 @@
 
 import statistics
 from abc import abstractmethod
-from typing import Callable, Optional, Tuple
+from collections.abc import Callable
 
 import torch
 from spacy import Language
@@ -31,7 +31,7 @@ class QualifierTransformer(QualifierDetector):
         *,
         token_window: int = 32,
         strip_entities: bool = True,
-        placeholder: Optional[str] = None,
+        placeholder: str | None = None,
         prob_aggregator: Callable = statistics.mean,
         **kwargs,
     ) -> None:
@@ -81,7 +81,7 @@ class QualifierTransformer(QualifierDetector):
         """
 
     @staticmethod
-    def _get_ent_window(ent: Span, token_window: int) -> Tuple[str, int, int]:
+    def _get_ent_window(ent: Span, token_window: int) -> tuple[str, int, int]:
         """
         Get the entity window.
 
@@ -117,7 +117,7 @@ class QualifierTransformer(QualifierDetector):
     @staticmethod
     def _trim_ent_boundaries(
         text: str, ent_start_char: int, ent_end_char: int
-    ) -> Tuple[str, int, int]:
+    ) -> tuple[str, int, int]:
         """
         Trim the boundaries of an entity.
 
@@ -149,7 +149,7 @@ class QualifierTransformer(QualifierDetector):
     @staticmethod
     def _fill_ent_placeholder(
         text: str, ent_start_char: int, ent_end_char: int, placeholder: str
-    ) -> Tuple[str, int, int]:
+    ) -> tuple[str, int, int]:
         """
         Replace the entity intext with a placeholder.
 
@@ -178,7 +178,7 @@ class QualifierTransformer(QualifierDetector):
 
         return text, ent_start_char, ent_end_char
 
-    def _prepare_ent(self, ent: Span) -> Tuple[str, int, int]:
+    def _prepare_ent(self, ent: Span) -> tuple[str, int, int]:
         """
         Prepare the entity for prediction.
 

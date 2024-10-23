@@ -131,7 +131,7 @@ class Sentencizer(Pipe):
 
         sentence_starts = self._compute_sentence_starts(doc)
 
-        for is_sent_start, token in zip(sentence_starts, doc):
+        for is_sent_start, token in zip(sentence_starts, doc, strict=True):
             token.is_sent_start = is_sent_start
 
         return doc

@@ -15,26 +15,26 @@ from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def nlp_ca(nlp_entity):
     nlp_entity.add_pipe("clinlp_sentencizer")
     return nlp_entity
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def ca(nlp):
     return ContextAlgorithm(nlp=nlp, load_rules=False)
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["dit", "is", "een", "test"])
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def mock_qualifier_class():
     return QualifierClass("Mock", ["Mock_1", "Mock_2"])
 
