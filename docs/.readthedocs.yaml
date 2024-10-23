@@ -5,8 +5,9 @@ build:
   tools:
     python: "3.12"
   commands:
-    - pip install uv
-    - uv venv
+    - asdf plugin add uv
+    - asdf install uv latest
+    - asdf global uv latest
     - uv sync --only-dev
     - make build-docs
     - cp -r docs/_build _readthedocs
