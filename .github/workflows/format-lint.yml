@@ -23,13 +23,11 @@ jobs:
       with:
         python-version: "3.10"
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: false
-
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+      
     - name: Install dependencies
-      run: poetry install --only=dev
+      run: uv sync --only-dev
 
     - name: ruff
-      run: ruff check
+      run: uv run ruff check

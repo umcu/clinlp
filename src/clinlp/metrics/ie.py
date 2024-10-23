@@ -5,8 +5,9 @@ import itertools
 import json
 import pathlib
 from collections import Counter, defaultdict
+from collections.abc import Callable, Iterable
 from dataclasses import dataclass
-from typing import Callable, ClassVar, Iterable, Optional
+from typing import ClassVar
 
 import nervaluate
 from sklearn.metrics import f1_score, precision_score, recall_score
@@ -32,7 +33,7 @@ class Annotation:
     label: str
     """The label/tag."""
 
-    qualifiers: Optional[list[Qualifier]] = None
+    qualifiers: list[Qualifier] | None = None
     """The applicable qualifiers."""
 
     def lstrip(self, chars: str = " ,") -> None:
@@ -166,7 +167,7 @@ class Document:
     """A list of annotations."""
 
     def to_nervaluate(
-        self, ann_filter: Optional[Callable[[Annotation], bool]] = None
+        self, ann_filter: Callable[[Annotation], bool] | None = None
     ) -> list[dict]:
         """
         Convert to ``nervaluate`` format.
@@ -202,7 +203,7 @@ class Document:
         }
 
     def labels(
-        self, ann_filter: Optional[Callable[[Annotation], bool]] = None
+        self, ann_filter: Callable[[Annotation], bool] | None = None
     ) -> set[str]:
         """
         Obtain all annotation labels for this document.
@@ -226,7 +227,7 @@ class Document:
             if ann_filter(annotation)
         }
 
-    def get_annotation_from_span(self, start: int, end: int) -> Optional[Annotation]:
+    def get_annotation_from_span(self, start: int, end: int) -> Annotation | None:
         """
         Get an annotation by span.
 
@@ -269,7 +270,7 @@ class InfoExtractionDataset:
     def from_clinlp_docs(
         cls,
         nlp_docs: Iterable[Doc],
-        ids: Optional[Iterable[str]] = None,
+        ids: Iterable[str] | None = None,
         spans_key: str = SPANS_KEY,
     ) -> "InfoExtractionDataset":
         """
@@ -296,7 +297,7 @@ class InfoExtractionDataset:
 
         docs = []
 
-        for doc, identifier in zip(nlp_docs, ids):
+        for doc, identifier in zip(nlp_docs, ids, strict=False):
             annotations = [
                 Annotation(
                     text=str(ent),
@@ -438,7 +439,7 @@ class InfoExtractionDataset:
         return cls.from_dict(data)
 
     def to_nervaluate(
-        self, ann_filter: Optional[Callable[[Annotation], bool]] = None
+        self, ann_filter: Callable[[Annotation], bool] | None = None
     ) -> list[list[dict]]:
         """
         Convert to ``nervaluate`` format.
@@ -505,8 +506,8 @@ class InfoExtractionDataset:
 
     def span_freqs(
         self,
-        n_spans: Optional[int] = 25,
-        span_callback: Optional[Callable] = None,
+        n_spans: int | None = 25,
+        span_callback: Callable | None = None,
     ) -> dict:
         """
         Compute frequency of all text spans in this dataset.
@@ -539,8 +540,8 @@ class InfoExtractionDataset:
 
     def label_freqs(
         self,
-        n_labels: Optional[int] = 25,
-        label_callback: Optional[Callable] = None,
+        n_labels: int | None = 25,
+        label_callback: Callable | None = None,
     ) -> dict:
         """
         Compute frequency of all labels in this dataset.
@@ -662,7 +663,7 @@ class InfoExtractionMetrics:
             msg = "Can only compute metrics for Datasets with same size."
             raise ValueError(msg)
 
-        for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
+        for true_doc, pred_doc in zip(self.true.docs, self.pred.docs, strict=False):
             if true_doc.identifier != pred_doc.identifier:
                 msg = (
                     "Found two documents with non-matching ids "
@@ -676,7 +677,7 @@ class InfoExtractionMetrics:
     def entity_metrics(
         self,
         *,
-        ann_filter: Optional[Callable[[Annotation], bool]] = None,
+        ann_filter: Callable[[Annotation], bool] | None = None,
         per_label: bool = False,
     ) -> dict:
         """
@@ -747,7 +748,7 @@ class InfoExtractionMetrics:
         """
         aggregation: dict = defaultdict(lambda: defaultdict(list))
 
-        for true_doc, pred_doc in zip(self.true.docs, self.pred.docs):
+        for true_doc, pred_doc in zip(self.true.docs, self.pred.docs, strict=False):
             for true_annotation in true_doc.annotations:
                 pred_annotation = pred_doc.get_annotation_from_span(
                     start=true_annotation.start, end=true_annotation.end

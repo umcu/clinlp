@@ -1,8 +1,8 @@
 """Component for rule based entity matching."""
 
 import json
+from collections.abc import Iterable
 from pathlib import Path
-from typing import Iterable, Union
 
 import intervaltree as ivt
 import pandas as pd
@@ -88,7 +88,7 @@ class RuleBasedEntityMatcher(Pipe):
         self._terms = {}
         self._concepts = {}
 
-    def add_term(self, concept: str, term: Union[str, dict, list, Term]) -> None:
+    def add_term(self, concept: str, term: str | dict | list | Term) -> None:
         """
         Add a term for matching, along with a concept identifier.
 
@@ -150,7 +150,7 @@ class RuleBasedEntityMatcher(Pipe):
                 self._matcher.add(key=matcher_key, patterns=[pattern])
 
     def add_terms(
-        self, concept: str, terms: Iterable[Union[str, dict, list, Term]]
+        self, concept: str, terms: Iterable[str | dict | list | Term]
     ) -> None:
         """
         Add multiple terms with the same concept identifier.
@@ -166,7 +166,7 @@ class RuleBasedEntityMatcher(Pipe):
             self.add_term(concept=concept, term=term)
 
     def add_terms_from_dict(
-        self, terms: dict[str, Iterable[Union[str, dict, list, Term]]]
+        self, terms: dict[str, Iterable[str | dict | list | Term]]
     ) -> None:
         """
         Add terms from a dictionary.

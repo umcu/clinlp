@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## 0.9.1 (2024-10-23)
+
+### Changed
+
+* Used `uv` as a package manager, replacing `poetry`
+* Small formatting fixes due to updated linting rules
+
 ## 0.9.0 (2024-07-10)
 
 ### Added

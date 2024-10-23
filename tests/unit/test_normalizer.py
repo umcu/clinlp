@@ -6,7 +6,7 @@ from clinlp import Normalizer
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def mock_doc():
     return Doc(Vocab(), words=["Patiënt", "250", "µg", "toedienen"])
 
@@ -101,7 +101,9 @@ class TestNormalizer:
         doc = n(mock_doc)
 
         # Assert
-        for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
+        for original_token, token, expected_norm in zip(
+            mock_doc, doc, expected_norms, strict=False
+        ):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
@@ -114,7 +116,9 @@ class TestNormalizer:
         doc = n(mock_doc)
 
         # Assert
-        for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
+        for original_token, token, expected_norm in zip(
+            mock_doc, doc, expected_norms, strict=False
+        ):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm
 
@@ -127,6 +131,8 @@ class TestNormalizer:
         doc = n(mock_doc)
 
         # Assert
-        for original_token, token, expected_norm in zip(mock_doc, doc, expected_norms):
+        for original_token, token, expected_norm in zip(
+            mock_doc, doc, expected_norms, strict=False
+        ):
             assert original_token.text == token.text
             assert token.norm_ == expected_norm

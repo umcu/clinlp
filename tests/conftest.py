@@ -34,12 +34,12 @@ def _make_nlp_entity(nlp: Language):
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def nlp():
     return _make_nlp()
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def nlp_entity(nlp):
     return _make_nlp_entity(nlp)

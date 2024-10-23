@@ -16,8 +16,8 @@ sys.path.append(Path(__file__).parent)
 
 toml_config = toml.load("../pyproject.toml")
 
-project = toml_config["tool"]["poetry"]["name"]
-release = toml_config["tool"]["poetry"]["version"]
+project = toml_config["project"]["name"]
+release = toml_config["project"]["version"]
 
 copyright = f"{datetime.datetime.now().year}, clinlp"
 

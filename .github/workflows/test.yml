@@ -27,19 +27,16 @@ jobs:
       with:
         python-version: ${{ matrix.python-version }}
 
-    - name: Install Poetry
-      uses: snok/install-poetry@v1
-      with:
-        virtualenvs-create: false
-
+    - name: Install uv
+      uses: astral-sh/setup-uv@v3
+  
     - name: Install package with extras
       run: |
-        poetry install --with dev
-        pip install ".[transformers, metrics]"  # fails when poetry installs this
+        uv sync --all-extras
 
     - name: Test with pytest
       run: |
-        python -m pytest --cov-report xml 
+        uv run pytest --cov-report xml -n auto
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0

@@ -10,13 +10,13 @@ from clinlp.ie.qualifier import (
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def text():
     return "The patient heeft geen diabetes in de familie."
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def nlp_qualifier():
     nlp_qualifier = _make_nlp()
 

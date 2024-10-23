@@ -141,5 +141,5 @@ class TestUnitClinlpSentencizer:
             s(tokens)
 
         # Assert
-        for token, expected_return in zip(tokens, expected_returns):
+        for token, expected_return in zip(tokens, expected_returns, strict=False):
             assert token.is_sent_start == expected_return

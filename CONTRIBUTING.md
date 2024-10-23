@@ -107,12 +107,12 @@ git clone git@github.com:umcu/clinlp.git
 cd clinlp
 ```
 
-We use poetry for managing dependencies, and building the package. If you do not have it yet, installation is covered in the [official Poetry guide](https://python-poetry.org/docs/#installation).
+We use `uv` for managing dependencies, and building the package. If you do not have it yet, installation is covered in the [official `uv` guide](https://docs.astral.sh/uv/getting-started/installation/).
 
 Then, you can install the project with dependencies using:
 
 ```bash
-poetry install -e . --group dev 
+uv sync --all-extras
 ```
 
 ### Repository structure
@@ -212,22 +212,22 @@ ruff lint --fix
 
 ### Dependencies
 
-We use `poetry` for managing dependencies. Adding a dependency is as straightforward as:
+We use `uv` for managing dependencies. Adding a dependency is as straightforward as:
 
 ```bash
-poetry add <package>
+uv add <package>
 ```
 
 To keep `clinlp` lightweight, we only include dependencies that are strictly necessary in the base package, and use optional dependencies for additional functionality (e.g. transformers, metrics). You can add an optional dependency using:
 
 ```bash
-poetry add --extras <extra> <package>
+uv add --optional <extra> <package>
 ```
 
-If you are adding specific development dependencies, please add them to a group such as `dev` or `docs` using:
+If you are adding specific development dependencies, please add them as such using:
 
 ```bash
-poetry add --group <group> <package>
+uv add --dev <package>
 ```
 
 ### Tests
@@ -320,10 +320,10 @@ Note that docstrings are used to automatically generate the API, which is also p
 
 #### Building the documentation
 
-We use `sphinx` for generating the documentation pages. If you want to build the documentation locally, you need to install the documentation dependencies:
+We use `sphinx` for generating the documentation pages. If you want to build the documentation locally, you need to install clinlp:
 
 ```bash
-poetry install . --group docs
+uv sync --all-extras
 ```
 
 Then, you can build the documentation by running:
@@ -346,11 +346,7 @@ Please make sure to update the `CHANGELOG.md` file with a description of your ch
 
 > **Note:** Only maintainers can release new versions of `clinlp`.
 
-To prepare a new release, you can increment the version number using the following command.
-
-```bash
-poetry version <major|minor|patch>
-```
+To prepare a new release, you can increment the version number manually in `pyproject.toml`.
 
 Please update `CHANGELOG.md` with the version number and date of this release. If everything went well, all changes that were merged to `main` should already be documented. But it's always good to double check.
 
