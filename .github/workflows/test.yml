@@ -32,13 +32,11 @@ jobs:
   
     - name: Install package with extras
       run: |
-        uv venv
-        uv pip install .
         uv sync --all-extras
 
     - name: Test with pytest
       run: |
-        uv run pytest --cov-report xml 
+        uv run pytest --cov-report xml -n auto
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0
