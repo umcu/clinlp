@@ -297,7 +297,7 @@ class InfoExtractionDataset:
 
         docs = []
 
-        for doc, identifier in zip(nlp_docs, ids, strict=True):
+        for doc, identifier in zip(nlp_docs, ids, strict=False):
             annotations = [
                 Annotation(
                     text=str(ent),
