@@ -2,7 +2,6 @@
 
 from abc import abstractmethod
 from dataclasses import dataclass, field
-from typing import Optional
 
 from spacy.pipeline import Pipe
 from spacy.tokens import Doc, Span
@@ -14,7 +13,7 @@ ATTR_QUALIFIERS_STR = f"{ATTR_QUALIFIERS}_str"
 ATTR_QUALIFIERS_DICT = f"{ATTR_QUALIFIERS}_dict"
 
 
-def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
+def qualifiers_to_str(ent: Span) -> set[str] | None:
     """
     Get qualifier information in string format.
 
@@ -37,7 +36,7 @@ def qualifiers_to_str(ent: Span) -> Optional[set[str]]:
     return {str(q) for q in qualifiers}
 
 
-def qualifiers_to_dict(ent: Span) -> Optional[list[dict]]:
+def qualifiers_to_dict(ent: Span) -> list[dict] | None:
     """
     Get qualifier information in dictionary format.
 
@@ -108,13 +107,13 @@ class Qualifier:
     value: str = field(compare=True)
     """The value of the qualifier."""
 
-    is_default: Optional[bool] = field(default=None, compare=False)
+    is_default: bool | None = field(default=None, compare=False)
     """Whether the value is the default value."""
 
     priority: int = field(default=0, compare=False)
     """The priority of the qualifier."""
 
-    prob: Optional[float] = field(default=None, compare=False)
+    prob: float | None = field(default=None, compare=False)
     """The probability of the qualifier."""
 
     def to_dict(self) -> dict:
@@ -158,8 +157,8 @@ class QualifierClass:
         self,
         name: str,
         values: list[str],
-        default: Optional[str] = None,
-        priorities: Optional[dict] = None,
+        default: str | None = None,
+        priorities: dict | None = None,
     ) -> None:
         """
         Initialize a qualifier class.
@@ -196,7 +195,7 @@ class QualifierClass:
             msg = f"Default {default} not in provided value {values}."
             raise ValueError(msg)
 
-    def create(self, value: Optional[str] = None, **kwargs) -> Qualifier:
+    def create(self, value: str | None = None, **kwargs) -> Qualifier:
         """
         Create a qualifier in this qualifier class.
 

@@ -1,7 +1,5 @@
 """``Term`` class, which is used for rule based entity matching."""
 
-from typing import Optional
-
 import pydantic
 from spacy.language import Language
 
@@ -14,19 +12,19 @@ class Term(pydantic.BaseModel):
     phrase: str
     """The literal phrase to match."""
 
-    attr: Optional[str] = "TEXT"
+    attr: str | None = "TEXT"
     """The attribute to match on."""
 
-    proximity: Optional[int] = 0
+    proximity: int | None = 0
     """ The number of tokens to allow between each token in the phrase."""
 
-    fuzzy: Optional[int] = 0
+    fuzzy: int | None = 0
     """The threshold for fuzzy matching."""
 
-    fuzzy_min_len: Optional[int] = 0
+    fuzzy_min_len: int | None = 0
     """The minimum length for fuzzy matching."""
 
-    pseudo: Optional[bool] = False
+    pseudo: bool | None = False
     """Whether this term is a pseudo-term, which is excluded from matches."""
 
     model_config = {"extra": "ignore"}

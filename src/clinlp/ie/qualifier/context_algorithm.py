@@ -9,7 +9,6 @@ from collections import defaultdict
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Optional, Union
 
 import intervaltree as ivt
 from spacy.language import Language
@@ -51,7 +50,7 @@ class ContextRuleDirection(Enum):
 class ContextRule:
     """A Context rule, as in the original Context Algorithm."""
 
-    pattern: Union[str, list[dict[str, str]]]
+    pattern: str | list[dict[str, str]]
     """
     The pattern to look for in text. Either a ``string``, or a ``spaCy`` pattern
     (``list``).
@@ -63,7 +62,7 @@ class ContextRule:
     qualifier: Qualifier
     """ The qualifier to apply."""
 
-    max_scope: Optional[int] = None
+    max_scope: int | None = None
     """
     The maximum number of tokens a trigger ranges over, or ``None`` for using
     sentence boundaries.
@@ -145,7 +144,7 @@ class ContextAlgorithm(QualifierDetector):
         *,
         phrase_matcher_attr: str = "TEXT",
         load_rules: bool = True,
-        rules: Optional[Union[str | dict]] = _DEFAULT_CONTEXT_RULES_PATH,
+        rules: str | dict | None = _DEFAULT_CONTEXT_RULES_PATH,
         **kwargs,
     ) -> None:
         """
@@ -249,7 +248,7 @@ class ContextAlgorithm(QualifierDetector):
         """
         return ContextRuleDirection[direction.upper()]
 
-    def _parse_rules(self, rules: Union[str | dict]) -> list[ContextRule]:
+    def _parse_rules(self, rules: str | dict) -> list[ContextRule]:
         """
         Parse context rules from a file or dictionary.
 

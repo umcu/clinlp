@@ -7,7 +7,7 @@ Dutch clinical text.
 
 import importlib.metadata
 import warnings
-from typing import Callable, Optional
+from collections.abc import Callable
 
 import spacy.lang.char_classes
 import spacy.lang.nl.tokenizer_exceptions
@@ -265,7 +265,7 @@ def _get_abbreviations() -> list[str]:
 def _get_tokenizer_exceptions(
     abbreviations: list[str],
     *,
-    abbrev_transforms: Optional[list[Callable[[str], str]]] = None,
+    abbrev_transforms: list[Callable[[str], str]] | None = None,
     keep_emoticons: bool = False,
 ) -> dict[str, list[dict]]:
     """
@@ -306,7 +306,7 @@ def _get_tokenizer_exceptions(
 
 
 def _get_list(
-    base: list[str], add: Optional[list[str]] = None, remove: Optional[list[str]] = None
+    base: list[str], add: list[str] | None = None, remove: list[str] | None = None
 ) -> list[str]:
     """
     Create a list of strings, by copying a base list and adding and/or removing items.

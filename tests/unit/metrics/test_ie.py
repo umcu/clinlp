@@ -15,14 +15,14 @@ from clinlp.metrics.ie import (
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def clinlp_docs():
     with Path.open(TEST_DATA_DIR / "clinlp_docs.pickle", "rb") as f:
         return pickle.load(f)
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def clinlp_dataset(clinlp_docs):
     ids = [f"doc_{x}" for x in range(15)]
 
@@ -30,14 +30,14 @@ def clinlp_dataset(clinlp_docs):
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def mctrainer_data():
     with Path.open(TEST_DATA_DIR / "medcattrainer_export.json", "rb") as f:
         return json.load(f)
 
 
 # Arrange
-@pytest.fixture()
+@pytest.fixture
 def mctrainer_dataset(mctrainer_data):
     return InfoExtractionDataset.from_medcattrainer(data=mctrainer_data)
 
