@@ -30,4 +30,4 @@ jobs:
       run: uv sync --only-dev
 
     - name: ruff
-      run: ruff check
+      run: uv run ruff check
