@@ -31,7 +31,7 @@ jobs:
     - name: Build package
       run: uv build
 
-    - name: Install package with extras
+    - name: Install build with extras
       run: |
         find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
 
