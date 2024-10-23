@@ -112,7 +112,7 @@ We use `uv` for managing dependencies, and building the package. If you do not h
 Then, you can install the project with dependencies using:
 
 ```bash
-uv pip install -e .
+uv sync --all-extras
 ```
 
 ### Repository structure
@@ -320,10 +320,10 @@ Note that docstrings are used to automatically generate the API, which is also p
 
 #### Building the documentation
 
-We use `sphinx` for generating the documentation pages. If you want to build the documentation locally, you need to install install clinlp:
+We use `sphinx` for generating the documentation pages. If you want to build the documentation locally, you need to install clinlp:
 
 ```bash
-uv pip install .
+uv sync --all-extras
 ```
 
 Then, you can build the documentation by running:

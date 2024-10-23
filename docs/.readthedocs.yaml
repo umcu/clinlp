@@ -6,6 +6,7 @@ build:
     python: "3.12"
   commands:
     - pip install uv
+    - uv venv
     - uv sync --only-dev
     - make build-docs
     - cp -r docs/_build _readthedocs
