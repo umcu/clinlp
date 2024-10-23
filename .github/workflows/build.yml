@@ -33,10 +33,10 @@ jobs:
 
     - name: Install package with extras
       run: |
-        find dist/*.whl | xargs -I {} pip install {}"[transformers, metrics]"
+        find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
 
     - name: Test build
       run: uv run pytest -n auto
       
     - name: Publish package
-      run: uv publish --token ${{ SECRETS.PYPI_TOKEN }} --dry-run
+      run: uv publish --token ${{ SECRETS.PYPI_TOKEN }}
