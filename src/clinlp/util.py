@@ -14,7 +14,9 @@ class _UnusedArgument:
 
 def get_class_init_signature(cls: Type) -> Tuple[list, dict]:
     """
-    Get the arguments and keyword arguments of a class's ``__init__`` method.
+    Get the arguments and defaults of a class's ``__init__`` method.
+
+    Handles inheritance.
 
     Parameters
     ----------
