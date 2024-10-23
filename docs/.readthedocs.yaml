@@ -5,8 +5,7 @@ build:
   tools:
     python: "3.12"
   commands:
-    - pip install poetry
-    - poetry config virtualenvs.create false
-    - poetry install --without dev --with docs
+    - pip install uv
+    - uv sync --only-dev
     - make build-docs
     - cp -r docs/_build _readthedocs
