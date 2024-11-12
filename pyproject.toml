@@ -4,41 +4,52 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clinlp"
-version = "0.9.1"
+version = "0.9.2"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
 authors = [ {name = "UMCU DIT Analytics", email="analytics@umcutrecht.nl"} ]
+classifiers = [
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
 requires-python = ">=3.10"
 dependencies = [
-    "intervaltree ~= 3.1",
-    "makefun ~= 1.15",
-    "numpy ~= 2.0",
-    "pandas ~= 2.2",
-    "pydantic ~= 2.6",
-    "spacy ~= 3.8",
+  "intervaltree ~= 3.1",
+  "makefun ~= 1.15",
+  "numpy ~= 2.0",
+  "pandas ~= 2.2",
+  "pydantic ~= 2.6",
+  "spacy ~= 3.8",
 ]
+
+[project.urls]
+Documentation = "https://clinlp.readthedocs.io/en/latest/"
+Repository = "https://github.com/umcu/clinlp"
+Issues = "https://github.com/umcu/clinlp/issues"
+Changelog = "https://github.com/umcu/clinlp/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 metrics = [
-    "nervaluate == 0.1.8",
-    "scikit-learn ~= 1.5",
+  "nervaluate == 0.1.8",
+  "scikit-learn ~= 1.5",
 ]
 transformers = [
     "transformers[torch] ~= 4.30",
 ]
 
-[tool.uv]
-dev-dependencies = [
-    "emoji ~= 2.12",
-    "furo ~= 2024.5",
-    "myst-parser ~= 4.0",
-    "pytest ~= 8.2",
-    "pytest-cov ~= 5.0",
-    "pytest-xdist>=3.6.1",
-    "ruff ~= 0.4",
-    "sphinx ~= 8.1",
-    "sphinx-new-tab-link ~= 0.4",
-    "toml ~= 0.10",
+[dependency-groups]
+dev = [
+  "emoji ~= 2.12",
+  "furo ~= 2024.5",
+  "myst-parser ~= 4.0",
+  "pytest ~= 8.2",
+  "pytest-cov ~= 5.0",
+  "pytest-xdist ~= 3.6",
+  "ruff ~= 0.4",
+  "sphinx ~= 8.1",
+  "sphinx-new-tab-link ~= 0.4",
+  "toml ~= 0.10",
 ]
 
 [tool.pytest.ini_options]
@@ -66,3 +77,4 @@ ignore = [
 
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
+

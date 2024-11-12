@@ -221,7 +221,7 @@ uv add <package>
 To keep `clinlp` lightweight, we only include dependencies that are strictly necessary in the base package, and use optional dependencies for additional functionality (e.g. transformers, metrics). You can add an optional dependency using:
 
 ```bash
-uv add --optional <extra> <package>
+uv add --optional <optional_group> <package>
 ```
 
 If you are adding specific development dependencies, please add them as such using:
