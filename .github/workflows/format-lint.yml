@@ -6,28 +6,20 @@ on:
   push:
     branches: main
 
+env:
+  PY_VERSION: 3.12
+
 jobs:
-
   check-formatting-linting:
-
     runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Set up Python 3.12
-      uses: actions/setup-python@v5
-      with:
-        python-version: "3.12"
-
     - name: Install uv
       uses: astral-sh/setup-uv@v3
-      
+    - name: Setup Python $PY_VERSION
+      run: uv python install $PY_VERSION      
     - name: Install dependencies
       run: uv sync --only-dev
-
     - name: ruff
       run: uv run ruff check
