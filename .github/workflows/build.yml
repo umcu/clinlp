@@ -61,5 +61,6 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: clinlp-build
+          path: dist
       - name: Publish package
         run: uv publish --token ${{ SECRETS.PYPI_TOKEN }}
