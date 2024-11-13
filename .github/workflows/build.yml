@@ -6,84 +6,67 @@ on:
     types: [published]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-
     - name: Install uv
       uses: astral-sh/setup-uv@v3
-
-    - name: Setup dev dependencies
-      run: uv sync --only-dev
-
     - name: Build package
       run: uv build
-
     - name: Upload build
       uses: actions/upload-artifact@v4
       with:
           name: clinlp-build
           path: | 
             dist
-
   test-build:
     needs: build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
     steps:
     - name: Set up Python 3.12
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
-
     - name: Install uv
       uses: astral-sh/setup-uv@v3
-
     - name: Download build
       uses: actions/download-artifact@v4
       with:
         name: clinlp-build
-
     - name: Install build with extras
       run: |
         find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
-
+    - name: Install dev dependencies
+      run: |
+        uv sync --only-dev
     - name: Test build
       run: uv run pytest -n auto
 
   publish:
+    needs: test-build
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
-
     steps:
-
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
       - name: Install uv
         uses: astral-sh/setup-uv@v3
-
       - name: Download build
         uses: actions/download-artifact@v4
         with:
           name: clinlp-build
-
       - name: Publish package
         run: uv publish --token ${{ SECRETS.PYPI_TOKEN }}
