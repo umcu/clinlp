@@ -62,7 +62,7 @@ jobs:
       run: | 
         ls -R        
     - name: Test build
-      run: uv run pytest -n auto
+      run: pytest -n auto
 
   publish:
     needs: test-build
