@@ -45,12 +45,20 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: clinlp-build
+        path: dist
     - name: Install build with extras
       run: |
         find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
+    - name: List files
+      run: | 
+        ls -R
     - name: Install dev dependencies
       run: |
         uv sync --only-dev
+    - name: Remove repository
+      run: |
+        cd ../
+        rm -rf clinlp/
     - name: Test build
       run: uv run pytest -n auto
 
