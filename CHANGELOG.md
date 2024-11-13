@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## 0.9.3 (2024-11-13)
+
+### Fixed
+
+* Inclusion of resources in package
+
 ## 0.9.2 (2024-11-12)
 
 ### Changed

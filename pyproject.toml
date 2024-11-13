@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clinlp"
-version = "0.9.2"
+version = "0.9.3"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
 authors = [ {name = "UMCU DIT Analytics", email="analytics@umcutrecht.nl"} ]
