@@ -46,15 +46,15 @@ jobs:
       with:
         name: clinlp-build
         path: dist
-    - name: Install build with extras
-      run: |
-        find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
-    - name: List files
-      run: | 
-        ls -R
     - name: Install dev dependencies
       run: |
         uv sync --only-dev
+    - name: List files
+      run: | 
+        ls -R
+    - name: Install build with extras
+      run: |
+        find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
     - name: Remove repository
       run: |
         cd ../
