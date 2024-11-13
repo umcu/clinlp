@@ -55,10 +55,9 @@ jobs:
     - name: Install build with extras
       run: |
         find dist/*.whl | xargs -I {} uv pip install {}"[transformers, metrics]"
-    - name: Remove repository
+    - name: Remove source
       run: |
-        cd ../
-        rm -rf clinlp/
+        rm -rf src/
     - name: List files
       run: | 
         ls -R        
