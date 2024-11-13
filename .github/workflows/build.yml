@@ -62,7 +62,7 @@ jobs:
       run: | 
         ls -R        
     - name: Test build
-      run: uv run pytest -n auto --no-build-package clinlp
+      run: uv run --no-build-package clinlp pytest -n auto
 
   publish:
     needs: test-build
