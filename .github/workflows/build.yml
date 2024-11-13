@@ -59,6 +59,9 @@ jobs:
       run: |
         cd ../
         rm -rf clinlp/
+    - name: List files
+      run: | 
+        ls -R        
     - name: Test build
       run: uv run pytest -n auto
 
