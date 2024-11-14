@@ -1,0 +1,338 @@
+{
+    "terms": {
+        "C0002871_anemie": [
+            "anemie",
+            {
+                "phrase": "anemie:",
+                "pseudo": true
+            },
+            "bloedtransfusie",
+            "erytransfusie",
+            "erytrocyten",
+            {
+                "phrase": "RBC",
+                "attr": "TEXT"
+            },
+            "rbc-transfusie",
+            "packed cells"
+        ],
+        "C0006287_bronchopulmonale_dysplasie": [
+            "bronchopulmonale dysplasie",
+            "bronchopulmonaire dysplasie",
+            "chronische longziekte",
+            "solucortef",
+            "solucortefkuur",
+            {
+                "phrase": "BPD",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "CLD",
+                "attr": "TEXT"
+            }
+        ],
+        "C0392166_congenitale_hartafwijkingen": [
+            "congenitale hartafwijkingen",
+            "hartafwijking",
+            "meerdere aangeboren cardiale defecten",
+            "multipele congenitale hartdefecten",
+            "multipele hartafwijkingen",
+            {
+                "phrase": "CHD",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "TOF",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "HLHS",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "TGA",
+                "attr": "TEXT"
+            }
+        ],
+        "C0020433_hyperbilirubinemie": [
+            "hyperbili",
+            "hyperbilirubinemie",
+            "bilirubinemie",
+            "geelzien",
+            "icterus",
+            "icterisch",
+            "kernicterus",
+            "fototherapie",
+            "biliblanket",
+            "wisseltransfusie"
+        ],
+        "C0020649_hypotensie": [
+            "hypotensie",
+            "lage bloeddruk",
+            "bloeddruk laag",
+            "verlaagde bloeddruk",
+            "druk arterieel verlaagd",
+            "bloeddruk verlaagd",
+            {
+                "phrase": "bd verlaagd",
+                "proximity": 1
+            },
+            "arteriele druk verlaagd",
+            "bloeddrukval",
+            "val van bloeddruk",
+            "val in bloeddruk",
+            "vulling",
+            "vaatvulling",
+            "inotropie",
+            "inotropica",
+            "dopamine",
+            "dobutamine",
+            "noradrenaline",
+            "adrenaline",
+            "dopa",
+            "dobuta",
+            "vasopressor",
+            {
+                "phrase": "NOR",
+                "attr": "TEXT"
+            }
+        ],
+        "C0035220_infant_respiratory_distress_syndrome": [
+            "infant respiratory distress syndrome",
+            "respiratory distress syndroom",
+            "verminderd surfactant syndroom",
+            "respiratory distressbeeld",
+            "surfactant",
+            "hyaliene membraanziekte",
+            {
+                "phrase": "RDS",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "IRDS",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "RD-beeld",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "MIST",
+                "attr": "TEXT"
+            }
+        ],
+        "C0015934_intrauterine_groeivertraging": [
+            "dysmatuur",
+            "dysmaturiteit",
+            "dysmaturitas",
+            "small for gestational age",
+            {
+                "phrase": "IUGR",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "SGA",
+                "attr": "TEXT"
+            },
+            "groeiachterstand",
+            "groeirestrictie",
+            "groeirestriktie",
+            "groeiretardatie",
+            "groeivertraging",
+            "groeibeperking",
+            "groei-achterstand",
+            "groeistilstand",
+            "groeistoornis",
+            "achterblijven van foetale groei",
+            "groei intra-uterien vertraagd",
+            "groei intrauterien vertraagd",
+            "<p3",
+            "p2,3"
+        ],
+        "C0270191_intraventriculaire_bloeding": [
+            "intraventriculaire bloeding",
+            "ventriculaire bloeding",
+            "ventrikelbloeding",
+            {
+                "phrase": "IVH",
+                "attr": "TEXT"
+            }
+        ],
+        "C0015938_macrosomie": [
+            "macrosomie",
+            "macrosoom",
+            {
+                "phrase": "LGA",
+                "attr": "TEXT"
+            },
+            "p97"
+        ],
+        "C0025289_meningitis": [
+            "meningitis",
+            "hersenvliesontsteking"
+        ],
+        "C0520459_necrotiserende_enterocolitis": [
+            "necrotiserende enterocolitis",
+            "necroserende enterocolitis",
+            "enterocolitis necroticans",
+            "enterocolitis necrotiserend",
+            "bloed bij ontlasting",
+            "rectaal bloedverlies",
+            "pneumatosis",
+            {
+                "phrase": "NEC",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "RBV",
+                "attr": "TEXT"
+            }
+        ],
+        "C0014850_oesophagus_atresie": [
+            "oesophagusatresie",
+            "atresie van oesophagus",
+            "slokdarmatresie",
+            "atresie van slokdarm",
+            "atresie",
+            "slokdarmafsluiting",
+            "slokdarm zonder opening",
+            "niet-doorgankelijke slokdarm",
+            "slokdarm niet doorgankelijk"
+        ],
+        "C0013274_patent_ductus_arteriosus": [
+            "patent ductus arteriosus",
+            "persisterende ductus arteriosus",
+            "ductus",
+            "open ductus arteriosus",
+            "open ductus botalli",
+            "ductus van botalli",
+            "botalli",
+            "ibuprofen",
+            "indometacine",
+            {
+                "phrase": "PDA",
+                "attr": "TEXT"
+            }
+        ],
+        "C0031190_persisterende_pulmonale_hypertensie": [
+            "persisterende pulmonale hypertensie",
+            "pulmonale hypertensie",
+            "persisterende foetale circulatie",
+            "foetalecirculatiesyndroom",
+            "foetaal circulatiesyndroom",
+            "stikstof",
+            {
+                "phrase": "PPHN",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "NO",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "iNO",
+                "attr": "TEXT"
+            }
+        ],
+        "C0559477_perinatale_asfyxie": [
+            "perinatale asfyxie",
+            "asfyxie",
+            "slechte start",
+            "encefalopathie",
+            "hypothermie",
+            "koeling",
+            {
+                "phrase": "HIE",
+                "attr": "TEXT"
+            }
+        ],
+        "C0023529_periventriculaire_leucomalacie": [
+            "periventriculaire leucomalacie",
+            {
+                "phrase": "PVL",
+                "attr": "TEXT"
+            }
+        ],
+        "C0032326_pneumothorax": [
+            "pneumothorax",
+            "pneu",
+            "klaplong"
+        ],
+        "C0877064_post_hemorrhagische_ventrikeldilatatie": [
+            "ventrikeldilatatie",
+            "gedilateerd ventrikelsysteem",
+            "rickham",
+            "rickhamdrain",
+            "ventrikeldrain",
+            "neurochirurg",
+            {
+                "phrase": "PHVD",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "VPD",
+                "attr": "TEXT"
+            }
+        ],
+        "C0151526_prematuriteit": [
+            "prematuriteit",
+            "prematuur",
+            {
+                "phrase": "prematuur ademhalingspatroon",
+                "pseudo": true
+            },
+            "preterm",
+            "randprematuur",
+            "te vroeg geboren",
+            "vroeggeboorte",
+            "vroege start bevalling",
+            "vroegtijdige geboorte",
+            "partus prematurus"
+        ],
+        "C0035344_retinopathie_van_de_prematuriteit": [
+            "retinopathie van de prematuriteit",
+            "retinopathy of prematurity",
+            "premature retinopathie",
+            {
+                "phrase": "ROP",
+                "attr": "TEXT"
+            }
+        ],
+        "C0243026_sepsis": [
+            "sepsis",
+            "lijnsepsis",
+            "infectie",
+            "infect",
+            "lijninfectie",
+            "systemische infectie",
+            "infectie systemisch",
+            "early onset",
+            "late onset",
+            "gram negatief",
+            "gram positief",
+            "bacteriemie",
+            "pneumonie",
+            {
+                "phrase": "EOS",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "LOS",
+                "attr": "TEXT"
+            }
+        ],
+        "C0751954_veneus_infarct": [
+            "veneus infarct",
+            "infarcering",
+            "hemorrhagische infarcthaard",
+            {
+                "phrase": "VI",
+                "attr": "TEXT"
+            },
+            {
+                "phrase": "PIVH",
+                "attr": "TEXT"
+            }
+        ]
+    }
+}
