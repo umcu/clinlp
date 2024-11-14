@@ -1,8 +1,8 @@
 """Utility functions for the Information Extraction demo."""
 
-from pathlib import Path
+import importlib
 
-RESOURCE_PATH = Path("src/clinlp_apps/ie_demo/resources")
+RESOURCE_PATH = importlib.resources.files("clinlp_apps.ie_demo.resources")
 
 
 def simple_label(label: str) -> str:
