@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "clinlp"
-version = "0.9.3"
+version = "0.9.4"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
 authors = [ {name = "UMCU DIT Analytics", email="analytics@umcutrecht.nl"} ]
@@ -15,6 +15,7 @@ classifiers = [
 ]
 requires-python = ">=3.10"
 dependencies = [
+  "click>=8.1.7",
   "intervaltree ~= 3.1",
   "makefun ~= 1.15",
   "numpy ~= 2.0",
@@ -22,6 +23,9 @@ dependencies = [
   "pydantic ~= 2.6",
   "spacy ~= 3.8",
 ]
+
+[project.scripts]
+clinlp = "clinlp.cli:cli"
 
 [project.urls]
 Documentation = "https://clinlp.readthedocs.io/en/latest/"
@@ -36,6 +40,10 @@ metrics = [
 ]
 transformers = [
     "transformers[torch] ~= 4.30",
+]
+apps = [
+    "dash-bootstrap-components>=1.6.0",
+    "dash>=2.18.2",
 ]
 
 [dependency-groups]

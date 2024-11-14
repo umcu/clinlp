@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## 0.9.4 (2024-11-14)
+
+### Added
+
+* Added a visual/interactive demo of the Information Extraction pipeline in the form of a Dash web application (`clinlp app ie_demo`)
+
 ## 0.9.3 (2024-11-13)
 
 ### Fixed
