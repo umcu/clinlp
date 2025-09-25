@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## (Unreleased)
+
+### Removed
+
+* The `load_concepts` and `create_concept_dict` methods in `RuleBasedEntityMatcher`
+* The `clinlp_entity_matcher` component
+
 ## 0.9.4 (2024-11-14)
 
 ### Added
