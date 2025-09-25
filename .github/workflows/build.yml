@@ -46,15 +46,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Download build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: clinlp-build
           path: dist
       - name: Download requirements file
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: clinlp-requirements
-          path: requirements.txt
       - name: Install python
         uses: actions/setup-python@v6
         with:
@@ -72,7 +71,7 @@ jobs:
       - name: Setup Python
         run: uv python install
       - name: Download build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v5
         with:
           name: clinlp-build
           path: dist
