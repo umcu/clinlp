@@ -43,30 +43,35 @@ jobs:
           path: requirements.txt
 
   test-build:
-    - name: Download build
-    uses: actions/download-artifact@v4
-    with:
-      name: clinlp-build
-      path: dist
-    - name: Download requirements file
-    uses: actions/download-artifact@v4
-    with:
-      name: clinlp-requirements
-      path: requirements.txt
-    - name: Install python
-      uses: actions/setup-python@v6
+    needs: make-requirements
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true    
+    steps:
+      - name: Download build
+      uses: actions/download-artifact@v4
       with:
-        python-version: "3.13"
-    - name: Install requirements using pip
-      run: pip install -r requirements.txt
-    - name: Test build
-      run: poe test 
+        name: clinlp-build
+        path: dist
+      - name: Download requirements file
+      uses: actions/download-artifact@v4
+      with:
+        name: clinlp-requirements
+        path: requirements.txt
+      - name: Install python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.13"
+      - name: Install requirements using pip
+        run: pip install -r requirements.txt
+      - name: Test build
+        run: poe test 
 
   publish:
     needs: test-build
     runs-on: ubuntu-latest
     strategy:
-      fail-fast: false
+      fail-fast: true
     steps:
       - name: Install uv
         uses: astral-sh/setup-uv@v3
