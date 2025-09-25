@@ -87,8 +87,12 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
+[tool.poe.executor]
+type = "virtualenv"
+location = ".venv"
+
 [tool.poe.tasks]
-test = "pytest ."
+test = "pytest --cov-report xml -n auto"
 format = "ruff format"
 check = "ruff check"
 _docs_build_api = "sphinx-apidoc --module-first --force --templatedir=docs/_templates -o docs/source/api/clinlp src"
