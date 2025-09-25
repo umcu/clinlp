@@ -19,4 +19,4 @@ jobs:
     - name: Install dependencies
       run: uv sync --only-dev
     - name: ruff
-      run: poe --executor uv check
+      run: uv run poe check
