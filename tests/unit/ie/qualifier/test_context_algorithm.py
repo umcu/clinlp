@@ -250,7 +250,7 @@ class TestUnitMatchedQualifierPattern:
         sentence = Span(mock_doc, start=0, end=4)
 
         # Assert
-        with pytest.raises(ValueError, match=".*max_scope must be at least 1.*"):
+        with pytest.raises(ValueError, match=r".*max_scope must be at least 1.*"):
             # Act
             mqp.set_initial_scope(sentence=sentence)
 
@@ -303,7 +303,7 @@ class TestUnitContextAlgorithm:
         qualifier_classes = {"Mock": mock_qualifier_class}
 
         # Assert
-        with pytest.raises(ValueError, match=".*Cannot parse qualifier.*"):
+        with pytest.raises(ValueError, match=r".*Cannot parse qualifier.*"):
             # Act
             ca._parse_qualifier(value, qualifier_classes)
 

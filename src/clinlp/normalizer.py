@@ -79,8 +79,7 @@ class Normalizer(Pipe):
         """
         if len(char) != 1:
             msg = (
-                "Please only use the _map_non_ascii_char method "
-                "on strings of length 1."
+                "Please only use the _map_non_ascii_char method on strings of length 1."
             )
             raise ValueError(msg)
 

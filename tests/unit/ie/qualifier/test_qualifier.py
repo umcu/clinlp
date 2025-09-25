@@ -261,7 +261,7 @@ class TestUnitQualifierClass:
         qualifier_class = QualifierClass("Negation", ["Affirmed", "Negated"])
 
         # Assert
-        with pytest.raises(ValueError, match=".*cannot take value.*"):
+        with pytest.raises(ValueError, match=r".*cannot take value.*"):
             # Act
             _ = qualifier_class.create(value="Unknown")
 
