@@ -9,6 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## (Unreleased)
 
+### Added
+
+* Use Poe the Poet (e.g. `poe build_docs`) for running common tasks
+
 ### Changed
 
 * Removed support for Python 3.10, added support for Python 3.13 (now the default)

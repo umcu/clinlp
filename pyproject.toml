@@ -51,6 +51,7 @@ dev = [
   "emoji ~= 2.15",
   "furo ~= 2025.7",
   "myst-parser ~= 4.0",
+  "poethepoet>=0.37.0",
   "pytest ~= 8.4",
   "pytest-cov ~= 7.0",
   "pytest-xdist ~= 3.8",
@@ -86,3 +87,11 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
+[tool.poe.tasks]
+test = "pytest ."
+format = "ruff format"
+check = "ruff check"
+_docs_build_api = "sphinx-apidoc --module-first --force --templatedir=docs/_templates -o docs/source/api/clinlp src"
+_docs_build_sphinx = "sphinx-build docs/source docs/_build/html -c docs/"
+_docs_emojize = "python docs/emojize.py docs/_build/html"
+build_docs = ["_docs_build_api", "_docs_build_sphinx", "_docs_emojize"]

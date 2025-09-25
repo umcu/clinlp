@@ -115,6 +115,12 @@ Then, you can install the project with dependencies using:
 uv sync --all-extras
 ```
 
+We use Poe the Poet for running common tasks, configured in `pyproject.toml`. It is automatically installed as a dev dependency. You can run Poe tasks using:
+
+```bash
+poe <task>
+```
+
 ### Repository structure
 
 The repository is structured as follows:
@@ -195,19 +201,19 @@ We use `ruff` for both formatting and linting. It is configured in `pyproject.to
 The `ruff` formatter is a drop-in replacement for `black`. You can run it using the following command, which will format the codebase:
 
 ```bash
-ruff format
+poe format
 ```
 
 The `ruff` linter checks for any common errors, that should be resolved before committing changes to the codebase. You can run it using the following command:
 
 ```bash
-ruff check
+poe check
 ```
 
 If any issues are found, some can be automatically fixed using the following command:
 
 ```bash
-ruff check --fix
+poe check --fix
 ```
 
 ### Dependencies
@@ -237,7 +243,7 @@ We use the `pytest` framework for testing. New code should preferably be accompa
 You can run the tests locally by running:
 
 ```bash
-pytest .
+poe test
 ```
 
 We preferably use the following `pytest` best practices:
@@ -329,7 +335,7 @@ uv sync --all-extras
 Then, you can build the documentation by running:
 
 ```bash
-make build-docs
+poe build_docs
 ```
 
 You should find the docs in `html/_build`.
