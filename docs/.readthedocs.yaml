@@ -9,5 +9,5 @@ build:
     - asdf install uv latest
     - asdf global uv latest
     - uv sync --only-dev
-    - uv run make build-docs
+    - uv run poe build_docs
     - cp -r docs/_build _readthedocs

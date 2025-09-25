@@ -15,7 +15,6 @@ jobs:
       fail-fast: true
       matrix:
         python-version:
-          - "3.10"
           - "3.11"
           - "3.12"
           - "3.13"
@@ -29,7 +28,7 @@ jobs:
     - name: Install package with extras
       run: uv sync --all-extras
     - name: Test with pytest
-      run: uv run pytest --cov-report xml -n auto
+      run: uv run poe test --cov-report xml
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:

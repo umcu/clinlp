@@ -7,7 +7,10 @@ name = "clinlp"
 version = "0.9.4"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
-authors = [ {name = "UMCU DIT Analytics", email="analytics@umcutrecht.nl"} ]
+authors = [ 
+  {name = "Vincent Menger", email="v.j.menger-2@umcutrecht.nl"},
+  {name = "Bram van Es", email="b.vanes-3@umcutrecht.nl"}
+]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -51,6 +54,7 @@ dev = [
   "emoji ~= 2.15",
   "furo ~= 2025.7",
   "myst-parser ~= 4.0",
+  "poethepoet>=0.37.0",
   "pytest ~= 8.4",
   "pytest-cov ~= 7.0",
   "pytest-xdist ~= 3.8",
@@ -86,3 +90,15 @@ ignore = [
 [tool.ruff.lint.pydocstyle]
 convention = "numpy"
 
+[tool.poe.executor]
+type = "virtualenv"
+location = ".venv"
+
+[tool.poe.tasks]
+test = "pytest -n auto"
+format = "ruff format"
+check = "ruff check"
+_docs_build_api = "sphinx-apidoc --module-first --force --templatedir=docs/_templates -o docs/source/api/clinlp src"
+_docs_build_sphinx = "sphinx-build docs/source docs/_build/html -c docs/"
+_docs_emojize = "python docs/emojize.py docs/_build/html"
+build_docs = ["_docs_build_api", "_docs_build_sphinx", "_docs_emojize"]
