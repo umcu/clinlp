@@ -201,13 +201,13 @@ ruff format
 The `ruff` linter checks for any common errors, that should be resolved before committing changes to the codebase. You can run it using the following command:
 
 ```bash
-ruff lint
+ruff check
 ```
 
 If any issues are found, some can be automatically fixed using the following command:
 
 ```bash
-ruff lint --fix
+ruff check --fix
 ```
 
 ### Dependencies
