@@ -17,11 +17,11 @@ __version__ = importlib.metadata.version(__package__ or __name__)
 
 
 __all__ = [
-    "RuleBasedEntityMatcher",
+    "Clinlp",
     "ContextAlgorithm",
     "ExperiencerTransformer",
     "NegationTransformer",
-    "Clinlp",
     "Normalizer",
+    "RuleBasedEntityMatcher",
     "Sentencizer",
 ]
