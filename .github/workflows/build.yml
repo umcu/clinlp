@@ -32,6 +32,11 @@ jobs:
       uses: astral-sh/setup-uv@v3
     - name: Setup Python
       run: uv python install
+    - name: Download build
+      uses: actions/download-artifact@v5
+      with:
+        name: clinlp-build
+        path: dist
     - name: Create requirements file for test environment
       run: |
         uv export -o requirements.txt --only-group dev --no-hashes 
