@@ -7,7 +7,10 @@ name = "clinlp"
 version = "0.9.4"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
-authors = [ {name = "UMCU DIT Analytics", email="analytics@umcutrecht.nl"} ]
+authors = [ 
+  {name = "Vincent Menger", email="v.j.menger-2@umcutrecht.nl"},
+  {name = "Bram van Es", email="b.vanes-3@umcutrecht.nl"}
+]
 classifiers = [
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
