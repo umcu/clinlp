@@ -617,7 +617,7 @@ class TestMetrics:
         iem.pred.docs = iem.pred.docs[:-2]
 
         # Assert
-        with pytest.raises(ValueError, match=".*Datasets with same size.*"):
+        with pytest.raises(ValueError, match=r".*Datasets with same size.*"):
             # Act
             iem._validate_dataset_compatibility()
 
@@ -627,7 +627,7 @@ class TestMetrics:
         iem.true.docs[0].identifier = "test"
 
         # Assert
-        with pytest.raises(ValueError, match=".*non-matching ids.*"):
+        with pytest.raises(ValueError, match=r".*non-matching ids.*"):
             # Act
             iem._validate_dataset_compatibility()
 

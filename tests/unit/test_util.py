@@ -449,6 +449,6 @@ class TestUnitIntervalDistance:
 
     def test_interval_distance_error(self):
         # Assert
-        with pytest.raises(ValueError, match=".*Input malformed interval.*"):
+        with pytest.raises(ValueError, match=r".*Input malformed interval.*"):
             # Act
             _ = interval_dist(10, 0, 0, 10)

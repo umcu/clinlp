@@ -65,7 +65,7 @@ class TestNormalizer:
 
         # Assert
         with pytest.raises(
-            ValueError, match=".*Please only use the _map_non_ascii_char.*"
+            ValueError, match=r".*Please only use the _map_non_ascii_char.*"
         ):
             # Act
             n._map_non_ascii_char("ab")
