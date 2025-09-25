@@ -253,7 +253,7 @@ requires-dist = [
     { name = "dash-bootstrap-components", marker = "extra == 'apps'", specifier = "~=2.0" },
     { name = "intervaltree", specifier = "~=3.1" },
     { name = "makefun", specifier = "~=1.16" },
-    { name = "nervaluate", marker = "extra == 'metrics'", specifier = "~=1.1" },
+    { name = "nervaluate", marker = "extra == 'metrics'", specifier = "==0.1.8" },
     { name = "numpy", specifier = "~=2.3" },
     { name = "pandas", specifier = "~=2.3" },
     { name = "pydantic", specifier = "~=2.11" },
@@ -886,11 +886,10 @@ wheels = [
 
 [[package]]
 name = "nervaluate"
-version = "1.1.0"
+version = "0.1.8"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/3a/db/8f5886bd95e3a68b594dcf347d7be77bcfc0fc5482a5902b551acb2dc380/nervaluate-1.1.0.tar.gz", hash = "sha256:6b8933f99e97e5fcd47aabc86c8a9da24e1f16a43042e411b5c68816b437975e", size = 40365 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/c6/b6/94d928c7b60cc487fd8204962d2571ef54886e54a4a45e03573186c76e1a/nervaluate-1.1.0-py3-none-any.whl", hash = "sha256:f808fb577ad413abd0121e8b980ad55434ca3c1c887b0aca5bbe7b16da60dfdf", size = 16661 },
+    { url = "https://files.pythonhosted.org/packages/95/93/ca9b0721982816a6a9ec09a44b5472fd8026782cbac0da5876dd3e43fc37/nervaluate-0.1.8-py3-none-any.whl", hash = "sha256:fa99d78cfc03425f60c690cc0627da9e5ae788bd7dd65b76728e1da97590de14", size = 24448 },
 ]
 
 [[package]]

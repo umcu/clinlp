@@ -35,7 +35,7 @@ Changelog = "https://github.com/umcu/clinlp/blob/main/CHANGELOG.md"
 
 [project.optional-dependencies]
 metrics = [
-  "nervaluate ~= 1.1",
+  "nervaluate == 0.1.8",
   "scikit-learn ~= 1.7",
 ]
 transformers = [
