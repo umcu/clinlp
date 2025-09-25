@@ -75,7 +75,7 @@ select = [
     "TRY", "PERF", "RUF"
 ]
 ignore = [
-    "ANN002", "ANN003", "ANN101", "ANN102"
+    "ANN002", "ANN003"
 ]
 
 [tool.ruff.lint.per-file-ignores]
