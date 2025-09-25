@@ -95,7 +95,7 @@ type = "virtualenv"
 location = ".venv"
 
 [tool.poe.tasks]
-test = "pytest --cov-report xml -n auto"
+test = "pytest -n auto"
 format = "ruff format"
 check = "ruff check"
 _docs_build_api = "sphinx-apidoc --module-first --force --templatedir=docs/_templates -o docs/source/api/clinlp src"
