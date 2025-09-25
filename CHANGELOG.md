@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## (Unreleased)
 
+### Changed
+
+* Removed support for Python 3.10, added support for Python 3.13 (now the default)
+* Updated dependencies to their latest versions
+
 ### Removed
 
 * The `load_concepts` and `create_concept_dict` methods in `RuleBasedEntityMatcher`
