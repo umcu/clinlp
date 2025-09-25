@@ -42,7 +42,7 @@ jobs:
         uv export -o requirements.txt --only-group dev --no-hashes 
         find dist/*.whl | xargs -I {} echo {}"[transformers, metrics]" >> requirements.txt
     - name: Test build
-      run: poe --executor uv test --no-project --with-requirements requirements.txt
+      run: uv run poe test --no-project --with-requirements requirements.txt
 
   publish:
     needs: test-build
