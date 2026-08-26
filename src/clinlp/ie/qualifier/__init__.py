@@ -16,6 +16,7 @@ if importlib.util.find_spec("transformers") is not None:
     from .transformer import (
         ExperiencerTransformer,
         NegationTransformer,
+        PiiTransformer,
         QualifierTransformer,
     )
 
@@ -26,6 +27,7 @@ __all__ = [
     "ContextRuleDirection",
     "ExperiencerTransformer",
     "NegationTransformer",
+    "PiiTransformer",
     "Qualifier",
     "QualifierClass",
     "QualifierDetector",

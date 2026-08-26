@@ -7,7 +7,7 @@ name = "clinlp"
 version = "0.10.0"
 description = "Performant and production-ready NLP pipelines for clinical text written in Dutch"
 readme = "README.md"
-authors = [ 
+authors = [
   {name = "Vincent Menger", email="v.j.menger-2@umcutrecht.nl"},
   {name = "Bram van Es", email="b.vanes-3@umcutrecht.nl"}
 ]
@@ -16,7 +16,7 @@ classifiers = [
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
 ]
-requires-python = ">=3.11"
+requires-python = ">=3.11,<3.14"
 dependencies = [
   "click ~= 8.3",
   "intervaltree ~= 3.1",

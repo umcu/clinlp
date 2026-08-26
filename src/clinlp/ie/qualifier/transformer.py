@@ -4,10 +4,15 @@ import statistics
 from abc import abstractmethod
 from collections.abc import Callable
 
+import numpy as np
 import torch
 from spacy import Language
 from spacy.tokens import Doc, Span
-from transformers import AutoTokenizer, RobertaForTokenClassification
+from transformers import (
+    AutoModelForTokenClassification,
+    AutoTokenizer,
+    RobertaForTokenClassification,
+)
 
 from clinlp.ie.qualifier.qualifier import (
     ATTR_QUALIFIERS,
@@ -15,7 +20,6 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
 )
 from clinlp.util import clinlp_component
-
 
 class QualifierTransformer(QualifierDetector):
     """
@@ -214,6 +218,32 @@ class QualifierTransformer(QualifierDetector):
 
         return text, ent_start_char, ent_end_char
 
+    @staticmethod
+    def _get_ent_token_span(
+        inputs, ent_start_char: int, ent_end_char: int
+    ) -> tuple[int, int]:
+        """Map character span to token span for transformer inputs."""
+        start_token = inputs.char_to_token(ent_start_char)
+        end_token = inputs.char_to_token(ent_end_char - 1)
+
+        if start_token is not None and end_token is not None:
+            return start_token, end_token
+
+        overlapping_token_indices = [
+            token_i
+            for token_i, (token_start, token_end) in enumerate(inputs.encodings[0].offsets)
+            if token_start < ent_end_char and token_end > ent_start_char
+        ]
+
+        if len(overlapping_token_indices) == 0:
+            msg = (
+                "Could not align entity character span to token span: "
+                f"[{ent_start_char}:{ent_end_char}]"
+            )
+            raise ValueError(msg)
+
+        return overlapping_token_indices[0], overlapping_token_indices[-1]
+
     def _predict(
         self,
         text: str,
@@ -247,12 +277,58 @@ class QualifierTransformer(QualifierDetector):
         output = self.model.forward(inputs["input_ids"])
         probs = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
 
-        start_token = inputs.char_to_token(ent_start_char)
-        end_token = inputs.char_to_token(ent_end_char - 1)
+        start_token, end_token = self._get_ent_token_span(
+            inputs, ent_start_char, ent_end_char
+        )
 
         return prob_aggregator(
             sum(pos[prob_indices]) for pos in probs[start_token : end_token + 1]
         )
+
+    def _predict_multiclass(
+        self,
+        text: str,
+        ent_start_char: int,
+        ent_end_char: int,
+        qualifier_mapping: dict | None = None,
+    ) -> tuple[str, float]:
+        """
+        Predict the probability of a multiclass qualifier.
+
+        Parameters
+        ----------
+        text
+            The text.
+        ent_start_char
+            The entity start character.
+        ent_end_char
+            The entity end character.
+
+        Returns
+        -------
+        ``tuple``
+            The qualifier (str), The probability (float)
+        """
+
+        inputs = self.tokenizer(text, return_tensors="pt")
+        output = self.model.forward(inputs["input_ids"])
+        probs = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
+
+        start_token, end_token = self._get_ent_token_span(
+            inputs, ent_start_char, ent_end_char
+        )
+
+        mean_probas = np.mean(probs[start_token : end_token + 1, :], axis=0)
+        label_id = int(np.argmax(mean_probas))
+
+        qualifier = self.model.config.id2label[label_id].removeprefix("B-").removeprefix("I-")
+        probability = float(mean_probas[label_id])
+
+        if isinstance(qualifier_mapping, dict):
+            qualifier = qualifier_mapping.get(qualifier, qualifier)
+
+        return qualifier, probability
+
 
 
 @clinlp_component(
@@ -430,3 +506,145 @@ class ExperiencerTransformer(QualifierTransformer):
                     ent,
                     self.qualifier_classes["Experiencer"].create("Family", prob=prob),
                 )
+
+
+@clinlp_component(
+    name="clinlp_pii_transformer",
+    requires=["doc.spans"],
+    assigns=[f"span._.{ATTR_QUALIFIERS}"],
+)
+class PiiTransformer(QualifierTransformer):
+    """Transformer-based PII detector."""
+
+    PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/PII_RobBERT"
+    REVISION = "7cae7b32d565fc49430f08517c5e8dbc20382478"
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
+    model = AutoModelForTokenClassification.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
+
+    def __init__(
+        self,
+        nlp: Language,
+        *,
+        proba_threshold: float = 0.1,
+        reduce_labels: bool = True,
+        **kwargs,
+    ) -> None:
+        """
+        Create a transformer-based PII detector.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language model.
+        proba_threshold
+            The threshold for any detection. Will classify qualifier as ``PII.Absent``
+            if ``prediction`` < ``proba_threshold``.
+        """
+        self.nlp = nlp
+        self.proba_threshold = proba_threshold
+        self.qualifier_mapping = {}
+
+        if reduce_labels:
+            self.qualifier_mapping = {
+                "GIVENNAME": "NAME",
+                "SURNAME": "NAME",
+                "TAXNUM": "IDNUM",
+                "DRIVERLICENSENUM": "IDNUM",
+                "CREDITCARDNUMBER": "IDNUM",
+                "PASSPORTNUM": "IDNUM",
+                "SOCIALNUM": "IDNUM",
+                "BUILDINGNUM": "LOCATION",
+                "CITY": "LOCATION",
+                "STREET": "LOCATION",
+                "ZIPCODE": "LOCATION",
+                "GENDER": "SEX",
+            }
+            # TODO: redundant once tested?
+            assert all(
+                [
+                    k
+                    in [
+                        _k.removeprefix("B-").removeprefix("I-")
+                        for _k in self.model.config.label2id.keys()
+                    ]
+                    for k in self.qualifier_mapping.keys()
+                ]
+            ), "Not all mapping keys map to an actual label"
+
+        super().__init__(**kwargs)
+
+    @property
+    def qualifier_classes(self) -> dict[str, QualifierClass]:  # noqa: D102
+        return {
+            "PII": QualifierClass(
+                "PII",
+                [
+                    "Absent",
+                    "AGE",
+                    "BUILDINGNUM",
+                    "CITY",
+                    "CREDITCARDNUMBER",
+                    "DATE",
+                    "DRIVERLICENSENUM",
+                    "EMAIL",
+                    "GENDER",
+                    "GIVENNAME",
+                    "IDCARDNUM",
+                    "IDNUM",
+                    "LOCATION",
+                    "NAME",
+                    "PASSPORTNUM",
+                    "SEX",
+                    "SOCIALNUM",
+                    "STREET",
+                    "SURNAME",
+                    "TAXNUM",
+                    "TELEPHONENUM",
+                    "TITLE",
+                    "ZIPCODE",
+                ],
+                default="Absent",
+            )
+        }
+
+    def _detect_qualifiers(self, doc: Doc) -> None:
+        """
+        Detect qualifiers for the entities in a document.
+
+        Prepares the entity, then predicts the probability of the qualifier. If the
+        probability is below the absence threshold, the qualifier is classified as
+        "Absent". If the probability is above the presence threshold, the qualifier is
+        classified as "Present". Otherwise, it is classified as "Uncertain".
+
+        Parameters
+        ----------
+        doc
+            The document to process.
+        """
+        for ent in doc.spans[self.spans_key]:
+            text, ent_start_char, ent_end_char = self._prepare_ent(ent)
+
+            qualifier, prob = self._predict_multiclass(
+                text,
+                ent_start_char,
+                ent_end_char,
+                self.qualifier_mapping,
+            )
+
+            if (
+                prob <= self.proba_threshold
+                or qualifier not in self.qualifier_classes["PII"].values
+            ):
+                qualifier_value = "Absent"
+            else:
+                qualifier_value = qualifier
+
+            self.add_qualifier_to_ent(
+                ent,
+                self.qualifier_classes["PII"].create(qualifier_value, prob=prob),
+            )
