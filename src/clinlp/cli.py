@@ -14,7 +14,7 @@ def cli() -> None:
 @click.argument("app_name")
 def app(app_name: str) -> None:
     """Start app by name."""
-    importlib.import_module(f"clinlp_apps.{app_name}.app").app.run_server()
+    importlib.import_module(f"clinlp_apps.{app_name}.app").app.run()
 
 
 cli.add_command(app)

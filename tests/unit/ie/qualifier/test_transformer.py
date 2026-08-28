@@ -4,6 +4,7 @@ import pytest
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
+    CardioTransformer,
     ExperiencerTransformer,
     NegationTransformer,
     PiiTransformer,
@@ -347,4 +348,86 @@ class TestPiiTransformer:
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             f"PII.{expected_qualifier}"
+        }
+
+
+class TestCardioTransformer:
+    @staticmethod
+    def _make_doc_with_cardio_entity(nlp_entity, text):
+        doc = nlp_entity(text)
+
+        ent_start = text.index("palpitaties")
+        ent_end = ent_start + len("palpitaties")
+        ent = doc.char_span(
+            ent_start,
+            ent_end,
+            label="named_entity",
+            alignment_mode="expand",
+        )
+        assert ent is not None
+        doc.spans[SPANS_KEY] = [ent]
+
+        return doc
+
+    def test_detect_qualifiers_absent_when_probability_below_threshold(self, nlp_entity):
+        # Arrange
+        ct = CardioTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "Reden van komst Analyse palpitaties.  Voorgeschiedenis 1996 Occipitaal CVA "
+            "1996 Afgesloten a poplitea beiderzijds 1996 Hyperhomocysteïnemie o.b.v. "
+            "heterozygotie"
+        )
+        doc = self._make_doc_with_cardio_entity(nlp_entity, text)
+
+        prepared_text, ent_start_char, ent_end_char = ct._prepare_ent(doc.spans[SPANS_KEY][0])
+        _, prob = ct._predict_multiclass(prepared_text, ent_start_char, ent_end_char)
+        ct.proba_threshold = min(1.0, prob + 1e-6)
+
+        # Act
+        ct(doc)
+
+        # Assert
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            "MED_NER.Absent"
+        }
+
+    def test_detect_qualifiers_uses_predicted_label_above_threshold(self, nlp_entity):
+        # Arrange
+        ct = CardioTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "Reden van komst Analyse palpitaties.  Voorgeschiedenis 1996 Occipitaal CVA "
+            "1996 Afgesloten a poplitea beiderzijds 1996 Hyperhomocysteïnemie o.b.v. "
+            "heterozygotie"
+        )
+        doc = nlp_entity(text)
+        ent = doc[4:5]
+        assert str(ent) == "palpitaties"
+        doc.spans[SPANS_KEY] = [ent]
+
+        prepared_text, ent_start_char, ent_end_char = ct._prepare_ent(doc.spans[SPANS_KEY][0])
+        qualifier, prob = ct._predict_multiclass(prepared_text, ent_start_char, ent_end_char)
+        ct.proba_threshold = max(0.0, prob - 1e-6)
+
+        # Act
+        ct(doc)
+
+        # Assert
+        expected_qualifier = (
+            qualifier if qualifier in ct.qualifier_classes["MED_NER"].values else "Absent"
+        )
+
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            f"MED_NER.{expected_qualifier}"
         }

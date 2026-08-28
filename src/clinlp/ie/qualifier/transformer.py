@@ -544,6 +544,8 @@ class PiiTransformer(QualifierTransformer):
         proba_threshold
             The threshold for any detection. Will classify qualifier as ``PII.Absent``
             if ``prediction`` < ``proba_threshold``.
+        reduce_labels
+            Whether to reduce the number of labels to a more generic set.
         """
         self.nlp = nlp
         self.proba_threshold = proba_threshold
@@ -642,9 +644,109 @@ class PiiTransformer(QualifierTransformer):
             ):
                 qualifier_value = "Absent"
             else:
-                qualifier_value = qualifier
+                if qualifier == "O":
+                    qualifier_value = "Absent"
+                else:
+                    qualifier_value = qualifier
 
             self.add_qualifier_to_ent(
                 ent,
                 self.qualifier_classes["PII"].create(qualifier_value, prob=prob),
+            )
+
+@clinlp_component(
+    name="clinlp_cardioner_transformer",
+    requires=["doc.spans"],
+    assigns=[f"span._.{ATTR_QUALIFIERS}"],
+)
+class CardioTransformer(QualifierTransformer):
+    """Transformer-based detector of medication/procedure/symptom/disease. For the cardiology domain."""
+
+    PRETRAINED_MODEL_NAME_OR_PATH = "DT4H/cardio-ner-multilingual-xlm-roberta-large-multilabel"
+    REVISION = "8dd428df5af2df36a62544c3020c0b15d617227c"
+
+    tokenizer = AutoTokenizer.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
+    model = AutoModelForTokenClassification.from_pretrained(
+        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
+    )
+
+    def __init__(
+        self,
+        nlp: Language,
+        *,
+        proba_threshold: float = 0.1,
+        **kwargs,
+    ) -> None:
+        """
+        Create a transformer-based medical entity detector.
+
+        Parameters
+        ----------
+        nlp
+            The ``spaCy`` language model.
+        proba_threshold
+            The threshold for any detection. Will classify qualifier as ``MED_ENT.Absent``
+            if ``prediction`` < ``proba_threshold``.
+        """
+        self.nlp = nlp
+        self.proba_threshold = proba_threshold
+        self.qualifier_mapping = {}
+
+        super().__init__(**kwargs)
+
+    @property
+    def qualifier_classes(self) -> dict[str, QualifierClass]:  # noqa: D102
+        return {
+            "MED_NER": QualifierClass(
+                "MED_NER",
+                [
+                    "Absent",
+                    "DISEASE",
+                    "SYMPTOM",
+                    "MEDICATION",
+                    "PROCEDURE"
+                ],
+                default="Absent",
+            )
+        }
+
+    def _detect_qualifiers(self, doc: Doc) -> None:
+        """
+        Detect qualifiers for the entities in a document.
+
+        Prepares the entity, then predicts the probability of the qualifier. If the
+        probability is below the absence threshold, the qualifier is classified as
+        "Absent". If the probability is above the presence threshold, the qualifier is
+        classified as "Present". Otherwise, it is classified as "Uncertain".
+
+        Parameters
+        ----------
+        doc
+            The document to process.
+        """
+        for ent in doc.spans[self.spans_key]:
+            text, ent_start_char, ent_end_char = self._prepare_ent(ent)
+
+            qualifier, prob = self._predict_multiclass(
+                text,
+                ent_start_char,
+                ent_end_char,
+            )
+
+            if (
+                prob <= self.proba_threshold
+                or qualifier not in self.qualifier_classes["MED_NER"].values
+            ):
+                qualifier_value = "Absent"
+            else:
+                if qualifier == "O":
+                    qualifier_value = "Absent"
+                else:
+                    qualifier_value = qualifier
+
+            self.add_qualifier_to_ent(
+                ent,
+                self.qualifier_classes["MED_NER"].create(qualifier_value, prob=prob),
             )
