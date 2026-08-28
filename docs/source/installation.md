@@ -21,3 +21,17 @@ Or, if you want to install multiple extras at once:
 ```bash
 pip install clinlp[extra_name1,extra_name2]
 ```
+
+For transformer-based components, you can optionally pre-download the required
+models to warm the Hugging Face cache ahead of runtime:
+
+```bash
+pip install "clinlp[transformers]"
+clinlp install transformers
+```
+
+To re-download model files even if they are already cached:
+
+```bash
+clinlp install transformers --force-download
+```

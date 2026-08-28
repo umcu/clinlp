@@ -1,7 +1,6 @@
 """Transformer-based qualifier detectors."""
 
 import statistics
-from abc import abstractmethod
 from collections.abc import Callable
 
 import numpy as np
@@ -11,6 +10,8 @@ from spacy.tokens import Doc, Span
 from transformers import (
     AutoModelForTokenClassification,
     AutoTokenizer,
+    PreTrainedModel,
+    PreTrainedTokenizerBase,
     RobertaForTokenClassification,
 )
 
@@ -25,10 +26,16 @@ class QualifierTransformer(QualifierDetector):
     """
     Transformer-based qualifier detector.
 
-    Implements some helper methods, but cannot be used directly. Specifically, does not
-    implement the abstract properties ``qualifier_classes``, ``tokenizer`` and
-    ``model``, and abstract method ``_detect_qualifiers``.
+    Implements helper methods and lazy-loading for transformer-based qualifier
+    detectors.
     """
+
+    PRETRAINED_MODEL_NAME_OR_PATH: str
+    REVISION: str
+    MODEL_CLASS = AutoModelForTokenClassification
+
+    _tokenizer: PreTrainedTokenizerBase | None = None
+    _model: PreTrainedModel | None = None
 
     def __init__(
         self,
@@ -60,29 +67,43 @@ class QualifierTransformer(QualifierDetector):
 
         super().__init__(**kwargs)
 
+    @classmethod
+    def _load_pretrained(
+        cls, *, force_download: bool = False
+    ) -> tuple[PreTrainedTokenizerBase, PreTrainedModel]:
+        """Load and cache the pretrained tokenizer and model for this component."""
+        if cls._tokenizer is None or force_download:
+            cls._tokenizer = AutoTokenizer.from_pretrained(
+                pretrained_model_name_or_path=cls.PRETRAINED_MODEL_NAME_OR_PATH,
+                revision=cls.REVISION,
+                force_download=force_download,
+            )
+
+        if cls._model is None or force_download:
+            cls._model = cls.MODEL_CLASS.from_pretrained(
+                pretrained_model_name_or_path=cls.PRETRAINED_MODEL_NAME_OR_PATH,
+                revision=cls.REVISION,
+                force_download=force_download,
+            )
+
+        return cls._tokenizer, cls._model
+
+    @classmethod
+    def prefetch(cls, *, force_download: bool = False) -> None:
+        """Pre-download all model assets used by this transformer."""
+        cls._load_pretrained(force_download=force_download)
+
     @property
-    @abstractmethod
-    def tokenizer(self) -> AutoTokenizer:
-        """
-        The tokenizer.
-
-        Returns
-        -------
-        ``AutoTokenizer``
-            The tokenizer.
-        """
+    def tokenizer(self) -> PreTrainedTokenizerBase:
+        """The tokenizer."""
+        tokenizer, _ = self.__class__._load_pretrained()
+        return tokenizer
 
     @property
-    @abstractmethod
-    def model(self) -> RobertaForTokenClassification:
-        """
-        The model.
-
-        Returns
-        -------
-        ``RobertaForTokenClassification``
-            The model.
-        """
+    def model(self) -> PreTrainedModel:
+        """The model."""
+        _, model = self.__class__._load_pretrained()
+        return model
 
     @staticmethod
     def _get_ent_window(ent: Span, token_window: int) -> tuple[str, int, int]:
@@ -341,13 +362,7 @@ class NegationTransformer(QualifierTransformer):
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_NegationDetection"
     REVISION = "83068ba132b6ce38e9f668c1e3ab636f79b774d3"
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
-    model = RobertaForTokenClassification.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
+    MODEL_CLASS = RobertaForTokenClassification
 
     def __init__(
         self,
@@ -438,13 +453,7 @@ class ExperiencerTransformer(QualifierTransformer):
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/MedRoBERTa.nl_Experiencer"
     REVISION = "d9318c4b2b0ab0dfe50afedca58319b2369f1a71"
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
-    model = RobertaForTokenClassification.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
+    MODEL_CLASS = RobertaForTokenClassification
 
     def __init__(
         self,
@@ -518,13 +527,6 @@ class PiiTransformer(QualifierTransformer):
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/PII_RobBERT"
     REVISION = "7cae7b32d565fc49430f08517c5e8dbc20382478"
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
-    model = AutoModelForTokenClassification.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
 
     def __init__(
         self,
@@ -664,13 +666,6 @@ class CardioTransformer(QualifierTransformer):
 
     PRETRAINED_MODEL_NAME_OR_PATH = "DT4H/cardio-ner-multilingual-xlm-roberta-large-multilabel"
     REVISION = "8dd428df5af2df36a62544c3020c0b15d617227c"
-
-    tokenizer = AutoTokenizer.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
-    model = AutoModelForTokenClassification.from_pretrained(
-        pretrained_model_name_or_path=PRETRAINED_MODEL_NAME_OR_PATH, revision=REVISION
-    )
 
     def __init__(
         self,
