@@ -33,6 +33,7 @@ class QualifierTransformer(QualifierDetector):
     PRETRAINED_MODEL_NAME_OR_PATH: str
     REVISION: str
     MODEL_CLASS = AutoModelForTokenClassification
+    TRUST_REMOTE_CODE = False
 
     _tokenizer: PreTrainedTokenizerBase | None = None
     _model: PreTrainedModel | None = None
@@ -77,6 +78,7 @@ class QualifierTransformer(QualifierDetector):
                 pretrained_model_name_or_path=cls.PRETRAINED_MODEL_NAME_OR_PATH,
                 revision=cls.REVISION,
                 force_download=force_download,
+                trust_remote_code=cls.TRUST_REMOTE_CODE,
             )
 
         if cls._model is None or force_download:
@@ -84,6 +86,7 @@ class QualifierTransformer(QualifierDetector):
                 pretrained_model_name_or_path=cls.PRETRAINED_MODEL_NAME_OR_PATH,
                 revision=cls.REVISION,
                 force_download=force_download,
+                trust_remote_code=cls.TRUST_REMOTE_CODE,
             )
 
         return cls._tokenizer, cls._model
@@ -311,7 +314,7 @@ class QualifierTransformer(QualifierDetector):
         text: str,
         ent_start_char: int,
         ent_end_char: int,
-        qualifier_mapping: dict | None = None,
+        qualifier_mapping: dict[str, str] | None = None,
     ) -> tuple[str, float]:
         """
         Predict the probability of a multiclass qualifier.
@@ -324,6 +327,11 @@ class QualifierTransformer(QualifierDetector):
             The entity start character.
         ent_end_char
             The entity end character.
+
+        qualifier_mapping
+            Optional mapping from model output labels to reduced labels. When
+            provided, probabilities of labels that map to the same reduced label
+            are averaged before selecting the final prediction.
 
         Returns
         -------
@@ -340,13 +348,39 @@ class QualifierTransformer(QualifierDetector):
         )
 
         mean_probas = np.mean(probs[start_token : end_token + 1, :], axis=0)
-        label_id = int(np.argmax(mean_probas))
-
-        qualifier = self.model.config.id2label[label_id].removeprefix("B-").removeprefix("I-")
-        probability = float(mean_probas[label_id])
 
         if isinstance(qualifier_mapping, dict):
-            qualifier = qualifier_mapping.get(qualifier, qualifier)
+            aggregated_probas: dict[str, float] = {}
+            aggregated_counts: dict[str, int] = {}
+
+            for label_id, label_proba in enumerate(mean_probas):
+                label = (
+                    self.model.config.id2label[label_id]
+                    .removeprefix("B-")
+                    .removeprefix("I-")
+                )
+                reduced_label = qualifier_mapping.get(label, label)
+
+                aggregated_probas[reduced_label] = (
+                    aggregated_probas.get(reduced_label, 0.0) + float(label_proba)
+                )
+                aggregated_counts[reduced_label] = aggregated_counts.get(reduced_label, 0) + 1
+
+            aggregated_mean_probas = {
+                reduced_label: aggregated_probas[reduced_label]
+                / aggregated_counts[reduced_label]
+                for reduced_label in aggregated_probas
+            }
+
+            qualifier, probability = max(
+                aggregated_mean_probas.items(),
+                key=lambda item: item[1],
+            )
+            return qualifier, probability
+
+        label_id = int(np.argmax(mean_probas))
+        qualifier = self.model.config.id2label[label_id].removeprefix("B-").removeprefix("I-")
+        probability = float(mean_probas[label_id])
 
         return qualifier, probability
 
@@ -527,6 +561,7 @@ class PiiTransformer(QualifierTransformer):
 
     PRETRAINED_MODEL_NAME_OR_PATH = "UMCU/PII_RobBERT"
     REVISION = "7cae7b32d565fc49430f08517c5e8dbc20382478"
+    TRUST_REMOTE_CODE = True
 
     def __init__(
         self,
