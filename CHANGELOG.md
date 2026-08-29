@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## 0.10.1 (2026-08-29)
+
+### Added
+- Unit tests for `PiiTransformer` detection logic in `tests/unit/ie/qualifier/test_transformer.py`, using realistic Dutch clinical text and explicit span setup.
+- Unit tests for `CardioTransformer` (`MED_NER`) detection logic (below/above threshold paths) using:
+  - `"Reden van komst Analyse palpitaties. Voorgeschiedenis ..."`
+  
+### Fixed
+- Improved char-to-token span alignment in `QualifierTransformer` with a robust fallback for cases where `char_to_token` returns `None`.
+
 ## 0.10.0 (2025-09-25)
 
 ### Added
