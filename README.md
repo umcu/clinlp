@@ -34,6 +34,16 @@ If you have questions, need help getting started, found a bug, or have a feature
 pip install clinlp
 ```
 
+If you use transformer-based components, install the optional dependency and
+pre-download required model assets:
+
+```bash
+pip install "clinlp[transformers]"
+clinlp install transformers
+```
+
+Use `--force-download` to refresh cached model files.
+
 ### Example
 
 ```python

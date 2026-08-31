@@ -302,6 +302,15 @@ This component requires the following optional dependencies:
 pip install "clinlp[transformers]"
 ```
 
+To pre-download all required transformer models (instead of waiting for first
+use), run:
+
+```bash
+clinlp install transformers
+```
+
+Use `--force-download` to refresh the local cache.
+
 The component can be configured to consider a maximum number of tokens as context, when determining whether a term is negated. There is an option to strip the entity, removing any potential whitespace or punctuation before passing it to the transformer. The `placeholder` option can be used to replace the entity with a placeholder token, which has a small impact on the output probability. The `prob_aggregator` option can be used to aggregate the probabilities of the transformer, which is only used for for multi-token entities.
 
 The thresholds define where the cutoff for absence and presence are. If the predicted probability of presence < `absence_threshold`, entities will be qualified as `Presence.Absent`. If the predicted probability of presence > `presence_threshold`, entities will be qualified as `Presence.Present`. If the predicted probability is between these thresholds, the entity will be qualified as `Presence.Uncertain`.

@@ -14,18 +14,22 @@ from .qualifier import (
 
 if importlib.util.find_spec("transformers") is not None:
     from .transformer import (
+        CardioTransformer,
         ExperiencerTransformer,
         NegationTransformer,
+        PiiTransformer,
         QualifierTransformer,
     )
 
 __all__ = [
     "ATTR_QUALIFIERS",
+    "CardioTransformer",
     "ContextAlgorithm",
     "ContextRule",
     "ContextRuleDirection",
     "ExperiencerTransformer",
     "NegationTransformer",
+    "PiiTransformer",
     "Qualifier",
     "QualifierClass",
     "QualifierDetector",
