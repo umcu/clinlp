@@ -10,6 +10,7 @@ from spacy.tokens import Doc, Span
 from transformers import (
     AutoModelForTokenClassification,
     AutoTokenizer,
+    BatchEncoding,
     PreTrainedModel,
     PreTrainedTokenizerBase,
     RobertaForTokenClassification,
@@ -21,6 +22,7 @@ from clinlp.ie.qualifier.qualifier import (
     QualifierDetector,
 )
 from clinlp.util import clinlp_component
+
 
 class QualifierTransformer(QualifierDetector):
     """
@@ -244,7 +246,7 @@ class QualifierTransformer(QualifierDetector):
 
     @staticmethod
     def _get_ent_token_span(
-        inputs, ent_start_char: int, ent_end_char: int
+        inputs: BatchEncoding, ent_start_char: int, ent_end_char: int
     ) -> tuple[int, int]:
         """Map character span to token span for transformer inputs."""
         start_token = inputs.char_to_token(ent_start_char)
@@ -255,7 +257,9 @@ class QualifierTransformer(QualifierDetector):
 
         overlapping_token_indices = [
             token_i
-            for token_i, (token_start, token_end) in enumerate(inputs.encodings[0].offsets)
+            for token_i, (token_start, token_end) in enumerate(
+                inputs.encodings[0].offsets
+            )
             if token_start < ent_end_char and token_end > ent_start_char
         ]
 
@@ -338,7 +342,6 @@ class QualifierTransformer(QualifierDetector):
         ``tuple``
             The qualifier (str), The probability (float)
         """
-
         inputs = self.tokenizer(text, return_tensors="pt")
         output = self.model.forward(inputs["input_ids"])
         probs = torch.nn.functional.softmax(output.logits[0], dim=1).detach().numpy()
@@ -364,7 +367,9 @@ class QualifierTransformer(QualifierDetector):
                 aggregated_probas[reduced_label] = (
                     aggregated_probas.get(reduced_label, 0.0) + float(label_proba)
                 )
-                aggregated_counts[reduced_label] = aggregated_counts.get(reduced_label, 0) + 1
+                aggregated_counts[reduced_label] = (
+                    aggregated_counts.get(reduced_label, 0) + 1
+                )
 
             aggregated_mean_probas = {
                 reduced_label: aggregated_probas[reduced_label]
@@ -379,7 +384,11 @@ class QualifierTransformer(QualifierDetector):
             return qualifier, probability
 
         label_id = int(np.argmax(mean_probas))
-        qualifier = self.model.config.id2label[label_id].removeprefix("B-").removeprefix("I-")
+        qualifier = (
+            self.model.config.id2label[label_id]
+            .removeprefix("B-")
+            .removeprefix("I-")
+        )
         probability = float(mean_probas[label_id])
 
         return qualifier, probability
@@ -604,16 +613,16 @@ class PiiTransformer(QualifierTransformer):
                 "GENDER": "SEX",
             }
             # TODO: redundant once tested?
-            assert all(
-                [
-                    k
+            if not all(
+                k
                     in [
                         _k.removeprefix("B-").removeprefix("I-")
-                        for _k in self.model.config.label2id.keys()
+                        for _k in self.model.config.label2id
                     ]
-                    for k in self.qualifier_mapping.keys()
-                ]
-            ), "Not all mapping keys map to an actual label"
+                    for k in self.qualifier_mapping
+            ):
+                msg = "Not all mapping keys map to an actual label"
+                raise ValueError(msg)
 
         super().__init__(**kwargs)
 
@@ -681,10 +690,7 @@ class PiiTransformer(QualifierTransformer):
             ):
                 qualifier_value = "Absent"
             else:
-                if qualifier == "O":
-                    qualifier_value = "Absent"
-                else:
-                    qualifier_value = qualifier
+                qualifier_value = "Absent" if qualifier == "O" else qualifier
 
             self.add_qualifier_to_ent(
                 ent,
@@ -697,9 +703,14 @@ class PiiTransformer(QualifierTransformer):
     assigns=[f"span._.{ATTR_QUALIFIERS}"],
 )
 class CardioTransformer(QualifierTransformer):
-    """Transformer-based detector of medication/procedure/symptom/disease. For the cardiology domain."""
+    """Transformer-based detector of medication/procedure/symptom/disease.
 
-    PRETRAINED_MODEL_NAME_OR_PATH = "DT4H/cardio-ner-multilingual-xlm-roberta-large-multilabel"
+    For the cardiology domain.
+    """
+
+    PRETRAINED_MODEL_NAME_OR_PATH = (
+        "DT4H/cardio-ner-multilingual-xlm-roberta-large-multilabel"
+    )
     REVISION = "8dd428df5af2df36a62544c3020c0b15d617227c"
 
     def __init__(
@@ -717,8 +728,8 @@ class CardioTransformer(QualifierTransformer):
         nlp
             The ``spaCy`` language model.
         proba_threshold
-            The threshold for any detection. Will classify qualifier as ``MED_ENT.Absent``
-            if ``prediction`` < ``proba_threshold``.
+            The threshold for any detection. Will classify qualifier as
+            ``MED_ENT.Absent`` if ``prediction`` < ``proba_threshold``.
         """
         self.nlp = nlp
         self.proba_threshold = proba_threshold
@@ -771,10 +782,7 @@ class CardioTransformer(QualifierTransformer):
             ):
                 qualifier_value = "Absent"
             else:
-                if qualifier == "O":
-                    qualifier_value = "Absent"
-                else:
-                    qualifier_value = qualifier
+                qualifier_value = "Absent" if qualifier == "O" else qualifier
 
             self.add_qualifier_to_ent(
                 ent,

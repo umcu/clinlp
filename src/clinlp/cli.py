@@ -30,7 +30,7 @@ def install() -> None:
     default=False,
     help="Force re-download of model files even if they are cached.",
 )
-def install_transformers(force_download: bool) -> None:
+def install_transformers(force_download: bool) -> None:  # noqa: FBT001
     """Pre-download transformers used by clinlp components."""
     if importlib.util.find_spec("transformers") is None:
         msg = (
@@ -47,9 +47,8 @@ def install_transformers(force_download: bool) -> None:
         transformer.PiiTransformer,
         transformer.CardioTransformer,
     ):
-        click.echo(
-            f"Prefetching {model_cls.PRETRAINED_MODEL_NAME_OR_PATH}@{model_cls.REVISION}"
-        )
+        name = f"{model_cls.PRETRAINED_MODEL_NAME_OR_PATH}@{model_cls.REVISION}"
+        click.echo(f"Prefetching {name}")
         model_cls.prefetch(force_download=force_download)
 
     click.echo("Done prefetching transformer models.")

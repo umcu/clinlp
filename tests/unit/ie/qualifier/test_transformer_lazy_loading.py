@@ -186,12 +186,11 @@ class _DummyMappedTransformer(QualifierTransformer):
     def qualifier_classes(self) -> dict:
         return {}
 
-    def _detect_qualifiers(self, doc: Doc) -> None:
+    def _detect_qualifiers(self, _doc: Doc) -> None:
         return None
 
 
 def test_predict_multiclass_reduction_uses_mean_to_avoid_size_bias():
-    """Average reduced-label probabilities to avoid class-size bias."""
 
     # Arrange
     transformer = _DummyMappedTransformer()
