@@ -729,7 +729,7 @@ class CardioTransformer(QualifierTransformer):
             The ``spaCy`` language model.
         proba_threshold
             The threshold for any detection. Will classify qualifier as
-            ``MED_ENT.Absent`` if ``prediction`` < ``proba_threshold``.
+            ``MED_NER.Absent`` if ``prediction`` < ``proba_threshold``.
         """
         self.nlp = nlp
         self.proba_threshold = proba_threshold
