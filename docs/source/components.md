@@ -61,6 +61,114 @@ Note that this component only has effect when explicitly configuring successor c
 
 The sentencizer is a rule-based sentence boundary detector. It is designed to detect sentence boundaries in clinical text, whenever a character that marks a sentence ending is matched (e.g. newline, period, question mark). The next sentence is started whenever an alpha character or a character in `sent_start_punct` is encountered. This prevents e.g. sentences ending in `...` to be classified as three separate sentences. The sentencizer correctly detects items in enumerations (e.g. starting with `-` or `*`).
 
+## Date association
+
+### `clinlp_date_linker`
+
+| property | value |
+| --- | --- |
+| name | `clinlp_date_linker` |
+| class | `clinlp.ie.date.DateLinker` |
+| example | `nlp.add_pipe("clinlp_date_linker")` |
+| requires | Existing concept spans in `doc.spans[spans_key]` |
+| assigns | `span._.date` |
+| config options | `spans_key = 'ents'`, `max_distance = 200` |
+
+This optional component runs **after entity matching**. It preserves all existing
+mentions and qualifiers, and associates each mention with an explicit numeric date
+before or after it on the **same physical line**. It does not count or deduplicate
+mentions.
+
+```python
+import clinlp
+import spacy
+
+nlp = spacy.blank("clinlp")
+matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
+matcher.add_terms_from_dict({"A": ["CONCEPT A"], "B": ["CONCEPT B"]})
+nlp.add_pipe("clinlp_date_linker", config={"max_distance": 200})
+
+doc = nlp("20/05/2016 CONCEPT A\n12/01/2018 CONCEPT A\n01/03/2021 CONCEPT B")
+for span in doc.spans["ents"]:
+    print(span.label_, span._.date["value"] if span._.date else None)
+# A 2016-05-20
+# A 2018-01-12
+# B 2021-03-01
+```
+
+When linked, `span._.date` is a serializable dictionary. For the first mention:
+
+```python
+{
+    "value": "2016-05-20",
+    "text": "20/05/2016",
+    "start_char": 0,
+    "end_char": 10,
+    "precision": "day",
+    "method": "same_line",
+}
+```
+
+Offsets refer to `doc.text`, with an exclusive end offset. A mention with no linked
+expression has `span._.date is None`. A linked but ambiguous expression instead has
+a metadata dictionary with `value=None` and `precision="ambiguous"`. Re-running the
+component replaces its previous metadata. A missing span group is treated as empty.
+
+Partial numeric dates are retained without inventing missing information:
+
+| Expression | `value` | `precision` |
+| --- | --- | --- |
+| `2020-9:` or `2020/09` | `"2020-09"` | `"month"` |
+| `9/2020` or `09-2020` | `"2020-09"` | `"month"` |
+| `09/10` or `9-10` | `None` | `"ambiguous"` |
+| `20/09` or `09/20` | `None` | `"ambiguous"` |
+
+For `09/10 ENTITY`, the metadata is:
+
+```python
+{
+    "value": None,
+    "text": "09/10",
+    "start_char": 0,
+    "end_char": 5,
+    "precision": "ambiguous",
+    "method": "same_line",
+}
+```
+
+The raw expression is always preserved in `text`. Even when the order is clear
+(e.g. `20/09`), a missing year makes the expression unresolved. No report year,
+century, day/month order, or first day of a month is inferred. Short pairs must be
+calendar-possible in at least one order; `29/02` is allowed because the unknown year
+could be a leap year, whereas `31/04` is rejected. Ratios and other numeric pairs
+can resemble partial dates: these are candidates for post-processing, not confirmed
+event dates.
+
+#### Supported dates and conservative linking
+
+- Supports day-first `d/m/yyyy`, `d-m-yyyy`, and `d.m.yyyy` (one or two digits for
+  day/month), and ISO `yyyy-mm-dd`. Separators must be consistent, years must have
+  four digits, and calendar dates must be valid.
+- The entire concept span must be on one line. CR, LF, and CRLF are boundaries;
+  dates are not inherited from a preceding line, heading, or report timestamp.
+- Exactly one supported date expression must occur on the line. Multiple date
+  expressions leave the association unresolved, even if one is closer, invalid,
+  or repeats the same date. Date ranges are not resolved to a single event date.
+- `max_distance` is the inclusive maximum number of characters **between** the
+  date and concept. Overlapping dates and concept spans are not linked.
+- Partial dates support `yyyy[-/]m(m)`, `m(m)[-/]yyyy`, and two one- or two-digit
+  components separated by `/` or `-`. A trailing colon is allowed. Period-separated
+  short pairs are not recognized, to avoid interpreting decimal numbers as dates.
+- Bare years, two-digit years in three-component dates, month names, and relative
+  expressions such as `gisteren` are not interpreted.
+
+**Preserve line breaks before running the pipeline.** Flattening a dated list
+removes the boundaries needed for linking and can leave all mentions unresolved.
+This is a structural heuristic, not a determination of a date's clinical role:
+a single nearby date may still describe a report or review rather than the event.
+Presence/experiencer filtering and cross-report aggregation remain downstream
+choices; the linker itself does not exclude negated or historical concepts.
+
 ## Entity Matching
 
 ### `clinlp_rule_based_entity_matcher`
