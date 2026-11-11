@@ -333,14 +333,21 @@ class QualifierTransformer(QualifierDetector):
             The entity end character.
 
         qualifier_mapping
-            Optional mapping from model output labels to reduced labels. When
-            provided, probabilities of labels that map to the same reduced label
-            are averaged before selecting the final prediction.
+            Optional mapping from model output labels (without ``B-``/``I-``
+            prefix) to reduced labels.
 
         Returns
         -------
         ``tuple``
             The qualifier (str), The probability (float)
+
+        Notes
+        -----
+        Labels are grouped into classes by stripping the ``B-``/``I-`` prefix and
+        applying ``qualifier_mapping``. Since the labels are mutually exclusive
+        softmax outputs, the probability of a class for a token is the sum of its
+        label probabilities. The class probability of the entity is that sum over
+        all entity tokens, divided by the number of entity tokens.
         """
         inputs = self.tokenizer(text, return_tensors="pt")
         output = self.model.forward(inputs["input_ids"])
@@ -350,48 +357,24 @@ class QualifierTransformer(QualifierDetector):
             inputs, ent_start_char, ent_end_char
         )
 
-        mean_probas = np.mean(probs[start_token : end_token + 1, :], axis=0)
+        ent_probs = probs[start_token : end_token + 1, :]
+        n_tokens = ent_probs.shape[0]
+        qualifier_mapping = qualifier_mapping or {}
 
-        if isinstance(qualifier_mapping, dict):
-            aggregated_probas: dict[str, float] = {}
-            aggregated_counts: dict[str, int] = {}
+        class_prob_sums: dict[str, float] = {}
 
-            for label_id, label_proba in enumerate(mean_probas):
-                label = (
-                    self.model.config.id2label[label_id]
-                    .removeprefix("B-")
-                    .removeprefix("I-")
-                )
-                reduced_label = qualifier_mapping.get(label, label)
+        for label_id, bio_label in self.model.config.id2label.items():
+            label = bio_label.removeprefix("B-").removeprefix("I-")
+            reduced_label = qualifier_mapping.get(label, label)
 
-                aggregated_probas[reduced_label] = (
-                    aggregated_probas.get(reduced_label, 0.0) + float(label_proba)
-                )
-                aggregated_counts[reduced_label] = (
-                    aggregated_counts.get(reduced_label, 0) + 1
-                )
+            class_prob_sums[reduced_label] = class_prob_sums.get(
+                reduced_label, 0.0
+            ) + float(np.sum(ent_probs[:, int(label_id)]))
 
-            aggregated_mean_probas = {
-                reduced_label: aggregated_probas[reduced_label]
-                / aggregated_counts[reduced_label]
-                for reduced_label in aggregated_probas
-            }
+        qualifier, prob_sum = max(class_prob_sums.items(), key=lambda item: item[1])
 
-            qualifier, probability = max(
-                aggregated_mean_probas.items(),
-                key=lambda item: item[1],
-            )
-            return qualifier, probability
-
-        label_id = int(np.argmax(mean_probas))
-        qualifier = (
-            self.model.config.id2label[label_id]
-            .removeprefix("B-")
-            .removeprefix("I-")
-        )
-        probability = float(mean_probas[label_id])
-
-        return qualifier, probability
+        # Clamp floating point overshoot of summed softmax probabilities.
+        return qualifier, min(1.0, prob_sum / n_tokens)
 
 
 
