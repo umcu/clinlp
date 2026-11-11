@@ -1,5 +1,6 @@
 from types import SimpleNamespace
 
+import pytest
 import torch
 from spacy.tokens import Doc
 
@@ -138,40 +139,39 @@ def test_prefetch_passes_trust_remote_code(monkeypatch):
 
 
 class _FakeInputs(dict):
-    def __init__(self):
-        super().__init__({"input_ids": torch.tensor([[101, 102]])})
-        self.encodings = [SimpleNamespace(offsets=[(0, 1)])]
+    """One transformer token per character."""
 
-    def char_to_token(self, _char_i: int) -> int:
-        return 0
+    def __init__(self, text: str):
+        super().__init__({"input_ids": torch.zeros((1, len(text)), dtype=torch.long)})
+        self.encodings = [
+            SimpleNamespace(offsets=[(i, i + 1) for i in range(len(text))])
+        ]
+
+    def char_to_token(self, char_i: int) -> int:
+        return char_i
 
 
 class _FakeTokenizer:
-    def __call__(self, _text: str, return_tensors: str):
+    def __call__(self, text: str, return_tensors: str):
         assert return_tensors == "pt"
-        return _FakeInputs()
+        return _FakeInputs(text)
 
 
 class _FakeModel:
-    config = SimpleNamespace(
-        id2label={
-            0: "B-GIVENNAME",
-            1: "B-SURNAME",
-            2: "B-DATE",
-        }
-    )
+    """Model whose softmax output equals the given per-token probabilities."""
 
-    @staticmethod
-    def forward(_input_ids):
-        # DATE has the highest single-label probability. NAME has two mapped
-        # labels, so summing would bias toward NAME, but mean should keep DATE.
-        return SimpleNamespace(logits=torch.tensor([[[2.0, 1.9, 2.1]]]))
+    def __init__(self, labels: list[str], token_probs: list[list[float]]):
+        self.config = SimpleNamespace(id2label=dict(enumerate(labels)))
+        self._logits = torch.log(torch.tensor([token_probs]))
+
+    def forward(self, _input_ids):
+        return SimpleNamespace(logits=self._logits)
 
 
 class _DummyMappedTransformer(QualifierTransformer):
-    def __init__(self):
+    def __init__(self, labels: list[str], token_probs: list[list[float]]):
         self._dummy_tokenizer = _FakeTokenizer()
-        self._dummy_model = _FakeModel()
+        self._dummy_model = _FakeModel(labels, token_probs)
         super().__init__()
 
     @property
@@ -190,16 +190,21 @@ class _DummyMappedTransformer(QualifierTransformer):
         return None
 
 
-def test_predict_multiclass_reduction_uses_mean_to_avoid_size_bias():
-
+def test_predict_multiclass_sums_mapped_labels_and_averages_over_tokens():
     # Arrange
-    transformer = _DummyMappedTransformer()
+    transformer = _DummyMappedTransformer(
+        labels=["O", "B-GIVENNAME", "I-GIVENNAME", "B-SURNAME", "B-DATE"],
+        token_probs=[
+            [0.1, 0.5, 0.1, 0.1, 0.2],  # NAME: 0.7, DATE: 0.2
+            [0.1, 0.1, 0.1, 0.4, 0.3],  # NAME: 0.6, DATE: 0.3
+        ],
+    )
 
     # Act
     qualifier, probability = transformer._predict_multiclass(
-        "x",
+        "xy",
         0,
-        1,
+        2,
         qualifier_mapping={
             "GIVENNAME": "NAME",
             "SURNAME": "NAME",
@@ -207,5 +212,26 @@ def test_predict_multiclass_reduction_uses_mean_to_avoid_size_bias():
     )
 
     # Assert
-    assert qualifier == "DATE"
-    assert 0 < probability < 1
+    assert qualifier == "NAME"
+    assert probability == pytest.approx((0.7 + 0.6) / 2)
+
+
+@pytest.mark.parametrize("qualifier_mapping", [None, {}])
+def test_predict_multiclass_merges_bio_prefixes_without_mapping(qualifier_mapping):
+    # Arrange
+    transformer = _DummyMappedTransformer(
+        labels=["O", "B-SYMPTOM", "I-SYMPTOM", "B-DISEASE"],
+        token_probs=[
+            [0.1, 0.6, 0.1, 0.2],  # SYMPTOM: 0.7
+            [0.1, 0.1, 0.6, 0.2],  # SYMPTOM: 0.7
+        ],
+    )
+
+    # Act
+    qualifier, probability = transformer._predict_multiclass(
+        "xy", 0, 2, qualifier_mapping=qualifier_mapping
+    )
+
+    # Assert
+    assert qualifier == "SYMPTOM"
+    assert probability == pytest.approx(0.7)
