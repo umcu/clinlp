@@ -170,7 +170,8 @@ metoprolol                PII=Absent    (1.00)  MED_NER=MEDICATION (1.00)
 
 The `prob` is the probability of the predicted class, averaged over the entity's
 tokens (`B-`/`I-` and merged labels are summed per token). Predictions with
-`prob <= proba_threshold` (default `0.1`) fall back to `Absent`. The PII component
+`prob <= proba_threshold` (default `0.4` for PII, `0.6` for `MED_NER`) fall back
+to `Absent`. The PII component
 merges fine-grained labels (e.g. `GIVENNAME`/`SURNAME` become `NAME`) by
 default; pass `config={"reduce_labels": False}` to keep the original labels.
 

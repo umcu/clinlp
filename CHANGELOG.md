@@ -19,7 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   
 ### Fixed
 - Improved char-to-token span alignment in `QualifierTransformer` with a robust fallback for cases where `char_to_token` returns `None`.
-- Multiclass transformer probabilities (`PiiTransformer`, `CardioTransformer`) are now summed over `B-`/`I-` and merged labels per class, instead of averaged, which underestimated confidence (e.g. `NAME` capped at 0.25).
+- Multiclass transformer probabilities (`PiiTransformer`, `CardioTransformer`) are now summed over `B-`/`I-` and merged labels per class, instead of averaged, which underestimated confidence (e.g. `NAME` capped at 0.25). Default `proba_threshold` raised accordingly from 0.1 to 0.4 (`PiiTransformer`) and 0.6 (`CardioTransformer`).
 
 ## 0.10.0 (2025-09-25)
 

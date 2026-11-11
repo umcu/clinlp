@@ -559,7 +559,7 @@ class PiiTransformer(QualifierTransformer):
         self,
         nlp: Language,
         *,
-        proba_threshold: float = 0.1,
+        proba_threshold: float = 0.4,
         reduce_labels: bool = True,
         **kwargs,
     ) -> None:
@@ -700,7 +700,7 @@ class CardioTransformer(QualifierTransformer):
         self,
         nlp: Language,
         *,
-        proba_threshold: float = 0.1,
+        proba_threshold: float = 0.6,
         **kwargs,
     ) -> None:
         """
