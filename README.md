@@ -159,16 +159,17 @@ for ent in doc.spans["ents"]:
 ```
 
 ```text
-Jan Jansen                PII=NAME      (0.25)  MED_NER=Absent     (1.00)
-Utrecht                   PII=LOCATION  (0.12)  MED_NER=Absent     (1.00)
-palpitaties               PII=Absent    (1.00)  MED_NER=SYMPTOM    (0.67)
-pijn op de borst          PII=Absent    (1.00)  MED_NER=SYMPTOM    (0.75)
-atriumfibrilleren         PII=Absent    (1.00)  MED_NER=DISEASE    (0.80)
-elektrische cardioversie  PII=Absent    (1.00)  MED_NER=PROCEDURE  (0.75)
-metoprolol                PII=Absent    (1.00)  MED_NER=MEDICATION (0.75)
+Jan Jansen                PII=NAME      (1.00)  MED_NER=Absent     (1.00)
+Utrecht                   PII=LOCATION  (1.00)  MED_NER=Absent     (1.00)
+palpitaties               PII=Absent    (1.00)  MED_NER=SYMPTOM    (1.00)
+pijn op de borst          PII=Absent    (1.00)  MED_NER=SYMPTOM    (1.00)
+atriumfibrilleren         PII=Absent    (1.00)  MED_NER=DISEASE    (1.00)
+elektrische cardioversie  PII=Absent    (1.00)  MED_NER=PROCEDURE  (1.00)
+metoprolol                PII=Absent    (1.00)  MED_NER=MEDICATION (1.00)
 ```
 
-The `prob` is the model's probability for the predicted label. Predictions with
+The `prob` is the probability of the predicted class, averaged over the entity's
+tokens (`B-`/`I-` and merged labels are summed per token). Predictions with
 `prob <= proba_threshold` (default `0.1`) fall back to `Absent`. The PII component
 merges fine-grained labels (e.g. `GIVENNAME`/`SURNAME` become `NAME`) by
 default; pass `config={"reduce_labels": False}` to keep the original labels.
