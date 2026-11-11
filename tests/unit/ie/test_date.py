@@ -39,6 +39,10 @@ class TestDateLinker:
             ("29/02", None, "ambiguous"),
             ("2-29", None, "ambiguous"),
             ("12/12", None, "ambiguous"),
+            ("31/04", None, "ambiguous"),
+            ("04-31", None, "ambiguous"),
+            ("30/02", None, "ambiguous"),
+            ("02-30", None, "ambiguous"),
         ],
     )
     @pytest.mark.parametrize("template", ["{date}:..ENTITY", "ENTITY ({date})."])
@@ -58,10 +62,6 @@ class TestDateLinker:
             "0000-9",
             "13/2020",
             "00-2020",
-            "31/04",
-            "04-31",
-            "30/02",
-            "02-30",
             "13/14",
             "00/09",
             "9-0",
@@ -72,9 +72,6 @@ class TestDateLinker:
             "2020-9x",
             "id_09/10",
             "09/10_id",
-            "2020-9/20",
-            "09/10/16",
-            "09/10.1234",
             "09-10-016",
             "12020-9",
             "2020-999",
@@ -106,13 +103,21 @@ class TestDateLinker:
 
     def test_partial_date_serialization_and_pipe(self, nlp_entity):
         nlp_entity.add_pipe("clinlp_date_linker")
-        texts = ["2020-9: ENTITY", "09/10 ENTITY", "ENTITY"]
+        texts = [
+            "2020-9: ENTITY",
+            "09/10 ENTITY",
+            "ENTITY",
+            "31/02/2016 ENTITY",
+            "30/02 ENTITY",
+        ]
         docs = list(nlp_entity.pipe(texts))
         metadata = [doc.spans["ents"][0]._.date for doc in docs]
         assert metadata == [
             expected_date("2020-9", "2020-09", precision="month"),
             expected_date("09/10", None, precision="ambiguous"),
             None,
+            expected_date("31/02/2016", None, precision="ambiguous"),
+            expected_date("30/02", None, precision="ambiguous"),
         ]
         for doc, expected in zip(docs, metadata, strict=True):
             restored = Doc(nlp_entity.vocab).from_bytes(doc.to_bytes())
@@ -139,30 +144,30 @@ class TestDateLinker:
             DateLinker(max_distance=max_distance)
 
     @pytest.mark.parametrize(
-        ("date_text", "value"),
+        ("date_text", "value", "precision"),
         [
-            ("20/05/2016", "2016-05-20"),
-            ("20-05-2016", "2016-05-20"),
-            ("20.05.2016", "2016-05-20"),
-            ("1/2/2016", "2016-02-01"),
-            ("01/2/2016", "2016-02-01"),
-            ("1/02/2016", "2016-02-01"),
-            ("1-2-2016", "2016-02-01"),
-            ("01-2-2016", "2016-02-01"),
-            ("1-02-2016", "2016-02-01"),
-            ("1.2.2016", "2016-02-01"),
-            ("01.2.2016", "2016-02-01"),
-            ("1.02.2016", "2016-02-01"),
-            ("03/04/2016", "2016-04-03"),
-            ("2016-05-20", "2016-05-20"),
-            ("29/02/2016", "2016-02-29"),
-            ("29.02.2000", "2000-02-29"),
-            ("2000-02-29", "2000-02-29"),
-            ("31/12/2016", "2016-12-31"),
+            ("20/05/2016", "2016-05-20", "day"),
+            ("20-05-2016", "2016-05-20", "day"),
+            ("20.05.2016", "2016-05-20", "day"),
+            ("1/2/2016", None, "ambiguous"),
+            ("01/2/2016", None, "ambiguous"),
+            ("1/02/2016", None, "ambiguous"),
+            ("1-2-2016", None, "ambiguous"),
+            ("01-2-2016", None, "ambiguous"),
+            ("1-02-2016", None, "ambiguous"),
+            ("1.2.2016", None, "ambiguous"),
+            ("01.2.2016", None, "ambiguous"),
+            ("1.02.2016", None, "ambiguous"),
+            ("03/04/2016", None, "ambiguous"),
+            ("2016-05-20", "2016-05-20", "day"),
+            ("29/02/2016", "2016-02-29", "day"),
+            ("29.02.2000", "2000-02-29", "day"),
+            ("2000-02-29", "2000-02-29", "day"),
+            ("31/12/2016", "2016-12-31", "day"),
         ],
     )
     @pytest.mark.parametrize("template", ["{date} ENTITY", "ENTITY ({date})."])
-    def test_explicit_dates(self, nlp_entity, date_text, value, template):
+    def test_explicit_dates(self, nlp_entity, date_text, value, precision, template):
         # Arrange
         text = template.format(date=date_text)
         doc = nlp_entity(text)
@@ -174,7 +179,37 @@ class TestDateLinker:
         assert result is doc
         assert len(doc.spans["ents"]) == 1
         assert doc.spans["ents"][0]._.date == expected_date(
-            date_text, value, text.index(date_text)
+            date_text, value, text.index(date_text), precision
+        )
+
+    @pytest.mark.parametrize(
+        "date_text",
+        [
+            "31/04/2016",
+            "31-06-2016",
+            "31.11.2016",
+            "29/02/2015",
+            "29/02/1900",
+            "30/02/2016",
+            "2016-04-31",
+            "2015-02-29",
+            "1900-02-29",
+            "31/04/2020",
+            "29/02/2019",
+            "31/02/2016",
+        ],
+    )
+    @pytest.mark.parametrize("template", ["{date} ENTITY", "ENTITY ({date})."])
+    def test_impossible_full_dates_retain_raw_metadata(
+        self, nlp_entity, date_text, template
+    ):
+        text = template.format(date=date_text)
+        doc = nlp_entity(text)
+
+        assert DateLinker()(doc) is doc
+        assert len(doc.spans["ents"]) == 1
+        assert doc.spans["ents"][0]._.date == expected_date(
+            date_text, None, text.index(date_text), "ambiguous"
         )
 
     @pytest.mark.parametrize(
@@ -185,39 +220,17 @@ class TestDateLinker:
             "vandaag",
             "morgen",
             "vorige week",
-            "20 mei 2016",
-            "mei 2016",
-            "2016",
-            "20/05/16",
-            "20-05-16",
-            "20.05.16",
+            "February",
+            "mei",
             "20/05/016",
-            "2016-5-20",
-            "2016-05-2",
-            "2016/05/20",
-            "2016.05.20",
-            "20/05-2016",
-            "20-05.2016",
-            "20.05/2016",
-            "2016-05/20",
             "00/05/2016",
             "20/00/2016",
             "32/05/2016",
             "20/13/2016",
-            "05/20/2016",
-            "31/04/2016",
-            "31-06-2016",
-            "31.11.2016",
-            "29/02/2015",
-            "29/02/1900",
-            "30/02/2016",
             "20/05/0000",
             "2016-00-20",
             "2016-05-00",
             "2016-13-20",
-            "2016-04-31",
-            "2015-02-29",
-            "1900-02-29",
             "0000-05-20",
         ],
     )
@@ -504,7 +517,7 @@ class TestDateLinker:
         "text",
         [
             "ENTITY",
-            "31/02/2016 ENTITY",
+            "32/02/2016 ENTITY",
             "20/05/2016 ENTITY 21/05/2016",
             "20/05/2016\nENTITY",
             "20/05/2016" + " " * 201 + "ENTITY",
@@ -524,13 +537,25 @@ class TestDateLinker:
         assert result is doc
         assert span._.date is None
 
-    def test_reprocessing_overwrites_stale_date_and_is_idempotent(self, nlp_entity):
+    @pytest.mark.parametrize(
+        ("date_text", "value", "precision"),
+        [
+            ("20/05/2016", "2016-05-20", "day"),
+            ("31/02/2016", None, "ambiguous"),
+            ("1900-02-29", None, "ambiguous"),
+            ("30/02", None, "ambiguous"),
+            ("04-31", None, "ambiguous"),
+        ],
+    )
+    def test_reprocessing_overwrites_stale_date_and_is_idempotent(
+        self, nlp_entity, date_text, value, precision
+    ):
         # Arrange
-        doc = nlp_entity("20/05/2016 ENTITY")
+        doc = nlp_entity(f"{date_text} ENTITY")
         linker = DateLinker()
         span = doc.spans["ents"][0]
         span._.date = expected_date("01/01/2000", "2000-01-01")
-        expected = expected_date("20/05/2016", "2016-05-20")
+        expected = expected_date(date_text, value, precision=precision)
 
         # Act & Assert
         assert linker(doc) is doc
@@ -648,7 +673,8 @@ class TestDateLinkerSerialization:
         path = tmp_path / "date_pipeline"
         texts = ["20/05/2016   ENTITY", "20/05/2016    ENTITY", "ENTITY"]
         expected = [expected_date("20/05/2016", "2016-05-20"), None, None]
-        assert [nlp(text).spans["findings"][0]._.date for text in texts] == expected
+        original_docs = list(nlp.pipe(texts))
+        assert [doc.spans["findings"][0]._.date for doc in original_docs] == expected
 
         # Act
         nlp.to_disk(path)

@@ -9,15 +9,54 @@ from spacy.tokens import Doc, Span
 from clinlp.ie.entity import SPANS_KEY
 from clinlp.util import clinlp_component
 
+_HORIZONTAL_SPACE = r"[^\S\r\n\u2028\u2029]"
+_SEPARATOR = r"[/.\-\u2010-\u2015\u2212]"
+_MONTH_NUMBERS = {
+    name: number
+    for number, names in enumerate(
+        (
+            ("januari", "jan"),
+            ("februari", "feb", "febr"),
+            ("maart", "mrt"),
+            ("april", "apr"),
+            ("mei",),
+            ("juni", "jun"),
+            ("juli", "jul"),
+            ("augustus", "aug"),
+            ("september", "sep", "sept"),
+            ("oktober", "okt"),
+            ("november", "nov"),
+            ("december", "dec"),
+        ),
+        start=1,
+    )
+    for name in names
+}
+_MONTH_PATTERN = (
+    "(?:" + "|".join(sorted(_MONTH_NUMBERS, key=len, reverse=True)) + r")\.?"
+)
+_TIME_PATTERN = (
+    r"[Tt][0-9]{1,2}:[0-9]{2}(?::[0-9]{2}(?:[.,][0-9]+)?)?"
+    r"(?:[Zz]|[+-][0-9]{2}:?[0-9]{2})?"
+)
 _DATE_PATTERN = re.compile(
-    r"(?<![\w/.-])(?:"
-    r"(?P<iso_year>[0-9]{4})-(?P<iso_month>[0-9]{2})-(?P<iso_day>[0-9]{2})"
-    r"|(?P<day>[0-9]{1,2})(?P<separator>[/.-])"
-    r"(?P<month>[0-9]{1,2})(?P=separator)(?P<year>[0-9]{4})"
-    r"|(?P<ym_year>[0-9]{4})[-/](?P<ym_month>[0-9]{1,2})"
-    r"|(?P<my_month>[0-9]{1,2})[-/](?P<my_year>[0-9]{4})"
-    r"|(?P<first>[0-9]{1,2})[-/](?P<second>[0-9]{1,2})"
-    r")(?!\w|[./-][0-9])"
+    rf"(?<![\w/.\-\u2010-\u2015\u2212])(?:"
+    rf"(?P<named>(?:[0-9]+{_HORIZONTAL_SPACE}*)?{_MONTH_PATTERN}"
+    rf"{_HORIZONTAL_SPACE}*[0-9]+)"
+    rf"|(?P<named_short>[0-9]+{_HORIZONTAL_SPACE}*{_MONTH_PATTERN})"
+    rf"|(?P<numeric>[0-9]+(?:{_HORIZONTAL_SPACE}*{_SEPARATOR}"
+    rf"{_HORIZONTAL_SPACE}*[0-9]+)+)(?:{_TIME_PATTERN})?"
+    r"|(?P<bare_year>[0-9]{4})"
+    rf")(?!\w|{_HORIZONTAL_SPACE}*{_SEPARATOR}{_HORIZONTAL_SPACE}*[0-9])",
+    re.IGNORECASE,
+)
+_DECIMAL_PAIR = re.compile(
+    rf"[0-9]{{1,3}}{_HORIZONTAL_SPACE}*\.{_HORIZONTAL_SPACE}*[0-9]{{1,3}}"
+)
+_NAMED_PARTS = re.compile(
+    rf"(?:(?P<day>[0-9]+){_HORIZONTAL_SPACE}*)?"
+    rf"(?P<month>{_MONTH_PATTERN}){_HORIZONTAL_SPACE}*(?P<year>[0-9]+)?",
+    re.IGNORECASE,
 )
 
 if not Span.has_extension("date"):
@@ -30,7 +69,7 @@ if not Span.has_extension("date"):
     assigns=["span._.date"],
 )
 class DateLinker(Pipe):
-    """Link entities to full or partial numeric dates on the same line.
+    """Link entities to full, partial or ambiguous date candidates on the same line.
 
     Missing years and uncertain day/month order are retained as ambiguous metadata,
     not resolved by guessing. This structural heuristic does not determine whether
@@ -69,40 +108,108 @@ class DateLinker(Pipe):
 
     @staticmethod
     def _valid_short_date(first: int, second: int) -> bool:
-        """Accept either day/month order without assuming a year or leap status."""
-        for month, day in ((first, second), (second, first)):
-            try:
-                # A leap year allows February 29 without inferring an event year.
-                date(2000, month, day)
-            except ValueError:
-                continue
-            return True
-        return False
+        """Accept plausible day/month ranges without requiring calendar validity."""
+        return any(
+            1 <= month <= 12 and 1 <= day <= 31
+            for month, day in ((first, second), (second, first))
+        )
+
+    @staticmethod
+    def _normalize_full(
+        year: int, month: int, day: int
+    ) -> tuple[str | None, str] | None:
+        """Normalize a known order without repairing inconsistent calendar dates."""
+        if not (1 <= year <= 9999 and 1 <= month <= 12 and 1 <= day <= 31):
+            return None
+        try:
+            return date(year, month, day).isoformat(), "day"
+        except ValueError:
+            return None, "ambiguous"
+
+    @classmethod
+    def _normalize_year_last(
+        cls, first: int, second: int, year_text: str
+    ) -> tuple[str | None, str] | None:
+        """Retain unknown centuries and competing day/month orders as ambiguous."""
+        orientations = {
+            (month, day)
+            for month, day in ((first, second), (second, first))
+            if 1 <= month <= 12 and 1 <= day <= 31
+        }
+        if not orientations or (len(year_text) == 4 and int(year_text) == 0):
+            return None
+        if len(year_text) == 2 or len(orientations) > 1:
+            return None, "ambiguous"
+        month, day = next(iter(orientations))
+        return cls._normalize_full(int(year_text), month, day)
+
+    @classmethod
+    def _normalize_partial(
+        cls, parts: list[str], expression: str
+    ) -> tuple[str | None, str] | None:
+        """Normalize month/year pairs without interpreting decimal short pairs."""
+        first, second = parts
+        if len(first) == 4 and len(second) <= 2:
+            year, month = int(first), int(second)
+        elif len(second) == 4 and len(first) <= 2:
+            year, month = int(second), int(first)
+        else:
+            if (
+                max(len(first), len(second)) <= 2
+                and "." not in expression
+                and cls._valid_short_date(int(first), int(second))
+            ):
+                return None, "ambiguous"
+            return None
+        if 1 <= year <= 9999 and 1 <= month <= 12:
+            return f"{year:04d}-{month:02d}", "month"
+        return None
+
+    @classmethod
+    def _normalize_numeric(cls, expression: str) -> tuple[str | None, str] | None:
+        """Consume numeric chains whole to prevent malformed-date fragments."""
+        parts = re.split(
+            rf"{_HORIZONTAL_SPACE}*{_SEPARATOR}{_HORIZONTAL_SPACE}*", expression
+        )
+        if len(parts) == 2:
+            return cls._normalize_partial(parts, expression)
+        if len(parts) != 3:
+            return None
+        first, second, third = parts
+        if len(first) == 4 and max(len(second), len(third)) <= 2:
+            return cls._normalize_full(int(first), int(second), int(third))
+        if max(len(first), len(second)) <= 2 and len(third) in (2, 4):
+            return cls._normalize_year_last(int(first), int(second), third)
+        return None
+
+    @classmethod
+    def _normalize_named(cls, expression: str) -> tuple[str | None, str] | None:
+        """Read Dutch month names without inferring a missing year or century."""
+        parts = _NAMED_PARTS.fullmatch(expression)
+        if parts is None:
+            return None
+        day_text, year_text = parts["day"], parts["year"]
+        if day_text is not None and (len(day_text) > 2 or not 1 <= int(day_text) <= 31):
+            return None
+        if year_text is not None and len(year_text) not in (2, 4):
+            return None
+        if year_text is None or len(year_text) == 2:
+            return None, "ambiguous"
+        month = _MONTH_NUMBERS[parts["month"].rstrip(".").casefold()]
+        year = int(year_text)
+        if day_text is not None:
+            return cls._normalize_full(year, month, int(day_text))
+        return (f"{year:04d}-{month:02d}", "month") if year else None
 
     @classmethod
     def _normalize(cls, match: re.Match) -> tuple[str | None, str] | None:
-        """Normalize known components and explicitly retain unresolved dates."""
-        if match.group("first") is not None:
-            if cls._valid_short_date(int(match["first"]), int(match["second"])):
-                return None, "ambiguous"
-            return None
-
-        if match.group("ym_year") is not None or match.group("my_year") is not None:
-            year = int(match["ym_year"] or match["my_year"])
-            month = int(match["ym_month"] or match["my_month"])
-            if 1 <= year <= 9999 and 1 <= month <= 12:
-                return f"{year:04d}-{month:02d}", "month"
-            return None
-
-        if match.group("iso_year") is not None:
-            parts = match.group("iso_year", "iso_month", "iso_day")
-        else:
-            parts = match.group("year", "month", "day")
-
-        try:
-            return date(*(int(part) for part in parts)).isoformat(), "day"
-        except ValueError:
-            return None
+        """Normalize only information supported by the captured expression."""
+        if match["numeric"] is not None:
+            return cls._normalize_numeric(match["numeric"])
+        if match["named"] is not None or match["named_short"] is not None:
+            return cls._normalize_named(match["named"] or match["named_short"])
+        year = match["bare_year"]
+        return (year, "year") if int(year) else None
 
     def _find_date(self, entity: Span) -> dict | None:
         """Find a single non-overlapping date on the entity's physical line."""
@@ -126,7 +233,11 @@ class DateLinker(Pipe):
             )
             if position != -1
         )
-        matches = list(_DATE_PATTERN.finditer(text, line_start, line_end))
+        matches = [
+            match
+            for match in _DATE_PATTERN.finditer(text, line_start, line_end)
+            if not _DECIMAL_PAIR.fullmatch(match["numeric"] or "")
+        ]
 
         # Check the whole line before applying proximity: a second date may have
         # another temporal role, even when it is farther away or invalid.
@@ -160,8 +271,10 @@ class DateLinker(Pipe):
 
         Each span's ``_.date`` is replaced with a serializable dictionary containing
         the date's precision and provenance, or ``None`` if no date can be linked.
-        Values are ISO dates for day precision, YYYY-MM for month precision, and
-        ``None`` for ambiguous expressions; their original text is retained.
+        Values are ISO dates for day precision, YYYY-MM for month precision,
+        YYYY for year precision, and ``None`` for ambiguous expressions. Original
+        text is retained, including an attached timestamp when present; clock time
+        and timezone do not change the day-level value.
         Character offsets refer to the original ``doc.text`` and are end-exclusive.
         A missing span group is treated as empty.
         """
