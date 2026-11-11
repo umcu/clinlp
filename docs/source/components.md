@@ -88,12 +88,12 @@ matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
 matcher.add_terms_from_dict({"A": ["CONCEPT A"], "B": ["CONCEPT B"]})
 nlp.add_pipe("clinlp_date_linker", config={"max_distance": 200})
 
-doc = nlp("20/05/2016 CONCEPT A\n12/01/2018 CONCEPT A\n01/03/2021 CONCEPT B")
+doc = nlp("20/05/2016 CONCEPT A\n22/01/2018 CONCEPT A\n21/03/2021 CONCEPT B")
 for span in doc.spans["ents"]:
     print(span.label_, span._.date["value"] if span._.date else None)
 # A 2016-05-20
-# A 2018-01-12
-# B 2021-03-01
+# A 2018-01-22
+# B 2021-03-21
 ```
 
 When linked, `span._.date` is a serializable dictionary. For the first mention:
