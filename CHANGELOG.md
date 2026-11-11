@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
-## 0.10.1 (2026-08-29)
+## 0.11.00 (2026-11-11)
 
 ### Added
+- date linker (attach dates to listed concepts)
+- PiiTransformer (PII NER)
+- CardioTransformer (medical NER for cardiology)
 - Unit tests for `PiiTransformer` detection logic in `tests/unit/ie/qualifier/test_transformer.py`, using realistic Dutch clinical text and explicit span setup.
 - Unit tests for `CardioTransformer` (`MED_NER`) detection logic (below/above threshold paths) using:
   - `"Reden van komst Analyse palpitaties. Voorgeschiedenis ..."`
