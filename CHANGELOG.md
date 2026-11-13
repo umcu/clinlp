@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## (unreleased)
+
+### Fixed
+
+* :exclamation: The default thresholds of `NegationTransformer` were swapped (`absence_threshold=0.9`, `presence_threshold=0.1`). So `Presence.Uncertain` could never be returned and every prediction up to 0.9 was `Presence.Absent`. While for example P=0.5 seems like a good case for`Presence.Uncertain`, for example. The defaults are now `absence_threshold=0.1` and `presence_threshold=0.9`, as documented. To keep the old behaviour, set both thresholds to `0.9`
+* `NegationTransformer` now raises a `ValueError` when `absence_threshold` is higher than `presence_threshold` so it can't be set. Therefore its a breaking change. Added unit test for this case.
+
 ## 0.10.0 (2025-09-25)
 
 ### Added
