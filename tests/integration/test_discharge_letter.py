@@ -5,7 +5,6 @@ from spacy import displacy
 
 from clinlp.ie import SPANS_KEY, Term
 
-
 DISCHARGE_LETTER = """ONTSLAGBRIEF CARDIOLOGIE — SYNTHETISCH VOORBEELD
 Alle gegevens in deze brief zijn fictief.
 
@@ -47,7 +46,9 @@ def _render_qualifier_report(doc):
         lines = [f"{ent.text} — {ent.label_}"]
         for qualifier in sorted(ent._.qualifiers, key=lambda item: item.name):
             probability = (
-                f"{qualifier.prob:.3f}" if qualifier.prob is not None else "niet beschikbaar"
+                f"{qualifier.prob:.3f}"
+                if qualifier.prob is not None
+                else "niet beschikbaar"
             )
             lines.append(
                 f"{qualifier.name}: {qualifier.value} | kans: {probability}"
@@ -108,7 +109,8 @@ p {{ color: #536174; line-height: 1.6; }}
 <h1>Ontslagbrief met qualifiers</h1>
 <p>Uitsluitend synthetische gegevens. Beweeg de muis over een gemarkeerde term
 voor Presence, Experiencer, PII en MED_NER, inclusief kansen en standaardwaarden.
-De gekleurde labels zijn de categorieën uit de woordenlijst, niet de modelvoorspellingen.
+De gekleurde labels zijn de categorieën uit de woordenlijst, niet de
+modelvoorspellingen.
 Modeluitvoer is geen klinisch advies.</p>
 {markup}
 </main></body>
@@ -158,7 +160,9 @@ def test_discharge_letter_all_transformer_qualifiers(nlp, tmp_path):
             detector = component[1]
             if hasattr(detector, "qualifier_classes"):
                 for qualifier_class in detector.qualifier_classes.values():
-                    qualifier = next(q for q in qualifiers if q.name == qualifier_class.name)
+                    qualifier = next(
+                        q for q in qualifiers if q.name == qualifier_class.name
+                    )
                     assert qualifier.value in qualifier_class.values
 
     assert report_path.is_file()
