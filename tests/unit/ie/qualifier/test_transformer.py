@@ -4,8 +4,10 @@ import pytest
 
 from clinlp.ie import SPANS_KEY
 from clinlp.ie.qualifier import (
+    CardioTransformer,
     ExperiencerTransformer,
     NegationTransformer,
+    PiiTransformer,
     QualifierTransformer,
 )
 from clinlp.ie.qualifier.qualifier import ATTR_QUALIFIERS_STR
@@ -261,4 +263,181 @@ class TestExperiencerTransformer:
         assert len(doc.spans[SPANS_KEY]) == 1
         assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
             "Experiencer.Family"
+        }
+
+
+class TestPiiTransformer:
+    @staticmethod
+    def _make_doc_with_pii_entity(nlp_entity, text):
+        doc = nlp_entity(text)
+
+        ent_start = text.index("Henk de Vries")
+        ent_end = ent_start + len("Henk de Vries")
+        ent = doc.char_span(
+            ent_start,
+            ent_end,
+            label="named_entity",
+            alignment_mode="expand",
+        )
+        assert ent is not None
+        doc.spans[SPANS_KEY] = [ent]
+
+        return doc
+
+    def test_detect_qualifiers_absent_when_probability_below_threshold(self, nlp_entity):  # noqa: E501
+        # Arrange
+        pt = PiiTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "De patient Henk de Vries, geboren in Amsterdam, op 20 augustus 1958, "
+            "had last van osteoporose."
+        )
+        doc = self._make_doc_with_pii_entity(nlp_entity, text)
+
+        span = doc.spans[SPANS_KEY][0]
+        prepared_text, ent_start_char, ent_end_char = pt._prepare_ent(span)
+        _, prob = pt._predict_multiclass(
+            prepared_text,
+            ent_start_char,
+            ent_end_char,
+            pt.qualifier_mapping,
+        )
+        pt.proba_threshold = min(1.0, prob + 1e-6)
+
+        # Act
+        pt(doc)
+
+        # Assert
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {"PII.Absent"}
+
+    def test_detect_qualifiers_uses_predicted_label_above_threshold(self, nlp_entity):
+        # Arrange
+        pt = PiiTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "De patient Henk de Vries, geboren in Amsterdam, op 20 augustus 1958, "
+            "had last van osteoporose."
+        )
+        doc = self._make_doc_with_pii_entity(nlp_entity, text)
+
+        span = doc.spans[SPANS_KEY][0]
+        prepared_text, ent_start_char, ent_end_char = pt._prepare_ent(span)
+        qualifier, prob = pt._predict_multiclass(
+            prepared_text,
+            ent_start_char,
+            ent_end_char,
+            pt.qualifier_mapping,
+        )
+        pt.proba_threshold = max(0.0, prob - 1e-6)
+
+        # Act
+        pt(doc)
+
+        # Assert
+        expected_qualifier = (
+            qualifier if qualifier in pt.qualifier_classes["PII"].values else "Absent"
+        )
+
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            f"PII.{expected_qualifier}"
+        }
+
+
+class TestCardioTransformer:
+    @staticmethod
+    def _make_doc_with_cardio_entity(nlp_entity, text):
+        doc = nlp_entity(text)
+
+        ent_start = text.index("palpitaties")
+        ent_end = ent_start + len("palpitaties")
+        ent = doc.char_span(
+            ent_start,
+            ent_end,
+            label="named_entity",
+            alignment_mode="expand",
+        )
+        assert ent is not None
+        doc.spans[SPANS_KEY] = [ent]
+
+        return doc
+
+    def test_detect_qualifiers_absent_when_probability_below_threshold(
+        self, nlp_entity
+    ):
+        # Arrange
+        ct = CardioTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "Reden van komst Analyse palpitaties.  Voorgeschiedenis 1996 Occipitaal CVA "  # noqa: E501
+            "1996 Afgesloten a poplitea beiderzijds 1996 Hyperhomocysteïnemie o.b.v. "
+            "heterozygotie"
+        )
+        doc = self._make_doc_with_cardio_entity(nlp_entity, text)
+
+        span = doc.spans[SPANS_KEY][0]
+        prepared_text, ent_start_char, ent_end_char = ct._prepare_ent(span)
+        _, prob = ct._predict_multiclass(prepared_text, ent_start_char, ent_end_char)
+        ct.proba_threshold = min(1.0, prob + 1e-6)
+
+        # Act
+        ct(doc)
+
+        # Assert
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            "MED_NER.Absent"
+        }
+
+    def test_detect_qualifiers_uses_predicted_label_above_threshold(self, nlp_entity):
+        # Arrange
+        ct = CardioTransformer(
+            nlp=nlp_entity,
+            token_window=32,
+            placeholder=None,
+            proba_threshold=0.1,
+        )
+        text = (
+            "Reden van komst Analyse palpitaties.  Voorgeschiedenis 1996 Occipitaal CVA "  # noqa: E501
+            "1996 Afgesloten a poplitea beiderzijds 1996 Hyperhomocysteïnemie o.b.v. "
+            "heterozygotie"
+        )
+        doc = nlp_entity(text)
+        ent = doc[4:5]
+        assert str(ent) == "palpitaties"
+        doc.spans[SPANS_KEY] = [ent]
+
+        span = doc.spans[SPANS_KEY][0]
+        prepared_text, ent_start_char, ent_end_char = ct._prepare_ent(span)
+        qualifier, prob = ct._predict_multiclass(
+            prepared_text, ent_start_char, ent_end_char
+        )
+        ct.proba_threshold = max(0.0, prob - 1e-6)
+
+        # Act
+        ct(doc)
+
+        # Assert
+        expected_qualifier = (
+            qualifier
+            if qualifier in ct.qualifier_classes["MED_NER"].values
+            else "Absent"
+        )
+
+        assert len(doc.spans[SPANS_KEY]) == 1
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            f"MED_NER.{expected_qualifier}"
         }

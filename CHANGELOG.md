@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
+## 0.11.00 (2026-11-11)
+
+### Added
+- date linker (attach dates to listed concepts)
+- PiiTransformer (PII NER)
+- CardioTransformer (medical NER for cardiology)
+- Unit tests for `PiiTransformer` detection logic in `tests/unit/ie/qualifier/test_transformer.py`, using realistic Dutch clinical text and explicit span setup.
+- Unit tests for `CardioTransformer` (`MED_NER`) detection logic (below/above threshold paths) using:
+  - `"Reden van komst Analyse palpitaties. Voorgeschiedenis ..."`
+  
+### Fixed
+- Improved char-to-token span alignment in `QualifierTransformer` with a robust fallback for cases where `char_to_token` returns `None`.
+- Multiclass transformer probabilities (`PiiTransformer`, `CardioTransformer`) are now summed over `B-`/`I-` and merged labels per class, instead of averaged, which underestimated confidence (e.g. `NAME` capped at 0.25). Default `proba_threshold` raised accordingly from 0.1 to 0.4 (`PiiTransformer`) and 0.6 (`CardioTransformer`).
+
 ## 0.10.0 (2025-09-25)
 
 ### Added
