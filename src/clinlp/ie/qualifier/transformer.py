@@ -277,8 +277,8 @@ class NegationTransformer(QualifierTransformer):
         self,
         nlp: Language,
         *,
-        absence_threshold: float = 0.9,
-        presence_threshold: float = 0.1,
+        absence_threshold: float = 0.1,
+        presence_threshold: float = 0.9,
         **kwargs,
     ) -> None:
         """
@@ -290,11 +290,24 @@ class NegationTransformer(QualifierTransformer):
             The ``spaCy`` language model.
         absence_threshold
             The threshold for absence. Will classify qualifier as ``Presence.Absent``
-            if ``prediction`` < ``absence_threshold``.
+            if ``prediction`` <= ``absence_threshold``.
         presence_threshold
             The threshold for presence. Will classify qualifier as ``Presence.Present``
-            if ``prediction`` > ``presence_threshold``.
+            if ``prediction`` >= ``presence_threshold``. Must not be lower than
+            ``absence_threshold``.
+
+        Raises
+        ------
+        ValueError
+            If ``absence_threshold`` is higher than ``presence_threshold``.
         """
+        if absence_threshold > presence_threshold:
+            msg = (
+                f"absence_threshold ({absence_threshold}) must not be higher than "
+                f"presence_threshold ({presence_threshold})."
+            )
+            raise ValueError(msg)
+
         self.nlp = nlp
         self.absence_threshold = absence_threshold
         self.presence_threshold = presence_threshold

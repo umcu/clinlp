@@ -187,6 +187,49 @@ class TestNegationTransformer:
             "Presence.Present"
         }
 
+    @pytest.mark.parametrize(
+        ("prob_present", "thresholds", "expected_qualifier"),
+        [
+            (0.05, {}, "Presence.Absent"),
+            (0.1, {}, "Presence.Absent"),
+            (0.5, {}, "Presence.Uncertain"),
+            (0.9, {}, "Presence.Present"),
+            (0.95, {}, "Presence.Present"),
+            (
+                0.5,
+                {"absence_threshold": 0.4, "presence_threshold": 0.6},
+                "Presence.Uncertain",
+            ),
+            (
+                0.5,
+                {"absence_threshold": 0.6, "presence_threshold": 0.6},
+                "Presence.Absent",
+            ),
+        ],
+    )
+    def test_detect_qualifiers_thresholds(
+        self, nlp_entity, monkeypatch, prob_present, thresholds, expected_qualifier
+    ):
+        # Arrange
+        nt = NegationTransformer(nlp=nlp_entity, **thresholds)
+        monkeypatch.setattr(nt, "_predict", lambda *_, **__: 1 - prob_present)
+        doc = nlp_entity("De patient had last van ENTITY.")
+
+        # Act
+        nt(doc)
+
+        # Assert
+        assert getattr(doc.spans[SPANS_KEY][0]._, ATTR_QUALIFIERS_STR) == {
+            expected_qualifier
+        }
+
+    def test_thresholds_in_wrong_order(self, nlp_entity):
+        # Act & Assert
+        with pytest.raises(ValueError, match="absence_threshold"):
+            NegationTransformer(
+                nlp=nlp_entity, absence_threshold=0.9, presence_threshold=0.1
+            )
+
 
 class TestExperiencerTransformer:
     def test_predict_family(self, nlp_entity):
