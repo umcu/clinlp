@@ -61,6 +61,152 @@ Note that this component only has effect when explicitly configuring successor c
 
 The sentencizer is a rule-based sentence boundary detector. It is designed to detect sentence boundaries in clinical text, whenever a character that marks a sentence ending is matched (e.g. newline, period, question mark). The next sentence is started whenever an alpha character or a character in `sent_start_punct` is encountered. This prevents e.g. sentences ending in `...` to be classified as three separate sentences. The sentencizer correctly detects items in enumerations (e.g. starting with `-` or `*`).
 
+## Date association
+
+### `clinlp_date_linker`
+
+| property | value |
+| --- | --- |
+| name | `clinlp_date_linker` |
+| class | `clinlp.ie.date.DateLinker` |
+| example | `nlp.add_pipe("clinlp_date_linker")` |
+| requires | Existing concept spans in `doc.spans[spans_key]` |
+| assigns | `span._.date` |
+| config options | `spans_key = 'ents'`, `max_distance = 200` |
+
+This optional component runs **after entity matching**. It preserves all existing
+mentions and qualifiers, and associates each mention with a potential date
+before or after it on the **same physical line**. It does not count or deduplicate
+mentions.
+
+```python
+import clinlp
+import spacy
+
+nlp = spacy.blank("clinlp")
+matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher")
+matcher.add_terms_from_dict({"A": ["CONCEPT A"], "B": ["CONCEPT B"]})
+nlp.add_pipe("clinlp_date_linker", config={"max_distance": 200})
+
+doc = nlp("20/05/2016 CONCEPT A\n22/01/2018 CONCEPT A\n21/03/2021 CONCEPT B")
+for span in doc.spans["ents"]:
+    print(span.label_, span._.date["value"] if span._.date else None)
+# A 2016-05-20
+# A 2018-01-22
+# B 2021-03-21
+```
+
+When linked, `span._.date` is a serializable dictionary. For the first mention:
+
+```python
+{
+    "value": "2016-05-20",
+    "text": "20/05/2016",
+    "start_char": 0,
+    "end_char": 10,
+    "precision": "day",
+    "method": "same_line",
+}
+```
+
+Offsets refer to `doc.text`, with an exclusive end offset. A mention with no linked
+expression has `span._.date is None`. A linked but ambiguous expression instead has
+a metadata dictionary with `value=None` and `precision="ambiguous"`. Re-running the
+component replaces its previous metadata. A missing span group is treated as empty.
+
+Date candidates are captured broadly and retained without inventing missing information:
+
+| Expression | `value` | `precision` |
+| --- | --- | --- |
+| `2020-9:` or `2020/09` | `"2020-09"` | `"month"` |
+| `9/2020` or `09-2020` | `"2020-09"` | `"month"` |
+| `09/10` or `9-10` | `None` | `"ambiguous"` |
+| `20/09` or `09/20` | `None` | `"ambiguous"` |
+| `31/04/2020` or `2020-04-31` | `None` | `"ambiguous"` |
+| `20 mei 2020` | `"2020-05-20"` | `"day"` |
+| `2020-9-1` or `2020/09/01` | `"2020-09-01"` | `"day"` |
+| `09/20/2020` or `20 / 09 / 2020` | `"2020-09-20"` | `"day"` |
+| `05/06/2020` | `None` | `"ambiguous"` |
+| `20/09/20` | `None` | `"ambiguous"` |
+| `2020` | `"2020"` | `"year"` |
+| `2020–9` | `"2020-09"` | `"month"` |
+| `2020-09-01T12:00` | `"2020-09-01"` | `"day"` |
+| `mei 2020` | `"2020-05"` | `"month"` |
+| `20 mei` or `mei 20` | `None` | `"ambiguous"` |
+
+For `09/10 ENTITY`, the metadata is:
+
+```python
+{
+    "value": None,
+    "text": "09/10",
+    "start_char": 0,
+    "end_char": 5,
+    "precision": "ambiguous",
+    "method": "same_line",
+}
+```
+
+The raw expression is always preserved in `text`. Even when the order is clear
+(e.g. `20/09`), a missing year makes the expression unresolved. No report year,
+century, day/month order, or first day of a month is inferred. Extraction is
+permissive: days must be 1–31, months 1–12, and explicit years 1–9999. Short pairs
+must fit these day/month ranges in at least one order. Month lengths and leap-year
+rules do not cause expressions to be discarded: `31/04`, `31/04/2020`, and
+`29/02/2019` are retained as ambiguous metadata. Valid full calendar dates still
+normalize to ISO with day precision; other in-range expressions retain their raw
+text with `value=None` rather than receiving a guessed repair. Out-of-range values
+such as `32/04/2020`, `00/04`, or `20/13/2020` are rejected.
+
+**Full numeric day/month ordering is now explicit about uncertainty.** For a
+four-digit year at the end, both European and US orders are considered. A single
+possible order is normalized; competing orders such as `05/06/2020` remain
+ambiguous instead of defaulting to day-first. A two-digit year always remains
+ambiguous, with no century pivot. Year-first dates keep their explicit year/month/day
+order. A standalone four-digit year has year precision, not an invented January 1.
+
+The entire attached timestamp is retained in `text` and its offsets. Only its date
+part is normalized for day-level aggregation; clock time and timezone are not
+interpreted or converted. Ratios, measurements, doses, and four-digit identifiers
+can resemble dates: these are candidates for post-processing, not confirmed event
+dates. This broad capture intentionally favors recall over precision.
+
+#### Supported dates and conservative linking
+
+- Numeric dates support one- or two-digit day/month components, four-digit years
+  first or last, and two-digit years last. Separators `/`, `.`, `-`, Unicode hyphens
+  U+2010–U+2015, and minus U+2212 are accepted, including mixed separators and
+  horizontal whitespace around them. Calendar-inconsistent dates remain ambiguous.
+- Dutch month names and common abbreviations are case-insensitive, with an optional
+  abbreviation period: `januari`/`jan`, `februari`/`feb`/`febr`, `maart`/`mrt`,
+  `april`/`apr`, `mei`, `juni`/`jun`, `juli`/`jul`, `augustus`/`aug`,
+  `september`/`sep`/`sept`, `oktober`/`okt`, `november`/`nov`, `december`/`dec`.
+  Day-month-year, month-year, and day-month without a year are supported, with or
+  without spaces (`20 mei 2020`, `20mei2020`, `mei2020`, `20mei`).
+- Numeric dates can have an attached `T12:00` time, optional seconds/fraction,
+  and a `Z` or numeric timezone suffix. The complete expression is captured once.
+- The entire concept span must be on one line. CR, LF, and CRLF are boundaries;
+  dates are not inherited from a preceding line, heading, or report timestamp.
+- Exactly one supported date expression must occur on the line. Multiple date
+  expressions leave the association unresolved, even if one is closer, invalid,
+  or repeats the same date. Date ranges are not resolved to a single event date.
+- `max_distance` is the inclusive maximum number of characters **between** the
+  date and concept. Overlapping dates and concept spans are not linked.
+- Partial dates support month/year and year/month with the numeric separators
+  above, bare four-digit years, and short pairs with slash or hyphen separators.
+  A trailing colon is allowed. Decimal-looking short pairs such as `9.10` and
+  `2.5` are ignored and do not block another date on the line.
+- Relative expressions such as `gisteren` and English-only month names are not
+  interpreted. Numeric chains are consumed whole: malformed/out-of-range dates
+  cannot silently fall back to just their year or another valid-looking fragment.
+
+**Preserve line breaks before running the pipeline.** Flattening a dated list
+removes the boundaries needed for linking and can leave all mentions unresolved.
+This is a structural heuristic, not a determination of a date's clinical role:
+a single nearby date may still describe a report or review rather than the event.
+Presence/experiencer filtering and cross-report aggregation remain downstream
+choices; the linker itself does not exclude negated or historical concepts.
+
 ## Entity Matching
 
 ### `clinlp_rule_based_entity_matcher`
@@ -301,6 +447,15 @@ This component requires the following optional dependencies:
 ```bash
 pip install "clinlp[transformers]"
 ```
+
+To pre-download all required transformer models (instead of waiting for first
+use), run:
+
+```bash
+clinlp install transformers
+```
+
+Use `--force-download` to refresh the local cache.
 
 The component can be configured to consider a maximum number of tokens as context, when determining whether a term is negated. There is an option to strip the entity, removing any potential whitespace or punctuation before passing it to the transformer. The `placeholder` option can be used to replace the entity with a placeholder token, which has a small impact on the output probability. The `prob_aggregator` option can be used to aggregate the probabilities of the transformer, which is only used for for multi-token entities.
 
