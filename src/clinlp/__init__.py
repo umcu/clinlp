@@ -3,6 +3,7 @@
 import importlib
 import importlib.util
 
+from .ie.date import DateLinker
 from .ie.entity import RuleBasedEntityMatcher
 from .ie.qualifier import ContextAlgorithm
 from .language import Clinlp
@@ -19,6 +20,7 @@ __version__ = importlib.metadata.version(__package__ or __name__)
 __all__ = [
     "Clinlp",
     "ContextAlgorithm",
+    "DateLinker",
     "ExperiencerTransformer",
     "NegationTransformer",
     "Normalizer",
