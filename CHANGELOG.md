@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 :exclamation: = Breaking change
 
-## 0.11.00 (2026-11-11)
+## 0.11.00 (2026-11-23)
 
 ### Added
 
