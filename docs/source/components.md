@@ -207,6 +207,95 @@ a single nearby date may still describe a report or review rather than the event
 Presence/experiencer filtering and cross-report aggregation remain downstream
 choices; the linker itself does not exclude negated or historical concepts.
 
+## Entity classification
+
+### `clinlp_pii_transformer`
+
+| property | value |
+| --- | --- |
+| name | `clinlp_pii_transformer` |
+| class | `clinlp.ie.qualifier.transformer.PiiTransformer` |
+| example | `nlp.add_pipe("clinlp_pii_transformer")` |
+| requires | `doc.spans['ents']` |
+| assigns | `span._.qualifiers` (`PII`) |
+| config options | `token_window = 32` <br /> `strip_entities = True` <br /> `placeholder = None` <br /> `prob_aggregator = statistics.mean` <br /> `proba_threshold = 0.4` <br /> `reduce_labels = True` |
+
+This transformer classifies **existing entity spans** for personally identifiable
+information (PII). It does not create new entities; it adds or updates the `PII`
+qualifier on each span in `doc.spans["ents"]`. Low-confidence predictions
+(`prob <= proba_threshold`) are set to `Absent`.
+
+By default, fine-grained labels are merged to broader labels (for example,
+`GIVENNAME` and `SURNAME` become `NAME`). Set
+`config={"reduce_labels": False}` to keep original model labels.
+
+### `clinlp_cardioner_transformer`
+
+| property | value |
+| --- | --- |
+| name | `clinlp_cardioner_transformer` |
+| class | `clinlp.ie.qualifier.transformer.CardioTransformer` |
+| example | `nlp.add_pipe("clinlp_cardioner_transformer")` |
+| requires | `doc.spans['ents']` |
+| assigns | `span._.qualifiers` (`MED_NER`) |
+| config options | `token_window = 32` <br /> `strip_entities = True` <br /> `placeholder = None` <br /> `prob_aggregator = statistics.mean` <br /> `proba_threshold = 0.6` |
+
+This transformer classifies **existing entity spans** into cardiology-focused
+medical NER classes (`DISEASE`, `SYMPTOM`, `MEDICATION`, `PROCEDURE`). It does
+not create new entities; it adds or updates the `MED_NER` qualifier on each span
+in `doc.spans["ents"]`. Low-confidence predictions (`prob <= proba_threshold`)
+are set to `Absent`.
+
+Both classifier components require the optional transformers dependencies:
+
+```bash
+pip install "clinlp[transformers]"
+clinlp install transformers
+```
+
+`clinlp install transformers --force-download` refreshes local model assets.
+
+Example pipeline with both classifiers:
+
+```python
+import spacy
+
+import clinlp  # noqa: F401
+
+nlp = spacy.blank("clinlp")
+nlp.add_pipe("clinlp_normalizer")
+nlp.add_pipe("clinlp_sentencizer")
+
+matcher = nlp.add_pipe("clinlp_rule_based_entity_matcher", config={"attr": "NORM"})
+matcher.add_terms_from_dict(
+    {
+        "persoon": ["Jan Jansen"],
+        "locatie": ["Utrecht"],
+        "klacht": ["pijn op de borst", "palpitaties"],
+        "ziekte": ["atriumfibrilleren"],
+        "medicatie": ["metoprolol"],
+        "verrichting": ["elektrische cardioversie"],
+    }
+)
+
+nlp.add_pipe("clinlp_pii_transformer")
+nlp.add_pipe("clinlp_cardioner_transformer")
+
+doc = nlp(
+    "Dhr. Jan Jansen uit Utrecht werd opgenomen wegens palpitaties en pijn op de "
+    "borst. Op het ECG werd atriumfibrilleren gezien, waarvoor een elektrische "
+    "cardioversie werd verricht. Bij ontslag gestart met metoprolol 50 mg."
+)
+
+for ent in doc.spans["ents"]:
+    qualifiers = {q.name: q for q in ent._.qualifiers}
+    pii, med = qualifiers["PII"], qualifiers["MED_NER"]
+    print(
+        f"{ent.text:<25} PII={pii.value:<9} ({pii.prob:.2f})  "
+        f"MED_NER={med.value:<10} ({med.prob:.2f})"
+    )
+```
+
 ## Entity Matching
 
 ### `clinlp_rule_based_entity_matcher`
