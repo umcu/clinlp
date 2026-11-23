@@ -10,22 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## 0.11.00 (2026-11-11)
 
 ### Added
-- date linker (attach dates to listed concepts)
-- PiiTransformer (PII NER)
-- CardioTransformer (medical NER for cardiology)
-- Unit tests for `PiiTransformer` detection logic in `tests/unit/ie/qualifier/test_transformer.py`, using realistic Dutch clinical text and explicit span setup.
-- Unit tests for `CardioTransformer` (`MED_NER`) detection logic (below/above threshold paths) using:
-  - `"Reden van komst Analyse palpitaties. Voorgeschiedenis ..."`
+
+* date linker (attach dates to listed concepts)
+* PiiTransformer (PII NER)
+* CardioTransformer (medical NER for cardiology)
+* Unit tests for `PiiTransformer` detection logic in `tests/unit/ie/qualifier/test_transformer.py`, using realistic Dutch clinical text and explicit span setup.
+* Unit tests for `CardioTransformer` (`MED_NER`) detection logic (below/above threshold paths) using:
+  * `"Reden van komst Analyse palpitaties. Voorgeschiedenis ..."`
+* Support for Python 3.14
   
 ### Fixed
-- Improved char-to-token span alignment in `QualifierTransformer` with a robust fallback for cases where `char_to_token` returns `None`.
-- Multiclass transformer probabilities (`PiiTransformer`, `CardioTransformer`) are now summed over `B-`/`I-` and merged labels per class, instead of averaged, which underestimated confidence (e.g. `NAME` capped at 0.25). Default `proba_threshold` raised accordingly from 0.1 to 0.4 (`PiiTransformer`) and 0.6 (`CardioTransformer`).
-## (unreleased)
 
-### Fixed
-
+* Improved char-to-token span alignment in `QualifierTransformer` with a robust fallback for cases where `char_to_token` returns `None`.
+* Multiclass transformer probabilities (`PiiTransformer`, `CardioTransformer`) are now summed over `B-`/`I-` and merged labels per class, instead of averaged, which underestimated confidence (e.g. `NAME` capped at 0.25). Default `proba_threshold` raised accordingly from 0.1 to 0.4 (`PiiTransformer`) and 0.6 (`CardioTransformer`).
 * :exclamation: The default thresholds of `NegationTransformer` were swapped (`absence_threshold=0.9`, `presence_threshold=0.1`). So `Presence.Uncertain` could never be returned and every prediction up to 0.9 was `Presence.Absent`. While for example P=0.5 seems like a good case for`Presence.Uncertain`, for example. The defaults are now `absence_threshold=0.1` and `presence_threshold=0.9`, as documented. To keep the old behaviour, set both thresholds to `0.9`
 * `NegationTransformer` now raises a `ValueError` when `absence_threshold` is higher than `presence_threshold` so it can't be set. Therefore its a breaking change. Added unit test for this case.
+
+### Removed
+
+- Support for Python 3.11
 
 ## 0.10.0 (2025-09-25)
 
