@@ -37,7 +37,7 @@ import json
 from pathlib import Path
 
 with Path('medcattrainer_export.json').open('rb') as f:
-    mtrainer_data = json.load(f)
+    mctrainer_data = json.load(f)
 
 mct_dataset = InfoExtractionDataset.from_medcattrainer(mctrainer_data)
 ```
@@ -48,21 +48,22 @@ mct_dataset = InfoExtractionDataset.from_medcattrainer(mctrainer_data)
 from clinlp.metrics import InfoExtractionDataset
 
 data = {
-    "documents": [
+    "docs": [
         {
             "identifier": "...",
             "text": "...",
-            "annotations": 
-            {
-                "text": "...",
-                "start": ..., 
-                "end": ...,
-                "label": "...",
-                "qualifiers": {
-                    "...": "...",
-                    ...
-                }
-            }, ...
+            "annotations": [
+                {
+                    "text": "...",
+                    "start": ...,
+                    "end": ...,
+                    "label": "...",
+                    "qualifiers": [
+                        {"name": "...", "value": "..."},
+                        ...
+                    ]
+                }, ...
+            ]
         },
         ...
     ]
@@ -86,18 +87,20 @@ Note that this method assumes a JSON file has been written by `InfoExtractionDat
 If your data is in a different format, you can manually convert it by creating `Annotation` and `Document` objects, and add those to a `InfoExtractionDataset`. Below are some pointers on how to create the appropriate objects:
 
 ```python
-from clinlp.metrics import Annotation, Document, InfoExtractionDataset
+from clinlp.ie.qualifier import Qualifier
+from clinlp.metrics import InfoExtractionDataset
+from clinlp.metrics.ie import Annotation, Document
 
 annotation = Annotation(
     text='prematuriteit',
-    start=0,
-    end=12,
+    start=17,
+    end=30,
     label='C0151526_prematuriteit',
-    qualifiers={
-        "Presence": "Present",
-        "Temporality": "Current",
-        "Experiencer": "Patient"
-    }
+    qualifiers=[
+        Qualifier(name="Presence", value="Present"),
+        Qualifier(name="Temporality", value="Current"),
+        Qualifier(name="Experiencer", value="Patient"),
+    ]
 )
 
 document = Document(
@@ -107,7 +110,7 @@ document = Document(
 )
 
 dataset = InfoExtractionDataset(
-    documents=[document1, document2, ...]
+    docs=[document1, document2, ...]
 )
 
 ```
@@ -124,7 +127,7 @@ dataset.stats()
 > {
     "num_docs": 50,
     "num_annotations": 513,
-    "span_counts": {
+    "span_freqs": {
         "prematuriteit": 43,
         "infectie": 31,
         "fototherapie": 25,
@@ -151,7 +154,7 @@ dataset.stats()
         "retinopathy of prematurity": 5,
         "bloedtransfusie": 5,
     },
-    "label_counts": {
+    "label_freqs": {
         "C0151526_prematuriteit": 94,
         "C0020433_hyperbilirubinemie": 68,
         "C0243026_sepsis": 63,
@@ -173,7 +176,7 @@ dataset.stats()
         "C0025289_meningitis": 5,
         "C0023529_periventriculaire_leucomalacie": 2,
     },
-    "qualifier_counts": {
+    "qualifier_freqs": {
         "Presence": {"Present": 436, "Uncertain": 34, "Absent": 30},
         "Temporality": {"Current": 473, "Historical": 18, "Future": 9},
         "Experiencer": {"Patient": 489, "Family": 9, "Other": 2},
@@ -265,7 +268,7 @@ The different metrics (`partial`, `exact`, `strict` and `ent_type`) are calculat
 For comparison metrics on qualifiers, use:
 
 ```python
-nlp_metrics.qualifier_info()
+nlp_metrics.qualifier_metrics()
 
 > {
     "Experiencer": {
